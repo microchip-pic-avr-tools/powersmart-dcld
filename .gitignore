@@ -27,11 +27,11 @@ Makefile-genesis.properties
 
 
 # Misc
+.svn
 code_templates/
 test_cases/
 .bin/Debug/
 user_guide/pictures/
-.svn
 *.bak
 
 
