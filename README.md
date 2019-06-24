@@ -1,2 +1,2 @@
 # DCLD
-Digital Control Loop Designer SDK - z-Domain Loop Designer
+Digital Control Loop Designer SDK for Microchip dsPIC - z-Domain Loop Designer
