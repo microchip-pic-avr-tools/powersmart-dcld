@@ -1,0 +1,38 @@
+# .gitignore file
+#
+# Set up for Visual Studio Environment
+#
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Executables
+#*.exe
+
+# VS specific
+~*.*
+.vs/
+obj/
+build/
+dist/
+private/
+disassembly/
+*.zip
+*.mk
+*.bash
+Makefile-genesis.properties
+
+
+# Misc
+code_templates/
+test_cases/
+.bin/Debug/
+user_guide/pictures/
+.svn
+*.bak
+
+
+
