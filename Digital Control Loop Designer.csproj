@@ -24,8 +24,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
-    <SupportUrl>https://www.microchip.com</SupportUrl>
-    <ErrorReportUrl>http://www.microchip.com</ErrorReportUrl>
+    <SupportUrl>https://www.microchip.com/SMPS</SupportUrl>
+    <ErrorReportUrl>http://www.microchip.com/SMPS</ErrorReportUrl>
     <TargetCulture>en-US</TargetCulture>
     <ProductName>z-Domain Control Loop Designer</ProductName>
     <PublisherName>Microchip Technology Inc.</PublisherName>
@@ -64,7 +64,7 @@
     <StartupObject>dcld.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon_bode.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\icon_bode.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>21D91C85DF497185CFD00F806B139609A59E75F2</ManifestCertificateThumbprint>
@@ -165,12 +165,17 @@
     <Compile Include="NumberBaseConverter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="generate.ico" />
     <None Include="Resources\z-domain_compensator_block_diagram.png" />
     <None Include="Resources\z-transform_euqations.PNG" />
     <None Include="Resources\help.ico" />
-    <None Include="Resources\generate_export.ico" />
     <None Include="Resources\hz_flowchart.PNG" />
+    <Content Include="Resources\icon_bode.ico" />
+    <Content Include="Resources\icon_generate_export.ico" />
+    <None Include="Resources\icon_help.ico" />
+    <None Include="Resources\icon_legend.ico" />
+    <None Include="Resources\icon_rotate4.ico" />
+    <None Include="Resources\icon_table.ico" />
+    <None Include="Resources\icon_time_table.ico" />
     <Content Include="Resources\legend.ico" />
     <Content Include="Resources\ActiproSoftware.dsPICAssembly.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -221,7 +226,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icon_bode.ico" />
     <None Include="Resources\ActiproSoftware.SyntaxEditor.LanguageDefinition.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -271,16 +275,6 @@
       <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
-    <PublishFile Include="icon_bode.ico">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
     <PublishFile Include="Resources\ActiproSoftware.dsPICAssembly.xml">
       <Visible>False</Visible>
       <Group>
@@ -321,13 +315,33 @@
       <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
+    <PublishFile Include="Resources\icon_generate_export.ico">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="Resources\legend.ico">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
   </ItemGroup>
   <ItemGroup>
     <FileAssociation Include=".dcld">
       <Visible>False</Visible>
       <Description>Digital Control Loop Designer Configuration File</Description>
       <Progid>DCLD.exe</Progid>
-      <DefaultIcon>generate.ico</DefaultIcon>
+      <DefaultIcon>Resources\icon_bode.ico</DefaultIcon>
     </FileAssociation>
   </ItemGroup>
   <ItemGroup>
