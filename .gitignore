@@ -20,6 +20,8 @@ build/
 dist/
 private/
 disassembly/
+*.pdb
+*.suo
 *.zip
 *.mk
 *.bash
@@ -32,7 +34,6 @@ code_templates/
 test_cases/
 bin/Debug/
 .svn
-*.pdb
 *.bak
 
 
