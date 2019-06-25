@@ -770,7 +770,7 @@ namespace dcld
                     {
                         // skip data update if data entry is not complet.
                         stbMainStatusLabel.Text = "Invalid data entry. Data update terminated.";
-                        stbMainStatusLabel.Image = dcld.Properties.Resources.icon_exclamation;
+                        stbMainStatusLabel.Image = dcld.Properties.Resources.icon_exclamation.ToBitmap();
                         stbMainStatusLabel.BackColor = stbMain.BackColor;
 
                         // Reset control flags
@@ -926,13 +926,13 @@ namespace dcld
                 if (!UpdateWarning)
                 { 
                     stbMainStatusLabel.Text = "Coefficients generated successfully";
-                    stbMainStatusLabel.Image = dcld.Properties.Resources.icon_ready;
+                    stbMainStatusLabel.Image = dcld.Properties.Resources.icon_ready.ToBitmap();
                     stbMainStatusLabel.BackColor = stbMain.BackColor;
                 }
                 else
                 {
                     stbMainStatusLabel.Text = "Coefficients have been generated with warnings";
-                    stbMainStatusLabel.Image = dcld.Properties.Resources.icon_exclamation;
+                    stbMainStatusLabel.Image = dcld.Properties.Resources.icon_exclamation.ToBitmap();
                     stbMainStatusLabel.BackColor = stbMain.BackColor;
                 }
 
@@ -960,7 +960,7 @@ namespace dcld
             {
                 // show failure message in status bar
                 stbMainStatusLabel.Text = "Invalid number format detected - results may be corrupted";
-                stbMainStatusLabel.Image = dcld.Properties.Resources.critical;
+                stbMainStatusLabel.Image = dcld.Properties.Resources.icon_critical.ToBitmap();
                 stbMainStatusLabel.BackColor = AlertBackground;
             }
             
