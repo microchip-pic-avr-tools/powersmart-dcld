@@ -92,14 +92,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="DCLD.exe" size="617472">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="DCLD.exe" size="630784">
       <assemblyIdentity name="DCLD" version="0.9.0.59" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>9FUqkCdZMLJKrEAQxQ+g7wF3DlIu4WP94u5xWFw16eA=</dsig:DigestValue>
+        <dsig:DigestValue>/8B3ZcClyc/BhJeJKqze7qENCt4rrtNwrSYIaXOugzg=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

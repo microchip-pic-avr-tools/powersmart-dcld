@@ -529,7 +529,7 @@
             // 
             // openToolStripMenuItem
             // 
-            this.openToolStripMenuItem.Image = global::dcld.Properties.Resources.icon_open.ToBitmap();
+            this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
@@ -538,7 +538,7 @@
             // 
             // saveToolStripMenuItem
             // 
-            this.saveToolStripMenuItem.Image = global::dcld.Properties.Resources.icon_save.ToBitmap();
+            this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
@@ -605,7 +605,7 @@
             // 
             // refreshToolStripMenuItem
             // 
-            this.refreshToolStripMenuItem.Image = global::dcld.Properties.Resources.icon_refresh.ToBitmap();
+            this.refreshToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("refreshToolStripMenuItem.Image")));
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
@@ -626,7 +626,7 @@
             // 
             // generateHeaderFileToolStripMenuItem
             // 
-            this.generateHeaderFileToolStripMenuItem.Image = global::dcld.Properties.Resources.icon_generate_export.ToBitmap();
+            this.generateHeaderFileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("generateHeaderFileToolStripMenuItem.Image")));
             this.generateHeaderFileToolStripMenuItem.Name = "generateHeaderFileToolStripMenuItem";
             this.generateHeaderFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.G)));
             this.generateHeaderFileToolStripMenuItem.Size = new System.Drawing.Size(280, 22);
@@ -649,14 +649,14 @@
             this.genericControlLibraryHeaderExportToolStripMenuItem,
             this.toolStripSeparator15,
             this.generateCodeBeforeExportToolStripMenuItem});
-            this.exportAllToolStripMenuItem.Image = global::dcld.Properties.Resources.icon_generate.ToBitmap();
+            this.exportAllToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exportAllToolStripMenuItem.Image")));
             this.exportAllToolStripMenuItem.Name = "exportAllToolStripMenuItem";
             this.exportAllToolStripMenuItem.Size = new System.Drawing.Size(280, 22);
             this.exportAllToolStripMenuItem.Text = "&Export Generated Files...";
             // 
             // exportFilesToolStripMenuItem
             // 
-            this.exportFilesToolStripMenuItem.Image = global::dcld.Properties.Resources.icon_generate.ToBitmap();
+            this.exportFilesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exportFilesToolStripMenuItem.Image")));
             this.exportFilesToolStripMenuItem.Name = "exportFilesToolStripMenuItem";
             this.exportFilesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.F5)));
             this.exportFilesToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
@@ -4275,7 +4275,7 @@
             // toolStripButtonOpen
             // 
             this.toolStripButtonOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonOpen.Image = global::dcld.Properties.Resources.icon_open.ToBitmap();
+            this.toolStripButtonOpen.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonOpen.Image")));
             this.toolStripButtonOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonOpen.Name = "toolStripButtonOpen";
             this.toolStripButtonOpen.Size = new System.Drawing.Size(23, 22);
@@ -4286,7 +4286,7 @@
             // toolStripButtonSave
             // 
             this.toolStripButtonSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSave.Image = global::dcld.Properties.Resources.icon_save.ToBitmap();
+            this.toolStripButtonSave.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSave.Image")));
             this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonSave.Name = "toolStripButtonSave";
             this.toolStripButtonSave.Size = new System.Drawing.Size(23, 22);
@@ -4302,7 +4302,7 @@
             // toolStripButtonShowCoefficientTable
             // 
             this.toolStripButtonShowCoefficientTable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonShowCoefficientTable.Image = global::dcld.Properties.Resources.icon_table.ToBitmap();
+            this.toolStripButtonShowCoefficientTable.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowCoefficientTable.Image")));
             this.toolStripButtonShowCoefficientTable.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonShowCoefficientTable.Name = "toolStripButtonShowCoefficientTable";
             this.toolStripButtonShowCoefficientTable.Size = new System.Drawing.Size(23, 22);
@@ -4313,7 +4313,7 @@
             // toolStripButtonShowTimingTable
             // 
             this.toolStripButtonShowTimingTable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonShowTimingTable.Image = global::dcld.Properties.Resources.icon_time_table.ToBitmap();
+            this.toolStripButtonShowTimingTable.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowTimingTable.Image")));
             this.toolStripButtonShowTimingTable.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonShowTimingTable.Name = "toolStripButtonShowTimingTable";
             this.toolStripButtonShowTimingTable.Size = new System.Drawing.Size(23, 22);
@@ -4324,7 +4324,7 @@
             // toolStripButtonRefresh
             // 
             this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonRefresh.Image = global::dcld.Properties.Resources.icon_refresh.ToBitmap();
+            this.toolStripButtonRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRefresh.Image")));
             this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
             this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
@@ -4340,7 +4340,7 @@
             // toolStripButtonUpdateCode
             // 
             this.toolStripButtonUpdateCode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonUpdateCode.Image = global::dcld.Properties.Resources.icon_generate_export.ToBitmap();
+            this.toolStripButtonUpdateCode.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUpdateCode.Image")));
             this.toolStripButtonUpdateCode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUpdateCode.Name = "toolStripButtonUpdateCode";
             this.toolStripButtonUpdateCode.Size = new System.Drawing.Size(23, 22);
@@ -4351,7 +4351,7 @@
             // toolStripButtonUpdateExportCode
             // 
             this.toolStripButtonUpdateExportCode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonUpdateExportCode.Image = global::dcld.Properties.Resources.icon_generate.ToBitmap();
+            this.toolStripButtonUpdateExportCode.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUpdateExportCode.Image")));
             this.toolStripButtonUpdateExportCode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUpdateExportCode.Name = "toolStripButtonUpdateExportCode";
             this.toolStripButtonUpdateExportCode.Size = new System.Drawing.Size(23, 22);
@@ -4367,7 +4367,7 @@
             // toolStripButtonHelp
             // 
             this.toolStripButtonHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonHelp.Image = global::dcld.Properties.Resources.icon_help.ToBitmap();
+            this.toolStripButtonHelp.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonHelp.Image")));
             this.toolStripButtonHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonHelp.Name = "toolStripButtonHelp";
             this.toolStripButtonHelp.Size = new System.Drawing.Size(23, 22);
