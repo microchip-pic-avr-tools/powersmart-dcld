@@ -4,7 +4,7 @@ The Digital Control Library SDK is a Software Development Kit (SDK) consisting o
 
 The major scope of this tool is the rapid design of a digital power supply control stage rather than the power supply itself. This allows to simplify the design process to models based on interconnected transfer functions. These transfer functions are defined and configured in individual configuration windows. A transfer function can be based on generic Laplace-domain functions being calculated at runtime or on external data coming from network analyzer measurements or other third-party simulation tools such as MATLAB, SciLab, Simplis, LTSpice, etc.
 
-## z-Domain Loop Configuration Tool & Code GeneratorModule Overview
+## z-Domain Loop Configuration Tool & Code Generator Module Overview
 
 In the current version the essential functions of the z-domain configuration block of the Digital Control Library SDK is allowing the graphical design of z-Domain compensation filters from the 1st to the 6th order (1P1Z to 6P6Z), the generation of customized/tailored digital SMPS controller code libraries with standardized API, taking away the need to manually write DSP-specific source code. Analysis results on timing, number accuracy and resolution and support of alternative fixed- and floating point number scaling options help to tune and optimize the final SMPS controller firmware for specific needs.
 
