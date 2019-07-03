@@ -3711,10 +3711,10 @@
             // tabPageCodeOutput
             // 
             this.tabPageCodeOutput.Controls.Add(this.tabSourceCode);
-            this.tabPageCodeOutput.Location = new System.Drawing.Point(4, 22);
+            this.tabPageCodeOutput.Location = new System.Drawing.Point(4, 24);
             this.tabPageCodeOutput.Name = "tabPageCodeOutput";
             this.tabPageCodeOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCodeOutput.Size = new System.Drawing.Size(944, 749);
+            this.tabPageCodeOutput.Size = new System.Drawing.Size(944, 747);
             this.tabPageCodeOutput.TabIndex = 0;
             this.tabPageCodeOutput.Text = "Source Code";
             this.tabPageCodeOutput.UseVisualStyleBackColor = true;
@@ -3731,7 +3731,7 @@
             this.tabSourceCode.Location = new System.Drawing.Point(3, 3);
             this.tabSourceCode.Name = "tabSourceCode";
             this.tabSourceCode.SelectedIndex = 0;
-            this.tabSourceCode.Size = new System.Drawing.Size(938, 743);
+            this.tabSourceCode.Size = new System.Drawing.Size(938, 741);
             this.tabSourceCode.TabIndex = 1;
             // 
             // tabPageAssembly
@@ -3742,7 +3742,7 @@
             this.tabPageAssembly.Location = new System.Drawing.Point(4, 24);
             this.tabPageAssembly.Name = "tabPageAssembly";
             this.tabPageAssembly.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAssembly.Size = new System.Drawing.Size(930, 715);
+            this.tabPageAssembly.Size = new System.Drawing.Size(930, 713);
             this.tabPageAssembly.TabIndex = 0;
             this.tabPageAssembly.Text = "Assembly";
             this.tabPageAssembly.UseVisualStyleBackColor = true;
@@ -3792,7 +3792,7 @@
             visualStudio2005SyntaxEditorRenderer1.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorAssembly.Renderer = visualStudio2005SyntaxEditorRenderer1;
             this.txtSyntaxEditorAssembly.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorAssembly.Size = new System.Drawing.Size(924, 640);
+            this.txtSyntaxEditorAssembly.Size = new System.Drawing.Size(924, 638);
             this.txtSyntaxEditorAssembly.TabIndex = 0;
             // 
             // panelASMSource
