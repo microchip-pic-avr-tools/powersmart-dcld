@@ -44,3 +44,6 @@ Nevertheless, should you decide to tweak the assembly code (e.g. comments, instr
 
 Please visit the WIKI site of this repository for more information: https://github.com/areiter128/DCLD/wiki 
 
+### Download Software
+
+Please visit the RELEASE websiteto download the latest release version: https://github.com/areiter128/DCLD/releases
