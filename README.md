@@ -42,5 +42,5 @@ Nevertheless, should you decide to tweak the assembly code (e.g. comments, instr
 
 ### Further Information:
 
-Please visit WIKI site of this repository for more information: https://github.com/areiter128/DCLD/wiki 
+Please visit the WIKI site of this repository for more information: https://github.com/areiter128/DCLD/wiki 
 
