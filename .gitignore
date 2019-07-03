@@ -2,6 +2,7 @@
 #
 # Set up for Visual Studio Environment
 #
+# Special gitignore for release branch only containing the publish folder
 
 # Object files
 *.o

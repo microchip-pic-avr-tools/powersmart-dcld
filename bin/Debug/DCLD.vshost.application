@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xrml="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <assemblyIdentity name="DCLD.application" version="0.9.0.59" publicKeyToken="0000000000000000" language="en-US" processorArchitecture="x86" xmlns="urn:schemas-microsoft-com:asm.v1" />
-  <description asmv2:publisher="Microchip Technology Inc." co.v1:suiteName="Digital SMPS Control Library SDK" asmv2:product="z-Domain Control Loop Designer" asmv2:supportUrl="https://www.microchip.com/" co.v1:errorReportUrl="http://www.microchip.com/" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <assemblyIdentity name="DCLD.application" version="0.9.0.58" publicKeyToken="0000000000000000" language="en-US" processorArchitecture="x86" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <description asmv2:publisher="Microchip Technology Inc." co.v1:suiteName="Digital SMPS Control Library SDK" asmv2:product="z-Domain Control Loop Designer" asmv2:supportUrl="https://www.microchip.com/SMPS" co.v1:errorReportUrl="http://www.microchip.com/SMPS" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <deployment install="true" co.v1:createDesktopShortcut="true" />
   <compatibleFrameworks xmlns="urn:schemas-microsoft-com:clickonce.v2">
     <framework targetVersion="4.5" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="DCLD.exe.manifest" size="11282">
-      <assemblyIdentity name="DCLD.exe" version="0.9.0.59" publicKeyToken="0000000000000000" language="en-US" processorArchitecture="x86" type="win32" />
+    <dependentAssembly dependencyType="install" codebase="DCLD.exe.manifest" size="10533">
+      <assemblyIdentity name="DCLD.exe" version="0.9.0.58" publicKeyToken="0000000000000000" language="en-US" processorArchitecture="x86" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>MJIUT5Ut2UGusK27Uq8qbLK9aG/OycAXIwvHTjMbmMw=</dsig:DigestValue>
+        <dsig:DigestValue>0pxOAdafqUS3CJ0bCS5RsqIM6DexQlEZOUKcoxQsXPA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
