@@ -2,12 +2,19 @@
 #
 # Set up for Visual Studio Environment
 #
+# Special gitignore for development branches trackinbg all project files
 
 # Object files
 *.o
 *.ko
 *.obj
 *.elf
+
+# Project Folders
+*.*
+bin/Debug/
+bin/Release/
+obj/
 
 # Executables
 #*.exe
@@ -27,14 +34,8 @@ disassembly/
 *.bash
 Makefile-genesis.properties
 
-
 # Misc
-user_guide/pictures/
-code_templates/
-test_cases/
-bin/Debug/
 .svn
 *.bak
-
-
+*.log
 
