@@ -11,13 +11,15 @@
 *.elf
 
 # Project Folders
+*.*
+bin/
+code_templates/
+obj/
+Properties/
+Resources/
 Service References/
 test_cases/
 user_guide/
-bin/
-obj/
-code_templates/
-Properties/
 
 # Executables
 #*.exe
@@ -37,7 +39,6 @@ disassembly/
 *.bash
 Makefile-genesis.properties
 
-
 # Misc
 user_guide/pictures/
 code_templates/
@@ -46,5 +47,9 @@ bin/Debug/
 .svn
 *.bak
 
-
+# Files to keep
+!docs/
+!publish/
+!README.md
+!readme.txt
 
