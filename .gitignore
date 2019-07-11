@@ -47,9 +47,11 @@ bin/Debug/
 .svn
 *.bak
 
-# Files to keep
-!docs/
-!publish/
+# Files and folders to keep
+!publish/*.*
+!publich/*.pdf
+!publish/Windows Install/
+!publish/ThumbDrive Version/
 !README.md
 !readme.txt
 
