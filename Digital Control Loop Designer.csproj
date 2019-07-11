@@ -14,7 +14,7 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>D:\Applications\Digital Control Library SDK\WindowsForms\Digital Control Loop Designer zDLD\publish\</PublishUrl>
+    <PublishUrl>D:\Applications\Digital Control Library SDK\WindowsForms\Digital Control Loop Designer zDLD\publish\Windows Install\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -31,6 +31,7 @@
     <PublisherName>Microchip Technology Inc.</PublisherName>
     <SuiteName>Digital SMPS Control Library SDK</SuiteName>
     <MinimumRequiredVersion>0.9.0.38</MinimumRequiredVersion>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <AutorunEnabled>true</AutorunEnabled>
     <DisallowUrlActivation>true</DisallowUrlActivation>
     <ApplicationRevision>60</ApplicationRevision>
@@ -65,7 +66,7 @@
     <StartupObject>dcld.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon_bode.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\icon_bode.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>21D91C85DF497185CFD00F806B139609A59E75F2</ManifestCertificateThumbprint>
@@ -110,7 +111,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Digital Control Loop Designer_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ActiproSoftware.Shared.Net20">
@@ -176,7 +178,6 @@
     <None Include="Resources\z-transform_euqations.PNG" />
     <None Include="Resources\help.ico" />
     <None Include="Resources\hz_flowchart.PNG" />
-    <Content Include="icon_bode.ico" />
     <Content Include="Resources\icon_bode.ico" />
     <Content Include="Resources\icon_generate_export.ico" />
     <None Include="Resources\icon_help.ico" />
@@ -212,7 +213,6 @@
     <Content Include="dcld.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Digital Control Loop Designer_TemporaryKey.pfx" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -314,6 +314,16 @@
       <FileType>File</FileType>
     </PublishFile>
     <PublishFile Include="Resources\assembly.gen">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="Resources\icon_bode.ico">
       <Visible>False</Visible>
       <Group>
       </Group>
