@@ -48,6 +48,7 @@ bin/Debug/
 *.bak
 
 # Files and folders to keep
+!docs/
 !publish/*.*
 !publich/*.pdf
 !publish/Windows Install/
