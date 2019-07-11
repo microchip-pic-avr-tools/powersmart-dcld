@@ -10,6 +10,15 @@
 *.obj
 *.elf
 
+# Project Folders
+Service References/
+test_cases/
+user_guide/
+bin/
+obj/
+code_templates/
+Properties/
+
 # Executables
 #*.exe
 
