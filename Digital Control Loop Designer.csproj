@@ -24,7 +24,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
-    <SupportUrl>https://www.microchip.com/SMPS</SupportUrl>
+    <SupportUrl>https://areiter128.github.io/DCLD/</SupportUrl>
     <ErrorReportUrl>http://www.microchip.com/SMPS</ErrorReportUrl>
     <TargetCulture>en-US</TargetCulture>
     <ProductName>z-Domain Control Loop Designer</ProductName>
@@ -32,9 +32,16 @@
     <SuiteName>Digital SMPS Control Library SDK</SuiteName>
     <MinimumRequiredVersion>0.9.0.38</MinimumRequiredVersion>
     <AutorunEnabled>true</AutorunEnabled>
+<<<<<<< HEAD
     <ApplicationRevision>58</ApplicationRevision>
     <ApplicationVersion>0.9.0.58</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
+=======
+    <DisallowUrlActivation>true</DisallowUrlActivation>
+    <ApplicationRevision>60</ApplicationRevision>
+    <ApplicationVersion>0.9.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+>>>>>>> master
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -64,7 +71,7 @@
     <StartupObject>dcld.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\icon_bode.ico</ApplicationIcon>
+    <ApplicationIcon>icon_bode.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>5809521C2852732369C3C387ECA664CEC438457D</ManifestCertificateThumbprint>
@@ -104,6 +111,12 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Digital Control Loop Designer_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ActiproSoftware.Shared.Net20">
@@ -173,6 +186,7 @@
     <None Include="Resources\z-transform_euqations.PNG" />
     <None Include="Resources\help.ico" />
     <None Include="Resources\hz_flowchart.PNG" />
+    <Content Include="icon_bode.ico" />
     <Content Include="Resources\icon_bode.ico" />
     <Content Include="Resources\icon_generate_export.ico" />
     <None Include="Resources\icon_help.ico" />
@@ -354,7 +368,7 @@
     <FileAssociation Include=".dcld">
       <Visible>False</Visible>
       <Description>Digital Control Loop Designer Configuration File</Description>
-      <Progid>DCLD.exe</Progid>
+      <Progid>dcld_auto_file</Progid>
       <DefaultIcon>Resources\icon_bode.ico</DefaultIcon>
     </FileAssociation>
   </ItemGroup>
