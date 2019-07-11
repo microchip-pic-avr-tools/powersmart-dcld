@@ -113,7 +113,7 @@ namespace dcld
 
         // Code generator options variables
         int GroupFolding_MinHeight = 20;
-        int GroupFolding_VDistance = 7;
+ //       int GroupFolding_VDistance = 7; (not used)
         int GroupFolding_grpContextSavingHeight = 100;
         int GroupFolding_grpCodeFeatureOptionsHeight = 100;
         int GroupFolding_grpAntiWindupHeight = 100;
