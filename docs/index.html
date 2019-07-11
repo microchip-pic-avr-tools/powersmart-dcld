@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!-- saved from url=(0034)https://areiter128.github.io/DCLD/ -->
+<html lang="en-US"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Digital Control Llibrary Designer SDK for Microchip dsPIC33® (DCLD)</title>
+<meta name="generator" content="Jekyll v3.8.5">
+<meta property="og:title" content="Digital Control Llibrary Designer SDK for Microchip dsPIC33® (DCLD)">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="Digital Control Library SDK - z-Domain Loop Configuration Tool &amp; Code Generation">
+<meta property="og:description" content="Digital Control Library SDK - z-Domain Loop Configuration Tool &amp; Code Generation">
+<link rel="canonical" href="https://areiter128.github.io/DCLD/">
+<meta property="og:url" content="https://areiter128.github.io/DCLD/">
+<meta property="og:site_name" content="DCLD">
+<script type="application/ld+json">
+{"@type":"WebSite","headline":"Digital Control Llibrary Designer SDK for Microchip dsPIC33® (DCLD)","url":"https://areiter128.github.io/DCLD/","name":"DCLD","description":"Digital Control Library SDK - z-Domain Loop Configuration Tool &amp; Code Generation","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <style class="anchorjs"></style><link rel="stylesheet" href="./index_files/style.css">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      
+
+      <h1 id="digital-control-llibrary-designer-sdk-for-microchip-dspic33-dcld"><a href="https://areiter128.github.io/DCLD/">Digital Control Llibrary Designer SDK for Microchip dsPIC33® (DCLD)<a></h1>
+
+<p align="right"><b><a href="https://github.com/areiter128/DCLD/releases">Download Digital Control Library SDK for Windows here</a></b></p>
+
+<h2 id="z-domain-loop-configuration-tool--code-generator-module-overview">Introduction<a class="anchorjs-link " href="https://areiter128.github.io/DCLD/#z-domain-loop-configuration-tool--code-generator-module-overview" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+
+<p>The Digital Control Library SDK is a Software Development Kit (SDK) consisting of one basic main module combining multiple, individual stand-alone tools covering system definition, system modeling, code generation, control system fine tuning and real-time debugging of fully digital control systems for Switched-Mode Power Supplies (SMPS) supporting Microchip Technology’s dsPIC® Digital Signal Controllers (DSC).</p>
+
+<p>The major scope of this tool is the rapid design of a digital power supply control stage rather than the power supply itself. This allows to simplify the design process to models based on interconnected transfer functions. These transfer functions are defined and configured in individual configuration windows. A transfer function can be based on generic Laplace-domain functions being calculated at runtime or on external data coming from network analyzer measurements or other third-party simulation tools such as MATLAB, SciLab, Simplis, LTSpice, etc.</p>
+
+<h2 id="z-domain-loop-configuration-tool--code-generator-module-overview">z-Domain Loop Configuration Tool &amp; Code Generator Module Overview<a class="anchorjs-link " href="https://areiter128.github.io/DCLD/#z-domain-loop-configuration-tool--code-generator-module-overview" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+
+<p>In the current version the essential functions of the z-domain configuration block of the Digital Control Library SDK is allowing the graphical design of z-Domain compensation filters from the 1st to the 6th order (1P1Z to 6P6Z), the generation of customized/tailored digital SMPS controller code libraries with standardized API, taking away the need to manually write DSP-specific source code. Analysis results on timing, number accuracy and resolution and support of alternative fixed- and floating point number scaling options help to tune and optimize the final SMPS controller firmware for specific needs.</p>
+
+<p><img src="./index_files/zDLD-main.JPG" alt="DCLD z-Domain Configuration Window"></p>
+
+<p>The standardized API ensures seamless integration into the final firmware, supporting multiple, co-existing controllers in one firmware and seamless exchange between different controller types and scaling methods helping to solve typical performance vs. accuracy and feature tradeoffs.
+For simplified use during code development, the z-Domain configuration window and code generator can be called directly from the MPLAB X® environment to make changes.</p>
+
+<p>(Please refer to the <a href="https://github.com/areiter128/DCLD/releases/download/v0.9.0.58/181026d_dcld_beta_user_guide.pdf">PDF User Guide</a> for details)</p>
+
+<h3 id="core-features">Core Features:<a class="anchorjs-link " href="https://areiter128.github.io/DCLD/#core-features" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<ul>
+  <li><strong>Supports z-Domain Compensation Filters from 1st to 6th Order</strong></li>
+  <li><strong>Fixed-Point and Floating-Point DSP Library Support</strong></li>
+  <li><strong>Graphic Loop Adjustment</strong></li>
+  <li><strong>Built-In Number Resolution Analysis and Optimization</strong></li>
+  <li><strong>Graphic Execution Timing Analysis</strong></li>
+  <li><strong>ANSI C/DSP Assembly Code Generation</strong></li>
+</ul>
+
+<h3 id="special-features">Special Features:<a class="anchorjs-link " href="https://areiter128.github.io/DCLD/#special-features" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<ul>
+  <li>
+    <p><strong>Data export using menu Tools =&gt; Copy To Clipboard</strong><br>
+Export of s-Domain and z-Domain Transfer Function (Bode Plot Data) copies the bode plot data table into the clipboard as tab-separated text table with column headers. This data can directly be pasted into e.g. MS Excel. The data table is set to 1601 points by default ranging from 1Hz to 1MHz.</p>
+
+    <p><strong>Please Note:</strong><br>
+  In this version the frequency range cannot be changed. A more flexible data export configuration is in preparation.</p>
+  </li>
+  <li>
+    <p><strong>Coefficient Declaration</strong><br>
+This is practically the content of the C-source file and therefore pretty much obsolete. You could as well just select the generated code from the C-Source window and copy it from there.</p>
+  </li>
+  <li>
+    <p><strong>Coefficient Table</strong><br>
+All coefficients are exported a block covering floating point, scaled floating point, fixed point, hex, int and binary number format and the rounding error. This is more for documentation than for any other reasonable use case.</p>
+  </li>
+  <li>
+    <p><strong>Config File Location</strong><br>
+Copies the file location of the op-code file for the assembly code generation. This is the script used to build the assembly library. Unfortunately, the C-code is not script based yet. Any larger modification affecting names or data structure elements would result in necessary changes to the DCLD code, which is not feasible. In future versions beyond v1.0 both (assembly and C) will be fully script based to allow anyone to add and modify supported controllers without the need to change to the main program.<br>
+Nevertheless, should you decide to tweak the assembly code (e.g. comments, instructions, working registers, etc.) you can do so. In case somthing goes wrong, you find a backup file here in this repo :-)</p>
+  </li>
+</ul>
+
+<h3 id="further-information">Further Information:<a class="anchorjs-link " href="https://areiter128.github.io/DCLD/#further-information" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+
+<p>Please visit the WIKI site of this repository for more information: <a href="https://github.com/areiter128/DCLD/wiki">https://github.com/areiter128/DCLD/wiki</a></p>
+
+<h3 id="further-information">Download:<a class="anchorjs-link " href="https://areiter128.github.io/DCLD/#download" aria-label="Anchor" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+
+<p> To download the Digital Control Library SDK software, please visit the Latest Release site on Github: <a href="https://github.com/areiter128/DCLD/releases">https://github.com/areiter128/DCLD/releases</a></p>
+
+
+    </div>
+    <script src="./index_files/anchor.min.js.download" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  
+
+</body></html>
