@@ -24,7 +24,7 @@ user_guide/
 # Executables
 #*.exe
 
-# VS specific
+# VS C# specific
 ~*.*
 .vs/
 obj/
@@ -33,13 +33,19 @@ dist/
 private/
 disassembly/
 *.pdb
+*.cs
+*.config
+*.csproj
+*.resx
+*.ico
+*.sln
 *.suo
 *.zip
 *.mk
 *.bash
 Makefile-genesis.properties
 
-# Misc
+### Misc ###
 user_guide/pictures/
 code_templates/
 test_cases/
@@ -47,7 +53,7 @@ bin/Debug/
 .svn
 *.bak
 
-# Files and folders to keep
+### Files and folders to keep ###
 !docs/
 !publish/*.*
 !publich/*.pdf
