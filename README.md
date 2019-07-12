@@ -1,4 +1,4 @@
-# Digital Control Llibrary Designer SDK for Microchip dsPIC33® (DCLD)
+# Digital Control Library Designer SDK for Microchip dsPIC33® (DCLD)
 
 The Digital Control Library SDK is a Software Development Kit (SDK) consisting of one basic main module combining multiple, individual stand-alone tools covering system definition, system modeling, code generation, control system fine tuning and real-time debugging of fully digital control systems for Switched-Mode Power Supplies (SMPS) supporting Microchip Technology's dsPIC® Digital Signal Controllers (DSC).
 
