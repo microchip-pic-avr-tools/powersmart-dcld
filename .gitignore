@@ -33,6 +33,7 @@ dist/
 private/
 disassembly/
 *.pdb
+*.cache
 *.cs
 *.config
 *.csproj
