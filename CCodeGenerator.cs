@@ -278,8 +278,8 @@ namespace dcld
                 strBuffer.Append(
                     "/* status items data structure to monitor a power converter */\r\n" +
                     "typedef union {\r\n" +
-                    "    volatile CONTROLLER_STATUS_BIT_FIELD_t flag;\r\n" +
-                    "    volatile uint16_t flags;\r\n" +
+                    "    volatile CONTROLLER_STATUS_BIT_FIELD_t flags;\r\n" +
+                    "    volatile uint16_t value;\r\n" +
                     "} __attribute__((packed))CONTROLLER_STATUS_t;\r\n" +
                     "\r\n"
                 );
@@ -399,14 +399,14 @@ namespace dcld
                 strBuffer.Append("\r\n");
 
                 strBuffer.Append(
-                    "extern inline uint16_t " + FileNamePattern + "_Init(void);" + 
+                    "extern uint16_t " + FileNamePattern + "_Init(void);" + 
                     " " + "// Loads default coefficients into " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " controller and resets histories to zero" + 
                     "\r\n");
 
                 strBuffer.Append("\r\n");
 
                 strBuffer.Append(
-                    "extern inline void " + FileNamePattern + "_Reset(" + " // Resets the " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " controller histories" + "\r\n" +
+                    "extern void " + FileNamePattern + "_Reset(" + " // Resets the " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " controller histories" + "\r\n" +
                     "\t" + "volatile cNPNZ16b_t* controller" + " // Pointer to nPnZ data structure" + "\r\n" +
                     "\t" + ");" +
                     "\r\n");
@@ -414,7 +414,7 @@ namespace dcld
                 strBuffer.Append("\r\n");
 
                 strBuffer.Append(
-                    "extern inline void " + FileNamePattern + "_Precharge(" + " // Pre-charges histories of the " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " with defined steady-state data" + "\r\n" +
+                    "extern void " + FileNamePattern + "_Precharge(" + " // Pre-charges histories of the " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " with defined steady-state data" + "\r\n" +
                     "\t" + "volatile cNPNZ16b_t* controller," + " // Pointer to nPnZ data structure" + "\r\n" +
                     "\t" + "volatile uint16_t ctrl_input," + " // user-defined, constant error history value" + "\r\n" +
                     "\t" + "volatile uint16_t ctrl_output" + " // user-defined, constant control output history value" + "\r\n" +
@@ -424,7 +424,7 @@ namespace dcld
                 strBuffer.Append("\r\n");
 
                 strBuffer.Append(
-                    "extern inline void " + FileNamePattern + "_Update(" + " // Calls the " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " controller" + "\r\n" +
+                    "extern void " + FileNamePattern + "_Update(" + " // Calls the " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " controller" + "\r\n" +
                     "\t" + "volatile cNPNZ16b_t* controller" + " // Pointer to nPnZ data structure" + "\r\n" +
                     "\t" + ");" +
                     "\r\n");
