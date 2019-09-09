@@ -278,8 +278,8 @@ namespace dcld
                 strBuffer.Append(
                     "/* status items data structure to monitor a power converter */\r\n" +
                     "typedef union {\r\n" +
-                    "    volatile CONTROLLER_STATUS_BIT_FIELD_t flag;\r\n" +
-                    "    volatile uint16_t flags;\r\n" +
+                    "    volatile CONTROLLER_STATUS_BIT_FIELD_t flags;\r\n" +
+                    "    volatile uint16_t value;\r\n" +
                     "} __attribute__((packed))CONTROLLER_STATUS_t;\r\n" +
                     "\r\n"
                 );
@@ -399,14 +399,7 @@ namespace dcld
                 strBuffer.Append("\r\n");
 
                 strBuffer.Append(
-                    "extern inline uint16_t " + FileNamePattern + "_Init(void);" + 
-                    " " + "// Loads default coefficients into " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " controller and resets histories to zero" + 
-                    "\r\n");
-
-                strBuffer.Append("\r\n");
-
-                strBuffer.Append(
-                    "extern inline void " + FileNamePattern + "_Reset(" + " // Resets the " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " controller histories" + "\r\n" +
+                    "extern volatile uint16_t " + FileNamePattern + "_Init(" + " // Loads default coefficients into " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " controller and resets histories to zero" + "\r\n" +
                     "\t" + "volatile cNPNZ16b_t* controller" + " // Pointer to nPnZ data structure" + "\r\n" +
                     "\t" + ");" +
                     "\r\n");
@@ -414,7 +407,15 @@ namespace dcld
                 strBuffer.Append("\r\n");
 
                 strBuffer.Append(
-                    "extern inline void " + FileNamePattern + "_Precharge(" + " // Pre-charges histories of the " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " with defined steady-state data" + "\r\n" +
+                    "extern void " + FileNamePattern + "_Reset(" + " // Resets the " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " controller histories" + "\r\n" +
+                    "\t" + "volatile cNPNZ16b_t* controller" + " // Pointer to nPnZ data structure" + "\r\n" +
+                    "\t" + ");" +
+                    "\r\n");
+
+                strBuffer.Append("\r\n");
+
+                strBuffer.Append(
+                    "extern void " + FileNamePattern + "_Precharge(" + " // Pre-charges histories of the " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " with defined steady-state data" + "\r\n" +
                     "\t" + "volatile cNPNZ16b_t* controller," + " // Pointer to nPnZ data structure" + "\r\n" +
                     "\t" + "volatile uint16_t ctrl_input," + " // user-defined, constant error history value" + "\r\n" +
                     "\t" + "volatile uint16_t ctrl_output" + " // user-defined, constant control output history value" + "\r\n" +
@@ -424,7 +425,7 @@ namespace dcld
                 strBuffer.Append("\r\n");
 
                 strBuffer.Append(
-                    "extern inline void " + FileNamePattern + "_Update(" + " // Calls the " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " controller" + "\r\n" +
+                    "extern void " + FileNamePattern + "_Update(" + " // Calls the " + compFilter.FilterOrder + "P" + compFilter.FilterOrder + "Z" + " controller" + "\r\n" +
                     "\t" + "volatile cNPNZ16b_t* controller" + " // Pointer to nPnZ data structure" + "\r\n" +
                     "\t" + ");" +
                     "\r\n");
@@ -564,40 +565,40 @@ namespace dcld
                 strBuffer.Append("\r\n/* ***************************************************************************************/\r\n\r\n");
 
                 strBuffer.Append(
-                      "uint16_t " + FileNamePattern + "_Init(void)" + "\r\n" +
+                      "volatile uint16_t " + FileNamePattern + "_Init(volatile cNPNZ16b_t* controller)" + "\r\n" +
                       "{" + "\r\n" +
                       "\t" + "volatile " + "uint16_t i = 0;" + "\r\n" +
                       "\r\n");
 
                 strBuffer.Append(
                     "\t" + "// Initialize controller data structure at runtime with pre-defined default values" + "\r\n" +
-                    "\t" + FileNamePattern + ".status.flags = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))" + "\r\n" +
+                    "\tcontroller->status.value = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))" + "\r\n" +
                     "\r\n" +
-                    "\t" + FileNamePattern + ".ptrACoefficients = &" + _PreFix + "coefficients.ACoefficients[0]; // initialize pointer to A-coefficients array" + "\r\n" +
-                    "\t" + FileNamePattern + ".ptrBCoefficients = &" + _PreFix + "coefficients.BCoefficients[0]; // initialize pointer to B-coefficients array" + "\r\n" +
-                    "\t" + FileNamePattern + ".ptrControlHistory = &" + _PreFix + "histories.ControlHistory[0]; // initialize pointer to control history array" + "\r\n" +
-                    "\t" + FileNamePattern + ".ptrErrorHistory = &" + _PreFix + "histories.ErrorHistory[0]; // initialize pointer to error history array" + "\r\n" +
-                    "\t" + FileNamePattern + ".normPostShiftA = " + _PreFix + "post_shift_A; // initialize A-coefficients/single bit-shift scaler" + "\r\n" +
-                    "\t" + FileNamePattern + ".normPostShiftB = " + _PreFix + "post_shift_B; // initialize B-coefficients/dual/post scale factor bit-shift scaler" + "\r\n" +
-                    "\t" + FileNamePattern + ".normPostScaler = " + _PreFix + "post_scaler; // initialize control output value normalization scaling factor" + "\r\n" +
-                    "\t" + FileNamePattern + ".normPreShift = " + _PreFix + "pre_scaler; // initialize A-coefficients/single bit-shift scaler" + "\r\n" +
+                    "\tcontroller->ptrACoefficients = &" + _PreFix + "coefficients.ACoefficients[0]; // initialize pointer to A-coefficients array" + "\r\n" +
+                    "\tcontroller->ptrBCoefficients = &" + _PreFix + "coefficients.BCoefficients[0]; // initialize pointer to B-coefficients array" + "\r\n" +
+                    "\tcontroller->ptrControlHistory = &" + _PreFix + "histories.ControlHistory[0]; // initialize pointer to control history array" + "\r\n" +
+                    "\tcontroller->ptrErrorHistory = &" + _PreFix + "histories.ErrorHistory[0]; // initialize pointer to error history array" + "\r\n" +
+                    "\tcontroller->normPostShiftA = " + _PreFix + "post_shift_A; // initialize A-coefficients/single bit-shift scaler" + "\r\n" +
+                    "\tcontroller->normPostShiftB = " + _PreFix + "post_shift_B; // initialize B-coefficients/dual/post scale factor bit-shift scaler" + "\r\n" +
+                    "\tcontroller->normPostScaler = " + _PreFix + "post_scaler; // initialize control output value normalization scaling factor" + "\r\n" +
+                    "\tcontroller->normPreShift = " + _PreFix + "pre_scaler; // initialize A-coefficients/single bit-shift scaler" + "\r\n" +
                     "\r\n" +
-                    "\t" + FileNamePattern + ".ACoefficientsArraySize = " + _PreFix + "ACoefficients_size; // initialize A-coefficients array size" + "\r\n" +
-                    "\t" + FileNamePattern + ".BCoefficientsArraySize = " + _PreFix + "BCoefficients_size; // initialize A-coefficients array size" + "\r\n" +
-                    "\t" + FileNamePattern + ".ControlHistoryArraySize = " + _PreFix + "ControlHistory_size; // initialize control history array size" + "\r\n" +
-                    "\t" + FileNamePattern + ".ErrorHistoryArraySize = " + _PreFix + "ErrorHistory_size; // initialize error history array size" + "\r\n" +
+                    "\tcontroller->ACoefficientsArraySize = " + _PreFix + "ACoefficients_size; // initialize A-coefficients array size" + "\r\n" +
+                    "\tcontroller->BCoefficientsArraySize = " + _PreFix + "BCoefficients_size; // initialize A-coefficients array size" + "\r\n" +
+                    "\tcontroller->ControlHistoryArraySize = " + _PreFix + "ControlHistory_size; // initialize control history array size" + "\r\n" +
+                    "\tcontroller->ErrorHistoryArraySize = " + _PreFix + "ErrorHistory_size; // initialize error history array size" + "\r\n" +
                     "\r\n");
 
                 strBuffer.Append(
                       "\r\n" +
                       "\t" + "// Load default set of A-coefficients from user RAM into X-Space controller A-array" + "\r\n" +
-                      "\t" + "for(i=0; i<" + FileNamePattern + ".ACoefficientsArraySize; i++)" + "\r\n" +
+                      "\t" + "for(i=0; i<controller->ACoefficientsArraySize; i++)" + "\r\n" +
                       "\t" + "{" + "\r\n" +
                       "\t" + "\t" + _PreFix + "coefficients.ACoefficients[i] = " + _PreFix + "ACoefficients[i];" + "\r\n" +
                       "\t" + "}" + "\r\n" +
                       "\r\n" +
                       "\t" + "// Load default set of B-coefficients from user RAM into X-Space controller B-array" + "\r\n" +
-                      "\t" + "for(i=0; i<" + FileNamePattern + ".BCoefficientsArraySize; i++)" + "\r\n" +
+                      "\t" + "for(i=0; i<controller->BCoefficientsArraySize; i++)" + "\r\n" +
                       "\t" + "{" + "\r\n" +
                       "\t" + "\t" + _PreFix + "coefficients.BCoefficients[i] = " + _PreFix + "BCoefficients[i];" + "\r\n" +
                       "\t" + "}" + "\r\n" +
