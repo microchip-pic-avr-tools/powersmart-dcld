@@ -110,7 +110,8 @@ namespace dcld
                     // Include section
                     strBuffer.Append("#include <xc.h>\r\n" + 
                                      "#include <dsp.h>\r\n" + 
-                                     "#include <stdint.h>\r\n" + 
+                                     "#include <stdint.h>\r\n" +
+                                     "#include <stdbool.h>\r\n" +
                                      "\r\n");
 
                     // Generate the contorl library contents
@@ -254,33 +255,27 @@ namespace dcld
                     );
 
                 strBuffer.Append(
-                    "typedef struct {\r\n" + 
-                    "    volatile unsigned flt_clamp_min : 1; // Bit 0: control loop is clamped at minimum output level\r\n" + 
-                    "    volatile unsigned flt_clamp_max : 1; // Bit 1: control loop is clamped at maximum output level\r\n" + 
-                    "    volatile unsigned : 1; // Bit 2: reserved\r\n" + 
-                    "    volatile unsigned : 1; // Bit 3: reserved\r\n" + 
-                    "    volatile unsigned : 1; // Bit 4: reserved\r\n" + 
-                    "    volatile unsigned : 1; // Bit 5: reserved\r\n" + 
-                    "    volatile unsigned : 1; // Bit 6: reserved\r\n" + 
-                    "    volatile unsigned : 1; // Bit 7: reserved\r\n" + 
-                    "    volatile unsigned : 1; // Bit 8: reserved\r\n" + 
-                    "    volatile unsigned : 1; // Bit 9: reserved\r\n" + 
-                    "    volatile unsigned : 1; // Bit 11: reserved\r\n" + 
-                    "    volatile unsigned : 1; // Bit 11: reserved\r\n" + 
-                    "    volatile unsigned : 1; // Bit 12: reserved\r\n" + 
-                    "    volatile unsigned : 1; // Bit 13: reserved\r\n" + 
-                    "    volatile unsigned : 1; // Bit 14: reserved\r\n" + 
-                    "    volatile unsigned enable : 1; // Bit 15: enables/disables control loop execution\r\n" + 
-                    "} __attribute__((packed))CONTROLLER_STATUS_BIT_FIELD_t;\r\n" + 
-                    "\r\n"
-                );
-
-                strBuffer.Append(
-                    "/* status items data structure to monitor a power converter */\r\n" +
                     "typedef union {\r\n" +
-                    "    volatile CONTROLLER_STATUS_BIT_FIELD_t flags;\r\n" +
-                    "    volatile uint16_t value;\r\n" +
-                    "} __attribute__((packed))CONTROLLER_STATUS_t;\r\n" +
+                    "    struct {\r\n" +
+                    "        volatile unsigned flt_clamp_min : 1; // Bit 0: control loop is clamped at minimum output level\r\n" +
+                    "        volatile unsigned flt_clamp_max : 1; // Bit 1: control loop is clamped at maximum output level\r\n" +
+                    "        volatile unsigned : 1; // Bit 2: reserved\r\n" +
+                    "        volatile unsigned : 1; // Bit 3: reserved\r\n" +
+                    "        volatile unsigned : 1; // Bit 4: reserved\r\n" +
+                    "        volatile unsigned : 1; // Bit 5: reserved\r\n" +
+                    "        volatile unsigned : 1; // Bit 6: reserved\r\n" +
+                    "        volatile unsigned : 1; // Bit 7: reserved\r\n" +
+                    "        volatile unsigned : 1; // Bit 8: reserved\r\n" +
+                    "        volatile unsigned : 1; // Bit 9: reserved\r\n" +
+                    "        volatile unsigned : 1; // Bit 11: reserved\r\n" +
+                    "        volatile unsigned : 1; // Bit 11: reserved\r\n" +
+                    "        volatile unsigned : 1; // Bit 12: reserved\r\n" +
+                    "        volatile unsigned : 1; // Bit 13: reserved\r\n" +
+                    "        volatile unsigned : 1; // Bit 14: reserved\r\n" +
+                    "        volatile unsigned enable : 1; // Bit 15: enables/disables control loop execution\r\n" +
+                    "    } __attribute__((packed))bits;    // Controller status bitfield for direct bit access\r\n" +
+                    "    volatile uint16_t value;          // Controller status full register access\r\n" +
+                    "} __attribute__((packed))CONTROLLER_STATUS_t; // Controller status data structure\r\n" +
                     "\r\n"
                 );
 
@@ -341,7 +336,7 @@ namespace dcld
                     "    volatile uint16_t* ptrADCTriggerRegister; // Pointer to ADC trigger register (e.g. TRIG1)\r\n" +
                     "    volatile uint16_t ADCTriggerOffset; // ADC trigger offset to compensate propagation delays \r\n" +
                     "    \r\n" +
-                    "} __attribute__((packed))cNPNZ16b_t;\r\n" +
+                    "} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object\r\n" +
                     "\r\n"
                     );
 
