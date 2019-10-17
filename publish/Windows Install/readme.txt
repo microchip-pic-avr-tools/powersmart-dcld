@@ -239,6 +239,14 @@ v0.9.0.60	07/12/19	bugfix
 	- Bugfix: on some systems the installation failed to complete successfully due to certificate conflicts. 
                   No funcitonal changes have been made to the main application
 
+v0.9.0.64	10/19/19	feature update
+
+	- Feature: the previously introduced input offset compensation showed some short comings when the input voltage
+		was unexpectedly lower than the given offset value. The new implementation now supports true bi-directional 
+		feedbacks by reliably generating seamless error signals in the positive and negative range. If a zero-line
+		cut-off is required, this would have to be done in user code prior to calling the control library code.
+		(This feature extension is on the list but not supported yet)
+
 ______________________________
 (C) Microchip Technology Inc.
 Date/Time: 12:41 PM 07/26/18
