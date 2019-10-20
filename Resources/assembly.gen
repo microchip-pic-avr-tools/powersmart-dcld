@@ -1,5 +1,6 @@
 [generic]
-Version=1.2.0
+Name=Assembly Generator Script
+Version=1.2.1
 Date=10/18/19
 
 [history]
@@ -8,6 +9,8 @@ count=2
 comment0=Added input offset compensation applied to input source
 1=10/18/19;1.2.0
 comment1=Changed existing input offset compensation to full bi-directional feedback implementation
+2=10/19/19;1.2.1
+comment2=Added code option for feedback signal rectification
 
 [filter_block_scaling_modes]
 0=%EMPTY%

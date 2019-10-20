@@ -299,6 +299,7 @@ namespace dcld
                     "\r\n" +
                     "Product Name:                    " + Application.ProductName.ToString() + "\r\n" +
                     "Application Version:             " + Application.ProductVersion.ToString() + "\r\n" +
+                    "AGS Version:                     " + ReadConfigString(AssemblyGeneratorFile, "generic", "Version", "N/A") + "\r\n" +
                     "Company Name:                    " + Application.CompanyName.ToString() + "\r\n" +
                 "\r\n";
 
@@ -414,7 +415,7 @@ namespace dcld
                 this.txtOutput.Text = txtOutput.Text + "17:    " + "C-header file path: " + str_dum + "\\" + str_file + ".h" + "\r\n";
                 this.txtOutput.Text = txtOutput.Text + "18:    " + "C-API header file path: " + str_dum + "\\npnz16b.h" + "\r\n";
                 this.txtOutput.Text = txtOutput.Text + "\r\n" + 
-                    "Application start up done" + "\r\n" + "\r\n";
+                    "Application start up complete" + "\r\n" + "\r\n";
 
                 txtOutput.SelectionStart = txtOutput.TextLength;
                 txtOutput.ScrollToCaret();
@@ -1422,6 +1423,7 @@ namespace dcld
                 WriteConfigString(str_path, "GUI", "SaveDate", Convert.ToString(System.DateTime.Now));
                 WriteConfigString(str_path, "GUI", "Name", Application.ProductName);
                 WriteConfigString(str_path, "GUI", "Version", Application.ProductVersion);
+                WriteConfigString(str_path, "GUI", "AGS Version", ReadConfigString(AssemblyGeneratorFile, "generic", "Version", "N/A"));
 
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 20;
@@ -3233,6 +3235,9 @@ namespace dcld
 
             AssGen.CustomComment = "; **********************************************************************************" + "\r\n" +
                                    ";  SDK Version: " + Application.ProductName + " v" + Application.ProductVersion + "\r\n" +
+                                   ";  AGS Version: " + ReadConfigString(AssGen.TemplateFile, "generic", "Name", "") + 
+                                                    " v" + ReadConfigString(AssGen.TemplateFile, "generic", "Version", "") + 
+                                                    " (" + ReadConfigString(AssGen.TemplateFile, "generic", "Date", "") + ")" + "\r\n" +
                                    ";  Author:      " + Environment.UserName + "\r\n" +
                                    ";  Date/Time:   " + System.DateTime.Now.ToString() + "\r\n" +
                                    "; **********************************************************************************" + "\r\n" +
