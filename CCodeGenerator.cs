@@ -156,17 +156,18 @@ namespace dcld
                                     "\r\n");
 
                     strBuffer.Append(
-                                " * ***************************************************************************************\r\n" +
+                                "/* ***************************************************************************************\r\n" +
                                 " * Data Arrays:\r\n" +
-                                " * The cNPNZ_t data structure contains pointers to coefficient, controller and error      \r\n" +
-                                " * history arrays. The pointer target objects (variables and arrays) are defined in       \r\n" +
-                                " *" + _FileNamePattern.ToLower() + ".c\r\n" +
+                                " * The cNPNZ_t data structure contains pointers to coefficient, control and error history \r\n" +
+                                " * arrays. The pointer target objects (variables and arrays) are defined in               \r\n" +
+                                " * " + _FileNamePattern.ToLower() + ".c\r\n" +
                                 " * This header file holds the public declarations for these variables and arrays.         \r\n" +
                                 " * \r\n" +
                                 " * Type definitions for A- and B- coefficient arrays as well as error- and control history\r\n" +
-                                " * arrays are aligned in memory for optimized addressing during DSP computations.         \r\n" +
-                                " * These data structures need to be placed in specific memory locations to allow direct   \r\n" +
-                                " * X/Y-access from the DSP. (coefficients in x-space, histories in y-space)               \r\n" +
+                                " * arrays are aligned in memory using the 'packed' attribute for optimized addressing     \r\n" +
+                                " * during DSP computations. These aligned data structures need to be placed in specific   \r\n" +
+                                " * memory locations to allow direct X/Y-access from the DSP. This X/Y-memory placement is \r\n" +
+                                " * covered by the declarations used in " + _FileNamePattern.ToLower() + ".c               \r\n" +
                                 " * ***************************************************************************************/\r\n" +
                                 "\r\n");
 
@@ -204,10 +205,15 @@ namespace dcld
                 strBuffer.Append(
                             "/* ***************************************************************************************\r\n" +
                             " * Data Arrays:\r\n" +
-                            " * The cNPNZ_t data structure contains a pointer to derived coefficients in X-space and" + "\r\n" +
-                            " * other pointers to controller and error history in Y-space.\r\n" +
-                            " * This source file declares the default parameters of the z-domain compensation filter.\r\n" +
-                            " * These declarations are made publicly accessible through defines in " + _FileNamePattern.ToLower() + ".h\r\n" + 
+                            " * This source file declares the default parameters of the z-domain compensation filter.  \r\n" +
+                            " * The cNPNZ_t data structure contains two pointers to A- and B- coefficient arrays and   \r\n" +
+                            " * two pointers to control and error history arrays.                                      \r\n" +
+                            " * For optimized data procesing during DSP computations, these arrays must be located in  \r\n" +
+                            " * specific memory locations (X-space for coefficient arrays and Y-space for control and  \r\n" +
+                            " * error history arrays).  \r\n" +
+                            " * The following declarations are used to define the array data contents, their length    \r\n" +
+                            " * and memory location. These declarations are made publicly accessible through defines   \r\n" +
+                            " * in " + _FileNamePattern.ToLower() + ".h\r\n" + 
                             " * ***************************************************************************************/\r\n" +
                             "\r\n"
                             );
