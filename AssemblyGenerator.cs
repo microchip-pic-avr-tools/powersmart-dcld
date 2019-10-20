@@ -150,6 +150,14 @@ namespace dcld
             set { _BidirectionalFeedback = value; return; }
         }
 
+        private bool _FeedbackRectification = false;
+        internal bool FeedbackRectification        // In bi-directional feedback systems with defined offsets, "reverse control" is enabled by rectifying input data
+        {
+            get { return _FeedbackRectification; }
+            set { _FeedbackRectification = value; return; }
+        }
+
+
         private bool _CreateCopyOfMostRecentControlInput = true;
         internal bool CreateCopyOfMostRecentControlInput
         {
@@ -490,6 +498,10 @@ namespace dcld
 
                         case "comp_zero_input":
                             if (_BidirectionalFeedback) str_dum = BuildCodeBlock(command);
+                            break;
+
+                        case "comp_invert_input":
+                            if (_FeedbackRectification) str_dum = BuildCodeBlock(command);
                             break;
 
                         case "comp_mac_load32b_a":
