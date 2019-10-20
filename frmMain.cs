@@ -750,7 +750,11 @@ namespace dcld
                     cNPNZ.InputDataResolution = NumberTextBox_ToDouble(txtInputDataResolution); // Convert.ToDouble(txtInputDataResolution.Text);
                     cNPNZ.InputGainNormalization = chkNormalizeInputGain.Checked;
                     cNPNZ.InputGain = NumberTextBox_ToDouble(txtInputGain); // Convert.ToDouble(txtInputGain.Text);
-                    cNPNZ.IsBidirectional = chkBiDirectionalFeedback.Checked; 
+                    cNPNZ.IsBidirectional = chkBiDirectionalFeedback.Checked;
+                    if (cNPNZ.IsBidirectional)
+                        cNPNZ.FeedbackRecitification = (chkFeedbackRectification.Checked & chkFeedbackRectification.Enabled);
+                    else
+                        cNPNZ.FeedbackRecitification = false;
 
                     for (i = 0; i < LagElements; i++)
                     {
@@ -1443,6 +1447,7 @@ namespace dcld
                 WriteConfigString(str_path, "ControlSetup", "InputGain", txtInputGain.Text);
                 WriteConfigString(str_path, "ControlSetup", "InputGainNormalization", Math.Abs(Convert.ToInt32(chkNormalizeInputGain.Checked)).ToString());
                 WriteConfigString(str_path, "ControlSetup", "BiDirectionalFeedback", Math.Abs(Convert.ToInt32(chkBiDirectionalFeedback.Checked)).ToString());
+                WriteConfigString(str_path, "ControlSetup", "FeedbackRectification", Math.Abs(Convert.ToInt32(chkFeedbackRectification.Checked & chkBiDirectionalFeedback.Checked)).ToString());
 
                 for (i = 0; i < txtPole.Length; i++)
                 { 
@@ -1584,6 +1589,7 @@ namespace dcld
                 txtInputGain.Text = ReadConfigString(str_path, "ControlSetup", "InputGain", "1");
                 chkNormalizeInputGain.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "InputGainNormalization", "0")));
                 chkBiDirectionalFeedback.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "BiDirectionalFeedback", "0")));
+                chkFeedbackRectification.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "FeedbackRectification", "0")));
 
                 for (i = 0; i < txtPole.Length; i++)
                 {
@@ -3190,6 +3196,10 @@ namespace dcld
             AssGen.FilterOrder = (int)(cNPNZ.FilterOrder);
             AssGen.CodeOptimizationLevel = cmbLoopOptimizationLevel.SelectedIndex;
             AssGen.BidirectionalFeedback = cNPNZ.IsBidirectional;
+            if (AssGen.BidirectionalFeedback) // feedback rectification option only allowed with bi-directional feedbacks
+                AssGen.FeedbackRectification = cNPNZ.FeedbackRecitification; 
+            else
+                AssGen.FeedbackRectification = false;
 
             // set dynamic execution options
             AssGen.SaveRestoreContext = this.chkContextSaving.Checked;
@@ -4030,6 +4040,11 @@ namespace dcld
 
         }
 
+        private void chkBiDirectionalFeedback_CheckedChanged(object sender, EventArgs e)
+        {
+            chkFeedbackRectification.Enabled = chkBiDirectionalFeedback.Checked;
+            UpdateTransferFunction(sender, e);
+        }
 
     }
 }
