@@ -193,8 +193,9 @@
             this.lblFP0Unit = new System.Windows.Forms.Label();
             this.txtFP2 = new System.Windows.Forms.TextBox();
             this.grpInputDataSpecifications = new System.Windows.Forms.GroupBox();
-            this.chkNormalizeInputGain = new System.Windows.Forms.CheckBox();
+            this.chkFeedbackRectification = new System.Windows.Forms.CheckBox();
             this.chkBiDirectionalFeedback = new System.Windows.Forms.CheckBox();
+            this.chkNormalizeInputGain = new System.Windows.Forms.CheckBox();
             this.txtInputDataResolution = new System.Windows.Forms.TextBox();
             this.txtInputGain = new System.Windows.Forms.TextBox();
             this.lblInputResolutionUnit = new System.Windows.Forms.Label();
@@ -217,12 +218,12 @@
             this.chkAntiWindupClampMax = new System.Windows.Forms.CheckBox();
             this.chkAntiWindup = new System.Windows.Forms.CheckBox();
             this.grpCodeFeatureOptions = new System.Windows.Forms.GroupBox();
+            this.chkAddErrorNormalization = new System.Windows.Forms.CheckBox();
             this.chkCodeFeatureOptions = new System.Windows.Forms.CheckBox();
             this.chkStoreReloadAccLevel1 = new System.Windows.Forms.CheckBox();
             this.chkAddLocalCopyOfControlInput = new System.Windows.Forms.CheckBox();
             this.chkAddLocalCopyOfControlOutput = new System.Windows.Forms.CheckBox();
             this.chkAddLocalCopyOfErrorInput = new System.Windows.Forms.CheckBox();
-            this.chkAddErrorNormalization = new System.Windows.Forms.CheckBox();
             this.chkAddADCTriggerPlacement = new System.Windows.Forms.CheckBox();
             this.chkAddEnableDisable = new System.Windows.Forms.CheckBox();
             this.chkAddCoreConfig = new System.Windows.Forms.CheckBox();
@@ -433,6 +434,11 @@
             this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
             this.timToolHelp = new System.Windows.Forms.Timer(this.components);
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
+            this.spinMain = new Microsoft.TeamFoundation.Controls.WinForms.SpinningProgress();
+            this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuMain.SuspendLayout();
             this.stbMain.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -532,7 +538,7 @@
             this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "&Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -541,27 +547,27 @@
             this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -728,6 +734,7 @@
             // 
             this.copycoefficientsToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.bodePlotDataToolStripMenuItem,
+            this.toolStripSeparator22,
             this.coefficientDeclarationToolStripMenuItem,
             this.coefficentTableToolStripMenuItem,
             this.configFileLocationToolStripMenuItem});
@@ -791,7 +798,7 @@
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -955,6 +962,7 @@
             // 
             this.pnlCompensator.AutoScroll = true;
             this.pnlCompensator.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pnlCompensator.Controls.Add(this.spinMain);
             this.pnlCompensator.Controls.Add(this.grpPolesZeros);
             this.pnlCompensator.Controls.Add(this.grpInputDataSpecifications);
             this.pnlCompensator.Controls.Add(this.grpControllerSelection);
@@ -1004,7 +1012,7 @@
             this.grpPolesZeros.Controls.Add(this.lblFP0Unit);
             this.grpPolesZeros.Controls.Add(this.txtFP2);
             this.grpPolesZeros.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpPolesZeros.Location = new System.Drawing.Point(0, 286);
+            this.grpPolesZeros.Location = new System.Drawing.Point(0, 323);
             this.grpPolesZeros.Name = "grpPolesZeros";
             this.grpPolesZeros.Size = new System.Drawing.Size(422, 262);
             this.grpPolesZeros.TabIndex = 44;
@@ -1098,6 +1106,7 @@
             this.lblFZ4.Size = new System.Drawing.Size(44, 15);
             this.lblFZ4.TabIndex = 17;
             this.lblFZ4.Text = "Zero 4:";
+            this.lblFZ4.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblFP5Unit
             // 
@@ -1128,6 +1137,7 @@
             this.lblSamplingFrequency.Size = new System.Drawing.Size(120, 15);
             this.lblSamplingFrequency.TabIndex = 3;
             this.lblSamplingFrequency.Text = "Sampling Frequency:";
+            this.lblSamplingFrequency.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // txtFP4
             // 
@@ -1166,6 +1176,7 @@
             this.lblFP4.Size = new System.Drawing.Size(44, 15);
             this.lblFP4.TabIndex = 15;
             this.lblFP4.Text = "Pole 4:";
+            this.lblFP4.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // txtFZ5
             // 
@@ -1200,6 +1211,7 @@
             this.lblFP1.Size = new System.Drawing.Size(44, 15);
             this.lblFP1.TabIndex = 3;
             this.lblFP1.Text = "Pole 1:";
+            this.lblFP1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // txtFZ3
             // 
@@ -1224,6 +1236,7 @@
             this.lblFZ5.Size = new System.Drawing.Size(44, 15);
             this.lblFZ5.TabIndex = 32;
             this.lblFZ5.Text = "Zero 5:";
+            this.lblFZ5.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblFZ3Unit
             // 
@@ -1244,6 +1257,7 @@
             this.lblFP0.Size = new System.Drawing.Size(221, 15);
             this.lblFP0.TabIndex = 1;
             this.lblFP0.Text = "Cross-over Frequency of Pole At Origin:";
+            this.lblFP0.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblFZ3
             // 
@@ -1254,6 +1268,7 @@
             this.lblFZ3.Size = new System.Drawing.Size(44, 15);
             this.lblFZ3.TabIndex = 13;
             this.lblFZ3.Text = "Zero 3:";
+            this.lblFZ3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // txtFP1
             // 
@@ -1316,6 +1331,7 @@
             this.lblFZ1.Size = new System.Drawing.Size(44, 15);
             this.lblFZ1.TabIndex = 5;
             this.lblFZ1.Text = "Zero 1:";
+            this.lblFZ1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblFZ4Unit
             // 
@@ -1350,6 +1366,7 @@
             this.lblFP3.Size = new System.Drawing.Size(44, 15);
             this.lblFP3.TabIndex = 11;
             this.lblFP3.Text = "Pole 3:";
+            this.lblFP3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblFP5
             // 
@@ -1360,6 +1377,7 @@
             this.lblFP5.Size = new System.Drawing.Size(44, 15);
             this.lblFP5.TabIndex = 31;
             this.lblFP5.Text = "Pole 5:";
+            this.lblFP5.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // txtFZ2
             // 
@@ -1384,6 +1402,7 @@
             this.lblFP2.Size = new System.Drawing.Size(44, 15);
             this.lblFP2.TabIndex = 7;
             this.lblFP2.Text = "Pole 2:";
+            this.lblFP2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblFZ2
             // 
@@ -1394,6 +1413,7 @@
             this.lblFZ2.Size = new System.Drawing.Size(44, 15);
             this.lblFZ2.TabIndex = 9;
             this.lblFZ2.Text = "Zero 2:";
+            this.lblFZ2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblFP0Unit
             // 
@@ -1421,8 +1441,9 @@
             // 
             // grpInputDataSpecifications
             // 
-            this.grpInputDataSpecifications.Controls.Add(this.chkNormalizeInputGain);
+            this.grpInputDataSpecifications.Controls.Add(this.chkFeedbackRectification);
             this.grpInputDataSpecifications.Controls.Add(this.chkBiDirectionalFeedback);
+            this.grpInputDataSpecifications.Controls.Add(this.chkNormalizeInputGain);
             this.grpInputDataSpecifications.Controls.Add(this.txtInputDataResolution);
             this.grpInputDataSpecifications.Controls.Add(this.txtInputGain);
             this.grpInputDataSpecifications.Controls.Add(this.lblInputResolutionUnit);
@@ -1431,32 +1452,44 @@
             this.grpInputDataSpecifications.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpInputDataSpecifications.Location = new System.Drawing.Point(0, 126);
             this.grpInputDataSpecifications.Name = "grpInputDataSpecifications";
-            this.grpInputDataSpecifications.Size = new System.Drawing.Size(422, 160);
+            this.grpInputDataSpecifications.Size = new System.Drawing.Size(422, 197);
             this.grpInputDataSpecifications.TabIndex = 43;
             this.grpInputDataSpecifications.TabStop = false;
             this.grpInputDataSpecifications.Text = "Input Data Specifications";
             // 
+            // chkFeedbackRectification
+            // 
+            this.chkFeedbackRectification.AutoSize = true;
+            this.chkFeedbackRectification.Enabled = false;
+            this.chkFeedbackRectification.Location = new System.Drawing.Point(68, 150);
+            this.chkFeedbackRectification.Name = "chkFeedbackRectification";
+            this.chkFeedbackRectification.Size = new System.Drawing.Size(214, 19);
+            this.chkFeedbackRectification.TabIndex = 48;
+            this.chkFeedbackRectification.Text = "Enable Singal &Rectification Control";
+            this.chkFeedbackRectification.UseVisualStyleBackColor = true;
+            this.chkFeedbackRectification.CheckedChanged += new System.EventHandler(this.UpdateTransferFunction);
+            // 
+            // chkBiDirectionalFeedback
+            // 
+            this.chkBiDirectionalFeedback.AutoSize = true;
+            this.chkBiDirectionalFeedback.Location = new System.Drawing.Point(48, 125);
+            this.chkBiDirectionalFeedback.Name = "chkBiDirectionalFeedback";
+            this.chkBiDirectionalFeedback.Size = new System.Drawing.Size(331, 19);
+            this.chkBiDirectionalFeedback.TabIndex = 47;
+            this.chkBiDirectionalFeedback.Text = "Feedback Offset Compensation/&Bi-directional Feedback ";
+            this.chkBiDirectionalFeedback.UseVisualStyleBackColor = true;
+            this.chkBiDirectionalFeedback.CheckedChanged += new System.EventHandler(this.chkBiDirectionalFeedback_CheckedChanged);
+            // 
             // chkNormalizeInputGain
             // 
             this.chkNormalizeInputGain.AutoSize = true;
-            this.chkNormalizeInputGain.Location = new System.Drawing.Point(135, 113);
+            this.chkNormalizeInputGain.Location = new System.Drawing.Point(48, 100);
             this.chkNormalizeInputGain.Name = "chkNormalizeInputGain";
             this.chkNormalizeInputGain.Size = new System.Drawing.Size(143, 19);
             this.chkNormalizeInputGain.TabIndex = 43;
             this.chkNormalizeInputGain.Text = "&Normalize Input Gain";
             this.chkNormalizeInputGain.UseVisualStyleBackColor = true;
             this.chkNormalizeInputGain.CheckedChanged += new System.EventHandler(this.UpdateTransferFunction);
-            // 
-            // chkBiDirectionalFeedback
-            // 
-            this.chkBiDirectionalFeedback.AutoSize = true;
-            this.chkBiDirectionalFeedback.Location = new System.Drawing.Point(135, 88);
-            this.chkBiDirectionalFeedback.Name = "chkBiDirectionalFeedback";
-            this.chkBiDirectionalFeedback.Size = new System.Drawing.Size(155, 19);
-            this.chkBiDirectionalFeedback.TabIndex = 42;
-            this.chkBiDirectionalFeedback.Text = "&Bi-directional Feedback";
-            this.chkBiDirectionalFeedback.UseVisualStyleBackColor = true;
-            this.chkBiDirectionalFeedback.CheckedChanged += new System.EventHandler(this.UpdateTransferFunction);
             // 
             // txtInputDataResolution
             // 
@@ -1500,21 +1533,23 @@
             // 
             this.lblInputGain.AutoSize = true;
             this.lblInputGain.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInputGain.Location = new System.Drawing.Point(181, 50);
+            this.lblInputGain.Location = new System.Drawing.Point(170, 53);
             this.lblInputGain.Name = "lblInputGain";
-            this.lblInputGain.Size = new System.Drawing.Size(97, 15);
+            this.lblInputGain.Size = new System.Drawing.Size(105, 15);
             this.lblInputGain.TabIndex = 28;
-            this.lblInputGain.Text = "Input Data Gain:";
+            this.lblInputGain.Text = "Input Signal Gain:";
+            this.lblInputGain.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblInputResolution
             // 
             this.lblInputResolution.AutoSize = true;
             this.lblInputResolution.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInputResolution.Location = new System.Drawing.Point(149, 26);
+            this.lblInputResolution.Location = new System.Drawing.Point(73, 25);
             this.lblInputResolution.Name = "lblInputResolution";
-            this.lblInputResolution.Size = new System.Drawing.Size(129, 15);
+            this.lblInputResolution.Size = new System.Drawing.Size(205, 15);
             this.lblInputResolution.TabIndex = 40;
-            this.lblInputResolution.Text = "Input Data Resolution:";
+            this.lblInputResolution.Text = "Total Input Data Length (Resolution):";
+            this.lblInputResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // grpControllerSelection
             // 
@@ -1559,6 +1594,7 @@
             this.lblController.Size = new System.Drawing.Size(93, 15);
             this.lblController.TabIndex = 1;
             this.lblController.Text = "Controller Type:";
+            this.lblController.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // cmbQScalingMethod
             // 
@@ -1586,6 +1622,7 @@
             this.lblQScalingMethod.Size = new System.Drawing.Size(84, 15);
             this.lblQScalingMethod.TabIndex = 29;
             this.lblQScalingMethod.Text = "Scaling Mode:";
+            this.lblQScalingMethod.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // cmbQFormat
             // 
@@ -1614,14 +1651,15 @@
             this.lblQFormat.Size = new System.Drawing.Size(88, 15);
             this.lblQFormat.TabIndex = 7;
             this.lblQFormat.Text = "Number Space:";
+            this.lblQFormat.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // tabSourceCodeConfig
             // 
             this.tabSourceCodeConfig.Controls.Add(this.pnlCodeGeneratorOptions);
-            this.tabSourceCodeConfig.Location = new System.Drawing.Point(4, 22);
+            this.tabSourceCodeConfig.Location = new System.Drawing.Point(4, 24);
             this.tabSourceCodeConfig.Name = "tabSourceCodeConfig";
             this.tabSourceCodeConfig.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 749);
+            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 747);
             this.tabSourceCodeConfig.TabIndex = 1;
             this.tabSourceCodeConfig.Text = "Source Code Configuration";
             this.tabSourceCodeConfig.UseVisualStyleBackColor = true;
@@ -1638,7 +1676,7 @@
             this.pnlCodeGeneratorOptions.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlCodeGeneratorOptions.Location = new System.Drawing.Point(3, 3);
             this.pnlCodeGeneratorOptions.Name = "pnlCodeGeneratorOptions";
-            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 743);
+            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 741);
             this.pnlCodeGeneratorOptions.TabIndex = 19;
             // 
             // grpAntiWindup
@@ -1740,12 +1778,12 @@
             // 
             // grpCodeFeatureOptions
             // 
+            this.grpCodeFeatureOptions.Controls.Add(this.chkAddErrorNormalization);
             this.grpCodeFeatureOptions.Controls.Add(this.chkCodeFeatureOptions);
             this.grpCodeFeatureOptions.Controls.Add(this.chkStoreReloadAccLevel1);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddLocalCopyOfControlInput);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddLocalCopyOfControlOutput);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddLocalCopyOfErrorInput);
-            this.grpCodeFeatureOptions.Controls.Add(this.chkAddErrorNormalization);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddADCTriggerPlacement);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddEnableDisable);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddCoreConfig);
@@ -1755,6 +1793,20 @@
             this.grpCodeFeatureOptions.Size = new System.Drawing.Size(405, 236);
             this.grpCodeFeatureOptions.TabIndex = 3;
             this.grpCodeFeatureOptions.TabStop = false;
+            // 
+            // chkAddErrorNormalization
+            // 
+            this.chkAddErrorNormalization.AutoSize = true;
+            this.chkAddErrorNormalization.Checked = true;
+            this.chkAddErrorNormalization.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAddErrorNormalization.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAddErrorNormalization.Location = new System.Drawing.Point(30, 76);
+            this.chkAddErrorNormalization.Name = "chkAddErrorNormalization";
+            this.chkAddErrorNormalization.Size = new System.Drawing.Size(159, 19);
+            this.chkAddErrorNormalization.TabIndex = 3;
+            this.chkAddErrorNormalization.Text = "Add Error Normali&zation";
+            this.chkAddErrorNormalization.UseVisualStyleBackColor = true;
+            this.chkAddErrorNormalization.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
             // chkCodeFeatureOptions
             // 
@@ -1818,20 +1870,6 @@
             this.chkAddLocalCopyOfErrorInput.Text = "Create Local Copy of Most Recent Error Input";
             this.chkAddLocalCopyOfErrorInput.UseVisualStyleBackColor = true;
             this.chkAddLocalCopyOfErrorInput.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
-            // 
-            // chkAddErrorNormalization
-            // 
-            this.chkAddErrorNormalization.AutoSize = true;
-            this.chkAddErrorNormalization.Checked = true;
-            this.chkAddErrorNormalization.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAddErrorNormalization.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddErrorNormalization.Location = new System.Drawing.Point(31, 77);
-            this.chkAddErrorNormalization.Name = "chkAddErrorNormalization";
-            this.chkAddErrorNormalization.Size = new System.Drawing.Size(191, 19);
-            this.chkAddErrorNormalization.TabIndex = 3;
-            this.chkAddErrorNormalization.Text = "Add Error Input Normali&zation";
-            this.chkAddErrorNormalization.UseVisualStyleBackColor = true;
-            this.chkAddErrorNormalization.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
             // chkAddADCTriggerPlacement
             // 
@@ -2026,6 +2064,8 @@
             // 
             this.chkUserVariableNamePrefix.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.chkUserVariableNamePrefix.AutoSize = true;
+            this.chkUserVariableNamePrefix.Checked = true;
+            this.chkUserVariableNamePrefix.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkUserVariableNamePrefix.Enabled = false;
             this.chkUserVariableNamePrefix.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkUserVariableNamePrefix.Location = new System.Drawing.Point(77, 111);
@@ -3711,10 +3751,10 @@
             // tabPageCodeOutput
             // 
             this.tabPageCodeOutput.Controls.Add(this.tabSourceCode);
-            this.tabPageCodeOutput.Location = new System.Drawing.Point(4, 22);
+            this.tabPageCodeOutput.Location = new System.Drawing.Point(4, 24);
             this.tabPageCodeOutput.Name = "tabPageCodeOutput";
             this.tabPageCodeOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCodeOutput.Size = new System.Drawing.Size(944, 749);
+            this.tabPageCodeOutput.Size = new System.Drawing.Size(944, 747);
             this.tabPageCodeOutput.TabIndex = 0;
             this.tabPageCodeOutput.Text = "Source Code";
             this.tabPageCodeOutput.UseVisualStyleBackColor = true;
@@ -3731,7 +3771,7 @@
             this.tabSourceCode.Location = new System.Drawing.Point(3, 3);
             this.tabSourceCode.Name = "tabSourceCode";
             this.tabSourceCode.SelectedIndex = 0;
-            this.tabSourceCode.Size = new System.Drawing.Size(938, 743);
+            this.tabSourceCode.Size = new System.Drawing.Size(938, 741);
             this.tabSourceCode.TabIndex = 1;
             // 
             // tabPageAssembly
@@ -3742,7 +3782,7 @@
             this.tabPageAssembly.Location = new System.Drawing.Point(4, 24);
             this.tabPageAssembly.Name = "tabPageAssembly";
             this.tabPageAssembly.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAssembly.Size = new System.Drawing.Size(930, 715);
+            this.tabPageAssembly.Size = new System.Drawing.Size(930, 713);
             this.tabPageAssembly.TabIndex = 0;
             this.tabPageAssembly.Text = "Assembly";
             this.tabPageAssembly.UseVisualStyleBackColor = true;
@@ -3754,7 +3794,7 @@
             this.tsbCodeGenUpdateWarningAssembly.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblCodeGenUpdateAssembly,
             this.toolStripLabel1});
-            this.tsbCodeGenUpdateWarningAssembly.Location = new System.Drawing.Point(3, 74);
+            this.tsbCodeGenUpdateWarningAssembly.Location = new System.Drawing.Point(3, 72);
             this.tsbCodeGenUpdateWarningAssembly.Name = "tsbCodeGenUpdateWarningAssembly";
             this.tsbCodeGenUpdateWarningAssembly.Size = new System.Drawing.Size(924, 25);
             this.tsbCodeGenUpdateWarningAssembly.TabIndex = 31;
@@ -3787,7 +3827,7 @@
             document1.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
             this.txtSyntaxEditorAssembly.Document = document1;
             this.txtSyntaxEditorAssembly.LineNumberMarginVisible = true;
-            this.txtSyntaxEditorAssembly.Location = new System.Drawing.Point(3, 74);
+            this.txtSyntaxEditorAssembly.Location = new System.Drawing.Point(3, 72);
             this.txtSyntaxEditorAssembly.Name = "txtSyntaxEditorAssembly";
             visualStudio2005SyntaxEditorRenderer1.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorAssembly.Renderer = visualStudio2005SyntaxEditorRenderer1;
@@ -3804,7 +3844,7 @@
             this.panelASMSource.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelASMSource.Location = new System.Drawing.Point(3, 3);
             this.panelASMSource.Name = "panelASMSource";
-            this.panelASMSource.Size = new System.Drawing.Size(924, 71);
+            this.panelASMSource.Size = new System.Drawing.Size(924, 69);
             this.panelASMSource.TabIndex = 9;
             // 
             // chkASMIncludePath
@@ -3855,10 +3895,10 @@
             this.tabPageCSource.Controls.Add(this.tsbCodeGenUpdateWarningCSource);
             this.tabPageCSource.Controls.Add(this.txtSyntaxEditorCSource);
             this.tabPageCSource.Controls.Add(this.panelCSourcePath);
-            this.tabPageCSource.Location = new System.Drawing.Point(4, 22);
+            this.tabPageCSource.Location = new System.Drawing.Point(4, 24);
             this.tabPageCSource.Name = "tabPageCSource";
             this.tabPageCSource.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCSource.Size = new System.Drawing.Size(930, 717);
+            this.tabPageCSource.Size = new System.Drawing.Size(930, 713);
             this.tabPageCSource.TabIndex = 2;
             this.tabPageCSource.Text = "C-Source";
             this.tabPageCSource.UseVisualStyleBackColor = true;
@@ -3908,7 +3948,7 @@
             visualStudio2005SyntaxEditorRenderer2.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCSource.Renderer = visualStudio2005SyntaxEditorRenderer2;
             this.txtSyntaxEditorCSource.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(924, 642);
+            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(924, 638);
             this.txtSyntaxEditorCSource.TabIndex = 5;
             // 
             // panelCSourcePath
@@ -3969,10 +4009,10 @@
             this.tabPageCHeader.Controls.Add(this.tsbCodeGenUpdateWarningCHeader);
             this.tabPageCHeader.Controls.Add(this.txtSyntaxEditorCHeader);
             this.tabPageCHeader.Controls.Add(this.panelCHeaderPath);
-            this.tabPageCHeader.Location = new System.Drawing.Point(4, 22);
+            this.tabPageCHeader.Location = new System.Drawing.Point(4, 24);
             this.tabPageCHeader.Name = "tabPageCHeader";
             this.tabPageCHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCHeader.Size = new System.Drawing.Size(930, 717);
+            this.tabPageCHeader.Size = new System.Drawing.Size(930, 713);
             this.tabPageCHeader.TabIndex = 3;
             this.tabPageCHeader.Text = "C-Header";
             this.tabPageCHeader.UseVisualStyleBackColor = true;
@@ -4022,7 +4062,7 @@
             visualStudio2005SyntaxEditorRenderer3.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCHeader.Renderer = visualStudio2005SyntaxEditorRenderer3;
             this.txtSyntaxEditorCHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(924, 642);
+            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(924, 638);
             this.txtSyntaxEditorCHeader.TabIndex = 5;
             // 
             // panelCHeaderPath
@@ -4083,10 +4123,10 @@
             this.tabPageLibraryHeader.Controls.Add(this.tsbCodeGenUpdateWarningLibHeader);
             this.tabPageLibraryHeader.Controls.Add(this.txtSyntaxEditorCLibHeader);
             this.tabPageLibraryHeader.Controls.Add(this.panelCLibPath);
-            this.tabPageLibraryHeader.Location = new System.Drawing.Point(4, 22);
+            this.tabPageLibraryHeader.Location = new System.Drawing.Point(4, 24);
             this.tabPageLibraryHeader.Name = "tabPageLibraryHeader";
             this.tabPageLibraryHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLibraryHeader.Size = new System.Drawing.Size(930, 717);
+            this.tabPageLibraryHeader.Size = new System.Drawing.Size(930, 713);
             this.tabPageLibraryHeader.TabIndex = 6;
             this.tabPageLibraryHeader.Text = "Library Header";
             this.tabPageLibraryHeader.UseVisualStyleBackColor = true;
@@ -4136,7 +4176,7 @@
             visualStudio2005SyntaxEditorRenderer4.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCLibHeader.Renderer = visualStudio2005SyntaxEditorRenderer4;
             this.txtSyntaxEditorCLibHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(924, 642);
+            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(924, 638);
             this.txtSyntaxEditorCLibHeader.TabIndex = 6;
             // 
             // panelCLibPath
@@ -4196,10 +4236,10 @@
             // tabPageGeneratorDefinitions
             // 
             this.tabPageGeneratorDefinitions.Controls.Add(this.txtSyntaxEditorINIFile);
-            this.tabPageGeneratorDefinitions.Location = new System.Drawing.Point(4, 22);
+            this.tabPageGeneratorDefinitions.Location = new System.Drawing.Point(4, 24);
             this.tabPageGeneratorDefinitions.Name = "tabPageGeneratorDefinitions";
             this.tabPageGeneratorDefinitions.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneratorDefinitions.Size = new System.Drawing.Size(930, 717);
+            this.tabPageGeneratorDefinitions.Size = new System.Drawing.Size(930, 713);
             this.tabPageGeneratorDefinitions.TabIndex = 4;
             this.tabPageGeneratorDefinitions.Text = "Generator Definitions";
             this.tabPageGeneratorDefinitions.UseVisualStyleBackColor = true;
@@ -4220,7 +4260,7 @@
             visualStudio2005SyntaxEditorRenderer5.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorINIFile.Renderer = visualStudio2005SyntaxEditorRenderer5;
             this.txtSyntaxEditorINIFile.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorINIFile.Size = new System.Drawing.Size(924, 711);
+            this.txtSyntaxEditorINIFile.Size = new System.Drawing.Size(924, 707);
             this.txtSyntaxEditorINIFile.TabIndex = 6;
             // 
             // tabPageOutput
@@ -4257,13 +4297,16 @@
             this.tsbMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonOpen,
             this.toolStripButtonSave,
+            this.toolStripSeparator18,
             this.toolStripSeparator19,
             this.toolStripButtonShowCoefficientTable,
             this.toolStripButtonShowTimingTable,
             this.toolStripButtonRefresh,
+            this.toolStripSeparator17,
             this.toolStripSeparator20,
             this.toolStripButtonUpdateCode,
             this.toolStripButtonUpdateExportCode,
+            this.toolStripSeparator16,
             this.toolStripSeparator21,
             this.toolStripButtonHelp});
             this.tsbMain.Location = new System.Drawing.Point(0, 24);
@@ -4274,22 +4317,20 @@
             // 
             // toolStripButtonOpen
             // 
-            this.toolStripButtonOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButtonOpen.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonOpen.Image")));
             this.toolStripButtonOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonOpen.Name = "toolStripButtonOpen";
-            this.toolStripButtonOpen.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonOpen.Size = new System.Drawing.Size(56, 22);
             this.toolStripButtonOpen.Text = "Open";
             this.toolStripButtonOpen.ToolTipText = "Open File...";
             this.toolStripButtonOpen.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripButtonSave
             // 
-            this.toolStripButtonSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButtonSave.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSave.Image")));
             this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonSave.Name = "toolStripButtonSave";
-            this.toolStripButtonSave.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonSave.Size = new System.Drawing.Size(51, 22);
             this.toolStripButtonSave.Text = "Save";
             this.toolStripButtonSave.ToolTipText = "Save File...";
             this.toolStripButtonSave.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
@@ -4301,33 +4342,30 @@
             // 
             // toolStripButtonShowCoefficientTable
             // 
-            this.toolStripButtonShowCoefficientTable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButtonShowCoefficientTable.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowCoefficientTable.Image")));
             this.toolStripButtonShowCoefficientTable.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonShowCoefficientTable.Name = "toolStripButtonShowCoefficientTable";
-            this.toolStripButtonShowCoefficientTable.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonShowCoefficientTable.Size = new System.Drawing.Size(90, 22);
             this.toolStripButtonShowCoefficientTable.Text = "Coefficients";
             this.toolStripButtonShowCoefficientTable.ToolTipText = "Show/Hide Coefficient Table";
             this.toolStripButtonShowCoefficientTable.Click += new System.EventHandler(this.showCoeffficientDataTableToolStripMenuItem_Click);
             // 
             // toolStripButtonShowTimingTable
             // 
-            this.toolStripButtonShowTimingTable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButtonShowTimingTable.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowTimingTable.Image")));
             this.toolStripButtonShowTimingTable.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonShowTimingTable.Name = "toolStripButtonShowTimingTable";
-            this.toolStripButtonShowTimingTable.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonShowTimingTable.Size = new System.Drawing.Size(65, 22);
             this.toolStripButtonShowTimingTable.Text = "Timing";
             this.toolStripButtonShowTimingTable.ToolTipText = "Show/Hide Timing Table";
             this.toolStripButtonShowTimingTable.Click += new System.EventHandler(this.showSourceCodeTimingToolStripMenuItem_Click);
             // 
             // toolStripButtonRefresh
             // 
-            this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButtonRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRefresh.Image")));
             this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
-            this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRefresh.Size = new System.Drawing.Size(66, 22);
             this.toolStripButtonRefresh.Text = "Refresh";
             this.toolStripButtonRefresh.ToolTipText = "Refresh Diagrams";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
@@ -4339,23 +4377,21 @@
             // 
             // toolStripButtonUpdateCode
             // 
-            this.toolStripButtonUpdateCode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButtonUpdateCode.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUpdateCode.Image")));
             this.toolStripButtonUpdateCode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUpdateCode.Name = "toolStripButtonUpdateCode";
-            this.toolStripButtonUpdateCode.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonUpdateCode.Size = new System.Drawing.Size(65, 22);
             this.toolStripButtonUpdateCode.Text = "Update";
             this.toolStripButtonUpdateCode.ToolTipText = "Update Generated Source Code";
             this.toolStripButtonUpdateCode.Click += new System.EventHandler(this.exportHeaderFileToolStripMenuItem_Click);
             // 
             // toolStripButtonUpdateExportCode
             // 
-            this.toolStripButtonUpdateExportCode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButtonUpdateExportCode.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUpdateExportCode.Image")));
             this.toolStripButtonUpdateExportCode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUpdateExportCode.Name = "toolStripButtonUpdateExportCode";
-            this.toolStripButtonUpdateExportCode.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonUpdateExportCode.Text = "Export";
+            this.toolStripButtonUpdateExportCode.Size = new System.Drawing.Size(74, 22);
+            this.toolStripButtonUpdateExportCode.Text = "Generate";
             this.toolStripButtonUpdateExportCode.ToolTipText = "Generate and Export Source Code";
             this.toolStripButtonUpdateExportCode.Click += new System.EventHandler(this.ExportGeneratedFiles);
             // 
@@ -4379,6 +4415,37 @@
             // 
             this.timToolHelp.Interval = 4000;
             this.timToolHelp.Tick += new System.EventHandler(this.timToolHelp_Tick);
+            // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator17
+            // 
+            this.toolStripSeparator17.Name = "toolStripSeparator17";
+            this.toolStripSeparator17.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator18
+            // 
+            this.toolStripSeparator18.Name = "toolStripSeparator18";
+            this.toolStripSeparator18.Size = new System.Drawing.Size(6, 25);
+            // 
+            // spinMain
+            // 
+            this.spinMain.InnerRadius = 8;
+            this.spinMain.IsSpinning = false;
+            this.spinMain.Location = new System.Drawing.Point(110, 610);
+            this.spinMain.Name = "spinMain";
+            this.spinMain.OuterRadius = 9;
+            this.spinMain.Size = new System.Drawing.Size(167, 88);
+            this.spinMain.TabIndex = 45;
+            this.spinMain.Text = "Progress...";
+            // 
+            // toolStripSeparator22
+            // 
+            this.toolStripSeparator22.Name = "toolStripSeparator22";
+            this.toolStripSeparator22.Size = new System.Drawing.Size(194, 6);
             // 
             // frmMain
             // 
@@ -4814,7 +4881,6 @@
         private System.Windows.Forms.GroupBox grpFilterProcessing;
         private System.Windows.Forms.PictureBox picFlowChart;
         private System.Windows.Forms.Label lblWorkflowInfo;
-        private System.Windows.Forms.CheckBox chkBiDirectionalFeedback;
         private System.Windows.Forms.CheckBox chkNormalizeInputGain;
         private System.Windows.Forms.Label lblCPULoad;
         private System.Windows.Forms.Label lblCPULoadLabel;
@@ -4832,6 +4898,13 @@
         private System.Windows.Forms.CheckBox chkCHeaderIncludePath;
         private System.Windows.Forms.CheckBox chkCLibIncludePath;
         private System.Windows.Forms.CheckBox chkASMIncludePath;
+        private System.Windows.Forms.CheckBox chkFeedbackRectification;
+        private System.Windows.Forms.CheckBox chkBiDirectionalFeedback;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
+        private Microsoft.TeamFoundation.Controls.WinForms.SpinningProgress spinMain;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator22;
     }
 }
 
