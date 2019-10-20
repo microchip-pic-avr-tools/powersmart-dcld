@@ -230,12 +230,14 @@ namespace dcld
 
                 strBuffer.Append(
                     "/* Status flags (Single Bit) */\r\n" + 
-                    "#define NPNZ16_STATUS_LSAT_SET		1\r\n" +
-                    "#define NPNZ16_STATUS_LSAT_RESET	0\r\n" +
-                    "#define NPNZ16_STATUS_USAT_SET		1\r\n" +
-                    "#define NPNZ16_STATUS_USAT_RESET	0\r\n" +
-                    "#define NPNZ16_STATUS_ENABLED		1\r\n" +
-                    "#define NPNZ16_STATUS_DISABLED		0\r\n" +
+                    "#define NPNZ16_STATUS_LSAT_SET             1\r\n" +
+                    "#define NPNZ16_STATUS_LSAT_CLEAR           0\r\n" +
+                    "#define NPNZ16_STATUS_USAT_SET             1\r\n" +
+                    "#define NPNZ16_STATUS_USAT_CLEAR           0\r\n" +
+                    "#define NPNZ16_STATUS_INPUT_INVERTED       1\r\n" +
+                    "#define NPNZ16_STATUS_INPUT_NOT_INVERTED   0\r\n" +
+                    "#define NPNZ16_STATUS_ENABLED              1\r\n" +
+                    "#define NPNZ16_STATUS_DISABLED             0\r\n" +
                     "\r\n"
                 );
 
@@ -244,10 +246,12 @@ namespace dcld
                     "typedef enum {\r\n" + 
                     "    CONTROLLER_STATUS_CLEAR = 0b0000000000000000,\r\n" + 
                     "    CONTROLLER_STATUS_SATUATION_MSK = 0b0000000000000011,\r\n" + 
-                    "    CONTROLLER_STATUS_LSAT_ON = 0b0000000000000001,\r\n" + 
-                    "    CONTROLLER_STATUS_LSAT_OFF = 0b0000000000000000,\r\n" + 
-                    "    CONTROLLER_STATUS_USAT_ON = 0b0000000000000010,\r\n" + 
-                    "    CONTROLLER_STATUS_USAT_OFF = 0b0000000000000000,\r\n" + 
+                    "    CONTROLLER_STATUS_LSAT_ACTIVE = 0b0000000000000001,\r\n" + 
+                    "    CONTROLLER_STATUS_LSAT_CLEAR = 0b0000000000000000,\r\n" + 
+                    "    CONTROLLER_STATUS_USAT_ACTIVE = 0b0000000000000010,\r\n" + 
+                    "    CONTROLLER_STATUS_USAT_CLEAR = 0b0000000000000000,\r\n" +
+                    "    CONTROLLER_STATUS_INV_INPUT_OFF = 0b0000000000000000,\r\n" +
+                    "    CONTROLLER_STATUS_INV_INPUT_ON = 0b0100000000000000\r\n" +
                     "    CONTROLLER_STATUS_ENABLE_OFF = 0b0000000000000000,\r\n" + 
                     "    CONTROLLER_STATUS_ENABLE_ON = 0b1000000000000000\r\n" + 
                     "} CONTROLLER_STATUS_FLAGS_t;\r\n" + 
@@ -271,7 +275,7 @@ namespace dcld
                     "        volatile unsigned : 1; // Bit 11: reserved\r\n" +
                     "        volatile unsigned : 1; // Bit 12: reserved\r\n" +
                     "        volatile unsigned : 1; // Bit 13: reserved\r\n" +
-                    "        volatile unsigned : 1; // Bit 14: reserved\r\n" +
+                    "        volatile unsigned invert_input: 1; // Bit 14: when set, most recent error input value to controller is inverted\r\n" +
                     "        volatile unsigned enable : 1; // Bit 15: enables/disables control loop execution\r\n" +
                     "    } __attribute__((packed))bits;    // Controller status bitfield for direct bit access\r\n" +
                     "    volatile uint16_t value;          // Controller status full register access\r\n" +
