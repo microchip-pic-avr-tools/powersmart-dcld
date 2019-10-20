@@ -623,6 +623,7 @@ namespace dcld
                 stbProgressBarLabel.Visible = true;
                 stbProgressBar.Visible = true;
                 stbProgressBar.Value = 0;
+
                 Application.DoEvents();
 
                 // determine lag elements and detect changes to previous settings
@@ -1182,6 +1183,14 @@ namespace dcld
             return rc;
         }
 
+        private bool DeleteConfigString(string fname, string section, string name)
+        {
+            bool rc;
+            rc = WritePrivateProfileString(section, name, null, fname);
+
+            return rc;
+        }
+
         private string GetCurrentProjectFilePath(object sender, EventArgs e)
         {
             string str_dum = "";
@@ -1254,7 +1263,10 @@ namespace dcld
             string[] str_arr_absolute_path;
             string[] dum_sep = new string[1];
 
+            // If project file has not been saved yet, no relative path information can be derived.
+            if (!File.Exists(CurrentProjectFileName)) return (AbsoluteFilePath.Trim());
 
+            // otherwise continue to determine relative path string
             cfg_file_path = GetCurrentProjectFilePath(sender, e).Trim();
 
             if (cfg_file_path.Substring(0, 1) != AbsoluteFilePath.Substring(0, 1))
@@ -1680,6 +1692,39 @@ namespace dcld
                 Application.DoEvents();
 
                 // Parameter listing complete
+
+                // Load user history
+                string[] str_arr;
+                string[] dum_sep = new string[1];
+                int lst_count = 0;
+                ListViewItem itm = new ListViewItem();
+
+                lstCoefficientsHistory.Items.Clear();
+
+                lst_count = Convert.ToInt32(ReadConfigString(str_path, "generator_history", "count", "0"));
+
+                if (lst_count > 0)
+                { 
+                    for (i = 1; i < lst_count; i++)
+                    {
+                        str_dum = ReadConfigString(str_path, "generator_history", i.ToString(), "");
+
+                        if ((str_dum.Length > 0) && (str_dum.Contains("||")))
+                        {
+                            dum_sep[0] = ("||");
+                            str_arr = str_dum.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
+
+                            if(str_arr.Length >= 4)
+                            {
+                                itm = lstCoefficientsHistory.Items.Add(i.ToString());
+                                itm.SubItems.Add(str_arr[0]);
+                                itm.SubItems.Add(str_arr[1]);
+                                itm.SubItems.Add(str_arr[2]);
+                                itm.SubItems.Add(str_arr[3]);
+                            }
+                        }
+                    }
+                }
 
                 ForceCoefficientsUpdate(this, EventArgs.Empty);
 
@@ -2344,6 +2389,55 @@ namespace dcld
                     MessageBoxButtons.OK, 
                     MessageBoxIcon.Asterisk
                     );
+
+
+                if (File.Exists(CurrentProjectFileName))
+                { 
+                
+                    ListViewItem itm = new ListViewItem();
+                    string id = "", key = "", user = "", label = "", settings = "";
+                    Int32 save_item = 0;
+
+                    // Add time stamp
+                    // CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern
+
+                    save_item = (Convert.ToInt32(ReadConfigString(CurrentProjectFileName, "generator_history", "count", "0")) + 1);
+                    key = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Datecode identifies the item
+                    label = "(Autosafe)";
+                    user = Environment.UserName.ToString();
+                    settings =  
+                        cmbCompType.SelectedIndex.ToString() + ", " +
+                        cmbQScalingMethod.SelectedIndex.ToString() + ", " +
+                        txtInputDataResolution.Text + ", " +
+                        txtInputGain.Text + ", " +
+                        Convert.ToInt32(chkNormalizeInputGain.Checked).ToString() + ", " +
+                        Convert.ToInt32(chkBiDirectionalFeedback.Checked).ToString() + ", " +
+                        Convert.ToInt32(chkFeedbackRectification.Checked).ToString() + ", " +
+                        txtSamplingFrequency.Text + ", " +
+                        txtFP0.Text + ", " +
+                        txtFP1.Text + ", " +
+                        txtFP2.Text + ", " +
+                        txtFP3.Text + ", " +
+                        txtFP4.Text + ", " +
+                        txtFP5.Text + ", " +
+                        txtFZ1.Text + ", " +
+                        txtFZ2.Text + ", " +
+                        txtFZ3.Text + ", " +
+                        txtFZ4.Text + ", " +
+                        txtFZ5.Text;
+
+
+                    itm = lstCoefficientsHistory.Items.Add(save_item.ToString());
+                    itm.SubItems.Add(key);
+                    itm.SubItems.Add(user);
+                    itm.SubItems.Add(label);
+                    itm.SubItems.Add(settings);
+
+                    WriteConfigString(CurrentProjectFileName, "generator_history", "count", save_item.ToString());
+                    WriteConfigString(CurrentProjectFileName, "generator_history", save_item.ToString(), key.Trim() + "||" + user.Trim() + "||" + label.Trim() + "||" + settings.Trim());
+                    
+                }
+
             }
             else
             {
@@ -4049,6 +4143,123 @@ namespace dcld
         {
             chkFeedbackRectification.Enabled = chkBiDirectionalFeedback.Checked;
             UpdateTransferFunction(sender, e);
+        }
+
+        private void ctxCoefficientsHistory_Opening(object sender, CancelEventArgs e)
+        {
+            if (lstCoefficientsHistory.Items.Count == 0)
+            {
+                ctxCoeffSetLoad.Enabled = false;
+                ctxCoeffSetRename.Enabled = false;
+                ctxCoeffSetDelete.Enabled = false;
+            }
+            else
+            {
+                ctxCoeffSetLoad.Enabled = (lstCoefficientsHistory.SelectedIndices.Count > 0);
+                ctxCoeffSetRename.Enabled = ctxCoeffSetLoad.Enabled;
+                ctxCoeffSetDelete.Enabled = ctxCoeffSetLoad.Enabled;
+            }
+        }
+
+        private void ctxCoefficientsHistory_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            string str_dum = "";
+            string id = "", key = "", user = "", label = "", settings = "";
+            DialogResult result = new DialogResult();
+            ListViewItem itm = new ListViewItem();
+
+
+
+            itm = lstCoefficientsHistory.SelectedItems[0];
+
+            switch (e.ClickedItem.Name) 
+            {
+                case "ctxCoeffSetLoad":
+                    break;
+
+                case "ctxCoeffSetRename":
+
+                    itm = lstCoefficientsHistory.SelectedItems[0];
+
+                    id = itm.SubItems[0].Text;
+                    key = itm.SubItems[1].Text;
+                    user = itm.SubItems[2].Text;
+                    label = itm.SubItems[3].Text;
+                    settings = itm.SubItems[4].Text;
+
+                    result = ShowInputDialog(this, this.Font, ref label, 
+                            "New Label:", "Please enter a new user-defined text for this history point:");
+
+                    if (result == System.Windows.Forms.DialogResult.OK)
+                    { 
+                        itm.SubItems[3].Text = label;
+                        WriteConfigString(CurrentProjectFileName, "generator_history", id, key.Trim() + "||" + user.Trim() + "||" + label.Trim() + "||" + settings.Trim());
+                    }
+                    break;
+
+                case "ctxCoeffSetDelete":
+                    itm = lstCoefficientsHistory.SelectedItems[0];
+                    DeleteConfigString(CurrentProjectFileName, "generator_history", itm.SubItems[0].Text);
+                    itm.Remove();
+                    break;
+
+                default:
+                    str_dum = sender.ToString();
+                    break;
+
+            }
+        }
+
+        private static DialogResult ShowInputDialog(IWin32Window owner, Font font, ref string input, string caption, string descr)
+        {
+            System.Drawing.Size size = new System.Drawing.Size(400, 90);
+            Form inputBox = new Form();
+
+            inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            inputBox.ClientSize = size;
+            inputBox.Font = font;
+            inputBox.Text = caption;
+
+            System.Windows.Forms.Label labelLabel = new Label();
+            labelLabel.TextAlign = ContentAlignment.TopLeft;
+            labelLabel.Size = new System.Drawing.Size(size.Width - 10, 23);
+            labelLabel.Location = new System.Drawing.Point(5, 5);
+            labelLabel.Font = font;
+            labelLabel.Text = descr;
+            inputBox.Controls.Add(labelLabel);
+
+            System.Windows.Forms.TextBox textBox = new TextBox();
+            textBox.Size = new System.Drawing.Size(size.Width - 10, 23);
+            textBox.Location = new System.Drawing.Point(labelLabel.Left, labelLabel.Top + labelLabel.Height + 5);
+            textBox.Font = font;
+            textBox.Text = input;
+            inputBox.Controls.Add(textBox);
+
+            Button cancelButton = new Button();
+            cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new System.Drawing.Size(75, 23);
+            cancelButton.Text = "&Cancel";
+            cancelButton.Location = new System.Drawing.Point(size.Width - 100, textBox.Top + textBox.Height + 9);
+            inputBox.Controls.Add(cancelButton);
+
+            Button okButton = new Button();
+            okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            okButton.Name = "okButton";
+            okButton.Size = new System.Drawing.Size(75, 23);
+            okButton.Text = "&OK";
+            okButton.Location = new System.Drawing.Point(cancelButton.Left - okButton.Width - 2, cancelButton.Top);
+            inputBox.Controls.Add(okButton);
+
+            inputBox.Height = okButton.Top + okButton.Height + 49;
+
+            inputBox.AcceptButton = okButton;
+            inputBox.CancelButton = cancelButton;
+            inputBox.StartPosition = FormStartPosition.CenterParent;
+
+            DialogResult result = inputBox.ShowDialog(owner);
+            input = textBox.Text;
+            return result;
         }
 
     }
