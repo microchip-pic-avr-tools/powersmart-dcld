@@ -156,17 +156,17 @@ namespace dcld
                                     "\r\n");
 
                     strBuffer.Append(
-                                "/* ***************************************************************************************\r\n" +
+                                " * ***************************************************************************************\r\n" +
                                 " * Data Arrays:\r\n" +
-                                " * The cNPNZ_t data structure contains a pointer to derived coefficients in X-space and" + "\r\n" +
-                                " * other pointers to controller and error history in Y-space.\r\n" +
-                                " * This header file holds public declarations for variables and arrays defined in \r\n" + 
-                                " * " + _FileNamePattern.ToLower() + ".c\r\n" +
+                                " * The cNPNZ_t data structure contains pointers to coefficient, controller and error      \r\n" +
+                                " * history arrays. The pointer target objects (variables and arrays) are defined in       \r\n" +
+                                " *" + _FileNamePattern.ToLower() + ".c\r\n" +
+                                " * This header file holds the public declarations for these variables and arrays.         \r\n" +
                                 " * \r\n" +
-                                " * Type definition for A- and B- coefficient arrays and error- and control-history arrays, \r\n" +
-                                " * which are aligned in memory for optimized addressing during DSP computations.           \r\n" +
-                                " * These data structures need to be placed in specific memory locations to allow direct    \r\n" +
-                                " * X/Y-access from the DSP. (coefficients in x-space, histories in y-space)                \r\n" +
+                                " * Type definitions for A- and B- coefficient arrays as well as error- and control history\r\n" +
+                                " * arrays are aligned in memory for optimized addressing during DSP computations.         \r\n" +
+                                " * These data structures need to be placed in specific memory locations to allow direct   \r\n" +
+                                " * X/Y-access from the DSP. (coefficients in x-space, histories in y-space)               \r\n" +
                                 " * ***************************************************************************************/\r\n" +
                                 "\r\n");
 
