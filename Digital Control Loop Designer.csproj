@@ -178,6 +178,7 @@
     <Compile Include="NumberBaseConverter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Resources\c-code.gen" />
     <None Include="Resources\z-domain_compensator_block_diagram.png" />
     <None Include="Resources\z-transform_euqations.PNG" />
     <None Include="Resources\help.ico" />

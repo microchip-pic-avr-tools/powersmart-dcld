@@ -1,0 +1,63 @@
+[generic]
+Name=C-Source and Header Generator Script
+Version=1.0.0
+Date=10/20/19
+
+[history]
+count=1
+0=10/20/19;1.0.0
+comment0=Initial version after moving C-sources and headers from application code to external script
+
+[supported_flags]
+count=8
+0=%EMPTY%
+1=%IDENT%
+2=%DATA_TYPE%
+3=%FILE_NAME_PATTERN%
+4=%PREFIX%
+5=%FILTER_ORDER%
+6=%FILTER_ORDER+1%
+7=%STRUCTURE_LABEL%
+
+[library_header]
+
+
+[comp_header]
+count=33
+line0=typedef struct
+line1={
+line2=%IDENT%volatile " + _str_coeff_datatype + " ACoefficients[%FILTER_ORDER%]; // A-Coefficients
+line3=%IDENT%volatile " + _str_coeff_datatype + " BCoefficients[%FILTER_ORDER+1%]; // B-Coefficients
+line4=} __attribute__((packed)) %PREFIX%CONTROL_LOOP_COEFFICIENTS_t;
+line5=
+line6=typedef struct
+line7={
+line8=%IDENT%volatile " + "fractional ControlHistory[%FILTER_ORDER%];  // Control History Array
+line9=%IDENT%volatile " + "fractional ErrorHistory[%FILTER_ORDER+1%];  // Error History Array
+line10=} __attribute__((packed)) %PREFIX%CONTROL_LOOP_HISTORIES_t;
+line11=
+line12=
+line13=\textern volatile %STRUCTURE_LABEL% %FILE_NAME_PATTERN%; // user-controller data object
+line14=/* ***************************************************************************************/
+line15=// Function call prototypes for initialization routines and control loops
+line16=extern volatile uint16_t %FILE_NAME_PATTERN%_Init( // Loads default coefficients into %FILTER_ORDER%P%FILTER_ORDER%Z controller and resets histories to zero
+line17=%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
+line18=);
+line19=
+line20=extern void %FILE_NAME_PATTERN%_Reset( // Resets the %FILTER_ORDER%P%FILTER_ORDER%Z controller histories
+line21=%IDENT%volatile %STRUCTURE_LABEL%* controller" + " // Pointer to nPnZ data type object
+line22=);
+line23=extern void %FILE_NAME_PATTERN%_Precharge( // Pre-charges histories of %FILTER_ORDER%P%FILTER_ORDER%Z controller with defined steady-state data
+line24=volatile %STRUCTURE_LABEL%* controller," + " // Pointer to nPnZ data type object
+line25=volatile uint16_t ctrl_input, // user-defined, constant error history value
+line26=volatile uint16_t ctrl_output // user-defined, constant control output history value
+line27=);
+line28=
+line29=extern void %FILE_NAME_PATTERN%_Update( // Calls the %FILTER_ORDER%P%FILTER_ORDER%Z controller
+line30=volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
+line31=);
+line32=
+
+
+[comp_source]
+
