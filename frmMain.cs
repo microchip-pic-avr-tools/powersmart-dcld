@@ -268,7 +268,7 @@ namespace dcld
             DefaultY2Max = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "y2_max", DefaultY2Max.ToString()));
 
             // reload data table status
-            splitContainerCoefficients.SplitterDistance = (splitContainerCoefficients.Panel1.Height + splitContainerCoefficients.Panel2.Height) - Convert.ToInt32(ReadConfigString(INI_FILE, "data_table", "splitter_pos", "540"));
+            splitContainerCoefficients.SplitterDistance = (splitContainerCoefficients.Panel1.Height + splitContainerCoefficients.Panel2.Height) - Convert.ToInt32(ReadConfigString(INI_FILE, "data_table", "splitter_pos", "500"));
             showCoeffficientDataTableToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(INI_FILE, "data_table", "visible", "1")));
             showCoeffficientDataTableToolStripMenuItem_CheckedChanged(sender, e);
 

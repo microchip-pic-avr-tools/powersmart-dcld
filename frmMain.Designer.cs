@@ -273,6 +273,8 @@
             this.fullScaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.unwrapPhaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabCoefficients = new System.Windows.Forms.TabControl();
+            this.tabCoefficientTable = new System.Windows.Forms.TabPage();
             this.lvCoefficients = new System.Windows.Forms.ListView();
             this.chdrCoeff = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chdrFloat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -284,6 +286,21 @@
             this.chdrUInt = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chdrHex = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chdrBin = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tabCoefficientsHistory = new System.Windows.Forms.TabPage();
+            this.lstCoefficientsHistory = new System.Windows.Forms.ListView();
+            this.clHeadID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colHeadTimeStamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colHeadUser = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colHeadLabel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colHeadSettings = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ctxCoefficientsHistory = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ctxCoeffSetLoad = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxCoeffSetSep1 = new System.Windows.Forms.ToolStripSeparator();
+            this.ctxCoeffSetRename = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxCoeffSetDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPageTiming = new System.Windows.Forms.TabPage();
             this.splitContainerTiming = new System.Windows.Forms.SplitContainer();
             this.pnlTimingChart = new System.Windows.Forms.Panel();
@@ -467,6 +484,11 @@
             this.splitContainerCoefficients.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartBode)).BeginInit();
             this.toolStripBode.SuspendLayout();
+            this.tabCoefficients.SuspendLayout();
+            this.tabCoefficientTable.SuspendLayout();
+            this.tabCoefficientsHistory.SuspendLayout();
+            this.ctxCoefficientsHistory.SuspendLayout();
+            this.tabControl1.SuspendLayout();
             this.tabPageTiming.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTiming)).BeginInit();
             this.splitContainerTiming.Panel1.SuspendLayout();
@@ -1676,7 +1698,7 @@
             this.pnlCodeGeneratorOptions.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlCodeGeneratorOptions.Location = new System.Drawing.Point(3, 3);
             this.pnlCodeGeneratorOptions.Name = "pnlCodeGeneratorOptions";
-            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 741);
+            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 743);
             this.pnlCodeGeneratorOptions.TabIndex = 19;
             // 
             // grpAntiWindup
@@ -2190,9 +2212,10 @@
             // 
             // splitContainerCoefficients.Panel2
             // 
-            this.splitContainerCoefficients.Panel2.Controls.Add(this.lvCoefficients);
+            this.splitContainerCoefficients.Panel2.Controls.Add(this.tabCoefficients);
+            this.splitContainerCoefficients.Panel2.Controls.Add(this.tabControl1);
             this.splitContainerCoefficients.Size = new System.Drawing.Size(938, 741);
-            this.splitContainerCoefficients.SplitterDistance = 421;
+            this.splitContainerCoefficients.SplitterDistance = 383;
             this.splitContainerCoefficients.TabIndex = 19;
             // 
             // chartBode
@@ -2307,7 +2330,7 @@
             this.chartBode.Series.Add(series2);
             this.chartBode.Series.Add(series3);
             this.chartBode.Series.Add(series4);
-            this.chartBode.Size = new System.Drawing.Size(936, 394);
+            this.chartBode.Size = new System.Drawing.Size(936, 356);
             this.chartBode.TabIndex = 4;
             this.chartBode.Text = "Compensation Transfer Function";
             this.chartBode.AnnotationPositionChanging += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.AnnotationPositionChangingEventArgs>(this.chartBode_AnnotationPositionChanging);
@@ -2509,6 +2532,28 @@
             this.unwrapPhaseToolStripMenuItem.Text = "Unwrap Phase";
             this.unwrapPhaseToolStripMenuItem.CheckedChanged += new System.EventHandler(this.unwrapPhaseToolStripMenuItem_CheckedChanged);
             // 
+            // tabCoefficients
+            // 
+            this.tabCoefficients.Controls.Add(this.tabCoefficientTable);
+            this.tabCoefficients.Controls.Add(this.tabCoefficientsHistory);
+            this.tabCoefficients.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabCoefficients.Location = new System.Drawing.Point(0, 0);
+            this.tabCoefficients.Name = "tabCoefficients";
+            this.tabCoefficients.SelectedIndex = 0;
+            this.tabCoefficients.Size = new System.Drawing.Size(936, 352);
+            this.tabCoefficients.TabIndex = 19;
+            // 
+            // tabCoefficientTable
+            // 
+            this.tabCoefficientTable.Controls.Add(this.lvCoefficients);
+            this.tabCoefficientTable.Location = new System.Drawing.Point(4, 24);
+            this.tabCoefficientTable.Name = "tabCoefficientTable";
+            this.tabCoefficientTable.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCoefficientTable.Size = new System.Drawing.Size(928, 324);
+            this.tabCoefficientTable.TabIndex = 0;
+            this.tabCoefficientTable.Text = "Number Analysis";
+            this.tabCoefficientTable.UseVisualStyleBackColor = true;
+            // 
             // lvCoefficients
             // 
             this.lvCoefficients.Activation = System.Windows.Forms.ItemActivation.OneClick;
@@ -2558,10 +2603,10 @@
             listViewItem10,
             listViewItem11});
             this.lvCoefficients.LabelWrap = false;
-            this.lvCoefficients.Location = new System.Drawing.Point(0, 0);
+            this.lvCoefficients.Location = new System.Drawing.Point(3, 3);
             this.lvCoefficients.MultiSelect = false;
             this.lvCoefficients.Name = "lvCoefficients";
-            this.lvCoefficients.Size = new System.Drawing.Size(936, 314);
+            this.lvCoefficients.Size = new System.Drawing.Size(922, 318);
             this.lvCoefficients.TabIndex = 17;
             this.lvCoefficients.UseCompatibleStateImageBehavior = false;
             this.lvCoefficients.View = System.Windows.Forms.View.Details;
@@ -2622,6 +2667,128 @@
             // 
             this.chdrBin.Text = "Binary";
             this.chdrBin.Width = 170;
+            // 
+            // tabCoefficientsHistory
+            // 
+            this.tabCoefficientsHistory.Controls.Add(this.lstCoefficientsHistory);
+            this.tabCoefficientsHistory.Location = new System.Drawing.Point(4, 22);
+            this.tabCoefficientsHistory.Name = "tabCoefficientsHistory";
+            this.tabCoefficientsHistory.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCoefficientsHistory.Size = new System.Drawing.Size(928, 326);
+            this.tabCoefficientsHistory.TabIndex = 1;
+            this.tabCoefficientsHistory.Text = "Settings History";
+            this.tabCoefficientsHistory.UseVisualStyleBackColor = true;
+            // 
+            // lstCoefficientsHistory
+            // 
+            this.lstCoefficientsHistory.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.clHeadID,
+            this.colHeadTimeStamp,
+            this.colHeadUser,
+            this.colHeadLabel,
+            this.colHeadSettings});
+            this.lstCoefficientsHistory.ContextMenuStrip = this.ctxCoefficientsHistory;
+            this.lstCoefficientsHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstCoefficientsHistory.FullRowSelect = true;
+            this.lstCoefficientsHistory.HideSelection = false;
+            this.lstCoefficientsHistory.LabelWrap = false;
+            this.lstCoefficientsHistory.Location = new System.Drawing.Point(3, 3);
+            this.lstCoefficientsHistory.MultiSelect = false;
+            this.lstCoefficientsHistory.Name = "lstCoefficientsHistory";
+            this.lstCoefficientsHistory.Size = new System.Drawing.Size(922, 320);
+            this.lstCoefficientsHistory.TabIndex = 0;
+            this.lstCoefficientsHistory.UseCompatibleStateImageBehavior = false;
+            this.lstCoefficientsHistory.View = System.Windows.Forms.View.Details;
+            // 
+            // clHeadID
+            // 
+            this.clHeadID.Text = "#ID";
+            this.clHeadID.Width = 50;
+            // 
+            // colHeadTimeStamp
+            // 
+            this.colHeadTimeStamp.Text = "Timestsamp";
+            this.colHeadTimeStamp.Width = 160;
+            // 
+            // colHeadUser
+            // 
+            this.colHeadUser.Text = "User";
+            this.colHeadUser.Width = 120;
+            // 
+            // colHeadLabel
+            // 
+            this.colHeadLabel.Text = "Label";
+            this.colHeadLabel.Width = 360;
+            // 
+            // colHeadSettings
+            // 
+            this.colHeadSettings.Text = "Settings";
+            this.colHeadSettings.Width = 360;
+            // 
+            // ctxCoefficientsHistory
+            // 
+            this.ctxCoefficientsHistory.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctxCoeffSetLoad,
+            this.ctxCoeffSetSep1,
+            this.ctxCoeffSetRename,
+            this.ctxCoeffSetDelete});
+            this.ctxCoefficientsHistory.Name = "ctxCoefficientsHistory";
+            this.ctxCoefficientsHistory.Size = new System.Drawing.Size(118, 76);
+            this.ctxCoefficientsHistory.Opening += new System.ComponentModel.CancelEventHandler(this.ctxCoefficientsHistory_Opening);
+            this.ctxCoefficientsHistory.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ctxCoefficientsHistory_ItemClicked);
+            // 
+            // ctxCoeffSetLoad
+            // 
+            this.ctxCoeffSetLoad.Name = "ctxCoeffSetLoad";
+            this.ctxCoeffSetLoad.Size = new System.Drawing.Size(117, 22);
+            this.ctxCoeffSetLoad.Text = "&Load";
+            // 
+            // ctxCoeffSetSep1
+            // 
+            this.ctxCoeffSetSep1.Name = "ctxCoeffSetSep1";
+            this.ctxCoeffSetSep1.Size = new System.Drawing.Size(114, 6);
+            // 
+            // ctxCoeffSetRename
+            // 
+            this.ctxCoeffSetRename.Name = "ctxCoeffSetRename";
+            this.ctxCoeffSetRename.Size = new System.Drawing.Size(117, 22);
+            this.ctxCoeffSetRename.Text = "&Rename";
+            // 
+            // ctxCoeffSetDelete
+            // 
+            this.ctxCoeffSetDelete.Name = "ctxCoeffSetDelete";
+            this.ctxCoeffSetDelete.Size = new System.Drawing.Size(117, 22);
+            this.ctxCoeffSetDelete.Text = "&Delete";
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Location = new System.Drawing.Point(65, 16);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(8, 8);
+            this.tabControl1.TabIndex = 18;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Location = new System.Drawing.Point(4, 24);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(0, 0);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(0, 0);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // tabPageTiming
             // 
@@ -3751,10 +3918,10 @@
             // tabPageCodeOutput
             // 
             this.tabPageCodeOutput.Controls.Add(this.tabSourceCode);
-            this.tabPageCodeOutput.Location = new System.Drawing.Point(4, 24);
+            this.tabPageCodeOutput.Location = new System.Drawing.Point(4, 22);
             this.tabPageCodeOutput.Name = "tabPageCodeOutput";
             this.tabPageCodeOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCodeOutput.Size = new System.Drawing.Size(944, 747);
+            this.tabPageCodeOutput.Size = new System.Drawing.Size(944, 749);
             this.tabPageCodeOutput.TabIndex = 0;
             this.tabPageCodeOutput.Text = "Source Code";
             this.tabPageCodeOutput.UseVisualStyleBackColor = true;
@@ -3771,7 +3938,7 @@
             this.tabSourceCode.Location = new System.Drawing.Point(3, 3);
             this.tabSourceCode.Name = "tabSourceCode";
             this.tabSourceCode.SelectedIndex = 0;
-            this.tabSourceCode.Size = new System.Drawing.Size(938, 741);
+            this.tabSourceCode.Size = new System.Drawing.Size(938, 743);
             this.tabSourceCode.TabIndex = 1;
             // 
             // tabPageAssembly
@@ -3782,7 +3949,7 @@
             this.tabPageAssembly.Location = new System.Drawing.Point(4, 24);
             this.tabPageAssembly.Name = "tabPageAssembly";
             this.tabPageAssembly.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAssembly.Size = new System.Drawing.Size(930, 713);
+            this.tabPageAssembly.Size = new System.Drawing.Size(930, 715);
             this.tabPageAssembly.TabIndex = 0;
             this.tabPageAssembly.Text = "Assembly";
             this.tabPageAssembly.UseVisualStyleBackColor = true;
@@ -3832,7 +3999,7 @@
             visualStudio2005SyntaxEditorRenderer1.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorAssembly.Renderer = visualStudio2005SyntaxEditorRenderer1;
             this.txtSyntaxEditorAssembly.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorAssembly.Size = new System.Drawing.Size(924, 638);
+            this.txtSyntaxEditorAssembly.Size = new System.Drawing.Size(924, 640);
             this.txtSyntaxEditorAssembly.TabIndex = 0;
             // 
             // panelASMSource
@@ -3895,10 +4062,10 @@
             this.tabPageCSource.Controls.Add(this.tsbCodeGenUpdateWarningCSource);
             this.tabPageCSource.Controls.Add(this.txtSyntaxEditorCSource);
             this.tabPageCSource.Controls.Add(this.panelCSourcePath);
-            this.tabPageCSource.Location = new System.Drawing.Point(4, 24);
+            this.tabPageCSource.Location = new System.Drawing.Point(4, 22);
             this.tabPageCSource.Name = "tabPageCSource";
             this.tabPageCSource.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCSource.Size = new System.Drawing.Size(930, 713);
+            this.tabPageCSource.Size = new System.Drawing.Size(930, 717);
             this.tabPageCSource.TabIndex = 2;
             this.tabPageCSource.Text = "C-Source";
             this.tabPageCSource.UseVisualStyleBackColor = true;
@@ -3948,7 +4115,7 @@
             visualStudio2005SyntaxEditorRenderer2.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCSource.Renderer = visualStudio2005SyntaxEditorRenderer2;
             this.txtSyntaxEditorCSource.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(924, 638);
+            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(924, 642);
             this.txtSyntaxEditorCSource.TabIndex = 5;
             // 
             // panelCSourcePath
@@ -4009,10 +4176,10 @@
             this.tabPageCHeader.Controls.Add(this.tsbCodeGenUpdateWarningCHeader);
             this.tabPageCHeader.Controls.Add(this.txtSyntaxEditorCHeader);
             this.tabPageCHeader.Controls.Add(this.panelCHeaderPath);
-            this.tabPageCHeader.Location = new System.Drawing.Point(4, 24);
+            this.tabPageCHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageCHeader.Name = "tabPageCHeader";
             this.tabPageCHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCHeader.Size = new System.Drawing.Size(930, 713);
+            this.tabPageCHeader.Size = new System.Drawing.Size(930, 717);
             this.tabPageCHeader.TabIndex = 3;
             this.tabPageCHeader.Text = "C-Header";
             this.tabPageCHeader.UseVisualStyleBackColor = true;
@@ -4062,7 +4229,7 @@
             visualStudio2005SyntaxEditorRenderer3.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCHeader.Renderer = visualStudio2005SyntaxEditorRenderer3;
             this.txtSyntaxEditorCHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(924, 638);
+            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(924, 642);
             this.txtSyntaxEditorCHeader.TabIndex = 5;
             // 
             // panelCHeaderPath
@@ -4123,10 +4290,10 @@
             this.tabPageLibraryHeader.Controls.Add(this.tsbCodeGenUpdateWarningLibHeader);
             this.tabPageLibraryHeader.Controls.Add(this.txtSyntaxEditorCLibHeader);
             this.tabPageLibraryHeader.Controls.Add(this.panelCLibPath);
-            this.tabPageLibraryHeader.Location = new System.Drawing.Point(4, 24);
+            this.tabPageLibraryHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageLibraryHeader.Name = "tabPageLibraryHeader";
             this.tabPageLibraryHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLibraryHeader.Size = new System.Drawing.Size(930, 713);
+            this.tabPageLibraryHeader.Size = new System.Drawing.Size(930, 717);
             this.tabPageLibraryHeader.TabIndex = 6;
             this.tabPageLibraryHeader.Text = "Library Header";
             this.tabPageLibraryHeader.UseVisualStyleBackColor = true;
@@ -4176,7 +4343,7 @@
             visualStudio2005SyntaxEditorRenderer4.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCLibHeader.Renderer = visualStudio2005SyntaxEditorRenderer4;
             this.txtSyntaxEditorCLibHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(924, 638);
+            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(924, 642);
             this.txtSyntaxEditorCLibHeader.TabIndex = 6;
             // 
             // panelCLibPath
@@ -4236,10 +4403,10 @@
             // tabPageGeneratorDefinitions
             // 
             this.tabPageGeneratorDefinitions.Controls.Add(this.txtSyntaxEditorINIFile);
-            this.tabPageGeneratorDefinitions.Location = new System.Drawing.Point(4, 24);
+            this.tabPageGeneratorDefinitions.Location = new System.Drawing.Point(4, 22);
             this.tabPageGeneratorDefinitions.Name = "tabPageGeneratorDefinitions";
             this.tabPageGeneratorDefinitions.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneratorDefinitions.Size = new System.Drawing.Size(930, 713);
+            this.tabPageGeneratorDefinitions.Size = new System.Drawing.Size(930, 717);
             this.tabPageGeneratorDefinitions.TabIndex = 4;
             this.tabPageGeneratorDefinitions.Text = "Generator Definitions";
             this.tabPageGeneratorDefinitions.UseVisualStyleBackColor = true;
@@ -4260,7 +4427,7 @@
             visualStudio2005SyntaxEditorRenderer5.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorINIFile.Renderer = visualStudio2005SyntaxEditorRenderer5;
             this.txtSyntaxEditorINIFile.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorINIFile.Size = new System.Drawing.Size(924, 707);
+            this.txtSyntaxEditorINIFile.Size = new System.Drawing.Size(924, 711);
             this.txtSyntaxEditorINIFile.TabIndex = 6;
             // 
             // tabPageOutput
@@ -4509,6 +4676,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.chartBode)).EndInit();
             this.toolStripBode.ResumeLayout(false);
             this.toolStripBode.PerformLayout();
+            this.tabCoefficients.ResumeLayout(false);
+            this.tabCoefficientTable.ResumeLayout(false);
+            this.tabCoefficientsHistory.ResumeLayout(false);
+            this.ctxCoefficientsHistory.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
             this.tabPageTiming.ResumeLayout(false);
             this.splitContainerTiming.Panel1.ResumeLayout(false);
             this.splitContainerTiming.Panel2.ResumeLayout(false);
@@ -4903,8 +5075,24 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
-        private Microsoft.TeamFoundation.Controls.WinForms.SpinningProgress spinMain;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator22;
+        private System.Windows.Forms.TabControl tabCoefficients;
+        private System.Windows.Forms.TabPage tabCoefficientTable;
+        private System.Windows.Forms.TabPage tabCoefficientsHistory;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.ListView lstCoefficientsHistory;
+        private System.Windows.Forms.ColumnHeader colHeadTimeStamp;
+        private System.Windows.Forms.ColumnHeader colHeadUser;
+        private System.Windows.Forms.ColumnHeader colHeadSettings;
+        private System.Windows.Forms.ColumnHeader colHeadLabel;
+        private System.Windows.Forms.ContextMenuStrip ctxCoefficientsHistory;
+        private System.Windows.Forms.ToolStripMenuItem ctxCoeffSetLoad;
+        private System.Windows.Forms.ToolStripSeparator ctxCoeffSetSep1;
+        private System.Windows.Forms.ToolStripMenuItem ctxCoeffSetRename;
+        private System.Windows.Forms.ToolStripMenuItem ctxCoeffSetDelete;
+        private System.Windows.Forms.ColumnHeader clHeadID;
     }
 }
 
