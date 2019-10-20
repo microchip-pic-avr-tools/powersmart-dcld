@@ -135,6 +135,7 @@
             this.bodePlotDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sDomainDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zDomainDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.coefficientDeclarationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.coefficentTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -441,21 +442,19 @@
             this.tsbMain = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonOpen = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonShowCoefficientTable = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonShowTimingTable = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonUpdateCode = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonUpdateExportCode = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
             this.timToolHelp = new System.Windows.Forms.Timer(this.components);
-            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
-            this.spinMain = new Microsoft.TeamFoundation.Controls.WinForms.SpinningProgress();
-            this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuMain.SuspendLayout();
             this.stbMain.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -560,7 +559,7 @@
             this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.openToolStripMenuItem.Text = "&Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -569,27 +568,27 @@
             this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -787,6 +786,11 @@
             this.zDomainDataToolStripMenuItem.Text = "z-Domain Data";
             this.zDomainDataToolStripMenuItem.Click += new System.EventHandler(this.CopyZDomainBodeData2Clipboard);
             // 
+            // toolStripSeparator22
+            // 
+            this.toolStripSeparator22.Name = "toolStripSeparator22";
+            this.toolStripSeparator22.Size = new System.Drawing.Size(194, 6);
+            // 
             // coefficientDeclarationToolStripMenuItem
             // 
             this.coefficientDeclarationToolStripMenuItem.Name = "coefficientDeclarationToolStripMenuItem";
@@ -820,7 +824,7 @@
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.aboutToolStripMenuItem.Text = "About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -984,7 +988,6 @@
             // 
             this.pnlCompensator.AutoScroll = true;
             this.pnlCompensator.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pnlCompensator.Controls.Add(this.spinMain);
             this.pnlCompensator.Controls.Add(this.grpPolesZeros);
             this.pnlCompensator.Controls.Add(this.grpInputDataSpecifications);
             this.pnlCompensator.Controls.Add(this.grpControllerSelection);
@@ -1678,10 +1681,10 @@
             // tabSourceCodeConfig
             // 
             this.tabSourceCodeConfig.Controls.Add(this.pnlCodeGeneratorOptions);
-            this.tabSourceCodeConfig.Location = new System.Drawing.Point(4, 24);
+            this.tabSourceCodeConfig.Location = new System.Drawing.Point(4, 22);
             this.tabSourceCodeConfig.Name = "tabSourceCodeConfig";
             this.tabSourceCodeConfig.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 747);
+            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 749);
             this.tabSourceCodeConfig.TabIndex = 1;
             this.tabSourceCodeConfig.Text = "Source Code Configuration";
             this.tabSourceCodeConfig.UseVisualStyleBackColor = true;
@@ -4502,6 +4505,11 @@
             this.toolStripButtonSave.ToolTipText = "Save File...";
             this.toolStripButtonSave.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
+            // toolStripSeparator18
+            // 
+            this.toolStripSeparator18.Name = "toolStripSeparator18";
+            this.toolStripSeparator18.Size = new System.Drawing.Size(6, 25);
+            // 
             // toolStripSeparator19
             // 
             this.toolStripSeparator19.Name = "toolStripSeparator19";
@@ -4537,6 +4545,11 @@
             this.toolStripButtonRefresh.ToolTipText = "Refresh Diagrams";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
+            // toolStripSeparator17
+            // 
+            this.toolStripSeparator17.Name = "toolStripSeparator17";
+            this.toolStripSeparator17.Size = new System.Drawing.Size(6, 25);
+            // 
             // toolStripSeparator20
             // 
             this.toolStripSeparator20.Name = "toolStripSeparator20";
@@ -4562,6 +4575,11 @@
             this.toolStripButtonUpdateExportCode.ToolTipText = "Generate and Export Source Code";
             this.toolStripButtonUpdateExportCode.Click += new System.EventHandler(this.ExportGeneratedFiles);
             // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
+            // 
             // toolStripSeparator21
             // 
             this.toolStripSeparator21.Name = "toolStripSeparator21";
@@ -4582,37 +4600,6 @@
             // 
             this.timToolHelp.Interval = 4000;
             this.timToolHelp.Tick += new System.EventHandler(this.timToolHelp_Tick);
-            // 
-            // toolStripSeparator16
-            // 
-            this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripSeparator17
-            // 
-            this.toolStripSeparator17.Name = "toolStripSeparator17";
-            this.toolStripSeparator17.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripSeparator18
-            // 
-            this.toolStripSeparator18.Name = "toolStripSeparator18";
-            this.toolStripSeparator18.Size = new System.Drawing.Size(6, 25);
-            // 
-            // spinMain
-            // 
-            this.spinMain.InnerRadius = 8;
-            this.spinMain.IsSpinning = false;
-            this.spinMain.Location = new System.Drawing.Point(110, 610);
-            this.spinMain.Name = "spinMain";
-            this.spinMain.OuterRadius = 9;
-            this.spinMain.Size = new System.Drawing.Size(167, 88);
-            this.spinMain.TabIndex = 45;
-            this.spinMain.Text = "Progress...";
-            // 
-            // toolStripSeparator22
-            // 
-            this.toolStripSeparator22.Name = "toolStripSeparator22";
-            this.toolStripSeparator22.Size = new System.Drawing.Size(194, 6);
             // 
             // frmMain
             // 
