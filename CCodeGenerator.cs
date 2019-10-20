@@ -257,7 +257,7 @@ namespace dcld
                     "    CONTROLLER_STATUS_USAT_ACTIVE = 0b0000000000000010,\r\n" + 
                     "    CONTROLLER_STATUS_USAT_CLEAR = 0b0000000000000000,\r\n" +
                     "    CONTROLLER_STATUS_INV_INPUT_OFF = 0b0000000000000000,\r\n" +
-                    "    CONTROLLER_STATUS_INV_INPUT_ON = 0b0100000000000000\r\n" +
+                    "    CONTROLLER_STATUS_INV_INPUT_ON = 0b0100000000000000,\r\n" +
                     "    CONTROLLER_STATUS_ENABLE_OFF = 0b0000000000000000,\r\n" + 
                     "    CONTROLLER_STATUS_ENABLE_ON = 0b1000000000000000\r\n" + 
                     "} CONTROLLER_STATUS_FLAGS_t;\r\n" + 
