@@ -134,7 +134,7 @@ namespace dcld
 
                 dum_sep[0] = ("\\");
                 str_path = args[0].ToString().Trim();
-                str_arr = str_path.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries); ;
+                str_arr = str_path.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
 
                 for (i = 0; i < (str_arr.Length-1); i++)
                 {
@@ -268,7 +268,7 @@ namespace dcld
             DefaultY2Max = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "y2_max", DefaultY2Max.ToString()));
 
             // reload data table status
-            splitContainerCoefficients.SplitterDistance = (splitContainerCoefficients.Panel1.Height + splitContainerCoefficients.Panel2.Height) - Convert.ToInt32(ReadConfigString(INI_FILE, "data_table", "splitter_pos", "540"));
+            splitContainerCoefficients.SplitterDistance = (splitContainerCoefficients.Panel1.Height + splitContainerCoefficients.Panel2.Height) - Convert.ToInt32(ReadConfigString(INI_FILE, "data_table", "splitter_pos", "500"));
             showCoeffficientDataTableToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(INI_FILE, "data_table", "visible", "1")));
             showCoeffficientDataTableToolStripMenuItem_CheckedChanged(sender, e);
 
@@ -299,6 +299,7 @@ namespace dcld
                     "\r\n" +
                     "Product Name:                    " + Application.ProductName.ToString() + "\r\n" +
                     "Application Version:             " + Application.ProductVersion.ToString() + "\r\n" +
+                    "AGS Version:                     " + ReadConfigString(AssemblyGeneratorFile, "generic", "Version", "N/A") + "\r\n" +
                     "Company Name:                    " + Application.CompanyName.ToString() + "\r\n" +
                 "\r\n";
 
@@ -414,7 +415,7 @@ namespace dcld
                 this.txtOutput.Text = txtOutput.Text + "17:    " + "C-header file path: " + str_dum + "\\" + str_file + ".h" + "\r\n";
                 this.txtOutput.Text = txtOutput.Text + "18:    " + "C-API header file path: " + str_dum + "\\npnz16b.h" + "\r\n";
                 this.txtOutput.Text = txtOutput.Text + "\r\n" + 
-                    "Application start up done" + "\r\n" + "\r\n";
+                    "Application start up complete" + "\r\n" + "\r\n";
 
                 txtOutput.SelectionStart = txtOutput.TextLength;
                 txtOutput.ScrollToCaret();
@@ -622,6 +623,7 @@ namespace dcld
                 stbProgressBarLabel.Visible = true;
                 stbProgressBar.Visible = true;
                 stbProgressBar.Value = 0;
+
                 Application.DoEvents();
 
                 // determine lag elements and detect changes to previous settings
@@ -750,7 +752,11 @@ namespace dcld
                     cNPNZ.InputDataResolution = NumberTextBox_ToDouble(txtInputDataResolution); // Convert.ToDouble(txtInputDataResolution.Text);
                     cNPNZ.InputGainNormalization = chkNormalizeInputGain.Checked;
                     cNPNZ.InputGain = NumberTextBox_ToDouble(txtInputGain); // Convert.ToDouble(txtInputGain.Text);
-                    cNPNZ.IsBidirectional = chkBiDirectionalFeedback.Checked; 
+                    cNPNZ.IsBidirectional = chkBiDirectionalFeedback.Checked;
+                    if (cNPNZ.IsBidirectional)
+                        cNPNZ.FeedbackRecitification = (chkFeedbackRectification.Checked & chkFeedbackRectification.Enabled);
+                    else
+                        cNPNZ.FeedbackRecitification = false;
 
                     for (i = 0; i < LagElements; i++)
                     {
@@ -1177,6 +1183,14 @@ namespace dcld
             return rc;
         }
 
+        private bool DeleteConfigString(string fname, string section, string name)
+        {
+            bool rc;
+            rc = WritePrivateProfileString(section, name, null, fname);
+
+            return rc;
+        }
+
         private string GetCurrentProjectFilePath(object sender, EventArgs e)
         {
             string str_dum = "";
@@ -1249,7 +1263,10 @@ namespace dcld
             string[] str_arr_absolute_path;
             string[] dum_sep = new string[1];
 
+            // If project file has not been saved yet, no relative path information can be derived.
+            if (!File.Exists(CurrentProjectFileName)) return (AbsoluteFilePath.Trim());
 
+            // otherwise continue to determine relative path string
             cfg_file_path = GetCurrentProjectFilePath(sender, e).Trim();
 
             if (cfg_file_path.Substring(0, 1) != AbsoluteFilePath.Substring(0, 1))
@@ -1418,6 +1435,7 @@ namespace dcld
                 WriteConfigString(str_path, "GUI", "SaveDate", Convert.ToString(System.DateTime.Now));
                 WriteConfigString(str_path, "GUI", "Name", Application.ProductName);
                 WriteConfigString(str_path, "GUI", "Version", Application.ProductVersion);
+                WriteConfigString(str_path, "GUI", "AGS Version", ReadConfigString(AssemblyGeneratorFile, "generic", "Version", "N/A"));
 
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 20;
@@ -1443,6 +1461,7 @@ namespace dcld
                 WriteConfigString(str_path, "ControlSetup", "InputGain", txtInputGain.Text);
                 WriteConfigString(str_path, "ControlSetup", "InputGainNormalization", Math.Abs(Convert.ToInt32(chkNormalizeInputGain.Checked)).ToString());
                 WriteConfigString(str_path, "ControlSetup", "BiDirectionalFeedback", Math.Abs(Convert.ToInt32(chkBiDirectionalFeedback.Checked)).ToString());
+                WriteConfigString(str_path, "ControlSetup", "FeedbackRectification", Math.Abs(Convert.ToInt32(chkFeedbackRectification.Checked & chkBiDirectionalFeedback.Checked)).ToString());
 
                 for (i = 0; i < txtPole.Length; i++)
                 { 
@@ -1584,6 +1603,7 @@ namespace dcld
                 txtInputGain.Text = ReadConfigString(str_path, "ControlSetup", "InputGain", "1");
                 chkNormalizeInputGain.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "InputGainNormalization", "0")));
                 chkBiDirectionalFeedback.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "BiDirectionalFeedback", "0")));
+                chkFeedbackRectification.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "FeedbackRectification", "0")));
 
                 for (i = 0; i < txtPole.Length; i++)
                 {
@@ -1672,6 +1692,9 @@ namespace dcld
                 Application.DoEvents();
 
                 // Parameter listing complete
+
+                // Load user history
+                LoadHistorySettingsList(str_path);
 
                 ForceCoefficientsUpdate(this, EventArgs.Empty);
 
@@ -2118,7 +2141,40 @@ namespace dcld
         {
             int i = 0;
             string str_path = "", str_dum = "", str_msg = "";
+            DialogResult result;
             SaveFileDialog sfdlg = new SaveFileDialog();
+
+            // Export is only allowed if the project file has been saved by the user, to prevent that files end up in Nirvana...
+            if (!File.Exists(CurrentProjectFileName))
+            { 
+                result = MessageBox.Show(this,
+                        "The recent configuration has not been saved yet. \r\n" +
+                        "\r\n" + 
+                        "Features such as relative path declaration in source files and the user setting " +
+                        "hitory log, will not be supported until this configuration has been saved. It is" +
+                        "highly recommended to safe the file before you continue.\r\n" +
+                        "\r\n" + 
+                        "- Click 'Yes' to save the configuration right now.\r\n" +
+                        "- Click 'No' to export the generated source code files \r\n" +
+                        "- Click 'Cancel' to return to the application\r\n" +
+                        "\r\n",
+                        "Warning", 
+                        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+
+                switch (result)
+                {
+                    case System.Windows.Forms.DialogResult.Yes:
+                        SaveFile(sender, e);
+                        return;
+
+                    case System.Windows.Forms.DialogResult.No:
+                        break;
+
+                    case System.Windows.Forms.DialogResult.Cancel:
+                        return;
+                }
+
+            }
 
             // Generate code before export
             if (generateCodeBeforeExportToolStripMenuItem.Checked)
@@ -2327,6 +2383,10 @@ namespace dcld
 
             }
 
+            // Add controller settings to user history
+            AddHistorySettings(sender, e);
+
+            // Acknowledge successfully executed command
             if (generateCodeBeforeExportToolStripMenuItem.Checked)
             {
                 MessageBox.Show(
@@ -2336,6 +2396,7 @@ namespace dcld
                     MessageBoxButtons.OK, 
                     MessageBoxIcon.Asterisk
                     );
+
             }
             else
             {
@@ -3190,6 +3251,10 @@ namespace dcld
             AssGen.FilterOrder = (int)(cNPNZ.FilterOrder);
             AssGen.CodeOptimizationLevel = cmbLoopOptimizationLevel.SelectedIndex;
             AssGen.BidirectionalFeedback = cNPNZ.IsBidirectional;
+            if (AssGen.BidirectionalFeedback) // feedback rectification option only allowed with bi-directional feedbacks
+                AssGen.FeedbackRectification = cNPNZ.FeedbackRecitification; 
+            else
+                AssGen.FeedbackRectification = false;
 
             // set dynamic execution options
             AssGen.SaveRestoreContext = this.chkContextSaving.Checked;
@@ -3223,6 +3288,9 @@ namespace dcld
 
             AssGen.CustomComment = "; **********************************************************************************" + "\r\n" +
                                    ";  SDK Version: " + Application.ProductName + " v" + Application.ProductVersion + "\r\n" +
+                                   ";  AGS Version: " + ReadConfigString(AssGen.TemplateFile, "generic", "Name", "") + 
+                                                    " v" + ReadConfigString(AssGen.TemplateFile, "generic", "Version", "") + 
+                                                    " (" + ReadConfigString(AssGen.TemplateFile, "generic", "Date", "") + ")" + "\r\n" +
                                    ";  Author:      " + Environment.UserName + "\r\n" +
                                    ";  Date/Time:   " + System.DateTime.Now.ToString() + "\r\n" +
                                    "; **********************************************************************************" + "\r\n" +
@@ -4030,6 +4098,337 @@ namespace dcld
 
         }
 
+        private void chkBiDirectionalFeedback_CheckedChanged(object sender, EventArgs e)
+        {
+            chkFeedbackRectification.Enabled = chkBiDirectionalFeedback.Checked;
+            UpdateTransferFunction(sender, e);
+        }
+
+        private void ctxCoefficientsHistory_Opening(object sender, CancelEventArgs e)
+        {
+            if (lstCoefficientsHistory.Items.Count == 0)
+            {
+                ctxCoeffSetLoad.Enabled = false;
+                ctxCoeffSetRename.Enabled = false;
+                ctxCoeffSetDelete.Enabled = false;
+            }
+            else
+            {
+                ctxCoeffSetLoad.Enabled = (lstCoefficientsHistory.SelectedIndices.Count > 0);
+                ctxCoeffSetRename.Enabled = ctxCoeffSetLoad.Enabled;
+                ctxCoeffSetDelete.Enabled = ctxCoeffSetLoad.Enabled;
+            }
+        }
+
+        private void ctxCoefficientsHistory_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+            switch (e.ClickedItem.Name) 
+            {
+                case "ctxCoeffSetLoad":
+                    LoadHistorySettings(sender, e);
+                    break;
+
+                case "ctxCoeffSetRename":
+                    RenameHistorySettings(sender, e);
+                    break;
+
+                case "ctxCoeffSetDelete":
+                    DeleteHistorySettings(sender, e);
+                    break;
+
+                default:
+                    break;
+
+            }
+        }
+
+        private void LoadHistorySettingsList(string project_file)
+        {
+            string str_dum = "";
+            string[] str_arr;
+            string[] dum_sep = new string[1];
+            int lst_count = 0, active_item = 0, i = 0;
+            ListViewItem itm = new ListViewItem();
+
+            if (!File.Exists(project_file)) return;
+
+            lstCoefficientsHistory.Items.Clear();
+
+            lst_count = Convert.ToInt32(ReadConfigString(project_file, "generator_history", "count", "0"));
+            active_item = Convert.ToInt32(ReadConfigString(project_file, "generator_history", "active_item", "0"));
+
+            if (lst_count > 0)
+            {
+                for (i = 1; i <= lst_count; i++)
+                {
+                    str_dum = ReadConfigString(project_file, "generator_history", i.ToString(), "");
+
+                    if ((str_dum.Length > 0) && (str_dum.Contains("||")))
+                    {
+                        dum_sep[0] = ("||");
+                        str_arr = str_dum.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
+
+                        if (str_arr.Length >= 4)
+                        {
+                            itm = lstCoefficientsHistory.Items.Add(i.ToString());
+                            itm.SubItems.Add(str_arr[0]);
+                            itm.SubItems.Add(str_arr[1]);
+                            itm.SubItems.Add(str_arr[2]);
+                            itm.SubItems.Add(str_arr[3]);
+
+                            if (active_item == i)
+                            { itm.BackColor = SystemColors.ActiveCaption; }
+                        }
+                    }
+                }
+            }
+            
+            return;
+        }
+
+        private void AddHistorySettings(object sender, EventArgs e)
+        {
+            int i = 0;
+            ListViewItem itm = new ListViewItem();
+            string id = "", key = "", user = "", label = "", settings = "";
+            Int32 save_item = 0;
+
+            if (!File.Exists(CurrentProjectFileName)) return;
+
+            // Add time stamp
+            save_item = (Convert.ToInt32(ReadConfigString(CurrentProjectFileName, "generator_history", "count", "0")) + 1);
+
+            id = save_item.ToString();
+            key = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Datecode identifies the item
+            label = "(Autosafe)";
+            user = Environment.UserName.ToString();
+            settings =
+                cmbCompType.SelectedIndex.ToString() + "; " +
+                cmbQScalingMethod.SelectedIndex.ToString() + "; " +
+                txtInputDataResolution.Text + "; " +
+                txtInputGain.Text + "; " +
+                Convert.ToInt32(chkNormalizeInputGain.Checked).ToString() + "; " +
+                Convert.ToInt32(chkBiDirectionalFeedback.Checked).ToString() + "; " +
+                Convert.ToInt32(chkFeedbackRectification.Checked).ToString() + "; " +
+                txtSamplingFrequency.Text + "; " +
+                txtFP0.Text + "; " +
+                txtFP1.Text + "; " +
+                txtFP2.Text + "; " +
+                txtFP3.Text + "; " +
+                txtFP4.Text + "; " +
+                txtFP5.Text + "; " +
+                txtFZ1.Text + "; " +
+                txtFZ2.Text + "; " +
+                txtFZ3.Text + "; " +
+                txtFZ4.Text + "; " +
+                txtFZ5.Text;
+
+
+            itm = lstCoefficientsHistory.Items.Add(save_item.ToString());
+            itm.SubItems.Add(key);
+            itm.SubItems.Add(user);
+            itm.SubItems.Add(label);
+            itm.SubItems.Add(settings);
+
+            for (i = 0; i < lstCoefficientsHistory.Items.Count; i++)
+            { lstCoefficientsHistory.Items[i].BackColor = SystemColors.Window; }
+            itm.BackColor = SystemColors.ActiveCaption;
+
+            WriteConfigString(CurrentProjectFileName, "generator_history", "count", id);
+            WriteConfigString(CurrentProjectFileName, "generator_history", id.Trim(), key.Trim() + "||" + user.Trim() + "||" + label.Trim() + "||" + settings.Trim());
+            WriteConfigString(CurrentProjectFileName, "generator_history", "active_item", id);
+
+            return;
+        }
+
+        private void RenameHistorySettings(object sender, EventArgs e)
+        {
+            string label = "";
+            DialogResult result = new DialogResult();
+            ListViewItem itm = new ListViewItem();
+
+            itm = lstCoefficientsHistory.SelectedItems[0];
+            label = itm.SubItems[3].Text;
+
+            result = ShowInputDialog(this, this.Font, ref label,
+                    "New Label:", "Please enter a new user-defined text for this history point:");
+
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                itm.SubItems[3].Text = label;
+                WriteConfigString(CurrentProjectFileName, "generator_history",
+                    itm.SubItems[0].Text.Trim(),
+                    itm.SubItems[1].Text.Trim() + "||" +
+                    itm.SubItems[2].Text.Trim() + "||" + 
+                    label.Trim() + "||" +
+                    itm.SubItems[4].Text.Trim());
+            }
+
+            return;
+        }
+
+        private void DeleteHistorySettings(object sender, EventArgs e)
+        {
+            string id = "";
+            ListViewItem itm = new ListViewItem();
+
+            itm = lstCoefficientsHistory.SelectedItems[0];
+            id = itm.SubItems[0].Text.Trim();
+            DeleteConfigString(CurrentProjectFileName, "generator_history", id);
+            id = ReadConfigString(CurrentProjectFileName, "generator_history", "active_item", "0");
+            if (id.Trim().ToLower() == itm.SubItems[0].Text.Trim().ToLower())
+                WriteConfigString(CurrentProjectFileName, "generator_history", "active_item", "0");
+            itm.Remove();
+            return;
+        }
+
+        private void LoadHistorySettings(object sender, EventArgs e)
+        {
+            int i = 0;
+            string str_dum = "";
+            string[] str_arr;
+            string[] dum_sep = new string[1];
+            ListViewItem itm = new ListViewItem();
+
+            itm = lstCoefficientsHistory.SelectedItems[0];
+
+            for (i = 0; i < lstCoefficientsHistory.Items.Count; i++)
+            { lstCoefficientsHistory.Items[i].BackColor = SystemColors.Window; }
+            itm.BackColor = SystemColors.ActiveCaption;
+
+            if (itm.SubItems.Count < 5) return;
+
+            // Clear the clutter generated by the ListView
+            str_dum = itm.SubItems[4].ToString();
+            str_dum = str_dum.Replace("ListViewSubItem", "");
+            str_dum = str_dum.Replace(":", "");
+            str_dum = str_dum.Replace("{", "");
+            str_dum = str_dum.Replace("}", "");
+
+            if (str_dum.Length > 0)
+            {
+                dum_sep[0] = (";");
+                str_arr = str_dum.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
+                if (str_arr.Length >= 4)
+                {
+                    ApplicationStartUp = true;  // Prevent repeated GUI updates
+
+                    // Loading transfer function settings
+                    cmbCompType.SelectedIndex = Convert.ToInt32(str_arr[0].Trim());
+                    cmbQScalingMethod.SelectedIndex = Convert.ToInt32(str_arr[1].Trim());
+                    txtInputDataResolution.Text = str_arr[2].Trim();
+                    txtInputGain.Text = str_arr[3].Trim();
+
+                    chkNormalizeInputGain.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[4].Trim()));
+                    chkBiDirectionalFeedback.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[5].Trim()));
+                    chkFeedbackRectification.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[6].Trim()));
+
+                    txtSamplingFrequency.Text = str_arr[7].Trim();
+                    txtFP0.Text = str_arr[8].Trim();
+                    txtFP1.Text = str_arr[9].Trim();
+                    txtFP2.Text = str_arr[10].Trim();
+                    txtFP3.Text = str_arr[11].Trim();
+                    txtFP4.Text = str_arr[12].Trim();
+                    txtFP5.Text = str_arr[13].Trim();
+                    txtFZ1.Text = str_arr[14].Trim();
+                    txtFZ2.Text = str_arr[15].Trim();
+                    txtFZ3.Text = str_arr[16].Trim();
+                    txtFZ4.Text = str_arr[17].Trim();
+                    txtFZ5.Text = str_arr[18].Trim();
+
+                    ApplicationStartUp = false; //Enable repeated GUI updates
+                    UpdateTransferFunction(this, EventArgs.Empty);
+                    GenerateCode(this, EventArgs.Empty);
+
+                    if (File.Exists(CurrentProjectFileName))
+                    {
+                        str_dum = itm.SubItems[0].Text.ToString().Trim();
+                        WriteConfigString(CurrentProjectFileName, "generator_history", "active_item", str_dum); 
+                    }
+
+                }
+
+            }
+
+            return;
+        }
+
+        private static DialogResult ShowInputDialog(IWin32Window owner, Font font, ref string input, string caption, string descr)
+        {
+            System.Drawing.Size size = new System.Drawing.Size(400, 90);
+            Form inputBox = new Form();
+
+            inputBox.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            inputBox.ClientSize = size;
+            inputBox.Font = font;
+            inputBox.Text = caption;
+
+            System.Windows.Forms.Label labelLabel = new Label();
+            labelLabel.TextAlign = ContentAlignment.TopLeft;
+            labelLabel.Size = new System.Drawing.Size(size.Width - 10, 23);
+            labelLabel.Location = new System.Drawing.Point(5, 5);
+            labelLabel.Font = font;
+            labelLabel.Text = descr;
+            inputBox.Controls.Add(labelLabel);
+
+            System.Windows.Forms.TextBox textBox = new TextBox();
+            textBox.Size = new System.Drawing.Size(size.Width - 10, 23);
+            textBox.Location = new System.Drawing.Point(labelLabel.Left, labelLabel.Top + labelLabel.Height + 5);
+            textBox.Font = font;
+            textBox.Text = input;
+            inputBox.Controls.Add(textBox);
+
+            Button cancelButton = new Button();
+            cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new System.Drawing.Size(75, 23);
+            cancelButton.Text = "&Cancel";
+            cancelButton.Location = new System.Drawing.Point(size.Width - 100, textBox.Top + textBox.Height + 9);
+            inputBox.Controls.Add(cancelButton);
+
+            Button okButton = new Button();
+            okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            okButton.Name = "okButton";
+            okButton.Size = new System.Drawing.Size(75, 23);
+            okButton.Text = "&OK";
+            okButton.Location = new System.Drawing.Point(cancelButton.Left - okButton.Width - 2, cancelButton.Top);
+            inputBox.Controls.Add(okButton);
+
+            inputBox.Height = okButton.Top + okButton.Height + 49;
+
+            inputBox.AcceptButton = okButton;
+            inputBox.CancelButton = cancelButton;
+            inputBox.StartPosition = FormStartPosition.CenterParent;
+
+            DialogResult result = inputBox.ShowDialog(owner);
+            input = textBox.Text;
+            return result;
+        }
+
+        private void lstCoefficientsHistory_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (lstCoefficientsHistory.SelectedItems.Count == 0) return;
+
+            if (e.KeyCode == Keys.Delete)
+            { DeleteHistorySettings(sender, e); }
+            else if (e.KeyCode == Keys.F2)
+            { RenameHistorySettings(sender, e); }
+            else if ((e.KeyCode == Keys.Enter) && (e.Shift == true))
+            { LoadHistorySettings(sender, e); }
+            
+            return;
+
+        }
+
+        private void lstCoefficientsHistory_DoubleClick(object sender, EventArgs e)
+        {
+            if (lstCoefficientsHistory.SelectedItems.Count == 0) return;
+            LoadHistorySettings(sender, e);
+
+            return;
+        }
 
     }
 }

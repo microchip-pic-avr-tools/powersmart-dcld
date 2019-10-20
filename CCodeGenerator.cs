@@ -158,15 +158,16 @@ namespace dcld
                     strBuffer.Append(
                                 "/* ***************************************************************************************\r\n" +
                                 " * Data Arrays:\r\n" +
-                                " * The cNPNZ_t data structure contains a pointer to derived coefficients in X-space and" + "\r\n" +
-                                " * other pointers to controller and error history in Y-space.\r\n" +
-                                " * This header file holds public declarations for variables and arrays defined in \r\n" + 
+                                " * The cNPNZ_t data structure contains pointers to coefficient, control and error history \r\n" +
+                                " * arrays. The pointer target objects (variables and arrays) are defined in               \r\n" +
                                 " * " + _FileNamePattern.ToLower() + ".c\r\n" +
+                                " * This header file holds the public declarations for these variables and arrays.         \r\n" +
                                 " * \r\n" +
-                                " * Type definition for A- and B- coefficient arrays and error- and control-history arrays, \r\n" +
-                                " * which are aligned in memory for optimized addressing during DSP computations.           \r\n" +
-                                " * These data structures need to be placed in specific memory locations to allow direct    \r\n" +
-                                " * X/Y-access from the DSP. (coefficients in x-space, histories in y-space)                \r\n" +
+                                " * Type definitions for A- and B- coefficient arrays as well as error- and control history\r\n" +
+                                " * arrays are aligned in memory using the 'packed' attribute for optimized addressing     \r\n" +
+                                " * during DSP computations. These aligned data structures need to be placed in specific   \r\n" +
+                                " * memory locations to allow direct X/Y-access from the DSP. This X/Y-memory placement is \r\n" +
+                                " * covered by the declarations used in " + _FileNamePattern.ToLower() + ".c               \r\n" +
                                 " * ***************************************************************************************/\r\n" +
                                 "\r\n");
 
@@ -204,10 +205,15 @@ namespace dcld
                 strBuffer.Append(
                             "/* ***************************************************************************************\r\n" +
                             " * Data Arrays:\r\n" +
-                            " * The cNPNZ_t data structure contains a pointer to derived coefficients in X-space and" + "\r\n" +
-                            " * other pointers to controller and error history in Y-space.\r\n" +
-                            " * This source file declares the default parameters of the z-domain compensation filter.\r\n" +
-                            " * These declarations are made publicly accessible through defines in " + _FileNamePattern.ToLower() + ".h\r\n" + 
+                            " * This source file declares the default parameters of the z-domain compensation filter.  \r\n" +
+                            " * The cNPNZ_t data structure contains two pointers to A- and B- coefficient arrays and   \r\n" +
+                            " * two pointers to control and error history arrays.                                      \r\n" +
+                            " * For optimized data procesing during DSP computations, these arrays must be located in  \r\n" +
+                            " * specific memory locations (X-space for coefficient arrays and Y-space for control and  \r\n" +
+                            " * error history arrays).  \r\n" +
+                            " * The following declarations are used to define the array data contents, their length    \r\n" +
+                            " * and memory location. These declarations are made publicly accessible through defines   \r\n" +
+                            " * in " + _FileNamePattern.ToLower() + ".h\r\n" + 
                             " * ***************************************************************************************/\r\n" +
                             "\r\n"
                             );
@@ -230,12 +236,14 @@ namespace dcld
 
                 strBuffer.Append(
                     "/* Status flags (Single Bit) */\r\n" + 
-                    "#define NPNZ16_STATUS_LSAT_SET		1\r\n" +
-                    "#define NPNZ16_STATUS_LSAT_RESET	0\r\n" +
-                    "#define NPNZ16_STATUS_USAT_SET		1\r\n" +
-                    "#define NPNZ16_STATUS_USAT_RESET	0\r\n" +
-                    "#define NPNZ16_STATUS_ENABLED		1\r\n" +
-                    "#define NPNZ16_STATUS_DISABLED		0\r\n" +
+                    "#define NPNZ16_STATUS_LSAT_SET             1\r\n" +
+                    "#define NPNZ16_STATUS_LSAT_CLEAR           0\r\n" +
+                    "#define NPNZ16_STATUS_USAT_SET             1\r\n" +
+                    "#define NPNZ16_STATUS_USAT_CLEAR           0\r\n" +
+                    "#define NPNZ16_STATUS_INPUT_INVERTED       1\r\n" +
+                    "#define NPNZ16_STATUS_INPUT_NOT_INVERTED   0\r\n" +
+                    "#define NPNZ16_STATUS_ENABLED              1\r\n" +
+                    "#define NPNZ16_STATUS_DISABLED             0\r\n" +
                     "\r\n"
                 );
 
@@ -244,10 +252,12 @@ namespace dcld
                     "typedef enum {\r\n" + 
                     "    CONTROLLER_STATUS_CLEAR = 0b0000000000000000,\r\n" + 
                     "    CONTROLLER_STATUS_SATUATION_MSK = 0b0000000000000011,\r\n" + 
-                    "    CONTROLLER_STATUS_LSAT_ON = 0b0000000000000001,\r\n" + 
-                    "    CONTROLLER_STATUS_LSAT_OFF = 0b0000000000000000,\r\n" + 
-                    "    CONTROLLER_STATUS_USAT_ON = 0b0000000000000010,\r\n" + 
-                    "    CONTROLLER_STATUS_USAT_OFF = 0b0000000000000000,\r\n" + 
+                    "    CONTROLLER_STATUS_LSAT_ACTIVE = 0b0000000000000001,\r\n" + 
+                    "    CONTROLLER_STATUS_LSAT_CLEAR = 0b0000000000000000,\r\n" + 
+                    "    CONTROLLER_STATUS_USAT_ACTIVE = 0b0000000000000010,\r\n" + 
+                    "    CONTROLLER_STATUS_USAT_CLEAR = 0b0000000000000000,\r\n" +
+                    "    CONTROLLER_STATUS_INV_INPUT_OFF = 0b0000000000000000,\r\n" +
+                    "    CONTROLLER_STATUS_INV_INPUT_ON = 0b0100000000000000\r\n" +
                     "    CONTROLLER_STATUS_ENABLE_OFF = 0b0000000000000000,\r\n" + 
                     "    CONTROLLER_STATUS_ENABLE_ON = 0b1000000000000000\r\n" + 
                     "} CONTROLLER_STATUS_FLAGS_t;\r\n" + 
@@ -271,7 +281,7 @@ namespace dcld
                     "        volatile unsigned : 1; // Bit 11: reserved\r\n" +
                     "        volatile unsigned : 1; // Bit 12: reserved\r\n" +
                     "        volatile unsigned : 1; // Bit 13: reserved\r\n" +
-                    "        volatile unsigned : 1; // Bit 14: reserved\r\n" +
+                    "        volatile unsigned invert_input: 1; // Bit 14: when set, most recent error input value to controller is inverted\r\n" +
                     "        volatile unsigned enable : 1; // Bit 15: enables/disables control loop execution\r\n" +
                     "    } __attribute__((packed))bits;    // Controller status bitfield for direct bit access\r\n" +
                     "    volatile uint16_t value;          // Controller status full register access\r\n" +
