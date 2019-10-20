@@ -247,6 +247,16 @@ v0.9.0.64	10/19/19	feature update
 		cut-off is required, this would have to be done in user code prior to calling the control library code.
 		(This feature extension is on the list but not supported yet)
 
+v0.9.0.70	10/20/19	feature update
+
+	- Feature: Input signal offset compensation now fully supports controlled feedback inversion, allowing the design of bi-directional controllers which can seanlessly switch between quadrants.
+		
+	- Feature: Settings, which have been used to generate code files, are now stored in a istory list located below the Bode plot.
+		Users can use this list to reload previously used settings by doubble-click, SHIFT+ENTER hot key or a mouse context menu.
+		Users can also label and rename or delete entries in this list.
+
+
+
 ______________________________
 (C) Microchip Technology Inc.
 Date/Time: 12:41 PM 07/26/18
