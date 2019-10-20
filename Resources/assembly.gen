@@ -1,5 +1,6 @@
 [generic]
 Name=Assembly Generator Script
+Description=this script defines DSP assembly code generation templates used to generate user-tailored SMPS control loops using the DCLD SDK
 Version=1.2.1
 Date=10/18/19
 
