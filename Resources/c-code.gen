@@ -20,7 +20,8 @@ count=8
 7=%STRUCTURE_LABEL%
 
 [library_header]
-
+count=0
+line0=
 
 [comp_header]
 count=33
@@ -58,6 +59,7 @@ line30=volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type objec
 line31=);
 line32=
 
-
 [comp_source]
+count=0
+line0=
 
