@@ -2702,6 +2702,8 @@
             this.lstCoefficientsHistory.TabIndex = 0;
             this.lstCoefficientsHistory.UseCompatibleStateImageBehavior = false;
             this.lstCoefficientsHistory.View = System.Windows.Forms.View.Details;
+            this.lstCoefficientsHistory.DoubleClick += new System.EventHandler(this.lstCoefficientsHistory_DoubleClick);
+            this.lstCoefficientsHistory.KeyUp += new System.Windows.Forms.KeyEventHandler(this.lstCoefficientsHistory_KeyDown);
             // 
             // clHeadID
             // 
