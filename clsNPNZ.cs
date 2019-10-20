@@ -187,10 +187,17 @@ namespace dcld
 
 
         private bool _IsBidirectional = false;
-        internal bool IsBidirectional        // Specifies if input value has a static offset
+        internal bool IsBidirectional        // Specifies if input value has a static offset which will be subtracted from the input signal
         {
             get { return _IsBidirectional; }
-            set { _IsBidirectional = value; UpdateCoefficients(); return; }
+            set { _IsBidirectional = value; return; }
+        }
+
+        private bool _FeedbackRecitification = false;
+        internal bool FeedbackRecitification        // Specifies if bi-directional input signals will/can be inverted/rectified
+        {
+            get { return _FeedbackRecitification; }
+            set { _FeedbackRecitification = value; return; }
         }
 
         private StringBuilder _debugInfo = new StringBuilder();
