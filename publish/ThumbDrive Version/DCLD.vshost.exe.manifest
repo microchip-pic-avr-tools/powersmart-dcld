@@ -123,7 +123,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>KroSsX902GY4gAwImkFFykOkIwdQILCJXEUrhApZnTE=</dsig:DigestValue>
+        <dsig:DigestValue>zbyWd1lqd5n+xJaFxz2So8znKbic2FLW/0TCRJCaTcE=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -178,7 +178,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>ahjQGEccngj2QFRMHG6vpAvk+B6sa5W2T8jAP8NTVnE=</dsig:DigestValue>
+      <dsig:DigestValue>x/S8/FRwSN94FZrHYpD2AV/AAkIuzwmJ/Aww2zU11t8=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Resources\icon_bode.ico" size="4286">
