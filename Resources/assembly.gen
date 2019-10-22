@@ -1091,7 +1091,7 @@ head_comment=\n; Check for lower limit violation
 cycles=3
 lines=2
 comment0=load lower limit value
-comment1=compare values and skip next instruction if control output is within operating range (control output > upper limit)
+comment1=compare values and skip next instruction if control output is within operating range (control output > lower limit)
 code0=mov [w0 + #offMinOutput], w6
 code1=cpsgt w4, w6
 
