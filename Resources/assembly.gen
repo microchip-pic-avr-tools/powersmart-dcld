@@ -1,17 +1,19 @@
 [generic]
 Name=Assembly Generator Script
 Description=this script defines DSP assembly code generation templates used to generate user-tailored SMPS control loops using the DCLD SDK
-Version=1.2.1
-Date=10/18/19
+Version=1.2.2
+Date=10/22/19
 
 [history]
-count=2
+count=4
 0=04/03/19;1.1.1
 comment0=Added input offset compensation applied to input source
 1=10/18/19;1.2.0
 comment1=Changed existing input offset compensation to full bi-directional feedback implementation
 2=10/19/19;1.2.1
 comment2=Added code option for feedback signal rectification
+3=10/22/19;1.2.2
+comment3=Fixed typos in comments of data structure
 
 [filter_block_scaling_modes]
 0=%EMPTY%
@@ -222,14 +224,14 @@ count=81
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
 cycles=0
 lines=21
-comment0=status word at address-offset=0
-comment1=pointer to source memory address=2
-comment2=pointer to tasrget memory address=2
-comment3=pointer to control reference memory address=2
-comment4=pointer to A-coefficients array start address=2
-comment5=pointer to B-coefficients array start address=2
-comment6=pointer to control history array start address=2
-comment7=pointer to error history array start address=2
+comment0=status word at address-offset
+comment1=pointer to source memory address
+comment2=pointer to target memory address
+comment3=pointer to control reference memory address
+comment4=pointer to A-coefficients array start address
+comment5=pointer to B-coefficients array start address
+comment6=pointer to control history array start address
+comment7=pointer to error history array start address
 comment8=size of the A-coefficients array
 comment9=size of the B-coefficients array
 comment10=size of the control history array
@@ -356,13 +358,13 @@ head_comment=%SEPARATOR%; Address offset declarations for data structure address
 cycles=0
 lines=21
 comment0=status word at address-offset=0
-comment1=pointer to source memory address=2
-comment2=pointer to tasrget memory address=2
-comment3=pointer to control reference memory address=2
-comment4=pointer to A-coefficients array start address=2
-comment5=pointer to B-coefficients array start address=2
-comment6=pointer to control history array start address=2
-comment7=pointer to error history array start address=2
+comment1=pointer to source memory address
+comment2=pointer to target memory address
+comment3=pointer to control reference memory address
+comment4=pointer to A-coefficients array start address
+comment5=pointer to B-coefficients array start address
+comment6=pointer to control history array start address
+comment7=pointer to error history array start address
 comment8=size of the A-coefficients array
 comment9=size of the B-coefficients array
 comment10=size of the control history array
@@ -489,13 +491,13 @@ head_comment=%SEPARATOR%; Address offset declarations for data structure address
 cycles=0
 lines=21
 comment0=status word at address-offset=0
-comment1=pointer to source memory address=2
-comment2=pointer to tasrget memory address=2
-comment3=pointer to control reference memory address=2
-comment4=pointer to A-coefficients array start address=2
-comment5=pointer to B-coefficients array start address=2
-comment6=pointer to control history array start address=2
-comment7=pointer to error history array start address=2
+comment1=pointer to source memory address
+comment2=pointer to target memory address
+comment3=pointer to control reference memory address
+comment4=pointer to A-coefficients array start address
+comment5=pointer to B-coefficients array start address
+comment6=pointer to control history array start address
+comment7=pointer to error history array start address
 comment8=size of the A-coefficients array
 comment9=size of the B-coefficients array
 comment10=size of the control history array
@@ -621,13 +623,13 @@ head_comment=%SEPARATOR%; Address offset declarations for data structure address
 cycles=0
 lines=21
 comment0=status word at address-offset=0
-comment1=pointer to source memory address=2
-comment2=pointer to tasrget memory address=2
-comment3=pointer to control reference memory address=2
-comment4=pointer to A-coefficients array start address=2
-comment5=pointer to B-coefficients array start address=2
-comment6=pointer to control history array start address=2
-comment7=pointer to error history array start address=2
+comment1=pointer to source memory address
+comment2=pointer to target memory address
+comment3=pointer to control reference memory address
+comment4=pointer to A-coefficients array start address
+comment5=pointer to B-coefficients array start address
+comment6=pointer to control history array start address
+comment7=pointer to error history array start address
 comment8=size of the A-coefficients array
 comment9=size of the B-coefficients array
 comment10=size of the control history array

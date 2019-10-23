@@ -208,7 +208,7 @@ namespace dcld
                             " * This source file declares the default parameters of the z-domain compensation filter.  \r\n" +
                             " * The cNPNZ_t data structure contains two pointers to A- and B- coefficient arrays and   \r\n" +
                             " * two pointers to control and error history arrays.                                      \r\n" +
-                            " * For optimized data procesing during DSP computations, these arrays must be located in  \r\n" +
+                            " * For optimized data processing during DSP computations, these arrays must be located in  \r\n" +
                             " * specific memory locations (X-space for coefficient arrays and Y-space for control and  \r\n" +
                             " * error history arrays).  \r\n" +
                             " * The following declarations are used to define the array data contents, their length    \r\n" +
