@@ -101,11 +101,18 @@ namespace dcld
             set { _AddErrorInputNormalization = value; return; }
         }
 
-        private bool _AddADCTriggerPlacement = true;
-        internal bool AddADCTriggerPlacement
+        private bool _AddADCTriggerAPlacement = true;
+        internal bool AddADCTriggerAPlacement
         {
-            get { return (_AddADCTriggerPlacement); }
-            set { _AddADCTriggerPlacement = value; return; }
+            get { return (_AddADCTriggerAPlacement); }
+            set { _AddADCTriggerAPlacement = value; return; }
+        }
+
+        private bool _AddADCTriggerBPlacement = false;
+        internal bool AddADCTriggerBPlacement
+        {
+            get { return (_AddADCTriggerBPlacement); }
+            set { _AddADCTriggerBPlacement = value; return; }
         }
 
         private bool _AddAntiWindup = true;
@@ -625,8 +632,16 @@ namespace dcld
                             }
                             break;
 
-                        case "adc_trigger_placement":
-                            if (_AddADCTriggerPlacement)
+                        case "adc_trigger_a_placement":
+                            if (_AddADCTriggerAPlacement)
+                            {
+                                if (_SpreadSpectrumModulation) { command = command + "_ssm"; }
+                                str_dum = BuildCodeBlock(command);
+                            }
+                            break;
+
+                        case "adc_trigger_b_placement":
+                            if (_AddADCTriggerBPlacement)
                             {
                                 if (_SpreadSpectrumModulation) { command = command + "_ssm"; }
                                 str_dum = BuildCodeBlock(command);

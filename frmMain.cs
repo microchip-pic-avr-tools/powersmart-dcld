@@ -1496,7 +1496,8 @@ namespace dcld
                 WriteConfigString(str_path, "AssemblyGenerator", "AddEnableDisableFeature", Convert.ToUInt16(this.chkAddEnableDisable.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddDisableDummyReadFeature", Convert.ToUInt16(this.chkAddDisableDummyRead.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddErrorNormalization", Convert.ToUInt16(this.chkAddErrorNormalization.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddADCTriggerPlacement", Convert.ToUInt16(this.chkAddADCTriggerPlacement.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "AddADCTriggerAPlacement", Convert.ToUInt16(this.chkAddADCTriggerAPlacement.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "AddADCTriggerBPlacement", Convert.ToUInt16(this.chkAddADCTriggerBPlacement.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlInput", Convert.ToUInt16(this.chkAddLocalCopyOfControlInput.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddShadowCopyErrorInput", Convert.ToUInt16(this.chkAddLocalCopyOfErrorInput.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlOutput", Convert.ToUInt16(this.chkAddLocalCopyOfControlOutput.Checked).ToString());
@@ -1643,7 +1644,8 @@ namespace dcld
                 this.chkAddEnableDisable.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddEnableDisableFeature", "1")));
                 this.chkAddDisableDummyRead.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDisableDummyReadFeature", "1")));
                 this.chkAddErrorNormalization.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddErrorNormalization", "1")));
-                this.chkAddADCTriggerPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddADCTriggerPlacement", "1")));
+                this.chkAddADCTriggerAPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddADCTriggerAPlacement", "1")));
+                this.chkAddADCTriggerBPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddADCTriggerBPlacement", "0")));
                 this.chkAddLocalCopyOfControlInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlInput", "0")));
                 this.chkAddLocalCopyOfErrorInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddShadowCopyErrorInput", "0")));
                 this.chkAddLocalCopyOfControlOutput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlOutput", "0")));
@@ -3080,6 +3082,8 @@ namespace dcld
         private void GenerateCode(object sender, EventArgs e)
         {
 
+            int EditorASMScrollPos = 0;
+
             if (ApplicationStartUp) return;     // During the startup-phase o fhte application, suppress all updates
             if (ProjectFileLoadActive) return;  // If settings are loaded from a file, suppress all updates
             if (cNPNZ.QFormat != 15) return;    // Q15-Format supported only
@@ -3090,6 +3094,9 @@ namespace dcld
 
             stbProgressBar.Value = 10;
             Application.DoEvents();
+
+            // capture editor windows vertical scroll status
+            EditorASMScrollPos = txtSyntaxEditorAssembly.SelectedView.CurrentDisplayLine.Index;   //SelectedView.DisplayLines.IndexOf();  //.VerticalScroll.Value;
 
             // Generate C-Source incorporating coefficients
             txtSyntaxEditorCSource.Text = GenerateCSource(sender, e).ToString();
@@ -3123,6 +3130,10 @@ namespace dcld
             // Update execution timing chart and data
             UpdateExecutionRuntime(sender, e);
 
+            // Reset editor windows vertial scroll status
+            if (EditorASMScrollPos > 0)
+                txtSyntaxEditorAssembly.SelectedView.GoToLine(EditorASMScrollPos-1);
+            
             stbProgressBar.Visible = false;
             stbProgressBarLabel.Visible = false;
 
@@ -3268,7 +3279,8 @@ namespace dcld
             AssGen.SaveRestoreCoreConfig = ((this.chkSaveRestoreCoreConfig.Checked) && (this.chkContextSaving.Checked));
             AssGen.SaveRestoreCoreStatusRegister = ((this.chkSaveRestoreCoreStatus.Checked) && (this.chkContextSaving.Checked));
 
-            AssGen.AddADCTriggerPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerPlacement.Checked));
+            AssGen.AddADCTriggerAPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerAPlacement.Checked));
+            AssGen.AddADCTriggerBPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerBPlacement.Checked));
             AssGen.AddErrorInputNormalization = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddErrorNormalization.Checked));
             AssGen.AddEnableDisableFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked));
             AssGen.AddDisableDummyReadFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked) && (this.chkAddDisableDummyRead.Checked));

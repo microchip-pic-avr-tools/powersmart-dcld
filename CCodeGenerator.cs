@@ -343,8 +343,10 @@ namespace dcld
                     "    volatile int16_t MaxOutput; // Maximum output value used for clamping (R/W)\r\n" +
                         "\r\n" +
                     "    // Voltage/Average Current Mode Control Trigger handling\r\n" +
-                    "    volatile uint16_t* ptrADCTriggerRegister; // Pointer to ADC trigger register (e.g. TRIG1)\r\n" +
-                    "    volatile uint16_t ADCTriggerOffset; // ADC trigger offset to compensate propagation delays \r\n" +
+                    "    volatile uint16_t* ptrADCTriggerARegister; // Pointer to ADC trigger #1 register (e.g. TRIG1)\r\n" +
+                    "    volatile uint16_t ADCTriggerAOffset; // ADC trigger #1 offset to compensate propagation delays \r\n" +
+                    "    volatile uint16_t* ptrADCTriggerBRegister; // Pointer to ADC trigger #2 register (e.g. TRIG2)\r\n" +
+                    "    volatile uint16_t ADCTriggerBOffset; // ADC trigger #2 offset to compensate propagation delays \r\n" +
                     "    \r\n" +
                     "} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object\r\n" +
                     "\r\n"
