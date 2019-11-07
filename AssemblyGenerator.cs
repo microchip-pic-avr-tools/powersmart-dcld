@@ -87,6 +87,13 @@ namespace dcld
             set { _AddEnableDisableFeature = value; return; }
         }
 
+        private bool _AddDisableDummyReadFeature = true;
+        internal bool AddDisableDummyReadFeature
+        {
+            get { return (_AddDisableDummyReadFeature); }
+            set { _AddDisableDummyReadFeature = value; return; }
+        }
+
         private bool _AddErrorInputNormalization = true;
         internal bool AddErrorInputNormalization
         {
@@ -477,7 +484,11 @@ namespace dcld
                             break;
 
                         case "enable_disable_end":
-                            if (_AddEnableDisableFeature) str_dum = BuildCodeBlock(command);
+                            if ((_AddEnableDisableFeature) && (!_AddDisableDummyReadFeature)) str_dum = BuildCodeBlock(command);
+                            break;
+
+                        case "enable_disable_end_dummy_read":
+                            if ((_AddEnableDisableFeature) && (_AddDisableDummyReadFeature)) str_dum = BuildCodeBlock(command);
                             break;
 
                         case "core_config":

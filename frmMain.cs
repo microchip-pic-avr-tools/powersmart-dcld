@@ -1494,6 +1494,7 @@ namespace dcld
 
                 WriteConfigString(str_path, "AssemblyGenerator", "EnforceCoreConfiguration", Convert.ToUInt16(this.chkAddCoreConfig.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddEnableDisableFeature", Convert.ToUInt16(this.chkAddEnableDisable.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "AddDisableDummyReadFeature", Convert.ToUInt16(this.chkAddDisableDummyRead.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddErrorNormalization", Convert.ToUInt16(this.chkAddErrorNormalization.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddADCTriggerPlacement", Convert.ToUInt16(this.chkAddADCTriggerPlacement.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlInput", Convert.ToUInt16(this.chkAddLocalCopyOfControlInput.Checked).ToString());
@@ -1640,6 +1641,7 @@ namespace dcld
 
                 this.chkAddCoreConfig.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "EnforceCoreConfiguration", "1")));
                 this.chkAddEnableDisable.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddEnableDisableFeature", "1")));
+                this.chkAddDisableDummyRead.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDisableDummyReadFeature", "1")));
                 this.chkAddErrorNormalization.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddErrorNormalization", "1")));
                 this.chkAddADCTriggerPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddADCTriggerPlacement", "1")));
                 this.chkAddLocalCopyOfControlInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlInput", "0")));
@@ -3269,6 +3271,7 @@ namespace dcld
             AssGen.AddADCTriggerPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerPlacement.Checked));
             AssGen.AddErrorInputNormalization = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddErrorNormalization.Checked));
             AssGen.AddEnableDisableFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked));
+            AssGen.AddDisableDummyReadFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked) && (this.chkAddDisableDummyRead.Checked));
             AssGen.AddCoreConfig = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCoreConfig.Checked));
 
             AssGen.AddAntiWindup = this.chkAntiWindup.Checked;
@@ -4428,6 +4431,12 @@ namespace dcld
             LoadHistorySettings(sender, e);
 
             return;
+        }
+
+        private void chkAddEnableDisable_CheckedChanged(object sender, EventArgs e)
+        {
+            chkAddDisableDummyRead.Enabled = chkAddEnableDisable.Checked;
+            CodeGeneratorOptions_CheckedChanged(sender, e);
         }
 
     }

@@ -979,6 +979,21 @@ code0=mov [w0 + #offStatus], w12
 code1=btss w12, #NPMZ16_STATUS_ENABLE
 code2=bra %PREFIXU%_BYPASS_LOOP
 
+[enable_disable_end_dummy_read]
+head_comment=%SEPARATOR%; Enable/Disable bypass branch target with dummy read of source buffer
+cycles=4
+lines=5
+comment0=when enabled, step over dummy read and go straight to EXIT
+comment1=Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
+comment2=load pointer to input source register
+comment3=move value from input source into working register
+comment4=Exit control loop branch target 
+code0=goto %PREFIXU%_EXIT_LOOP
+code1=%PREFIXU%_BYPASS_LOOP:
+code2=mov [w0 + #offSourceRegister], w2
+code3=mov [w2], w1 
+code4=%PREFIXU%_EXIT_LOOP:
+
 [enable_disable_end]
 head_comment=%SEPARATOR%; Enable/Disable bypass branch target
 cycles=0

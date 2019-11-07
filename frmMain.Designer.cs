@@ -219,6 +219,7 @@
             this.chkAntiWindupClampMax = new System.Windows.Forms.CheckBox();
             this.chkAntiWindup = new System.Windows.Forms.CheckBox();
             this.grpCodeFeatureOptions = new System.Windows.Forms.GroupBox();
+            this.chkAddDisableDummyRead = new System.Windows.Forms.CheckBox();
             this.chkAddErrorNormalization = new System.Windows.Forms.CheckBox();
             this.chkCodeFeatureOptions = new System.Windows.Forms.CheckBox();
             this.chkStoreReloadAccLevel1 = new System.Windows.Forms.CheckBox();
@@ -1803,6 +1804,7 @@
             // 
             // grpCodeFeatureOptions
             // 
+            this.grpCodeFeatureOptions.Controls.Add(this.chkAddDisableDummyRead);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddErrorNormalization);
             this.grpCodeFeatureOptions.Controls.Add(this.chkCodeFeatureOptions);
             this.grpCodeFeatureOptions.Controls.Add(this.chkStoreReloadAccLevel1);
@@ -1818,6 +1820,19 @@
             this.grpCodeFeatureOptions.Size = new System.Drawing.Size(405, 236);
             this.grpCodeFeatureOptions.TabIndex = 3;
             this.grpCodeFeatureOptions.TabStop = false;
+            // 
+            // 
+            // chkAddDisableDummyRead
+            // 
+            this.chkAddDisableDummyRead.AutoSize = true;
+            this.chkAddDisableDummyRead.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAddDisableDummyRead.Location = new System.Drawing.Point(46, 76);
+            this.chkAddDisableDummyRead.Name = "chkAddDisableDummyRead";
+            this.chkAddDisableDummyRead.Size = new System.Drawing.Size(279, 19);
+            this.chkAddDisableDummyRead.TabIndex = 10;
+            this.chkAddDisableDummyRead.Text = "Add \'Dummy Read from Source\' when disabled";
+            this.chkAddDisableDummyRead.UseVisualStyleBackColor = true;
+            this.chkAddDisableDummyRead.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
             // chkAddErrorNormalization
             // 
@@ -1922,7 +1937,7 @@
             this.chkAddEnableDisable.TabIndex = 2;
             this.chkAddEnableDisable.Text = "Add E&nable/Disable Feature";
             this.chkAddEnableDisable.UseVisualStyleBackColor = true;
-            this.chkAddEnableDisable.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            this.chkAddEnableDisable.CheckedChanged += new System.EventHandler(this.chkAddEnableDisable_CheckedChanged);
             // 
             // chkAddCoreConfig
             // 
