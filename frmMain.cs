@@ -320,6 +320,7 @@ namespace dcld
                     "    - Current Managed Thread-ID: " + Environment.CurrentManagedThreadId.ToString() + "\r\n" +
                     "    - Command Line:              " + Environment.CommandLine.ToString() + "\r\n" +
                     "    - Current Directory:         " + Environment.CurrentDirectory.ToString() + "\r\n" +
+                    "    - AGS Filename:              " + AssemblyGeneratorFile + "\r\n" +
                 //    "    - StackTrace:\t" + Environment.StackTrace.ToString() + "\r\n" +
                     "    - System Directory:          " + Environment.SystemDirectory.ToString() + "\r\n" +
                     "    - User Interactive:          " + Environment.UserInteractive.ToString() + "\r\n" +
