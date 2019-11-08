@@ -1,8 +1,8 @@
 [generic]
 Name=Assembly Generator Script
 Description=this script defines DSP assembly code generation templates used to generate user-tailored SMPS control loops using the DCLD SDK
-Version=1.2.2
-Date=10/22/19
+Version=1.2.3
+Date=11/07/19
 
 [history]
 count=4
@@ -14,6 +14,8 @@ comment1=Changed existing input offset compensation to full bi-directional feedb
 comment2=Added code option for feedback signal rectification
 3=10/22/19;1.2.2
 comment3=Fixed typos in comments of data structure
+4=11/07/19;1.2.3
+comment4=Added 'Dummy Read of Source Buffer' when control loop is disabled\r\nAdded second ADC trigger placement target and offset
 
 [filter_block_scaling_modes]
 0=%EMPTY%
@@ -366,7 +368,7 @@ count=81
 [add_data_structure_scscl]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
 cycles=0
-lines=21
+lines=23
 comment0=status word at address-offset=0
 comment1=pointer to source memory address
 comment2=pointer to target memory address
@@ -386,8 +388,10 @@ comment15=control loop output normalization factor
 comment16=input source offset value
 comment17=minimum clamping value of control output 
 comment18=maximum clamping value of control output 
-comment19=pointer to ADC trigger register memory address
-comment20=value of ADC trigger offset
+comment19=pointer to ADC trigger #1 register memory address
+comment20=value of ADC trigger #1 offset
+comment21=pointer to ADC trigger #2 register memory address
+comment22=value of ADC trigger #2 offset
 code0=.equ offStatus,                 0
 code1=.equ offSourceRegister,         2
 code2=.equ offTargetRegister,         4
@@ -407,8 +411,10 @@ code15=.equ offPostScaler,             30
 code16=.equ offInputOffset,            32
 code17=.equ offMinOutput,              34
 code18=.equ offMaxOutput,              36
-code19=.equ offADCTriggerRegister,     38
-code20=.equ offADCTriggerOffset,       40
+code19=.equ offADCTriggerARegister,    38
+code20=.equ offADCTriggerAOffset,      40
+code21=.equ offADCTriggerBRegister,    42
+code22=.equ offADCTriggerBOffset,      44
 
 [blockset_dbsft_0]
 ;Instruction blockset for double-bitshed 16-bit fixed point controllers
@@ -501,7 +507,7 @@ count=81
 [add_data_structure_dbsft]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
 cycles=0
-lines=21
+lines=23
 comment0=status word at address-offset=0
 comment1=pointer to source memory address
 comment2=pointer to target memory address
@@ -521,8 +527,10 @@ comment15=(reserved)
 comment16=input source offset value
 comment17=minimum clamping value of control output 
 comment18=maximum clamping value of control output 
-comment19=pointer to ADC trigger register memory address
-comment20=value of ADC trigger offset
+comment19=pointer to ADC trigger #1 register memory address
+comment20=value of ADC trigger #1 offset
+comment21=pointer to ADC trigger #2 register memory address
+comment22=value of ADC trigger #2 offset
 code0=.equ offStatus,                 0
 code1=.equ offSourceRegister,         2
 code2=.equ offTargetRegister,         4
@@ -542,8 +550,10 @@ code15=.equ reserved_1,                30
 code16=.equ offInputOffset,            32
 code17=.equ offMinOutput,              34
 code18=.equ offMaxOutput,              36
-code19=.equ offADCTriggerRegister,     38
-code20=.equ offADCTriggerOffset,       40
+code19=.equ offADCTriggerARegister,    38
+code20=.equ offADCTriggerAOffset,      40
+code21=.equ offADCTriggerBRegister,    42
+code22=.equ offADCTriggerBOffset,      44
 
 [blockset_fscl_0]
 ;Instruction blockset for double-bitshed 16-bit fixed point controllers
@@ -635,7 +645,7 @@ count=80
 [add_data_structure_fscl]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
 cycles=0
-lines=21
+lines=23
 comment0=status word at address-offset=0
 comment1=pointer to source memory address
 comment2=pointer to target memory address
@@ -655,8 +665,10 @@ comment15=(reserved)
 comment16=input source offset value
 comment17=minimum clamping value of control output 
 comment18=maximum clamping value of control output 
-comment19=pointer to ADC trigger register memory address
-comment20=value of ADC trigger offset
+comment19=pointer to ADC trigger #1 register memory address
+comment20=value of ADC trigger #1 offset
+comment21=pointer to ADC trigger #2 register memory address
+comment22=value of ADC trigger #2 offset
 code0=.equ offStatus,                 0
 code1=.equ offSourceRegister,         2
 code2=.equ offTargetRegister,         4
@@ -676,8 +688,10 @@ code15=.equ reserved_3,                30
 code16=.equ offInputOffset,            32
 code17=.equ offMinOutput,              34
 code18=.equ offMaxOutput,              36
-code19=.equ offADCTriggerRegister,     38
-code20=.equ offADCTriggerOffset,       40
+code19=.equ offADCTriggerARegister,    38
+code20=.equ offADCTriggerAOffset,      40
+code21=.equ offADCTriggerBRegister,    42
+code22=.equ offADCTriggerBOffset,      44
 
 
 ;=============================================
@@ -1682,9 +1696,9 @@ lines=5
 comment0=%EMPTY%
 code0=asr w4, #1, w6
 code1=mov [w0 + #offADCTriggerAOffset], w8
-code2=add w6, w8, w7
+code2=add w6, w8, w10
 code3=mov [w0 + #offADCTriggerARegister], w8
-code4=mov w7, [w8]
+code4=mov w10, [w8]
 
 [adc_trigger_b_placement]
 head_comment=%SEPARATOR%; Update ADC trigger B position
@@ -1692,9 +1706,9 @@ cycles=4
 lines=4
 comment0=%EMPTY%
 code0=mov [w0 + #offADCTriggerBOffset], w8
-code1=add w6, w8, w7
+code1=add w6, w8, w10
 code2=mov [w0 + #offADCTriggerBRegister], w8
-code3=mov w7, [w8]
+code3=mov w10, [w8]
 
 [return]
 head_comment=%SEPARATOR%; End of routine
