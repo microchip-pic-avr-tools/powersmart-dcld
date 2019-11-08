@@ -58,7 +58,7 @@ bin/Debug/
 !docs/
 !publish/*.*
 !publich/*.pdf
-!publish/Windows Install/
+!publish/Windows Install/*.*
 !publish/ThumbDrive Version/
 !README.md
 !readme.txt
