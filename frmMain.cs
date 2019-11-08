@@ -1499,9 +1499,11 @@ namespace dcld
                 WriteConfigString(str_path, "AssemblyGenerator", "AddErrorNormalization", Convert.ToUInt16(this.chkAddErrorNormalization.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddADCTriggerAPlacement", Convert.ToUInt16(this.chkAddADCTriggerAPlacement.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddADCTriggerBPlacement", Convert.ToUInt16(this.chkAddADCTriggerBPlacement.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlInput", Convert.ToUInt16(this.chkAddLocalCopyOfControlInput.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddShadowCopyErrorInput", Convert.ToUInt16(this.chkAddLocalCopyOfErrorInput.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlOutput", Convert.ToUInt16(this.chkAddLocalCopyOfControlOutput.Checked).ToString());
+
+                WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderSource", Convert.ToUInt16(this.chkAddDataProviderSource.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlInput", Convert.ToUInt16(this.chkAddDataProviderControlInput.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderErrorInput", Convert.ToUInt16(this.chkAddDataProviderErrorInput.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlOutput", Convert.ToUInt16(this.chkAddDataProviderControlOutput.Checked).ToString());
 
                 WriteConfigString(str_path, "AssemblyGenerator", "AntiWindup", Convert.ToUInt16(this.chkAntiWindup.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AntiWindupSoftDesaturation", Convert.ToUInt16(this.chkAntiWindupSoftDesaturationFlag.Checked).ToString());
@@ -1647,9 +1649,11 @@ namespace dcld
                 this.chkAddErrorNormalization.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddErrorNormalization", "1")));
                 this.chkAddADCTriggerAPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddADCTriggerAPlacement", "1")));
                 this.chkAddADCTriggerBPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddADCTriggerBPlacement", "0")));
-                this.chkAddLocalCopyOfControlInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlInput", "0")));
-                this.chkAddLocalCopyOfErrorInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddShadowCopyErrorInput", "0")));
-                this.chkAddLocalCopyOfControlOutput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlOutput", "0")));
+
+                this.chkAddDataProviderSource.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderSource", "0")));
+                this.chkAddDataProviderControlInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlInput", "0")));
+                this.chkAddDataProviderErrorInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderErrorInput", "0")));
+                this.chkAddDataProviderControlOutput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlOutput", "0")));
 
                 stbProgressBar.Value = 50;
                 Application.DoEvents();
@@ -3294,9 +3298,9 @@ namespace dcld
             AssGen.AntiWindupClampMin = this.chkAntiWindupClampMin.Checked;
             AssGen.AntiWindupClampMinWithStatusFlag = ((this.chkAntiWindupMinStatusFlag.Checked) && (this.chkAntiWindupClampMin.Checked));
 
-            AssGen.CreateCopyOfMostRecentControlInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddLocalCopyOfControlInput.Checked));
-            AssGen.CreateCopyOfMostRecentErrorInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddLocalCopyOfErrorInput.Checked));
-            AssGen.CreateCopyOfMostRecentControlOutput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddLocalCopyOfControlOutput.Checked));
+            AssGen.CreateCopyOfMostRecentControlInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlInput.Checked) && (chkAddDataProviderSource.Checked));
+            AssGen.CreateCopyOfMostRecentErrorInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderErrorInput.Checked) && (chkAddDataProviderSource.Checked));
+            AssGen.CreateCopyOfMostRecentControlOutput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlOutput.Checked) && (chkAddDataProviderSource.Checked));
 
             AssGen.StoreReloadAccLevel1 = ((this.chkCodeFeatureOptions.Checked) && (this.chkStoreReloadAccLevel1.Checked) && (this.chkStoreReloadAccLevel1.Enabled) && (AssGen.CodeOptimizationLevel == 1));
 
@@ -4449,6 +4453,14 @@ namespace dcld
         private void chkAddEnableDisable_CheckedChanged(object sender, EventArgs e)
         {
             chkAddDisableDummyRead.Enabled = chkAddEnableDisable.Checked;
+            CodeGeneratorOptions_CheckedChanged(sender, e);
+        }
+
+        private void chkAddDataProviderSource_CheckedChanged(object sender, EventArgs e)
+        {
+            chkAddDataProviderControlInput.Enabled = chkAddDataProviderSource.Checked;
+            chkAddDataProviderControlOutput.Enabled = chkAddDataProviderSource.Checked;
+            chkAddDataProviderErrorInput.Enabled = chkAddDataProviderSource.Checked;
             CodeGeneratorOptions_CheckedChanged(sender, e);
         }
 

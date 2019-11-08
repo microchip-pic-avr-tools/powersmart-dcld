@@ -229,7 +229,7 @@ count=83
 [add_data_structure_sbsft]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
 cycles=0
-lines=23
+lines=26
 comment0=status word at address-offset
 comment1=pointer to source memory address
 comment2=pointer to target memory address
@@ -253,6 +253,9 @@ comment19=pointer to ADC trigger #1 register memory address
 comment20=value of ADC trigger #1 offset
 comment21=pointer to ADC trigger #2 register memory address
 comment22=value of ADC trigger #2 offset
+comment23=pointer to external data buffer of most recent control input
+comment24=pointer to external data buffer of most recent control error
+comment25=pointer to external data buffer of most recent control output
 code0=.equ offStatus,                 0
 code1=.equ offSourceRegister,         2
 code2=.equ offTargetRegister,         4
@@ -276,6 +279,9 @@ code19=.equ offADCTriggerARegister,    38
 code20=.equ offADCTriggerAOffset,      40
 code21=.equ offADCTriggerBRegister,    42
 code22=.equ offADCTriggerBOffset,      44
+code23=.equ offPtrControlInput,        46
+code24=.equ offPtrControlError,        48
+code25=.equ offPtrControlOutput,       50
 
 [blockset_scscl_0]
 ;Instruction blockset for output factor modulated, signle-bitshed 16-bit fixed point controllers
@@ -368,7 +374,7 @@ count=81
 [add_data_structure_scscl]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
 cycles=0
-lines=23
+lines=26
 comment0=status word at address-offset=0
 comment1=pointer to source memory address
 comment2=pointer to target memory address
@@ -392,6 +398,9 @@ comment19=pointer to ADC trigger #1 register memory address
 comment20=value of ADC trigger #1 offset
 comment21=pointer to ADC trigger #2 register memory address
 comment22=value of ADC trigger #2 offset
+comment23=pointer to external data buffer of most recent control input
+comment24=pointer to external data buffer of most recent control error
+comment25=pointer to external data buffer of most recent control output
 code0=.equ offStatus,                 0
 code1=.equ offSourceRegister,         2
 code2=.equ offTargetRegister,         4
@@ -415,6 +424,9 @@ code19=.equ offADCTriggerARegister,    38
 code20=.equ offADCTriggerAOffset,      40
 code21=.equ offADCTriggerBRegister,    42
 code22=.equ offADCTriggerBOffset,      44
+code23=.equ offPtrControlInput,        46
+code24=.equ offPtrControlError,        48
+code25=.equ offPtrControlOutput,       50
 
 [blockset_dbsft_0]
 ;Instruction blockset for double-bitshed 16-bit fixed point controllers
@@ -507,7 +519,7 @@ count=81
 [add_data_structure_dbsft]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
 cycles=0
-lines=23
+lines=26
 comment0=status word at address-offset=0
 comment1=pointer to source memory address
 comment2=pointer to target memory address
@@ -531,6 +543,9 @@ comment19=pointer to ADC trigger #1 register memory address
 comment20=value of ADC trigger #1 offset
 comment21=pointer to ADC trigger #2 register memory address
 comment22=value of ADC trigger #2 offset
+comment23=pointer to external data buffer of most recent control input
+comment24=pointer to external data buffer of most recent control error
+comment25=pointer to external data buffer of most recent control output
 code0=.equ offStatus,                 0
 code1=.equ offSourceRegister,         2
 code2=.equ offTargetRegister,         4
@@ -554,6 +569,9 @@ code19=.equ offADCTriggerARegister,    38
 code20=.equ offADCTriggerAOffset,      40
 code21=.equ offADCTriggerBRegister,    42
 code22=.equ offADCTriggerBOffset,      44
+code23=.equ offPtrControlInput,        46
+code24=.equ offPtrControlError,        48
+code25=.equ offPtrControlOutput,       50
 
 [blockset_fscl_0]
 ;Instruction blockset for double-bitshed 16-bit fixed point controllers
@@ -645,7 +663,7 @@ count=80
 [add_data_structure_fscl]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
 cycles=0
-lines=23
+lines=26
 comment0=status word at address-offset=0
 comment1=pointer to source memory address
 comment2=pointer to target memory address
@@ -669,6 +687,9 @@ comment19=pointer to ADC trigger #1 register memory address
 comment20=value of ADC trigger #1 offset
 comment21=pointer to ADC trigger #2 register memory address
 comment22=value of ADC trigger #2 offset
+comment23=pointer to external data buffer of most recent control input
+comment24=pointer to external data buffer of most recent control error
+comment25=pointer to external data buffer of most recent control output
 code0=.equ offStatus,                 0
 code1=.equ offSourceRegister,         2
 code2=.equ offTargetRegister,         4
@@ -692,6 +713,9 @@ code19=.equ offADCTriggerARegister,    38
 code20=.equ offADCTriggerAOffset,      40
 code21=.equ offADCTriggerBRegister,    42
 code22=.equ offADCTriggerBOffset,      44
+code23=.equ offPtrControlInput,        46
+code24=.equ offPtrControlError,        48
+code25=.equ offPtrControlOutput,       50
 
 
 ;=============================================
@@ -1221,10 +1245,12 @@ code1=neg w1, w1
 
 [shadow_copy_control_input]
 head_comment=%EMPTY%
-cycles=1
-lines=1
-comment0=copy most recent controller input value into data structure
-code0=mov w1, [w0 + #offControlInput]
+cycles=2
+lines=2
+comment0=load pointer address of target buffer of most recent controller input from data structure
+comment1=copy most recent controller input value to given data buffer target
+code0=mov [w0 + #offPtrControlInput], w2
+code1=mov w1, [w2]
 
 [comp_get_error]
 head_comment=%EMPTY%
@@ -1246,17 +1272,21 @@ code1=sl w1, w2, w1
 
 [shadow_copy_error_input]
 head_comment=%EMPTY%
-cycles=1
-lines=1
-comment0=copy most recent error value into data structure
-code0=mov w1, [w0 + #offErrorInput]
+cycles=2
+lines=2
+comment0=load pointer address of target buffer of most recent error value from data structure
+comment1=copy most recent error value to given data buffer target
+code0=mov [w0 + #offPtrControlError], w2
+code1=mov w1, [w2]
 
 [shadow_copy_control_output]
 head_comment=%EMPTY%
-cycles=1
-lines=1
-comment0=copy most recent controller output value into data structure
-code0=mov w4, [w0 + #offControlOutput]
+cycles=2
+lines=2
+comment0=load pointer address of target buffer of most recent controller output value from data structure
+comment1=copy most recent controller output value to given data buffer target
+code0=mov [w0 + #offPtrControlOutput], w2
+code1=mov w1, [w2]
 
 [comp_error_history_update]
 address_loop=b
