@@ -219,13 +219,15 @@
             this.chkAntiWindupClampMax = new System.Windows.Forms.CheckBox();
             this.chkAntiWindup = new System.Windows.Forms.CheckBox();
             this.grpCodeFeatureOptions = new System.Windows.Forms.GroupBox();
+            this.chkAddADCTriggerBPlacement = new System.Windows.Forms.CheckBox();
+            this.chkAddDisableDummyRead = new System.Windows.Forms.CheckBox();
             this.chkAddErrorNormalization = new System.Windows.Forms.CheckBox();
             this.chkCodeFeatureOptions = new System.Windows.Forms.CheckBox();
             this.chkStoreReloadAccLevel1 = new System.Windows.Forms.CheckBox();
             this.chkAddLocalCopyOfControlInput = new System.Windows.Forms.CheckBox();
             this.chkAddLocalCopyOfControlOutput = new System.Windows.Forms.CheckBox();
             this.chkAddLocalCopyOfErrorInput = new System.Windows.Forms.CheckBox();
-            this.chkAddADCTriggerPlacement = new System.Windows.Forms.CheckBox();
+            this.chkAddADCTriggerAPlacement = new System.Windows.Forms.CheckBox();
             this.chkAddEnableDisable = new System.Windows.Forms.CheckBox();
             this.chkAddCoreConfig = new System.Windows.Forms.CheckBox();
             this.grpContextSaving = new System.Windows.Forms.GroupBox();
@@ -1713,7 +1715,7 @@
             this.grpAntiWindup.Controls.Add(this.chkAntiWindupClampMax);
             this.grpAntiWindup.Controls.Add(this.chkAntiWindup);
             this.grpAntiWindup.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpAntiWindup.Location = new System.Drawing.Point(0, 596);
+            this.grpAntiWindup.Location = new System.Drawing.Point(0, 654);
             this.grpAntiWindup.Name = "grpAntiWindup";
             this.grpAntiWindup.Size = new System.Drawing.Size(405, 184);
             this.grpAntiWindup.TabIndex = 4;
@@ -1803,21 +1805,47 @@
             // 
             // grpCodeFeatureOptions
             // 
+            this.grpCodeFeatureOptions.Controls.Add(this.chkAddADCTriggerBPlacement);
+            this.grpCodeFeatureOptions.Controls.Add(this.chkAddDisableDummyRead);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddErrorNormalization);
             this.grpCodeFeatureOptions.Controls.Add(this.chkCodeFeatureOptions);
             this.grpCodeFeatureOptions.Controls.Add(this.chkStoreReloadAccLevel1);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddLocalCopyOfControlInput);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddLocalCopyOfControlOutput);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddLocalCopyOfErrorInput);
-            this.grpCodeFeatureOptions.Controls.Add(this.chkAddADCTriggerPlacement);
+            this.grpCodeFeatureOptions.Controls.Add(this.chkAddADCTriggerAPlacement);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddEnableDisable);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddCoreConfig);
             this.grpCodeFeatureOptions.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpCodeFeatureOptions.Location = new System.Drawing.Point(0, 360);
             this.grpCodeFeatureOptions.Name = "grpCodeFeatureOptions";
-            this.grpCodeFeatureOptions.Size = new System.Drawing.Size(405, 236);
+            this.grpCodeFeatureOptions.Size = new System.Drawing.Size(405, 294);
             this.grpCodeFeatureOptions.TabIndex = 3;
             this.grpCodeFeatureOptions.TabStop = false;
+            // 
+            // chkAddADCTriggerBPlacement
+            // 
+            this.chkAddADCTriggerBPlacement.AutoSize = true;
+            this.chkAddADCTriggerBPlacement.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAddADCTriggerBPlacement.Location = new System.Drawing.Point(30, 151);
+            this.chkAddADCTriggerBPlacement.Name = "chkAddADCTriggerBPlacement";
+            this.chkAddADCTriggerBPlacement.Size = new System.Drawing.Size(182, 19);
+            this.chkAddADCTriggerBPlacement.TabIndex = 11;
+            this.chkAddADCTriggerBPlacement.Text = "Add ADC &Trigger B Placement";
+            this.chkAddADCTriggerBPlacement.UseVisualStyleBackColor = true;
+            this.chkAddADCTriggerBPlacement.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            // 
+            // chkAddDisableDummyRead
+            // 
+            this.chkAddDisableDummyRead.AutoSize = true;
+            this.chkAddDisableDummyRead.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAddDisableDummyRead.Location = new System.Drawing.Point(46, 76);
+            this.chkAddDisableDummyRead.Name = "chkAddDisableDummyRead";
+            this.chkAddDisableDummyRead.Size = new System.Drawing.Size(279, 19);
+            this.chkAddDisableDummyRead.TabIndex = 10;
+            this.chkAddDisableDummyRead.Text = "Add \'Dummy Read from Source\' when disabled";
+            this.chkAddDisableDummyRead.UseVisualStyleBackColor = true;
+            this.chkAddDisableDummyRead.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
             // chkAddErrorNormalization
             // 
@@ -1825,7 +1853,7 @@
             this.chkAddErrorNormalization.Checked = true;
             this.chkAddErrorNormalization.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAddErrorNormalization.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddErrorNormalization.Location = new System.Drawing.Point(30, 76);
+            this.chkAddErrorNormalization.Location = new System.Drawing.Point(30, 101);
             this.chkAddErrorNormalization.Name = "chkAddErrorNormalization";
             this.chkAddErrorNormalization.Size = new System.Drawing.Size(159, 19);
             this.chkAddErrorNormalization.TabIndex = 3;
@@ -1852,7 +1880,7 @@
             this.chkStoreReloadAccLevel1.Checked = true;
             this.chkStoreReloadAccLevel1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkStoreReloadAccLevel1.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkStoreReloadAccLevel1.Location = new System.Drawing.Point(31, 204);
+            this.chkStoreReloadAccLevel1.Location = new System.Drawing.Point(30, 251);
             this.chkStoreReloadAccLevel1.Name = "chkStoreReloadAccLevel1";
             this.chkStoreReloadAccLevel1.Size = new System.Drawing.Size(245, 19);
             this.chkStoreReloadAccLevel1.TabIndex = 8;
@@ -1864,7 +1892,7 @@
             // 
             this.chkAddLocalCopyOfControlInput.AutoSize = true;
             this.chkAddLocalCopyOfControlInput.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddLocalCopyOfControlInput.Location = new System.Drawing.Point(31, 129);
+            this.chkAddLocalCopyOfControlInput.Location = new System.Drawing.Point(30, 176);
             this.chkAddLocalCopyOfControlInput.Name = "chkAddLocalCopyOfControlInput";
             this.chkAddLocalCopyOfControlInput.Size = new System.Drawing.Size(283, 19);
             this.chkAddLocalCopyOfControlInput.TabIndex = 7;
@@ -1876,7 +1904,7 @@
             // 
             this.chkAddLocalCopyOfControlOutput.AutoSize = true;
             this.chkAddLocalCopyOfControlOutput.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddLocalCopyOfControlOutput.Location = new System.Drawing.Point(31, 179);
+            this.chkAddLocalCopyOfControlOutput.Location = new System.Drawing.Point(30, 226);
             this.chkAddLocalCopyOfControlOutput.Name = "chkAddLocalCopyOfControlOutput";
             this.chkAddLocalCopyOfControlOutput.Size = new System.Drawing.Size(292, 19);
             this.chkAddLocalCopyOfControlOutput.TabIndex = 7;
@@ -1888,7 +1916,7 @@
             // 
             this.chkAddLocalCopyOfErrorInput.AutoSize = true;
             this.chkAddLocalCopyOfErrorInput.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddLocalCopyOfErrorInput.Location = new System.Drawing.Point(31, 154);
+            this.chkAddLocalCopyOfErrorInput.Location = new System.Drawing.Point(30, 201);
             this.chkAddLocalCopyOfErrorInput.Name = "chkAddLocalCopyOfErrorInput";
             this.chkAddLocalCopyOfErrorInput.Size = new System.Drawing.Size(270, 19);
             this.chkAddLocalCopyOfErrorInput.TabIndex = 6;
@@ -1896,19 +1924,19 @@
             this.chkAddLocalCopyOfErrorInput.UseVisualStyleBackColor = true;
             this.chkAddLocalCopyOfErrorInput.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
-            // chkAddADCTriggerPlacement
+            // chkAddADCTriggerAPlacement
             // 
-            this.chkAddADCTriggerPlacement.AutoSize = true;
-            this.chkAddADCTriggerPlacement.Checked = true;
-            this.chkAddADCTriggerPlacement.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAddADCTriggerPlacement.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddADCTriggerPlacement.Location = new System.Drawing.Point(31, 103);
-            this.chkAddADCTriggerPlacement.Name = "chkAddADCTriggerPlacement";
-            this.chkAddADCTriggerPlacement.Size = new System.Drawing.Size(172, 19);
-            this.chkAddADCTriggerPlacement.TabIndex = 4;
-            this.chkAddADCTriggerPlacement.Text = "Add ADC &Trigger Placement";
-            this.chkAddADCTriggerPlacement.UseVisualStyleBackColor = true;
-            this.chkAddADCTriggerPlacement.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            this.chkAddADCTriggerAPlacement.AutoSize = true;
+            this.chkAddADCTriggerAPlacement.Checked = true;
+            this.chkAddADCTriggerAPlacement.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAddADCTriggerAPlacement.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAddADCTriggerAPlacement.Location = new System.Drawing.Point(31, 126);
+            this.chkAddADCTriggerAPlacement.Name = "chkAddADCTriggerAPlacement";
+            this.chkAddADCTriggerAPlacement.Size = new System.Drawing.Size(182, 19);
+            this.chkAddADCTriggerAPlacement.TabIndex = 4;
+            this.chkAddADCTriggerAPlacement.Text = "Add ADC &Trigger A Placement";
+            this.chkAddADCTriggerAPlacement.UseVisualStyleBackColor = true;
+            this.chkAddADCTriggerAPlacement.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
             // chkAddEnableDisable
             // 
@@ -1922,7 +1950,7 @@
             this.chkAddEnableDisable.TabIndex = 2;
             this.chkAddEnableDisable.Text = "Add E&nable/Disable Feature";
             this.chkAddEnableDisable.UseVisualStyleBackColor = true;
-            this.chkAddEnableDisable.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            this.chkAddEnableDisable.CheckedChanged += new System.EventHandler(this.chkAddEnableDisable_CheckedChanged);
             // 
             // chkAddCoreConfig
             // 
@@ -4532,7 +4560,7 @@
             this.toolStripButtonShowTimingTable.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowTimingTable.Image")));
             this.toolStripButtonShowTimingTable.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonShowTimingTable.Name = "toolStripButtonShowTimingTable";
-            this.toolStripButtonShowTimingTable.Size = new System.Drawing.Size(65, 22);
+            this.toolStripButtonShowTimingTable.Size = new System.Drawing.Size(64, 22);
             this.toolStripButtonShowTimingTable.Text = "Timing";
             this.toolStripButtonShowTimingTable.ToolTipText = "Show/Hide Timing Table";
             this.toolStripButtonShowTimingTable.Click += new System.EventHandler(this.showSourceCodeTimingToolStripMenuItem_Click);
@@ -4788,7 +4816,7 @@
         private System.Windows.Forms.CheckBox chkContextSaving;
         private System.Windows.Forms.GroupBox grpCodeFeatureOptions;
         private System.Windows.Forms.CheckBox chkAddErrorNormalization;
-        private System.Windows.Forms.CheckBox chkAddADCTriggerPlacement;
+        private System.Windows.Forms.CheckBox chkAddADCTriggerAPlacement;
         private System.Windows.Forms.CheckBox chkAddEnableDisable;
         private System.Windows.Forms.CheckBox chkAddCoreConfig;
         private System.Windows.Forms.CheckBox chkSaveRestoreCoreConfig;
@@ -5082,6 +5110,8 @@
         private System.Windows.Forms.ToolStripMenuItem ctxCoeffSetRename;
         private System.Windows.Forms.ToolStripMenuItem ctxCoeffSetDelete;
         private System.Windows.Forms.ColumnHeader clHeadID;
+        private System.Windows.Forms.CheckBox chkAddDisableDummyRead;
+        private System.Windows.Forms.CheckBox chkAddADCTriggerBPlacement;
     }
 }
 

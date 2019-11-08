@@ -208,7 +208,7 @@ namespace dcld
                             " * This source file declares the default parameters of the z-domain compensation filter.  \r\n" +
                             " * The cNPNZ_t data structure contains two pointers to A- and B- coefficient arrays and   \r\n" +
                             " * two pointers to control and error history arrays.                                      \r\n" +
-                            " * For optimized data procesing during DSP computations, these arrays must be located in  \r\n" +
+                            " * For optimized data processing during DSP computations, these arrays must be located in  \r\n" +
                             " * specific memory locations (X-space for coefficient arrays and Y-space for control and  \r\n" +
                             " * error history arrays).  \r\n" +
                             " * The following declarations are used to define the array data contents, their length    \r\n" +
@@ -343,8 +343,10 @@ namespace dcld
                     "    volatile int16_t MaxOutput; // Maximum output value used for clamping (R/W)\r\n" +
                         "\r\n" +
                     "    // Voltage/Average Current Mode Control Trigger handling\r\n" +
-                    "    volatile uint16_t* ptrADCTriggerRegister; // Pointer to ADC trigger register (e.g. TRIG1)\r\n" +
-                    "    volatile uint16_t ADCTriggerOffset; // ADC trigger offset to compensate propagation delays \r\n" +
+                    "    volatile uint16_t* ptrADCTriggerARegister; // Pointer to ADC trigger #1 register (e.g. TRIG1)\r\n" +
+                    "    volatile uint16_t ADCTriggerAOffset; // ADC trigger #1 offset to compensate propagation delays \r\n" +
+                    "    volatile uint16_t* ptrADCTriggerBRegister; // Pointer to ADC trigger #2 register (e.g. TRIG2)\r\n" +
+                    "    volatile uint16_t ADCTriggerBOffset; // ADC trigger #2 offset to compensate propagation delays \r\n" +
                     "    \r\n" +
                     "} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object\r\n" +
                     "\r\n"
