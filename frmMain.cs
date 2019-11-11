@@ -326,7 +326,6 @@ namespace dcld
                     "    - Current Directory:         " + Environment.CurrentDirectory.ToString() + "\r\n" +
                     "    - AGS Filename:              " + AssemblyGeneratorFile + "\r\n" +
                     "    - CGS Filename:              " + CCodeGeneratorFile + "\r\n" +
-                    //    "    - StackTrace:\t" + Environment.StackTrace.ToString() + "\r\n" +
                     "    - System Directory:          " + Environment.SystemDirectory.ToString() + "\r\n" +
                     "    - User Interactive:          " + Environment.UserInteractive.ToString() + "\r\n" +
                     "    - Version:                   " + Environment.Version.ToString() + "\r\n" +
