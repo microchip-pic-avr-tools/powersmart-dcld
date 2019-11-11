@@ -495,6 +495,14 @@ namespace dcld
                             break;
 
                         case "enable_disable_end_dummy_read":
+                            if ((_AddEnableDisableFeature) && (_AddDisableDummyReadFeature))
+                            {
+                                str_dum = BuildCodeBlock(command);
+                                if (_CreateCopyOfMostRecentControlInput) str_dum = str_dum + BuildCodeBlock("shadow_copy_control_input");
+                            }
+                            break;
+
+                        case "enable_disable_end_dummy_read_end":
                             if ((_AddEnableDisableFeature) && (_AddDisableDummyReadFeature)) str_dum = BuildCodeBlock(command);
                             break;
 
