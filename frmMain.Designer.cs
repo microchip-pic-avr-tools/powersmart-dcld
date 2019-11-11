@@ -1853,6 +1853,7 @@
             // chkAddDataProviderControlInput
             // 
             this.chkAddDataProviderControlInput.AutoSize = true;
+            this.chkAddDataProviderControlInput.Enabled = false;
             this.chkAddDataProviderControlInput.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkAddDataProviderControlInput.Location = new System.Drawing.Point(36, 25);
             this.chkAddDataProviderControlInput.Name = "chkAddDataProviderControlInput";
@@ -1865,6 +1866,7 @@
             // chkAddDataProviderErrorInput
             // 
             this.chkAddDataProviderErrorInput.AutoSize = true;
+            this.chkAddDataProviderErrorInput.Enabled = false;
             this.chkAddDataProviderErrorInput.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkAddDataProviderErrorInput.Location = new System.Drawing.Point(36, 50);
             this.chkAddDataProviderErrorInput.Name = "chkAddDataProviderErrorInput";
@@ -1877,6 +1879,7 @@
             // chkAddDataProviderControlOutput
             // 
             this.chkAddDataProviderControlOutput.AutoSize = true;
+            this.chkAddDataProviderControlOutput.Enabled = false;
             this.chkAddDataProviderControlOutput.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkAddDataProviderControlOutput.Location = new System.Drawing.Point(36, 75);
             this.chkAddDataProviderControlOutput.Name = "chkAddDataProviderControlOutput";
@@ -1904,9 +1907,9 @@
             this.chkAddDisableDummyRead.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkAddDisableDummyRead.Location = new System.Drawing.Point(46, 100);
             this.chkAddDisableDummyRead.Name = "chkAddDisableDummyRead";
-            this.chkAddDisableDummyRead.Size = new System.Drawing.Size(279, 19);
+            this.chkAddDisableDummyRead.Size = new System.Drawing.Size(245, 19);
             this.chkAddDisableDummyRead.TabIndex = 4;
-            this.chkAddDisableDummyRead.Text = "Add \'Dummy Read from Source\' when disabled";
+            this.chkAddDisableDummyRead.Text = "Always read from source when disabled";
             this.chkAddDisableDummyRead.UseVisualStyleBackColor = true;
             this.chkAddDisableDummyRead.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
@@ -4193,6 +4196,8 @@
             // chkCSourceIncludePath
             // 
             this.chkCSourceIncludePath.AutoSize = true;
+            this.chkCSourceIncludePath.Checked = true;
+            this.chkCSourceIncludePath.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkCSourceIncludePath.Location = new System.Drawing.Point(128, 41);
             this.chkCSourceIncludePath.Name = "chkCSourceIncludePath";
             this.chkCSourceIncludePath.Size = new System.Drawing.Size(293, 19);
@@ -4307,6 +4312,8 @@
             // chkCHeaderIncludePath
             // 
             this.chkCHeaderIncludePath.AutoSize = true;
+            this.chkCHeaderIncludePath.Checked = true;
+            this.chkCHeaderIncludePath.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkCHeaderIncludePath.Location = new System.Drawing.Point(128, 41);
             this.chkCHeaderIncludePath.Name = "chkCHeaderIncludePath";
             this.chkCHeaderIncludePath.Size = new System.Drawing.Size(293, 19);
