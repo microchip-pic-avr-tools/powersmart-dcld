@@ -4,14 +4,10 @@
 #
 # Special gitignore for release branch only containing the publish folder
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
-
 # Project Folders
 bin/
+bin/Debug/
+bin/Release/
 code_templates/
 obj/
 Properties/
@@ -19,9 +15,15 @@ Resources/
 Service References/
 test_cases/
 user_guide/
+user_guide/pictures/
 
-# Executables
-#*.exe
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+.svn
+*.bak
 
 # VS C# specific
 ~*.*
@@ -45,21 +47,21 @@ disassembly/
 *.bash
 Makefile-genesis.properties
 
-### Misc ###
-user_guide/pictures/
-code_templates/
-test_cases/
-bin/Debug/
-.svn
-*.bak
-
 ### Files and folders to keep ###
 !docs/
+!dosc/index_files/
+!dosc/index_files/*.*
+!publish/
 !publish/*.*
-!publich/*.pdf
+!publish/*.pdf
+!publish/Windows Install/
 !publish/Windows Install/*.*
+!publish/Windows Install/Application Files/
 !publish/Windows Install/Application Files/*.*
 !publish/ThumbDrive Version/
+!publish/ThumbDrive Version/*.*
+!publish/ThumbDrive Version/Resources/
+!publish/ThumbDrive Version/Resources/*.*
 !README.md
 !readme.txt
 
