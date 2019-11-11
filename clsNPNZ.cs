@@ -45,6 +45,20 @@ namespace dcld
             DCLD_SCLMOD_DBLSCL_FLOAT = 4
         } ;
 
+        public enum dcldDataStructureType : byte
+        {
+            DCLD_DST_UNDEFINED = 0,
+            DCLD_DST_Q15 = 1,
+            DCLD_DST_FFLOAT_Q15 = 2,
+            DCLD_DST_FFLOAT = 3
+        } ;
+
+        private dcldDataStructureType _DataStructureType = dcldDataStructureType.DCLD_DST_Q15;
+        internal dcldDataStructureType DataStructureType
+        {
+            get { return (_DataStructureType); }
+        }
+
         private int _FilterOrder = 1;
         internal int FilterOrder
         {
@@ -90,7 +104,21 @@ namespace dcld
         internal dcldScalingMethod ScalingMethod
         {
             get { return _QScalingMethod; }
-            set { _QScalingMethod = value; ScaleCoefficients(); return; }
+            set { 
+                    _QScalingMethod = value;
+                    switch (_QScalingMethod)
+                    { 
+                        case dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT:
+                            _DataStructureType = dcldDataStructureType.DCLD_DST_FFLOAT_Q15;
+                            break;
+
+                        default:
+                            _DataStructureType = dcldDataStructureType.DCLD_DST_Q15;
+                            break;
+                    }
+                    ScaleCoefficients(); 
+                    return; 
+                }
         }
 
         private string _QScalingMethodID = "";
@@ -214,7 +242,32 @@ namespace dcld
 
         internal clsTransferFunction TransferFunction;       // Compensator Transfer Function Data Series
 
-  
+        // Control loop scalers used in assembly code generator
+        private int _PreScaler = 0;
+        internal int PreScaler
+        {
+            get { return (_PreScaler); }
+        }
+
+        private int _PostShiftA = 0;
+        internal int PostShiftA
+        {
+            get { return (_PostShiftA); }
+        }
+
+        private int _PostShiftB = 0;
+        internal int PostShiftB
+        {
+            get { return (_PostShiftB); }
+        }
+
+        private int _PostScaler;
+        internal int PostScaler
+        {
+            get { return (_PostScaler); }
+        }
+
+
         // Internal functions
 
         private int GetQNumberScaler(double float_number, double q_factor)
@@ -525,6 +578,12 @@ namespace dcld
                             UpdateValueResult &= CoeffB[i].UpdateValues(false);
                         }
 
+                        // Control loop scalers for assembly code generator
+                        _PreScaler = (Convert.ToInt32(_InputDataResolution) - _QFormat);
+                        _PostShiftA = CoeffA[1].QScaler;
+                        _PostShiftB = 0;
+                        _PostScaler = 0;
+
                         break;
 
                     case dcldScalingMethod.DCLD_SCLMOD_OUTPUT_SCALING_FACTOR:
@@ -570,6 +629,12 @@ namespace dcld
                             UpdateValueResult &= CoeffB[i].UpdateValues(false);
                         }
 
+                        // Control loop scalers for assembly code generator
+                        _PreScaler = (Convert.ToInt32(_InputDataResolution) - _QFormat);
+                        _PostShiftA = OutputScalingFactor.QScaler;
+                        _PostShiftB = 0;
+                        _PostScaler = OutputScalingFactor.Int;
+
                         break;
 
                     case dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT:
@@ -596,6 +661,12 @@ namespace dcld
                             UpdateValueResult &= CoeffB[i].UpdateValues(false);
                         }
 
+                        // Control loop scalers for assembly code generator
+                        _PreScaler = (Convert.ToInt32(_InputDataResolution) - _QFormat);
+                        _PostShiftA = CoeffA[1].QScaler;
+                        _PostShiftB = CoeffB[0].QScaler;
+                        _PostScaler = 0;
+
                         break;
 
                     case dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT:
@@ -618,6 +689,12 @@ namespace dcld
                             CoeffB[i].OutputScalingFactor = 0.000;
                             UpdateValueResult &= CoeffB[i].UpdateValues(true);
                         }
+
+                        // Control loop scalers for assembly code generator
+                        _PreScaler = (Convert.ToInt32(_InputDataResolution) - _QFormat);
+                        _PostShiftA = 0;
+                        _PostShiftB = 0;
+                        _PostScaler = 0;
 
                         break;
 
