@@ -579,7 +579,7 @@ namespace dcld
                         }
 
                         // Control loop scalers for assembly code generator
-                        _PreScaler = (Convert.ToInt32(_InputDataResolution) - _QFormat);
+                        _PreScaler = (_QFormat - Convert.ToInt32(_InputDataResolution));
                         _PostShiftA = CoeffA[1].QScaler;
                         _PostShiftB = 0;
                         _PostScaler = 0;
@@ -630,7 +630,7 @@ namespace dcld
                         }
 
                         // Control loop scalers for assembly code generator
-                        _PreScaler = (Convert.ToInt32(_InputDataResolution) - _QFormat);
+                        _PreScaler = (_QFormat - Convert.ToInt32(_InputDataResolution));
                         _PostShiftA = OutputScalingFactor.QScaler;
                         _PostShiftB = 0;
                         _PostScaler = OutputScalingFactor.Int;
@@ -662,7 +662,7 @@ namespace dcld
                         }
 
                         // Control loop scalers for assembly code generator
-                        _PreScaler = (Convert.ToInt32(_InputDataResolution) - _QFormat);
+                        _PreScaler = (_QFormat - Convert.ToInt32(_InputDataResolution));
                         _PostShiftA = CoeffA[1].QScaler;
                         _PostShiftB = CoeffB[0].QScaler;
                         _PostScaler = 0;
@@ -691,7 +691,7 @@ namespace dcld
                         }
 
                         // Control loop scalers for assembly code generator
-                        _PreScaler = (Convert.ToInt32(_InputDataResolution) - _QFormat);
+                        _PreScaler = (_QFormat - Convert.ToInt32(_InputDataResolution));
                         _PostShiftA = 0;
                         _PostShiftB = 0;
                         _PostScaler = 0;
