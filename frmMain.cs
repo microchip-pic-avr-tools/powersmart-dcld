@@ -79,9 +79,11 @@ namespace dcld
 
         const string DEFAULT_INI_FILE = "dcld.ini";
         const string ASS_GEN_FILE = "assembly.gen";
+        const string C_GEN_FILE = "c-code.gen";
 
         string INI_FILE = DEFAULT_INI_FILE;
         string AssemblyGeneratorFile = ASS_GEN_FILE;
+        string CCodeGeneratorFile = C_GEN_FILE;
 
         // GUI controls groups
         TextBox[] txtPole = null, txtZero = null;
@@ -233,6 +235,7 @@ namespace dcld
 
             NewProjectFilenameDummy = DefaultProjectFileName;
             AssemblyGeneratorFile = resourcePath + ASS_GEN_FILE;
+            CCodeGeneratorFile = resourcePath + C_GEN_FILE;
             
             INI_FILE = "./" + DEFAULT_INI_FILE;
             if (! System.IO.File.Exists(INI_FILE)) 
@@ -300,6 +303,7 @@ namespace dcld
                     "Product Name:                    " + Application.ProductName.ToString() + "\r\n" +
                     "Application Version:             " + Application.ProductVersion.ToString() + "\r\n" +
                     "AGS Version:                     " + ReadConfigString(AssemblyGeneratorFile, "generic", "Version", "N/A") + "\r\n" +
+                    "CGS Version:                     " + ReadConfigString(CCodeGeneratorFile, "generic", "Version", "N/A") + "\r\n" +
                     "Company Name:                    " + Application.CompanyName.ToString() + "\r\n" +
                 "\r\n";
 
@@ -349,9 +353,10 @@ namespace dcld
                 this.txtOutput.Text = txtOutput.Text + "04:    " + "root path: " + rootPath + "\r\n";
                 this.txtOutput.Text = txtOutput.Text + "05:    " + "resource path: " + resourcePath + "\r\n";
                 this.txtOutput.Text = txtOutput.Text + "06:    " + "settings file path: " + INI_FILE + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "07:    " + "code generator file path: " + AssemblyGeneratorFile + "\r\n";
+                this.txtOutput.Text = txtOutput.Text + "07:    " + "assembly code generator file path: " + AssemblyGeneratorFile + "\r\n";
+                this.txtOutput.Text = txtOutput.Text + "08:    " + "c-code generator file path:" + CCodeGeneratorFile + "\r\n"; 
 
-                this.txtOutput.Text = txtOutput.Text + "08:    " + "assembly parser file: " + resourcePath + "ActiproSoftware.dsPICAssembly.xml";
+                this.txtOutput.Text = txtOutput.Text + "09:    " + "assembly parser file: " + resourcePath + "ActiproSoftware.dsPICAssembly.xml";
                 if (System.IO.File.Exists(resourcePath + "ActiproSoftware.dsPICAssembly.xml"))
                 {
                     this.txtSyntaxEditorAssembly.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICAssembly.xml", 0);
@@ -361,7 +366,7 @@ namespace dcld
                 }
                 else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
 
-                this.txtOutput.Text = txtOutput.Text + "09:    " + "XC16 parser file (source file): " + resourcePath + "ActiproSoftware.dsPICXC16.xml";
+                this.txtOutput.Text = txtOutput.Text + "10:    " + "XC16 parser file (source file): " + resourcePath + "ActiproSoftware.dsPICXC16.xml";
                 if (System.IO.File.Exists(resourcePath + "ActiproSoftware.dsPICXC16.xml"))
                 {
                     this.txtSyntaxEditorCSource.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
@@ -369,13 +374,13 @@ namespace dcld
                     this.txtSyntaxEditorCSource.HideSelection = false;
                     this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
 
-                    this.txtOutput.Text = txtOutput.Text + "10:    " + "XC16 parser file (header file): " + resourcePath + "ActiproSoftware.dsPICXC16.xml";
+                    this.txtOutput.Text = txtOutput.Text + "11:    " + "XC16 parser file (header file): " + resourcePath + "ActiproSoftware.dsPICXC16.xml";
                     this.txtSyntaxEditorCHeader.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
                     this.txtSyntaxEditorCHeader.LineNumberMarginVisible = true;
                     this.txtSyntaxEditorCHeader.HideSelection = false;
                     this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
 
-                    this.txtOutput.Text = txtOutput.Text + "11:    " + "XC16 parser file (library API header): " + resourcePath + "ActiproSoftware.dsPICXC16.xml";
+                    this.txtOutput.Text = txtOutput.Text + "12:    " + "XC16 parser file (library API header): " + resourcePath + "ActiproSoftware.dsPICXC16.xml";
                     this.txtSyntaxEditorCLibHeader.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
                     this.txtSyntaxEditorCLibHeader.LineNumberMarginVisible = true;
                     this.txtSyntaxEditorCLibHeader.HideSelection = false;
@@ -383,7 +388,7 @@ namespace dcld
                 }
                 else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
 
-                this.txtOutput.Text = txtOutput.Text + "12:    " + "INI script parser file: " + resourcePath + "ActiproSoftware.INIFile.xml";
+                this.txtOutput.Text = txtOutput.Text + "13:    " + "INI script parser file: " + resourcePath + "ActiproSoftware.INIFile.xml";
                 if (System.IO.File.Exists(resourcePath + "ActiproSoftware.INIFile.xml"))
                 {
                     this.txtSyntaxEditorINIFile.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.INIFile.xml", 0);
@@ -393,7 +398,7 @@ namespace dcld
                 }
                 else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
 
-                this.txtOutput.Text = txtOutput.Text + "13:    " + "ASM gemerator file: " + AssemblyGeneratorFile;
+                this.txtOutput.Text = txtOutput.Text + "14:    " + "ASM gemerator file: " + AssemblyGeneratorFile;
                 if (System.IO.File.Exists(AssemblyGeneratorFile))
                 {
                     this.txtSyntaxEditorINIFile.Document.LoadFile(AssemblyGeneratorFile);
@@ -401,7 +406,12 @@ namespace dcld
                 }
                 else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
 
-                this.txtOutput.Text = txtOutput.Text + "14:    " + "My Documents path: ";
+                this.txtOutput.Text = txtOutput.Text + "15:    " + "C-Code gemerator file: " + CCodeGeneratorFile;
+                if (System.IO.File.Exists(CCodeGeneratorFile))
+                { this.txtOutput.Text = txtOutput.Text + " ... OK\r\n"; }
+                else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
+
+                this.txtOutput.Text = txtOutput.Text + "16:    " + "My Documents path: ";
                 str_dum = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 this.txtOutput.Text = txtOutput.Text + str_dum + "\r\n";
 
@@ -411,10 +421,10 @@ namespace dcld
                 this.txtCHeaderPath.Text = str_dum + "\\"; // + str_file + ".h";
                 this.txtCLibPath.Text = str_dum + "\\"; // + "npnz16b.h";
 
-                this.txtOutput.Text = txtOutput.Text + "15:    " + "ASM source file path: " + str_dum + "\\" + str_file + "_asm.s" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "16:    " + "C-source file path: " + str_dum + "\\" + str_file + ".c" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "17:    " + "C-header file path: " + str_dum + "\\" + str_file + ".h" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "18:    " + "C-API header file path: " + str_dum + "\\npnz16b.h" + "\r\n";
+                this.txtOutput.Text = txtOutput.Text + "17:    " + "ASM source file path: " + str_dum + "\\" + str_file + "_asm.s" + "\r\n";
+                this.txtOutput.Text = txtOutput.Text + "18:    " + "C-source file path: " + str_dum + "\\" + str_file + ".c" + "\r\n";
+                this.txtOutput.Text = txtOutput.Text + "19:    " + "C-header file path: " + str_dum + "\\" + str_file + ".h" + "\r\n";
+                this.txtOutput.Text = txtOutput.Text + "20:    " + "C-API header file path: " + str_dum + "\\npnz16b.h" + "\r\n";
                 this.txtOutput.Text = txtOutput.Text + "\r\n" + 
                     "Application start up complete" + "\r\n" + "\r\n";
 
@@ -1499,9 +1509,11 @@ namespace dcld
                 WriteConfigString(str_path, "AssemblyGenerator", "AddErrorNormalization", Convert.ToUInt16(this.chkAddErrorNormalization.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddADCTriggerAPlacement", Convert.ToUInt16(this.chkAddADCTriggerAPlacement.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddADCTriggerBPlacement", Convert.ToUInt16(this.chkAddADCTriggerBPlacement.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlInput", Convert.ToUInt16(this.chkAddLocalCopyOfControlInput.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddShadowCopyErrorInput", Convert.ToUInt16(this.chkAddLocalCopyOfErrorInput.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlOutput", Convert.ToUInt16(this.chkAddLocalCopyOfControlOutput.Checked).ToString());
+
+                WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderSource", Convert.ToUInt16(this.chkAddDataProviderSource.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlInput", Convert.ToUInt16(this.chkAddDataProviderControlInput.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderErrorInput", Convert.ToUInt16(this.chkAddDataProviderErrorInput.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlOutput", Convert.ToUInt16(this.chkAddDataProviderControlOutput.Checked).ToString());
 
                 WriteConfigString(str_path, "AssemblyGenerator", "AntiWindup", Convert.ToUInt16(this.chkAntiWindup.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AntiWindupSoftDesaturation", Convert.ToUInt16(this.chkAntiWindupSoftDesaturationFlag.Checked).ToString());
@@ -1647,9 +1659,11 @@ namespace dcld
                 this.chkAddErrorNormalization.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddErrorNormalization", "1")));
                 this.chkAddADCTriggerAPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddADCTriggerAPlacement", "1")));
                 this.chkAddADCTriggerBPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddADCTriggerBPlacement", "0")));
-                this.chkAddLocalCopyOfControlInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlInput", "0")));
-                this.chkAddLocalCopyOfErrorInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddShadowCopyErrorInput", "0")));
-                this.chkAddLocalCopyOfControlOutput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddShadowCopyControlOutput", "0")));
+
+                this.chkAddDataProviderSource.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderSource", "0")));
+                this.chkAddDataProviderControlInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlInput", "0")));
+                this.chkAddDataProviderErrorInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderErrorInput", "0")));
+                this.chkAddDataProviderControlOutput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlOutput", "0")));
 
                 stbProgressBar.Value = 50;
                 Application.DoEvents();
@@ -1861,7 +1875,8 @@ namespace dcld
             // try to cature body into clipboard
             try
             {
-                Clipboard.SetText(GenerateCSource(sender, e).ToString());
+                GenerateCode(sender, e);
+                Clipboard.SetText(txtSyntaxEditorCSource.Text);
                 MessageBox.Show("Coefficient Declaration has been successfully copied into Clipboard", Application.ProductName,
                                                 MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             }
@@ -2072,19 +2087,6 @@ namespace dcld
                         "\r\n"
                     );
 
-                //str_Buffer.Append( 
-                //        "Coeff A" + i + "\r\n" +
-                //        "Float:    " + cNPNZ.CoeffA[i].Float64.ToString() + "\r\n" +
-                //        "FloatS:   " + cNPNZ.CoeffA[i].FloatScaledFixedPoint.ToString() + "\r\n" +
-                //        "Q15:      " + cNPNZ.CoeffA[i].QFractional.ToString() + "\r\n" +
-                //        "Q-Scaler: " + cNPNZ.CoeffA[i].QScaler.ToString() + "\r\n" +
-                //        "C-Factor: " + cNPNZ.CoeffA[i].OutputScalingFactor.ToString() + "\r\n" +
-                //        "UInt:     " + cNPNZ.CoeffA[i].UInt.ToString() + "\r\n" +
-                //        "Int:      " + cNPNZ.CoeffA[i].Int.ToString() + "\r\n" +
-                //        "Hex:      " + cNPNZ.CoeffA[i].Hex.ToString() + "\r\n" +
-                //        "Bin:      " + cNPNZ.CoeffA[i].Binary.ToString() + "\r\n\r\n"
-                //    );
-
             }
 
             for (i = 0; i <= cNPNZ.FilterOrder; i++)
@@ -2103,18 +2105,6 @@ namespace dcld
                         "\r\n"
                     );
 
-                //str_Buffer.Append( 
-                //        "Coeff B" + i + "\r\n" +
-                //        "Float:    " + cNPNZ.CoeffB[i].Float64.ToString() + "\r\n" +
-                //        "FloatS:   " + cNPNZ.CoeffB[i].FloatScaledFixedPoint.ToString() + "\r\n" +
-                //        "Q15:      " + cNPNZ.CoeffB[i].QFractional.ToString() + "\r\n" +
-                //        "Q-Scaler: " + cNPNZ.CoeffB[i].QScaler.ToString() + "\r\n" +
-                //        "C-Factor: " + cNPNZ.CoeffB[i].OutputScalingFactor.ToString() + "\r\n" +
-                //        "UInt:     " + cNPNZ.CoeffB[i].UInt.ToString() + "\r\n" +
-                //        "Int:      " + cNPNZ.CoeffB[i].Int.ToString() + "\r\n" +
-                //        "Hex:      " + cNPNZ.CoeffB[i].Hex.ToString() + "\r\n" +
-                //        "Bin:      " + cNPNZ.CoeffB[i].Binary.ToString() + "\r\n\r\n"
-                //    );
             }
 
             if (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_OUTPUT_SCALING_FACTOR)
@@ -3099,24 +3089,59 @@ namespace dcld
             // capture editor windows vertical scroll status
             EditorASMScrollPos = txtSyntaxEditorAssembly.SelectedView.CurrentDisplayLine.Index;   //SelectedView.DisplayLines.IndexOf();  //.VerticalScroll.Value;
 
-            // Generate C-Source incorporating coefficients
-            txtSyntaxEditorCSource.Text = GenerateCSource(sender, e).ToString();
+            // ========================================================================
 
+            // Set common C-Code Generator Settings
+            clsCCodeGenerator cGen = new clsCCodeGenerator();
+
+            cGen.FileNamePattern = txtControllerNamePrefix1.Text.Trim() + txtControllerNamePrefix2.Text.Trim();
+            cGen.PreShift = (int)(Convert.ToUInt32(cmbQFormat.Text.Substring(1, (int)cmbQFormat.Text.Length - 1)) - Convert.ToUInt32(txtInputDataResolution.Text));
+
+            if ((chkUserVariableNamePrefix.Checked) && (chkUserVariableNamePrefix.Enabled))
+            { cGen.PreFix = cGen.FileNamePattern + "_"; }
+            else { cGen.PreFix = DefaultVariablePrefix + "_"; }
+
+            if (chkCSourceIncludePath.Checked)
+            { cGen.CHeaderIncludePath = GetIncludePath(txtCHeaderPath.Text); }
+            else
+            { cGen.CHeaderIncludePath = ""; }
+
+            if (chkCHeaderIncludePath.Checked)
+            { cGen.LibHeaderIncludePath = GetIncludePath(txtCLibPath.Text); }
+            else
+            { cGen.CHeaderIncludePath = ""; }
+
+            cGen.TemplateFile = CCodeGeneratorFile;
+            cGen.CGS_Version = ReadConfigString(CCodeGeneratorFile, "generic", "Version", "n/a");
+            cGen.CGS_VersionDate = ReadConfigString(CCodeGeneratorFile, "generic", "Date", "n/a");
+            cGen.CompTypeName = cmbCompType.Text;
+            cGen.ScalingMethodName = cmbQScalingMethod.Text;
+
+            // Generate C-Source incorporating coefficients
+
+            txtSyntaxEditorCSource.Text = cGen.BuildSource(cNPNZ).ToString(); // GenerateCSource(sender, e).ToString();
             stbProgressBar.Value = 20;
             Application.DoEvents();
 
             // Generate C-Header
-            txtSyntaxEditorCHeader.Text = GenerateCHeader(sender, e).ToString();
-            txtSyntaxEditorCLibHeader.Text = GenerateCLibHeader(sender, e).ToString();
-
+            txtSyntaxEditorCHeader.Text = cGen.BuildCHeader(cNPNZ).ToString(); // GenerateCHeader(sender, e).ToString();
             stbProgressBar.Value = 30;
             Application.DoEvents();
+
+            // Generate C Library Header
+            txtSyntaxEditorCLibHeader.Text = cGen.BuildCLibHeader(cNPNZ).ToString(); //  GenerateCLibHeader(sender, e).ToString();
+            stbProgressBar.Value = 30;
+            Application.DoEvents();
+
+            // ========================================================================
 
             // Generate assembly body
             txtSyntaxEditorAssembly.Document.Text = GenerateAssembly(sender, e).ToString();
 
             stbProgressBar.Value = 70;
             Application.DoEvents();
+
+            // ========================================================================
 
             // Hide code generation update warnings
             tsbCodeGenUpdateWarningAssembly.Visible = false;
@@ -3141,89 +3166,24 @@ namespace dcld
             return;
         }
 
-        private StringBuilder GenerateCSource(object sender, EventArgs e)
+        private string GetIncludePath(string PathDeclaration)
         {
             string str_dum = "";
-            clsCCodeGenerator cGen = new clsCCodeGenerator();
 
-            if (chkCSourceIncludePath.Checked)
+            str_dum = PathDeclaration;
+
+            if ((str_dum.Length > 1) && (str_dum.Substring(1, 1) == "."))
             {
-                str_dum = txtCHeaderPath.Text;
-                if ((str_dum.Length > 1) && (str_dum.Substring(1, 1) == ".")) 
-                {
-                    str_dum = str_dum.Replace("\\", "/");
-                    if ((str_dum.Length > 1) && (str_dum.Substring(str_dum.Length - 1, 1) != "/")) str_dum = str_dum + "/";
-                }
-                else
-                {
-                    if ((str_dum.Length > 1) && (str_dum.Substring(str_dum.Length - 1, 1) != "\\")) str_dum = str_dum + "\\";
-                }
-                cGen.CHeaderIncludePath = str_dum;
+                str_dum = str_dum.Replace("\\", "/");
+                if ((str_dum.Length > 1) && (str_dum.Substring(str_dum.Length - 1, 1) != "/")) str_dum = str_dum + "/";
             }
             else
-            { cGen.CHeaderIncludePath = ""; }
-
-            cGen.FileNamePattern = txtControllerNamePrefix1.Text.Trim() + txtControllerNamePrefix2.Text.Trim();
-            cGen.PreShift = (int)(Convert.ToUInt32(cmbQFormat.Text.Substring(1, (int)cmbQFormat.Text.Length - 1)) - Convert.ToUInt32(txtInputDataResolution.Text));
-
-            if ((chkUserVariableNamePrefix.Checked) && (chkUserVariableNamePrefix.Enabled))
-            { cGen.PreFix = cGen.FileNamePattern + "_"; }
-            else { cGen.PreFix = DefaultVariablePrefix + "_"; }
-
-            cGen.CompTypeName = cmbCompType.Text;
-            cGen.ScalingMethodName = cmbQScalingMethod.Text;
-
-            return (cGen.BuildCode(cNPNZ, false));
-
-        }
-
-        private StringBuilder GenerateCHeader(object sender, EventArgs e)
-        {
-            string str_dum = "";
-            clsCCodeGenerator cGen = new clsCCodeGenerator();
-
-            if (chkCHeaderIncludePath.Checked)
             {
-                str_dum = txtCLibPath.Text;
-                if ((str_dum.Length > 1) && (str_dum.Substring(0, 1) == "."))
-                {
-                    str_dum = str_dum.Replace("\\", "/");
-                    if ((str_dum.Length > 1) && (str_dum.Substring(str_dum.Length - 1, 1) != "/")) str_dum = str_dum + "/";
-                }
-                else
-                {
-                    if ((str_dum.Length > 1) && (str_dum.Substring(str_dum.Length - 1, 1) != "\\")) str_dum = str_dum + "\\";
-                }
-                cGen.LibHeaderIncludePath = str_dum; 
+                if ((str_dum.Length > 1) && (str_dum.Substring(str_dum.Length - 1, 1) != "\\")) str_dum = str_dum + "\\";
             }
-            else
-            { cGen.LibHeaderIncludePath = ""; }
 
-            cGen.FileNamePattern = txtControllerNamePrefix1.Text.Trim() + txtControllerNamePrefix2.Text.Trim();
-            cGen.PreShift = (int)(Convert.ToUInt32(cmbQFormat.Text.Substring(1, (int)cmbQFormat.Text.Length - 1)) - Convert.ToUInt32(txtInputDataResolution.Text));
-
-            if ((chkUserVariableNamePrefix.Checked) && (chkUserVariableNamePrefix.Enabled))
-            { cGen.PreFix = cGen.FileNamePattern + "_"; }
-            else { cGen.PreFix = DefaultVariablePrefix + "_"; }
-
-            cGen.CompTypeName = cmbCompType.Text;
-            cGen.ScalingMethodName = cmbQScalingMethod.Text;
-
-            return(cGen.BuildCode(cNPNZ, true));
-
-        }
-
-        private StringBuilder GenerateCLibHeader(object sender, EventArgs e)
-        {
-            clsCCodeGenerator cGen = new clsCCodeGenerator();
-
-            cGen.FileNamePattern = txtControllerNamePrefix1.Text.Trim() + txtControllerNamePrefix2.Text.Trim();
-            cGen.PreShift = (int)(Convert.ToUInt32(cmbQFormat.Text.Substring(1, (int)cmbQFormat.Text.Length - 1)) - Convert.ToUInt32(txtInputDataResolution.Text));
-            cGen.PreFix = "c" + cNPNZ.FilterOrder + "P" + cNPNZ.FilterOrder + "Z_";
-            cGen.CompTypeName = cmbCompType.Text;
-            cGen.ScalingMethodName = cmbQScalingMethod.Text;
-
-            return (cGen.BuildCode(cNPNZ, true, true));
+            // Return corrected include path
+            return (str_dum);
 
         }
 
@@ -3294,9 +3254,9 @@ namespace dcld
             AssGen.AntiWindupClampMin = this.chkAntiWindupClampMin.Checked;
             AssGen.AntiWindupClampMinWithStatusFlag = ((this.chkAntiWindupMinStatusFlag.Checked) && (this.chkAntiWindupClampMin.Checked));
 
-            AssGen.CreateCopyOfMostRecentControlInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddLocalCopyOfControlInput.Checked));
-            AssGen.CreateCopyOfMostRecentErrorInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddLocalCopyOfErrorInput.Checked));
-            AssGen.CreateCopyOfMostRecentControlOutput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddLocalCopyOfControlOutput.Checked));
+            AssGen.CreateCopyOfMostRecentControlInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlInput.Checked) && (chkAddDataProviderSource.Checked));
+            AssGen.CreateCopyOfMostRecentErrorInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderErrorInput.Checked) && (chkAddDataProviderSource.Checked));
+            AssGen.CreateCopyOfMostRecentControlOutput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlOutput.Checked) && (chkAddDataProviderSource.Checked));
 
             AssGen.StoreReloadAccLevel1 = ((this.chkCodeFeatureOptions.Checked) && (this.chkStoreReloadAccLevel1.Checked) && (this.chkStoreReloadAccLevel1.Enabled) && (AssGen.CodeOptimizationLevel == 1));
 
@@ -4449,6 +4409,14 @@ namespace dcld
         private void chkAddEnableDisable_CheckedChanged(object sender, EventArgs e)
         {
             chkAddDisableDummyRead.Enabled = chkAddEnableDisable.Checked;
+            CodeGeneratorOptions_CheckedChanged(sender, e);
+        }
+
+        private void chkAddDataProviderSource_CheckedChanged(object sender, EventArgs e)
+        {
+            chkAddDataProviderControlInput.Enabled = chkAddDataProviderSource.Checked;
+            chkAddDataProviderControlOutput.Enabled = chkAddDataProviderSource.Checked;
+            chkAddDataProviderErrorInput.Enabled = chkAddDataProviderSource.Checked;
             CodeGeneratorOptions_CheckedChanged(sender, e);
         }
 
