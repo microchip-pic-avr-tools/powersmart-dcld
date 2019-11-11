@@ -255,8 +255,31 @@ v0.9.0.70	10/20/19	feature update
 		Users can use this list to reload previously used settings by doubble-click, SHIFT+ENTER hot key or a mouse context menu.
 		Users can also label and rename or delete entries in this list.
 
+v0.9.0.72	11/07/19	feature update
 
+	- Feature: Added {Dummy-Read when Disabled} Option This option has been added for dsPIC33CH and dsPIC33CK devices where an 
+		ADC buffer always needs to be accessed when its ADC interrupt is triggered and the interrupt service routine (ISR) 
+		is called. This new option will add code for reading the specified data source register/variable even when the controller 
+		is disabled and the control loop execution is bypassed to prevent the CPU from stalling on dsPIC33CH and dsPIC3CK devices. 
+		This option is not required for dsPIC33FJ and dsPIC33EP devices.
 
+	- Feature: Added {Second ADC Trigger} Option** In a multi-loop system control modes such as average current mode control, an outer 
+		loop (e.g. voltage loop) generates reference values for the inner loop (e.g. current loop). The duty cycle, frequency or 
+		phase-shift adjustment, however, is computed by the inner loop only. Any ADC trigger placement which needs to be aligned 
+		and synchronized with the switching waveform can therefore only be set once the inner control loop execution has been completed. 
+		As outer and inner loop may require two independent ADC trigger locations within one switching cycle, an option for placing a second 
+		ADC trigger has been added. The two available triggers ADC_Trigger_A and ADC_Trigger_B are equal and can be used as desired. 
+		When no second ADC trigger is required and the option is disabled, ADC_Trigger_B will be ignored by the control loop.
+
+v0.9.0.75	11/11/19	feature update
+
+	- Feature: Added three Data Provider Sources to control loop. These data providers are pointers to external data buffers where
+		users can decide to push internal runtime data to. Users can select most recent input value (from source), most recent error
+		and most recent control output. If the most recent data input (from source) is selected, data is also pushed when the 
+		control loop is disabled.
+
+	- Internal Upgrade: C-Code generation is now fully based on an external code generator script, which allow users to modify the generated
+		C-Code when desired. 
 ______________________________
 (C) Microchip Technology Inc.
 Date/Time: 12:41 PM 07/26/18
