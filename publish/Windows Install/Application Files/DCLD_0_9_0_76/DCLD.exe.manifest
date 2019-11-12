@@ -15,7 +15,7 @@
         <defaultAssemblyRequest permissionSetReference="Custom" />
       </applicationRequestMinimum>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
-        <!-- UAC Manifest Options
+        <!-- UAC Manifest Option
             If you want to change the Windows User Account Control level replace the 
             requestedExecutionLevel node with one of the following.
 
