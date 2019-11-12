@@ -22,7 +22,7 @@
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
+    <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
     <SupportUrl>https://areiter128.github.io/DCLD/</SupportUrl>
     <ErrorReportUrl>http://www.microchip.com/SMPS</ErrorReportUrl>
@@ -30,14 +30,15 @@
     <ProductName>z-Domain Control Loop Designer</ProductName>
     <PublisherName>Microchip Technology Inc.</PublisherName>
     <SuiteName>Digital SMPS Control Library SDK</SuiteName>
-    <MinimumRequiredVersion>0.9.0.38</MinimumRequiredVersion>
+    <MinimumRequiredVersion>0.9.0.75</MinimumRequiredVersion>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <AutorunEnabled>true</AutorunEnabled>
     <DisallowUrlActivation>true</DisallowUrlActivation>
     <ApplicationRevision>77</ApplicationRevision>
     <ApplicationVersion>0.9.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>true</UseApplicationTrust>
+    <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <ExcludeDeploymentUrl>true</ExcludeDeploymentUrl>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
