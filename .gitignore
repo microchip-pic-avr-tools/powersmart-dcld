@@ -42,7 +42,6 @@ disassembly/
 *.ico
 *.sln
 *.suo
-*.zip
 *.mk
 *.bash
 Makefile-genesis.properties
@@ -55,6 +54,7 @@ Makefile-genesis.properties
 !publish/*.*
 !publish/*.pdf
 !publish/Windows Install/
+!publish/Windows Install/Windows Install.zip
 !publish/Windows Install/*.*
 !publish/Windows Install/Application Files/
 !publish/Windows Install/Application Files/*.*
