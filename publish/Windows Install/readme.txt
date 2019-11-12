@@ -281,7 +281,7 @@ v0.9.0.75	11/11/19	feature update
 	- Internal Upgrade: C-Code generation is now fully based on an external code generator script, which allow users to modify the generated
 		C-Code when desired. 
 
-v0.9.0.76	11/12/19	bugfix
+v0.9.0.76	11/11/19	bugfix
 
 	- Bugfix: The control loop pre-scaler used for input data normalization was generated with an inverted sign, making positive number negative and vice versa
 
