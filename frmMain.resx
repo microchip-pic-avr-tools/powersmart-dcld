@@ -261,7 +261,7 @@
     <value>True</value>
   </metadata>
   <metadata name="toolStripBode.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>615, 17</value>
+    <value>477, 18</value>
   </metadata>
   <data name="chkBodeCursor.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -297,7 +297,7 @@
     <value>861, 17</value>
   </metadata>
   <metadata name="toolStripTiming.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>479, 17</value>
+    <value>338, 18</value>
   </metadata>
   <data name="chkTimingCursor.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -824,7 +824,7 @@
     <value>228, 17</value>
   </metadata>
   <metadata name="tsbMain.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>992, 56</value>
+    <value>618, 18</value>
   </metadata>
   <data name="toolStripButtonOpen.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

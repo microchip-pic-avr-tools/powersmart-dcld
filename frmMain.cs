@@ -65,6 +65,7 @@ namespace dcld
         bool ApplicationStartUp = true;
         bool ProjectFileLoadActive = false;
         bool ProjectFileChanged = false;
+        bool ShowSDomainTF = true;
 
         // Project files
         string DefaultProjectFileName = "MyCtrlLoop.dcld";
@@ -289,6 +290,9 @@ namespace dcld
             cmbCompType.SelectedIndex = 2;  // Always select 3P3Z controller as default
             cmbLoopOptimizationLevel.SelectedIndex = 0; // Always select loop optimization level 0 (none) as default
             cmbTriggerPlacement.SelectedIndex = 0; // Always select 50% On-Time as default
+
+            ShowSDomainTF = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(INI_FILE, "bode_plot", "show_s_domain", "1")));
+            showSDomainTransferFunctionToolStripMenuItem.Checked = ShowSDomainTF;
 
             // Refresh GUI
             ApplicationStartUp = false;
@@ -1004,9 +1008,16 @@ namespace dcld
             // Load gain and phase plots
             chartBode.Series[0].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagGain_z);
             chartBode.Series[1].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagPhase_z);
-            chartBode.Series[2].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagGain_s);
-            chartBode.Series[3].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagPhase_s);
-
+            if (ShowSDomainTF)
+            {
+                chartBode.Series[2].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagGain_s);
+                chartBode.Series[3].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagPhase_s);
+            }
+            else
+            {
+                chartBode.Series[2].Points.Clear();
+                chartBode.Series[3].Points.Clear();
+            }
 
             if (ForceScales)
             {
@@ -1091,10 +1102,20 @@ namespace dcld
 
             try
             {
+                // Load data into data series
                 chartBode.Series[0].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagGain_z);
                 chartBode.Series[1].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagPhase_z);
-                chartBode.Series[2].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagGain_s);
-                chartBode.Series[3].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagPhase_s);
+
+                if (ShowSDomainTF)
+                {
+                    chartBode.Series[2].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagGain_s);
+                    chartBode.Series[3].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagPhase_s);
+                }
+                else
+                {
+                    chartBode.Series[2].Points.Clear(); // .Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagGain_s);
+                    chartBode.Series[3].Points.Clear(); // .Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagPhase_s);
+                }
 
                 if (ForceAnnotationUpdate)
                 {
@@ -2433,6 +2454,7 @@ namespace dcld
             WriteConfigString(INI_FILE, "bode_plot", "y1_max", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisY.Maximum));
             WriteConfigString(INI_FILE, "bode_plot", "y2_min", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisY2.Minimum));
             WriteConfigString(INI_FILE, "bode_plot", "y2_max", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisY2.Maximum));
+            WriteConfigString(INI_FILE, "bode_plot", "show_s_domain", Convert.ToString(Convert.ToInt32(showSDomainTransferFunctionToolStripMenuItem.Checked)));
 
             // save data table status
             WriteConfigString(INI_FILE, "data_table", "visible", Convert.ToUInt16(showCoeffficientDataTableToolStripMenuItem.Checked).ToString());
@@ -4418,6 +4440,23 @@ namespace dcld
             chkAddDataProviderControlOutput.Enabled = chkAddDataProviderSource.Checked;
             chkAddDataProviderErrorInput.Enabled = chkAddDataProviderSource.Checked;
             CodeGeneratorOptions_CheckedChanged(sender, e);
+        }
+
+        private void showSDomainTransferFunctionToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            chartBode.Series[2].IsVisibleInLegend = ShowSDomainTF;
+            chartBode.Series[3].IsVisibleInLegend = ShowSDomainTF;
+            UpdateBodePlot(sender, e, false);
+        }
+
+        private void showSDomainTransferFunctionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (showSDomainTransferFunctionToolStripMenuItem.Checked)
+                ShowSDomainTF = false;
+            else
+                ShowSDomainTF = true;
+
+            showSDomainTransferFunctionToolStripMenuItem.Checked = ShowSDomainTF;
         }
 
     }
