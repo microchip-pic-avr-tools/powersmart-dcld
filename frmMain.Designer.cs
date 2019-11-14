@@ -117,6 +117,8 @@
             this.showCoeffficientDataTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showSourceCodeTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.showSDomainTransferFunctionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateHeaderFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -438,10 +440,10 @@
             this.txtCLibPath = new System.Windows.Forms.TextBox();
             this.lblCLibPath = new System.Windows.Forms.Label();
             this.cmdCLibPath = new System.Windows.Forms.Button();
-            this.tabPageGeneratorDefinitions = new System.Windows.Forms.TabPage();
-            this.txtSyntaxEditorINIFile = new ActiproSoftware.SyntaxEditor.SyntaxEditor();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
             this.txtOutput = new System.Windows.Forms.TextBox();
+            this.tabPageGeneratorDefinitions = new System.Windows.Forms.TabPage();
+            this.txtSyntaxEditorINIFile = new ActiproSoftware.SyntaxEditor.SyntaxEditor();
             this.timRefresh = new System.Windows.Forms.Timer(this.components);
             this.tsbMain = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonOpen = new System.Windows.Forms.ToolStripButton();
@@ -526,8 +528,8 @@
             this.tabPageLibraryHeader.SuspendLayout();
             this.tsbCodeGenUpdateWarningLibHeader.SuspendLayout();
             this.panelCLibPath.SuspendLayout();
-            this.tabPageGeneratorDefinitions.SuspendLayout();
             this.tabPageOutput.SuspendLayout();
+            this.tabPageGeneratorDefinitions.SuspendLayout();
             this.tsbMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -564,7 +566,7 @@
             this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "&Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -573,27 +575,27 @@
             this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -603,6 +605,8 @@
             this.showCoeffficientDataTableToolStripMenuItem,
             this.showSourceCodeTimingToolStripMenuItem,
             this.toolStripSeparator2,
+            this.showSDomainTransferFunctionToolStripMenuItem,
+            this.toolStripSeparator23,
             this.refreshToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
@@ -634,6 +638,21 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(261, 6);
+            // 
+            // showSDomainTransferFunctionToolStripMenuItem
+            // 
+            this.showSDomainTransferFunctionToolStripMenuItem.Checked = true;
+            this.showSDomainTransferFunctionToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showSDomainTransferFunctionToolStripMenuItem.Name = "showSDomainTransferFunctionToolStripMenuItem";
+            this.showSDomainTransferFunctionToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.showSDomainTransferFunctionToolStripMenuItem.Text = "Show s-DomainTransfer Function";
+            this.showSDomainTransferFunctionToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showSDomainTransferFunctionToolStripMenuItem_CheckedChanged);
+            this.showSDomainTransferFunctionToolStripMenuItem.Click += new System.EventHandler(this.showSDomainTransferFunctionToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator23
+            // 
+            this.toolStripSeparator23.Name = "toolStripSeparator23";
+            this.toolStripSeparator23.Size = new System.Drawing.Size(261, 6);
             // 
             // refreshToolStripMenuItem
             // 
@@ -3995,8 +4014,8 @@
             this.tabSourceCode.Controls.Add(this.tabPageCSource);
             this.tabSourceCode.Controls.Add(this.tabPageCHeader);
             this.tabSourceCode.Controls.Add(this.tabPageLibraryHeader);
-            this.tabSourceCode.Controls.Add(this.tabPageGeneratorDefinitions);
             this.tabSourceCode.Controls.Add(this.tabPageOutput);
+            this.tabSourceCode.Controls.Add(this.tabPageGeneratorDefinitions);
             this.tabSourceCode.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabSourceCode.Location = new System.Drawing.Point(3, 3);
             this.tabSourceCode.Name = "tabSourceCode";
@@ -4467,36 +4486,6 @@
             this.cmdCLibPath.UseVisualStyleBackColor = true;
             this.cmdCLibPath.Click += new System.EventHandler(this.GetCodeGeneratorPath);
             // 
-            // tabPageGeneratorDefinitions
-            // 
-            this.tabPageGeneratorDefinitions.Controls.Add(this.txtSyntaxEditorINIFile);
-            this.tabPageGeneratorDefinitions.Location = new System.Drawing.Point(4, 22);
-            this.tabPageGeneratorDefinitions.Name = "tabPageGeneratorDefinitions";
-            this.tabPageGeneratorDefinitions.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneratorDefinitions.Size = new System.Drawing.Size(930, 717);
-            this.tabPageGeneratorDefinitions.TabIndex = 4;
-            this.tabPageGeneratorDefinitions.Text = "Generator Definitions";
-            this.tabPageGeneratorDefinitions.UseVisualStyleBackColor = true;
-            // 
-            // txtSyntaxEditorINIFile
-            // 
-            this.txtSyntaxEditorINIFile.AutoScroll = true;
-            this.txtSyntaxEditorINIFile.BracketHighlightingInclusive = true;
-            this.txtSyntaxEditorINIFile.BracketHighlightingVisible = true;
-            this.txtSyntaxEditorINIFile.CurrentLineHighlightingVisible = true;
-            this.txtSyntaxEditorINIFile.Dock = System.Windows.Forms.DockStyle.Fill;
-            document5.Filename = "";
-            document5.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
-            this.txtSyntaxEditorINIFile.Document = document5;
-            this.txtSyntaxEditorINIFile.LineNumberMarginVisible = true;
-            this.txtSyntaxEditorINIFile.Location = new System.Drawing.Point(3, 3);
-            this.txtSyntaxEditorINIFile.Name = "txtSyntaxEditorINIFile";
-            visualStudio2005SyntaxEditorRenderer5.ResetAllPropertiesOnSystemColorChange = false;
-            this.txtSyntaxEditorINIFile.Renderer = visualStudio2005SyntaxEditorRenderer5;
-            this.txtSyntaxEditorINIFile.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorINIFile.Size = new System.Drawing.Size(924, 711);
-            this.txtSyntaxEditorINIFile.TabIndex = 6;
-            // 
             // tabPageOutput
             // 
             this.tabPageOutput.Controls.Add(this.txtOutput);
@@ -4520,6 +4509,36 @@
             this.txtOutput.Size = new System.Drawing.Size(924, 711);
             this.txtOutput.TabIndex = 0;
             this.txtOutput.WordWrap = false;
+            // 
+            // tabPageGeneratorDefinitions
+            // 
+            this.tabPageGeneratorDefinitions.BackColor = System.Drawing.Color.Transparent;
+            this.tabPageGeneratorDefinitions.Controls.Add(this.txtSyntaxEditorINIFile);
+            this.tabPageGeneratorDefinitions.Location = new System.Drawing.Point(4, 22);
+            this.tabPageGeneratorDefinitions.Name = "tabPageGeneratorDefinitions";
+            this.tabPageGeneratorDefinitions.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageGeneratorDefinitions.Size = new System.Drawing.Size(930, 717);
+            this.tabPageGeneratorDefinitions.TabIndex = 4;
+            this.tabPageGeneratorDefinitions.Text = "Generator Definitions";
+            // 
+            // txtSyntaxEditorINIFile
+            // 
+            this.txtSyntaxEditorINIFile.AutoScroll = true;
+            this.txtSyntaxEditorINIFile.BracketHighlightingInclusive = true;
+            this.txtSyntaxEditorINIFile.BracketHighlightingVisible = true;
+            this.txtSyntaxEditorINIFile.CurrentLineHighlightingVisible = true;
+            this.txtSyntaxEditorINIFile.Dock = System.Windows.Forms.DockStyle.Fill;
+            document5.Filename = "";
+            document5.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
+            this.txtSyntaxEditorINIFile.Document = document5;
+            this.txtSyntaxEditorINIFile.LineNumberMarginVisible = true;
+            this.txtSyntaxEditorINIFile.Location = new System.Drawing.Point(3, 3);
+            this.txtSyntaxEditorINIFile.Name = "txtSyntaxEditorINIFile";
+            visualStudio2005SyntaxEditorRenderer5.ResetAllPropertiesOnSystemColorChange = false;
+            this.txtSyntaxEditorINIFile.Renderer = visualStudio2005SyntaxEditorRenderer5;
+            this.txtSyntaxEditorINIFile.SelectionMovesOnRightClick = false;
+            this.txtSyntaxEditorINIFile.Size = new System.Drawing.Size(924, 711);
+            this.txtSyntaxEditorINIFile.TabIndex = 6;
             // 
             // timRefresh
             // 
@@ -4785,9 +4804,9 @@
             this.tsbCodeGenUpdateWarningLibHeader.PerformLayout();
             this.panelCLibPath.ResumeLayout(false);
             this.panelCLibPath.PerformLayout();
-            this.tabPageGeneratorDefinitions.ResumeLayout(false);
             this.tabPageOutput.ResumeLayout(false);
             this.tabPageOutput.PerformLayout();
+            this.tabPageGeneratorDefinitions.ResumeLayout(false);
             this.tsbMain.ResumeLayout(false);
             this.tsbMain.PerformLayout();
             this.ResumeLayout(false);
@@ -5150,6 +5169,8 @@
         private System.Windows.Forms.CheckBox chkAddADCTriggerBPlacement;
         private System.Windows.Forms.GroupBox grpDataProviderSources;
         private System.Windows.Forms.CheckBox chkAddDataProviderSource;
+        private System.Windows.Forms.ToolStripMenuItem showSDomainTransferFunctionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator23;
     }
 }
 
