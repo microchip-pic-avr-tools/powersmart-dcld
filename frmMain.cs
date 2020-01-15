@@ -66,14 +66,17 @@ namespace dcld
         bool ProjectFileLoadActive = false;
         bool ProjectFileChanged = false;
         bool ShowSDomainTF = true;
+        bool MPLABXProjectDirUpdate = false;
 
         // Project files
-        string DefaultProjectFileName = "MyCtrlLoop.dcld";
+        string DefaultProjectFileNameExtension = ".dcld";
+        string DefaultProjectFileName = "MyCtrlLoop";
         
         string CurrentProjectFileName = "";
-
         string NewProjectFilenameDummy = "";
         string ExternalFileOpenPath = "";
+        string MPLABXProjectDirectory = "";
+        string UserGuideFileName = "";
 
         string rootPath = Application.StartupPath;
         string resourcePath = Application.StartupPath;
@@ -219,12 +222,6 @@ namespace dcld
             txtSamplingFrequency.Text = NumberTextBox_ToDouble(txtSamplingFrequency).ToString();
 
             // Load default settings
-/*
-            // Set application path string for relative file paths
-            if ((rootPath.Substring(rootPath.Length - 1, 1) != "\\") && (rootPath.Length > 0)) rootPath = rootPath + "\\";
-            if (System.IO.Directory.Exists(rootPath + "Resources\\")) { resourcePath = rootPath + "Resources\\"; }
-            else { resourcePath = rootPath; }
-*/
             rootPath = "./";
             if (System.IO.Directory.Exists("./Resources")) { resourcePath = "./Resources/"; }
             else {
@@ -1223,20 +1220,28 @@ namespace dcld
             return rc;
         }
 
+        /* ***************************************************************************************** 
+         * Extracts the path of the directory in which the DCLD project is been stored
+         * ***************************************************************************************** */
         private string GetCurrentProjectFilePath(object sender, EventArgs e)
         {
             string str_dum = "";
             string[] str_arr;
             string[] dum_sep = new string[1];
 
-            dum_sep[0] = ("\\");
-            str_arr = CurrentProjectFileName.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
+            if (CurrentProjectFileName.Trim().Length > 0)
+            { 
+                dum_sep[0] = ("\\");
+                str_arr = CurrentProjectFileName.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
+                str_dum = CurrentProjectFileName.Substring(0, CurrentProjectFileName.Length - str_arr[str_arr.Length - 1].Length);
+            }
 
-            str_dum = CurrentProjectFileName.Substring(0, CurrentProjectFileName.Length - str_arr[str_arr.Length - 1].Length);
-
-            return (str_dum);
+            return (str_dum.Trim());
         }
 
+        /* ***************************************************************************************** 
+         * Extracts the path of the directory with filename of the DCLD project file
+         * ***************************************************************************************** */
         private string GetCurrentProjectFileName(object sender, EventArgs e)
         {
             string str_dum = "";
@@ -1247,24 +1252,85 @@ namespace dcld
             str_arr = CurrentProjectFileName.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
             str_dum = str_arr[Convert.ToInt32(str_arr.GetUpperBound(0))];
 
-            return (str_dum);
+            return (str_dum.Trim());
         }
 
-        private string GetAbsoluteFilePath(object sender, EventArgs e, string RelativeFilePath)
+        /* ***************************************************************************************** 
+         * Builds the absolute path of the MPLAB X project directory the current DCLD project
+         * is associated with.
+         * ***************************************************************************************** */
+        private string GetMPLABXProjectPath(object sender, EventArgs e)
+        {
+            string str_dum = "";
+
+            // Read directory path from text box
+            str_dum = txtMPLABXProjectDir.Text.Trim();
+
+            if ((str_dum.Length > 1) && (str_dum.Substring(0, 1) == "."))   // Path is relative
+            { // => Make and return absolute path
+                str_dum = GetAbsoluteFilePath(sender, e, str_dum, CurrentProjectFileName);
+            }
+
+            return (str_dum.Trim());
+        }
+
+        /* ***************************************************************************************** 
+         * Builds the absolute path of the MPLAB X project directory the current DCLD project
+         * is associated with.
+         * ***************************************************************************************** */
+        private string GetAbsoluteFilePath(object sender, EventArgs e, string RelativeFilePath, string ReferencePath)
         {
             int i = 0, up_steps = 0;
-            string str_dum = "", cfg_file_path = "";
+            string str_dum = "", reference_path = "";
             string[] str_arr_anchor_path;
             string[] str_arr_relative_path;
             string[] dum_sep = new string[1];
 
-            if (RelativeFilePath.Trim().Length == 0) return (RelativeFilePath.Trim());
-            if (RelativeFilePath.Trim().Substring(0, 1) != ".") return (RelativeFilePath.Trim()); 
+            // If project file has not been saved yet, no relative path information can be derived.
+            //if (!File.Exists(CurrentProjectFileName)) return (RelativeFilePath.Trim());
 
-            cfg_file_path = GetCurrentProjectFilePath(sender, e).Trim();
+            // pre-formate relative path parameter
+            if (RelativeFilePath.Trim().Length == 0) return (RelativeFilePath.Trim()); // relative path parameter is empty => exit
+            if (RelativeFilePath.Trim().Substring(0, 1) != ".") return (RelativeFilePath.Trim()); // not a relative path => exit
+
+            // otherwise continue to determine relative path string
+            reference_path = ReferencePath.Trim();
+
+            if (reference_path.Length > 0)
+            { 
+                if (reference_path.ToLower() == MPLABXProjectDirectory.Trim().ToLower())
+                { // Reference is set to MPLAB X project directory reference
+                    reference_path = MPLABXProjectDirectory;
+                }
+                else if (reference_path.ToLower() == CurrentProjectFileName.Trim().ToLower())
+                { // Reference is set to DCLD project file reference
+                    reference_path = GetCurrentProjectFilePath(sender, e);
+                }
+                else if (reference_path.ToLower() == GetCurrentProjectFilePath(sender, e).Trim().ToLower())
+                { // Reference is set to DCLD project file directoy location reference
+                    reference_path = reference_path.Trim();
+                }
+                else if (reference_path.Length == 0)
+                { 
+                    return ("");
+                }
+            }
+            else // Reference path is empty 
+            {
+                if ((reference_path.ToLower() == MPLABXProjectDirectory.Trim().ToLower()) && (MPLABXProjectDirectory.Trim().Length == 0))
+                {
+                    if (CurrentProjectFileName.Trim().Length > 0)
+                    { reference_path = GetCurrentProjectFilePath(sender, e).Trim(); }
+                    else
+                    { return (RelativeFilePath.Trim()); }
+                }
+                else
+                { return (RelativeFilePath.Trim()); }
+                
+            }
             
             dum_sep[0] = ("\\");
-            str_arr_anchor_path = cfg_file_path.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
+            str_arr_anchor_path = reference_path.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
             str_arr_relative_path = RelativeFilePath.Trim().Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
 
             for (i = str_arr_relative_path.Length; i > 0; i--)
@@ -1283,66 +1349,95 @@ namespace dcld
                 str_dum = str_arr_anchor_path[i-1] + "\\" + str_dum;
             }
 
-            if (str_dum.Contains("\\" + "\\")) str_dum.Replace("\\" + "\\", "\\");
-            return (str_dum);
+            if (str_dum.Contains("\\" + "\\")) str_dum = str_dum.Replace("\\" + "\\", "\\");
+            if (str_dum.Contains("\\" + "./" + "\\")) str_dum = str_dum.Replace("\\" + "./" + "\\", "\\");
+            return (str_dum.Trim());
         }
 
-        private string GetRelativeFilePath(object sender, EventArgs e, string AbsoluteFilePath)
+        private string GetRelativeFilePath(object sender, EventArgs e, string AbsoluteFilePath, string ReferencePath)
         {
             int i = 0, up_steps = 0;
-            string str_dum = "", cfg_file_path = "";
+            string str_dum = "", reference_path = "";
             string[] str_arr_anchor_path;
             string[] str_arr_absolute_path;
             string[] dum_sep = new string[1];
 
-            // If project file has not been saved yet, no relative path information can be derived.
-            if (!File.Exists(CurrentProjectFileName)) return (AbsoluteFilePath.Trim());
-
-            // otherwise continue to determine relative path string
-            cfg_file_path = GetCurrentProjectFilePath(sender, e).Trim();
-
-            if (cfg_file_path.Substring(0, 1) != AbsoluteFilePath.Substring(0, 1))
-            { 
-                return (AbsoluteFilePath.Trim());   // if even the drive letter is different, exit here
-            }
-            else if (AbsoluteFilePath.Contains(cfg_file_path))
-            {
-                str_dum = AbsoluteFilePath.Trim();
-                str_dum = str_dum.Replace(cfg_file_path, ".\\");
-            }
-
-            else
+            try
             {
 
-                dum_sep[0] = ("\\");
-                str_arr_anchor_path = cfg_file_path.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
-                str_arr_absolute_path = AbsoluteFilePath.Trim().Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
+                // If project file has not been saved yet, no relative path information can be derived.
+                //if (ReferencePath.Trim().ToLower() == GetCurrentProjectFilePath(sender, e).Trim().ToLower())
+                //{ if (!File.Exists(CurrentProjectFileName)) return (AbsoluteFilePath.Trim()); }
 
-                for (i = 0; i < str_arr_anchor_path.Length; i++)
+                AbsoluteFilePath = AbsoluteFilePath.Trim();
+                ReferencePath = ReferencePath.Trim();
+
+                // Fix AbsoluteFilePath and ReferencePath if necessary
+                if ((AbsoluteFilePath.Length > 2) && (AbsoluteFilePath.Substring(AbsoluteFilePath.Length - 1, 1) != "\\"))
+                { AbsoluteFilePath = AbsoluteFilePath + "\\"; }
+                if ((ReferencePath.Length > 2) && (ReferencePath.Substring(ReferencePath.Length - 1, 1) != "\\"))
+                { ReferencePath = ReferencePath + "\\"; }
+
+                if (ReferencePath.Contains("\\" + "\\")) ReferencePath = ReferencePath.Replace("\\" + "\\", "\\");
+                if (AbsoluteFilePath.Contains("\\" + "\\")) AbsoluteFilePath = AbsoluteFilePath.Replace("\\" + "\\", "\\");
+
+                // otherwise continue to determine relative path string
+                reference_path = ReferencePath.Trim();
+
+                if (reference_path.Length == 0) // If reference path is empty, MPLAB X Project Directory has most probably not been set
                 {
-                    if (i < str_arr_absolute_path.Length)
-                    {
-                        if (str_arr_anchor_path[i] == str_arr_absolute_path[i])
-                        {
-                            str_arr_anchor_path[i] = "";
-                            str_arr_absolute_path[i] = "";
-                        }
-                        else
-                        { up_steps = i; break; }
-                    }
-                    else { up_steps = i; break; }
+                    if (GetCurrentProjectFilePath(sender, e).Trim().Length > 0)
+                    { reference_path = GetCurrentProjectFilePath(sender, e).Trim(); }
                 }
 
-                for (i = up_steps; i < str_arr_anchor_path.Length; i++)
-                { str_dum = str_dum + "..\\"; }
+                if (reference_path.Substring(0, 1) != AbsoluteFilePath.Substring(0, 1))
+                {
+                    return (AbsoluteFilePath.Trim());   // if even the drive letter is different, exit here
+                }
+                else if (AbsoluteFilePath.Contains(reference_path))
+                {
+                    str_dum = AbsoluteFilePath.Trim();
+                    str_dum = str_dum.Replace(reference_path, ".\\");
+                }
+                else
+                {
 
-                for (i = up_steps; i < str_arr_absolute_path.Length; i++)
-                { str_dum = str_dum + str_arr_absolute_path[i] + "\\"; }
+                    dum_sep[0] = ("\\");
+                    str_arr_anchor_path = reference_path.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
+                    str_arr_absolute_path = AbsoluteFilePath.Trim().Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (i = 0; i < str_arr_anchor_path.Length; i++)
+                    {
+                        if (i < str_arr_absolute_path.Length)
+                        {
+                            if (str_arr_anchor_path[i] == str_arr_absolute_path[i])
+                            {
+                                str_arr_anchor_path[i] = "";
+                                str_arr_absolute_path[i] = "";
+                            }
+                            else
+                            { up_steps = i; break; }
+                        }
+                        else { up_steps = i; break; }
+                    }
+
+                    for (i = up_steps; i < str_arr_anchor_path.Length; i++)
+                    { str_dum = str_dum + "..\\"; }
+
+                    for (i = up_steps; i < str_arr_absolute_path.Length; i++)
+                    { str_dum = str_dum + str_arr_absolute_path[i] + "\\"; }
+
+                }
+
+                if (str_dum.Contains("\\" + "\\")) str_dum = str_dum.Replace("\\" + "\\", "\\");
+                if (str_dum.Contains("\\" + "./" + "\\")) str_dum = str_dum.Replace("\\" + "./" + "\\", "\\");
+                return (str_dum.Trim());
 
             }
-
-            if (str_dum.Contains("\\" + "\\")) str_dum.Replace("\\" + "\\", "\\");
-            return (str_dum);
+            catch
+            {
+                return (AbsoluteFilePath);
+            }
         }
 
         private bool AskForFileSave(object sender, EventArgs e)
@@ -1396,12 +1491,17 @@ namespace dcld
             Application.DoEvents();
 
             // Save parameter file
-            if ((CurrentProjectFileName == "") || (sender == saveAsToolStripMenuItem) || (CurrentProjectFileName == NewProjectFilenameDummy))
+            if ((CurrentProjectFileName.Trim().Length == 0) || (sender == saveAsToolStripMenuItem) || (CurrentProjectFileName == NewProjectFilenameDummy))
             {
                 // Show "Save As..." Dialog
                 sfdlg.FileName = NewProjectFilenameDummy;
                 sfdlg.Filter = "Microchip Digital Control Loop Designer files (*.dcld)|*.dcld|All files (*.*)|*.*";
                 sfdlg.FilterIndex = 1;
+
+                if (CurrentProjectFileName.Trim().Length > 7)
+                { sfdlg.InitialDirectory = GetCurrentProjectFilePath(sender, e); }
+                else if (MPLABXProjectDirectory.Trim().Length > 7)
+                { sfdlg.InitialDirectory = MPLABXProjectDirectory; }
 
                 if (sfdlg.ShowDialog() == DialogResult.OK)
                 {
@@ -1409,13 +1509,21 @@ namespace dcld
                     {
                         if (sfdlg.CheckPathExists)
                         {
+                            // Capture filename & path
                             str_path = sfdlg.FileName.Trim();
                             CurrentProjectFileName = str_path;
 
+                            // Display recent project file in window title bar
                             dum_sep[0] = ("\\");
                             str_arr = sfdlg.FileName.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries); ;
                             str_dum = str_arr[Convert.ToInt32(str_arr.GetUpperBound(0))];
                             this.Text = Application.ProductName + " v" + Application.ProductVersion + " - [" + str_dum + "]";
+
+                            // Rescan and adopt code generator file path declarations
+                            if (MPLABXProjectDirectory.Trim().Length == 0)
+                            { MPLABXProjectDirectory = GetCurrentProjectFilePath(sender, e); }
+                            SetMPLABXProjectDirectory(sender, e, MPLABXProjectDirectory);
+
                         }
                     }
                     catch (Exception ex)
@@ -2979,28 +3087,28 @@ namespace dcld
             switch (sender_name) 
             { 
                 case "cmdASMSourcePath":
-                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtASMSourcePath.Text);
+                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtASMSourcePath.Text, MPLABXProjectDirectory);
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text + "_asm";
                     sfdlg.DefaultExt = ".s";
                     sfdlg.FilterIndex = 1;
                     break;
 
                 case "cmdCHeaderPath":
-                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtCHeaderPath.Text);
+                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtCHeaderPath.Text, MPLABXProjectDirectory);
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text;
                     sfdlg.DefaultExt = ".h";
                     sfdlg.FilterIndex = 2;
                     break;
 
                 case "cmdCLibPath":
-                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtCLibPath.Text);
+                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtCLibPath.Text, MPLABXProjectDirectory);
                     sfdlg.FileName = "npnz16b.h";
                     sfdlg.DefaultExt = ".h";
                     sfdlg.FilterIndex = 2;
                     break;
 
                 case "cmdCSourcePath":
-                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtCSourcePath.Text);
+                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtCSourcePath.Text, MPLABXProjectDirectory);
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text;
                     sfdlg.DefaultExt = ".c";
                     sfdlg.FilterIndex = 3;
@@ -3028,19 +3136,19 @@ namespace dcld
                         {
                                 
                             case "cmdASMSourcePath":
-                                txtASMSourcePath.Text = GetRelativeFilePath(sender, e, str_path);
+                                txtASMSourcePath.Text = GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory);
                                 break;
 
                             case "cmdCHeaderPath":
-                                txtCHeaderPath.Text = GetRelativeFilePath(sender, e, str_path);
+                                txtCHeaderPath.Text = GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory);
                                 break;
 
                             case "cmdCLibPath":
-                                txtCLibPath.Text = GetRelativeFilePath(sender, e, str_path);
+                                txtCLibPath.Text = GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory);
                                 break;
 
                             case "cmdCSourcePath":
-                                txtCSourcePath.Text = GetRelativeFilePath(sender, e, str_path);
+                                txtCSourcePath.Text = GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory);
                                 break;
 
                             default:
@@ -3977,17 +4085,56 @@ namespace dcld
             this.Cursor = Cursors.Default;
             Application.DoEvents();
 
+            return;
         }
 
         private void SourcePathTextBox_TextChanged(object sender, EventArgs e)
         {
+            string txtName = "", str_dum = "";
 
-            TextBox txt = (TextBox)sender;
-            if (txt.Name == txtCLibPath.Name)
-            {
-                genericControlLibraryHeaderExportToolStripMenuItem.Checked = true;
+            if (sender.GetType().ToString() == "System.Windows.Forms.ToolStripTextBox")
+            { 
+                // Set control type
+                ToolStripTextBox txt = (ToolStripTextBox)sender;
+                txtName = txt.Name;
+
+                if (txtName == txtMPLABXProjectDir.Name)
+                {
+                    // Capture absolute path of MPLAB X project declaration
+                    str_dum = GetAbsoluteFilePath(sender, e, txt.Text, CurrentProjectFileName).Trim();
+
+                    // If user types in a directory, update MPLAB X Project Directory value
+                    if (str_dum.Length == 0)
+                    {
+                        MPLABXProjectDirectory = "";                        // Clear MPLAB X project directory declaration
+                        toolStripButtonMPLABXPathWarning.Visible = false;   // Hide warning icon
+                    }
+                    if (System.IO.Directory.Exists(str_dum))
+                    {
+                        if (!MPLABXProjectDirUpdate)
+                        { SetMPLABXProjectDirectory(sender, e, str_dum); }     // If path is valid, set path as new MPLAB X project pdirectory
+
+                        toolStripButtonMPLABXPathWarning.Visible = false;   // Hide warning icon
+                        
+                    }
+                    else
+                    {  // Show warning icon
+                        toolStripButtonMPLABXPathWarning.Visible = true;
+                    }
+                }
             }
+            else if (sender.GetType().ToString() == "System.Windows.Forms.TextBox")
+            { 
+                TextBox txt = (TextBox)sender;
+                txtName = txt.Name;
 
+                if (txtName == txtCLibPath.Name)
+                { genericControlLibraryHeaderExportToolStripMenuItem.Checked = true; }
+            }
+            else
+            { return; }
+
+            // Respond to changes to project settings
             eventProjectFileChanged(sender, e);
 
             return;
