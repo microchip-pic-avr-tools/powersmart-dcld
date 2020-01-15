@@ -272,11 +272,11 @@ namespace dcld
 
 
             // Save last user settings
-            this.WindowState = (FormWindowState)Convert.ToInt32(ReadConfigString(INI_FILE, "common", "winstate", "0"));
+            this.WindowState = (FormWindowState)Convert.ToInt32(ReadConfigString(INI_FILE, "main_window", "winstate", "0"));
             if (WindowState == System.Windows.Forms.FormWindowState.Normal)
             {
-                this.Width = Convert.ToInt32(ReadConfigString(INI_FILE, "common", "width", "1000"));
-                this.Height = Convert.ToInt32(ReadConfigString(INI_FILE, "common", "height", "1000"));
+                this.Width = Convert.ToInt32(ReadConfigString(INI_FILE, "main_window", "width", "1000"));
+                this.Height = Convert.ToInt32(ReadConfigString(INI_FILE, "main_window", "height", "1000"));
             }
             
             // capture foldable object sizes
@@ -314,6 +314,12 @@ namespace dcld
 
             ShowSDomainTF = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(INI_FILE, "bode_plot", "show_s_domain", "1")));
             showSDomainTransferFunctionToolStripMenuItem.Checked = ShowSDomainTF;
+
+            // Load dynamic control properties
+            toolStripButtonMPLABXPathWarning.AutoToolTip = false;
+            toolStripButtonMPLABXPathWarning.ToolTipText =
+                                "The recent declaration of the MPLAB X® project directory is not valid. \r\n" +
+                                "Please make sure this path is valid or empty or code generation will fail.";
 
             // Refresh GUI
             ApplicationStartUp = false;
@@ -413,20 +419,20 @@ namespace dcld
                 }
                 else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
 
-                this.txtOutput.Text = txtOutput.Text + "13:    " + "INI script parser file: " + resourcePath + "ActiproSoftware.INIFile.xml";
-                if (System.IO.File.Exists(resourcePath + "ActiproSoftware.INIFile.xml"))
-                {
-                    this.txtSyntaxEditorINIFile.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.INIFile.xml", 0);
-                    this.txtSyntaxEditorINIFile.LineNumberMarginVisible = true;
-                    this.txtSyntaxEditorINIFile.HideSelection = false;
-                    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
-                }
-                else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
+                //this.txtOutput.Text = txtOutput.Text + "13:    " + "INI script parser file: " + resourcePath + "ActiproSoftware.INIFile.xml";
+                //if (System.IO.File.Exists(resourcePath + "ActiproSoftware.INIFile.xml"))
+                //{
+                //    this.txtSyntaxEditorINIFile.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.INIFile.xml", 0);
+                //    this.txtSyntaxEditorINIFile.LineNumberMarginVisible = true;
+                //    this.txtSyntaxEditorINIFile.HideSelection = false;
+                //    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
+                //}
+                //else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
 
                 this.txtOutput.Text = txtOutput.Text + "14:    " + "ASM gemerator file: " + AssemblyGeneratorFile;
                 if (System.IO.File.Exists(AssemblyGeneratorFile))
                 {
-                    this.txtSyntaxEditorINIFile.Document.LoadFile(AssemblyGeneratorFile);
+                    //this.txtSyntaxEditorINIFile.Document.LoadFile(AssemblyGeneratorFile);
                     this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
                 }
                 else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
@@ -441,15 +447,17 @@ namespace dcld
                 this.txtOutput.Text = txtOutput.Text + str_dum + "\r\n";
 
                 str_file = lblFinalNamePrefixOutput.Text;
+                this.txtMPLABXProjectDir.Text = "";
                 this.txtASMSourcePath.Text = str_dum + "\\"; // +str_file + "_asm.s";
                 this.txtCSourcePath.Text = str_dum + "\\"; // + str_file + ".c";
                 this.txtCHeaderPath.Text = str_dum + "\\"; // + str_file + ".h";
                 this.txtCLibPath.Text = str_dum + "\\"; // + "npnz16b.h";
 
-                this.txtOutput.Text = txtOutput.Text + "17:    " + "ASM source file path: " + str_dum + "\\" + str_file + "_asm.s" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "18:    " + "C-source file path: " + str_dum + "\\" + str_file + ".c" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "19:    " + "C-header file path: " + str_dum + "\\" + str_file + ".h" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "20:    " + "C-API header file path: " + str_dum + "\\npnz16b.h" + "\r\n";
+                this.txtOutput.Text = txtOutput.Text + "17:    " + "MPLAB X Project Directory: " + this.txtMPLABXProjectDir.Text + "\r\n";
+                this.txtOutput.Text = txtOutput.Text + "18:    " + "ASM source file path: " + str_dum + "\\" + str_file + "_asm.s" + "\r\n";
+                this.txtOutput.Text = txtOutput.Text + "19:    " + "C-source file path: " + str_dum + "\\" + str_file + ".c" + "\r\n";
+                this.txtOutput.Text = txtOutput.Text + "20:    " + "C-header file path: " + str_dum + "\\" + str_file + ".h" + "\r\n";
+                this.txtOutput.Text = txtOutput.Text + "21:    " + "C-API header file path: " + str_dum + "\\npnz16b.h" + "\r\n";
                 this.txtOutput.Text = txtOutput.Text + "\r\n" + 
                     "Application start up complete" + "\r\n" + "\r\n";
 
@@ -1771,6 +1779,9 @@ namespace dcld
                 stbProgressBar.Value = 10;
                 Application.DoEvents();
 
+                // write debugging info to output window
+                txtOutput.AppendText("Open File '" + Filename + "'...\r\n");
+
                 // Control Type and Mode
                 this.cmbCompType.SelectedIndex = Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "ControlType", "2"));
                 cmbQScalingMethod.SelectedIndex = Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "ScalingMode", "0"));
@@ -1890,9 +1901,28 @@ namespace dcld
 
                 ForceCoefficientsUpdate(this, EventArgs.Empty);
 
+                // First load recent project name
                 CurrentProjectFileName = str_path;
                 this.Text = Application.ProductName + " v" + Application.ProductVersion + " - [" + CurrentProjectFileName + "]";
 
+                // Construct absolute MPLAB X project directory path
+                this.txtMPLABXProjectDir.Text = ReadConfigString(str_path, "CodeGenerationPaths", "MPLABX_ProjectDirectory", "");
+                if (txtMPLABXProjectDir.Text.Trim().Length > 0)
+                {
+                    MPLABXProjectDirectory = GetMPLABXProjectPath((object)txtMPLABXProjectDir, (EventArgs)null);
+                    txtMPLABXProjectDir.ToolTipText = MPLABXProjectDirectory;
+                }
+
+                // write debugging info to output window
+                txtOutput.AppendText("Code Generator File Paths:\r\n");
+                txtOutput.AppendText("    - DCLD Project Directory:         " + GetCurrentProjectFilePath(this, EventArgs.Empty) + "\r\n");
+                txtOutput.AppendText("    - MPLAB X Project Directory:      " + MPLABXProjectDirectory + "\r\n");
+                txtOutput.AppendText("    - ASM Source File Directory:      " + GetAbsoluteFilePath(this, EventArgs.Empty, txtASMSourcePath.Text, MPLABXProjectDirectory) + "\r\n");
+                txtOutput.AppendText("    - C Source File Directory:        " + GetAbsoluteFilePath(this, EventArgs.Empty, txtCSourcePath.Text, MPLABXProjectDirectory) + "\r\n");
+                txtOutput.AppendText("    - C Header File Directory:        " + GetAbsoluteFilePath(this, EventArgs.Empty, txtCHeaderPath.Text, MPLABXProjectDirectory) + "\r\n");
+                txtOutput.AppendText("    - Library Header File Directory:  " + GetAbsoluteFilePath(this, EventArgs.Empty, txtCLibPath.Text, MPLABXProjectDirectory) + "\r\n");
+
+                // Set Flags
                 ProjectFileLoadActive = false;
                 ProjectFileChanged = false;
                 saveToolStripMenuItem.Enabled = false;
@@ -1946,7 +1976,7 @@ namespace dcld
         private void NumberTextBox_KeyDownWithScaling(object sender, KeyEventArgs e)
         {
             string tval = "";
-            System.Windows.Forms.TextBox tBox;
+            TextBox tBox;
 
             if (
                 ((e.KeyValue == 84) && (e.Shift))  || ((e.KeyValue == 71) && (e.Shift)) || ((e.KeyValue == 77) && (e.Shift)) ||     // allow scaling using T=Tera, G=Giga, M=Mega, ...
@@ -1958,7 +1988,7 @@ namespace dcld
                 {
                     if (sender.GetType().ToString() == "System.Windows.Forms.TextBox")
                     {
-                        tBox = (System.Windows.Forms.TextBox)sender;
+                        tBox = (TextBox)sender;
                         tval = tBox.Text.Trim();
 
                              if ((e.KeyValue == 84) && (e.Shift))  tval = tval + " T";   // Tera
@@ -2140,20 +2170,19 @@ namespace dcld
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             string copyright, version;
             Assembly asm = Assembly.GetExecutingAssembly();
 
             copyright = ((AssemblyCopyrightAttribute)asm.GetCustomAttribute(typeof(AssemblyCopyrightAttribute))).Copyright;
             version = ((AssemblyFileVersionAttribute)asm.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))).Version;
-            
+
             MessageBox.Show(
-                this, 
+                this,
                 //Application.ProductName + " v" + Application.ProductVersion + "\t\r\n\r\n" + Application.CompanyName + "\r\n" +
                 Application.ProductName + " v" + version + "\r\n" +
                 copyright + ", " + Application.CompanyName,
-                "About " + Application.ProductName, 
-                MessageBoxButtons.OK, 
+                "About " + Application.ProductName,
+                MessageBoxButtons.OK,
                 MessageBoxIcon.Information
                 );
 
@@ -2592,11 +2621,11 @@ namespace dcld
             if (!AskForFileSave(sender, e)) e.Cancel = true;
 
             // Save last user settings
-            WriteConfigString(INI_FILE, "common", "winstate", Convert.ToInt32(WindowState).ToString());
+            WriteConfigString(INI_FILE, "main_window", "winstate", Convert.ToInt32(WindowState).ToString());
             if (WindowState == System.Windows.Forms.FormWindowState.Normal)
             {
-                WriteConfigString(INI_FILE, "common", "width", Convert.ToString(Width));
-                WriteConfigString(INI_FILE, "common", "height", Convert.ToString(Height));
+                WriteConfigString(INI_FILE, "main_window", "width", Convert.ToString(Width));
+                WriteConfigString(INI_FILE, "main_window", "height", Convert.ToString(Height));
             }
 
             // save last Bode axis settings
