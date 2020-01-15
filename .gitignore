@@ -5,6 +5,7 @@
 # Special gitignore for release branch only containing the publish folder
 
 # Project Folders
+.vs/
 bin/
 bin/Debug/
 bin/Release/
@@ -14,6 +15,7 @@ Properties/
 Resources/
 Service References/
 test_cases/
+tools/
 user_guide/
 user_guide/pictures/
 
