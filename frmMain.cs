@@ -233,16 +233,38 @@ namespace dcld
                 else { resourcePath = rootPath; }
             }
 
-            NewProjectFilenameDummy = DefaultProjectFileName;
+            NewProjectFilenameDummy = DefaultProjectFileName + DefaultProjectFileNameExtension;
             AssemblyGeneratorFile = resourcePath + ASS_GEN_FILE;
             CCodeGeneratorFile = resourcePath + C_GEN_FILE;
             
             INI_FILE = "./" + DEFAULT_INI_FILE;
             if (! System.IO.File.Exists(INI_FILE)) 
             { 
-                if (System.IO.File.Exists(rootPath + DEFAULT_INI_FILE)) { INI_FILE = rootPath + DEFAULT_INI_FILE; }
+                if (System.IO.File.Exists(rootPath + DEFAULT_INI_FILE)) { 
+                    INI_FILE = rootPath + DEFAULT_INI_FILE;
+                }
             }
 
+            // Capture User Guide filename
+            str_dum = Application.StartupPath;
+            if (str_dum.Substring(str_dum.Length - 1, 1) != "\\") { str_dum = str_dum + "\\"; }
+            UserGuideFileName = ReadConfigString(INI_FILE, "common", "UserGuideFileName", "");
+            str_file = str_dum + UserGuideFileName;
+            if (System.IO.File.Exists(str_file))
+            { UserGuideFileName = str_file; }
+            else {
+                str_dum = str_dum + "\\Resources\\";
+                str_file = str_dum + UserGuideFileName;
+                if (System.IO.File.Exists(str_file))
+                { UserGuideFileName = str_file; }
+                else
+                {
+                    str_dum = str_dum + "\\user_guide\\";
+                    str_file = str_dum + UserGuideFileName;
+                    if (System.IO.File.Exists(str_file))
+                    { UserGuideFileName = str_file; }
+                }
+            }
 
             // Set startup-status
             lvCoefficients.HideSelection = false;
@@ -2356,7 +2378,7 @@ namespace dcld
 
                 if (str_path.Contains(".\\"))  // path contains relative path items
                 {
-                    str_path = GetAbsoluteFilePath(sender, e, str_path);
+                    str_path = GetAbsoluteFilePath(sender, e, str_path, MPLABXProjectDirectory);
                 }
                 
                 else if ((str_path.Length < 3) && (str_path.Substring(0, 2) != ".\\") && (str_path.Substring(0, 3) != "..\\"))
@@ -3324,7 +3346,7 @@ namespace dcld
 
             str_dum = PathDeclaration;
 
-            if ((str_dum.Length > 1) && (str_dum.Substring(1, 1) == "."))
+            if ((str_dum.Length > 1) && (str_dum.Substring(0, 1) == "."))
             {
                 str_dum = str_dum.Replace("\\", "/");
                 if ((str_dum.Length > 1) && (str_dum.Substring(str_dum.Length - 1, 1) != "/")) str_dum = str_dum + "/";
@@ -4650,6 +4672,146 @@ namespace dcld
 
             showSDomainTransferFunctionToolStripMenuItem.Checked = ShowSDomainTF;
         }
+
+        private void SetMPLABXProjectDirectory(object sender, EventArgs e, string NewMPLABXProjectPath)
+        {
+            string str_path = "", ref_path = "";
+            string asm_source_buf = "", c_cource_buf = "", c_head_buf = "", c_lib_buf = "";
+            string[] dum_sep = new string[1];
+
+            // Read new MPLAB X Project Directory 
+            str_path = NewMPLABXProjectPath.Trim();
+
+            // Set MPLAB X Project Directory Path Reference (always absolute)
+            MPLABXProjectDirectory = str_path;
+            txtMPLABXProjectDir.ToolTipText = MPLABXProjectDirectory;
+
+            // Buffer file paths as absolute paths
+            if (MPLABXProjectDirectory.Length > 0)
+            { ref_path = MPLABXProjectDirectory; }
+            else
+            { ref_path = GetCurrentProjectFilePath(sender, e); }
+
+            asm_source_buf = GetAbsoluteFilePath(sender, e, txtASMSourcePath.Text, ref_path);
+            c_cource_buf = GetAbsoluteFilePath(sender, e, txtCSourcePath.Text, ref_path);
+            c_head_buf = GetAbsoluteFilePath(sender, e, txtCHeaderPath.Text, ref_path);
+            c_lib_buf = GetAbsoluteFilePath(sender, e, txtCLibPath.Text, ref_path);
+
+            // Make file locations relative
+            txtASMSourcePath.Text = GetRelativeFilePath(sender, e, asm_source_buf, MPLABXProjectDirectory);  //"./";
+            txtCSourcePath.Text = GetRelativeFilePath(sender, e, c_cource_buf, MPLABXProjectDirectory);  //"./";
+            txtCHeaderPath.Text = GetRelativeFilePath(sender, e, c_head_buf, MPLABXProjectDirectory); //"./";
+            txtCLibPath.Text = GetRelativeFilePath(sender, e, c_lib_buf, MPLABXProjectDirectory); //"./";
+
+            // Determine relative path of MPLAB X Project Directory Path and show it in directory test box
+
+            // Set MPLAB X Project Directory Update Flag
+            MPLABXProjectDirUpdate = true;
+
+            // Update MPLAB X Project Directory TextBox
+            if (System.IO.Directory.Exists(str_path.Trim()))
+                txtMPLABXProjectDir.Text = GetRelativeFilePath(sender, e, str_path.Trim(), GetCurrentProjectFilePath(sender, e));
+
+            // Clear MPLAB X Project Directory Update Flag
+            MPLABXProjectDirUpdate = false;
+
+            return;
+
+        }
+
+        private void toolStripButtonBrowse_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbdlg = new FolderBrowserDialog();
+            System.Windows.Forms.DialogResult ans = new System.Windows.Forms.DialogResult();
+            string str_path = "";
+
+            // Determine target directory of folder dialog
+            if (MPLABXProjectDirectory.Trim().Length > 0)   // MPLAB X project location is available
+            { str_path = MPLABXProjectDirectory.Trim(); }
+            else 
+            {
+                if (CurrentProjectFileName.Trim().Length == 0) // DCLD project location is not available
+                { str_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); }
+                else
+                { str_path = GetCurrentProjectFilePath(sender, e); }  // DCLD project location is available
+            }
+
+            // Set target directory of folder dialog
+            fbdlg.SelectedPath = str_path;
+
+            while ((ans == System.Windows.Forms.DialogResult.None) || (ans == System.Windows.Forms.DialogResult.Retry))
+            {
+                // Show Folder Browse Dialog
+                if (fbdlg.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        // Read selected directory path
+                        str_path = fbdlg.SelectedPath;
+
+                        // If MPLAB X project path is valid...
+                        if (str_path.Substring(str_path.Length - 2).ToUpper() == ".X")
+                        {
+                            SetMPLABXProjectDirectory(sender, e, str_path);
+                            ans = System.Windows.Forms.DialogResult.OK;
+                        }
+                        else
+                        {
+
+                            ans = MessageBox.Show(
+                                        "Selected directory \r\n\r\n'" + str_path + "' is not a valid MPLAB X® project directory.\r\n\r\n" +
+                                        "Please select a valid directory (e.g. my_project.X)",
+                                        Application.ProductName,
+                                        MessageBoxButtons.RetryCancel,
+                                        MessageBoxIcon.Exclamation,
+                                        MessageBoxDefaultButton.Button1
+                                        );
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(
+                            "Error (0x" + ex.HResult.ToString("X") + "): Could not identify path or selected directory is not available.\r\n" +
+                            "Original error: " + ex.Message,
+                            Application.ProductName,
+                            MessageBoxButtons.RetryCancel,
+                            MessageBoxIcon.Exclamation,
+                            MessageBoxDefaultButton.Button1
+                            );
+
+                    }
+                }
+                else
+                { 
+                    ans = System.Windows.Forms.DialogResult.Cancel;
+                    break;
+                }
+            }
+
+            // Restore output window
+            fbdlg.Dispose();
+
+            return;
+
+        }
+
+        private void userGuideToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (System.IO.File.Exists(UserGuideFileName))
+                System.Diagnostics.Process.Start(UserGuideFileName);
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            userGuideToolStripMenuItem.Enabled = System.IO.File.Exists(UserGuideFileName);
+        }
+
+        private void visitURLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(ReadConfigString(INI_FILE, "common", "URL", ""));
+        }
+
 
     }
 }
