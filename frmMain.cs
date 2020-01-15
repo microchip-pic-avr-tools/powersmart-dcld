@@ -122,6 +122,8 @@ namespace dcld
  //       int GroupFolding_VDistance = 7; (not used)
         int GroupFolding_grpContextSavingHeight = 100;
         int GroupFolding_grpCodeFeatureOptionsHeight = 100;
+        int GroupFolding_grpCodeFeatureDataIOHeight = 80;
+        int GroupFolding_grpDataProviderSourcesHeight = 100;
         int GroupFolding_grpAntiWindupHeight = 100;
 
 
@@ -1632,6 +1634,7 @@ namespace dcld
                 WriteConfigString(str_path, "AssemblyGenerator", "ContextSavingCoreConfigRegister", Convert.ToUInt16(this.chkSaveRestoreCoreConfig.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "ContextSavingCoreStatusRegister", Convert.ToUInt16(this.chkSaveRestoreCoreStatus.Checked).ToString());
 
+                WriteConfigString(str_path, "AssemblyGenerator", "CodeFeatureOptions", Convert.ToUInt16(this.chkCodeFeatureOptions.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "EnforceCoreConfiguration", Convert.ToUInt16(this.chkAddCoreConfig.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddEnableDisableFeature", Convert.ToUInt16(this.chkAddEnableDisable.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddDisableDummyReadFeature", Convert.ToUInt16(this.chkAddDisableDummyRead.Checked).ToString());
@@ -1644,7 +1647,7 @@ namespace dcld
                 WriteConfigString(str_path, "AssemblyGenerator", "AddAlternateSource", Convert.ToUInt16(this.chkAddAlternateSource.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddAlternateTarget", Convert.ToUInt16(this.chkAddAlternateTarget.Checked).ToString());
 
-                WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderSource", Convert.ToUInt16(this.chkAddDataProviderSource.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "DataProviderSource", Convert.ToUInt16(this.chkDataProviderSource.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlInput", Convert.ToUInt16(this.chkAddDataProviderControlInput.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderErrorInput", Convert.ToUInt16(this.chkAddDataProviderErrorInput.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlOutput", Convert.ToUInt16(this.chkAddDataProviderControlOutput.Checked).ToString());
@@ -1652,7 +1655,9 @@ namespace dcld
                 WriteConfigString(str_path, "AssemblyGenerator", "AntiWindup", Convert.ToUInt16(this.chkAntiWindup.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AntiWindupSoftDesaturation", Convert.ToUInt16(this.chkAntiWindupSoftDesaturationFlag.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMaximumClamping", Convert.ToUInt16(this.chkAntiWindupClampMax.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMaximumClampingStatusFlag", Convert.ToUInt16(this.chkAntiWindupMaxStatusFlag.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMinimumClamping", Convert.ToUInt16(this.chkAntiWindupClampMin.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMinimumClampingStatusFlag", Convert.ToUInt16(this.chkAntiWindupMinStatusFlag.Checked).ToString());
 
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 50;
@@ -1664,6 +1669,7 @@ namespace dcld
                 WriteConfigString(str_path, "CodeGenerationPaths", "ExportCHeader", Convert.ToUInt32(libraryCHeaderExportToolStripMenuItem.Checked).ToString());
                 WriteConfigString(str_path, "CodeGenerationPaths", "ExportCLib", Convert.ToUInt32(genericControlLibraryHeaderExportToolStripMenuItem.Checked).ToString());
                 WriteConfigString(str_path, "CodeGenerationPaths", "EnableOneClickExport", Convert.ToUInt32(generateCodeBeforeExportToolStripMenuItem.Checked).ToString());
+                WriteConfigString(str_path, "CodeGenerationPaths", "MPLABX_ProjectDirectory", txtMPLABXProjectDir.Text);
                 WriteConfigString(str_path, "CodeGenerationPaths", "ASMSourcePath", txtASMSourcePath.Text);
                 WriteConfigString(str_path, "CodeGenerationPaths", "CSourcePath", txtCSourcePath.Text);
                 WriteConfigString(str_path, "CodeGenerationPaths", "CHeaderPath", txtCHeaderPath.Text);
@@ -1787,14 +1793,20 @@ namespace dcld
                 stbProgressBar.Value = 40;
                 Application.DoEvents();
 
+                this.chkCodeFeatureOptions.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "CodeFeatureOptions", "1")));
                 this.chkAddCoreConfig.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "EnforceCoreConfiguration", "1")));
                 this.chkAddEnableDisable.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddEnableDisableFeature", "1")));
                 this.chkAddDisableDummyRead.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDisableDummyReadFeature", "1")));
                 this.chkAddErrorNormalization.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddErrorNormalization", "1")));
                 this.chkAddADCTriggerAPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddADCTriggerAPlacement", "1")));
                 this.chkAddADCTriggerBPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddADCTriggerBPlacement", "0")));
+                this.chkAddCascadedFunctionCall.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddCascadedFunctionCall", "0")));
 
-                this.chkAddDataProviderSource.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderSource", "0")));
+                this.chkAutomatedDataInterface.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAutomatedDataInterface", "0")));
+                this.chkAddAlternateSource.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAlternateSource", "0")));
+                this.chkAddAlternateTarget.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAlternateTarget", "0")));
+
+                this.chkDataProviderSource.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "DataProviderSource", "0")));
                 this.chkAddDataProviderControlInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlInput", "0")));
                 this.chkAddDataProviderErrorInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderErrorInput", "0")));
                 this.chkAddDataProviderControlOutput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlOutput", "0")));
@@ -1805,7 +1817,10 @@ namespace dcld
                 this.chkAntiWindup.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AntiWindup", "1")));
                 this.chkAntiWindupSoftDesaturationFlag.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AntiWindupSoftDesaturation", "0")));
                 this.chkAntiWindupClampMax.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMaximumClamping", "1")));
+                this.chkAntiWindupMaxStatusFlag.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMaximumClampingStatusFlag", "0")));
                 this.chkAntiWindupClampMin.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMinimumClamping", "1")));
+                this.chkAntiWindupMinStatusFlag.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMinimumClampingStatusFlag", "0")));
+                
 
                 stbProgressBar.Value = 60;
                 Application.DoEvents();
@@ -1826,6 +1841,7 @@ namespace dcld
                 this.libraryCHeaderExportToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(str_path, "CodeGenerationPaths", "ExportCHeader", "1")));
                 this.genericControlLibraryHeaderExportToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(str_path, "CodeGenerationPaths", "ExportCLib", "1")));
                 this.generateCodeBeforeExportToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(str_path, "CodeGenerationPaths", "EnableOneClickExport", "1")));
+                //this.txtMPLABXProjectDir.Text = ReadConfigString(str_path, "CodeGenerationPaths", "MPLABX_ProjectDirectory", ""); // Is loaded separately when project file is opened
                 this.chkCSourceIncludePath.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(str_path, "CodeGenerationPaths", "IncludeCHeaderPathInCSource", "1")));
                 this.chkCHeaderIncludePath.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(str_path, "CodeGenerationPaths", "IncludeCLibPathInCHeader", "1")));
 
@@ -1844,6 +1860,7 @@ namespace dcld
                 stbProgressBar.Value = 90;
                 Application.DoEvents();
 
+                // ==================================================================================
                 // Parameter listing complete
 
                 // Load user history
@@ -3375,8 +3392,11 @@ namespace dcld
             AssGen.SaveRestoreCoreConfig = ((this.chkSaveRestoreCoreConfig.Checked) && (this.chkContextSaving.Checked));
             AssGen.SaveRestoreCoreStatusRegister = ((this.chkSaveRestoreCoreStatus.Checked) && (this.chkContextSaving.Checked));
 
+            AssGen.AddAlternateSource = ((this.chkAddAlternateSource.Checked) && (this.chkAddAlternateSource.Enabled));
+            AssGen.AddAlternateTarget = ((this.chkAddAlternateTarget.Checked) && (this.chkAddAlternateTarget.Enabled));
             AssGen.AddADCTriggerAPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerAPlacement.Checked));
             AssGen.AddADCTriggerBPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerBPlacement.Checked));
+            AssGen.AddCascadedFunctionCall = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCascadedFunctionCall.Checked));
             AssGen.AddErrorInputNormalization = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddErrorNormalization.Checked));
             AssGen.AddEnableDisableFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked));
             AssGen.AddDisableDummyReadFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked) && (this.chkAddDisableDummyRead.Checked));
@@ -3389,9 +3409,9 @@ namespace dcld
             AssGen.AntiWindupClampMin = this.chkAntiWindupClampMin.Checked;
             AssGen.AntiWindupClampMinWithStatusFlag = ((this.chkAntiWindupMinStatusFlag.Checked) && (this.chkAntiWindupClampMin.Checked));
 
-            AssGen.CreateCopyOfMostRecentControlInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlInput.Checked) && (chkAddDataProviderSource.Checked));
-            AssGen.CreateCopyOfMostRecentErrorInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderErrorInput.Checked) && (chkAddDataProviderSource.Checked));
-            AssGen.CreateCopyOfMostRecentControlOutput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlOutput.Checked) && (chkAddDataProviderSource.Checked));
+            AssGen.CreateCopyOfMostRecentControlInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlInput.Checked) && (chkDataProviderSource.Checked));
+            AssGen.CreateCopyOfMostRecentErrorInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderErrorInput.Checked) && (chkDataProviderSource.Checked));
+            AssGen.CreateCopyOfMostRecentControlOutput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlOutput.Checked) && (chkDataProviderSource.Checked));
 
             AssGen.StoreReloadAccLevel1 = ((this.chkCodeFeatureOptions.Checked) && (this.chkStoreReloadAccLevel1.Checked) && (this.chkStoreReloadAccLevel1.Enabled) && (AssGen.CodeOptimizationLevel == 1));
 
@@ -3681,7 +3701,15 @@ namespace dcld
             else { grpCodeFeatureOptions.Height = GroupFolding_grpCodeFeatureOptionsHeight; }
             //grpCodeFeatureOptions.Top = grpContextSaving.Top + grpContextSaving.Height + GroupFolding_VDistance;
 
-            if (!chkAntiWindup.Checked){ grpAntiWindup.Height = GroupFolding_MinHeight; }
+            if (!chkAutomatedDataInterface.Checked) { grpCodeFeatureDataIO.Height = GroupFolding_MinHeight; }
+            else { grpCodeFeatureDataIO.Height = GroupFolding_grpCodeFeatureDataIOHeight; }
+            //grpCodeFeatureOptions.Top = grpContextSaving.Top + grpContextSaving.Height + GroupFolding_VDistance;
+
+            if (!chkDataProviderSource.Checked) { grpDataProviderSources.Height = GroupFolding_MinHeight; }
+            else { grpDataProviderSources.Height = GroupFolding_grpDataProviderSourcesHeight; }
+            //grpCodeFeatureOptions.Top = grpContextSaving.Top + grpContextSaving.Height + GroupFolding_VDistance;
+
+            if (!chkAntiWindup.Checked) { grpAntiWindup.Height = GroupFolding_MinHeight; }
             else { grpAntiWindup.Height = GroupFolding_grpAntiWindupHeight; }
             //grpAntiWindup.Top = grpCodeFeatureOptions.Top + grpCodeFeatureOptions.Height + GroupFolding_VDistance;
 
@@ -3745,6 +3773,27 @@ namespace dcld
             CodeGeneratorOptions_CheckedChanged(sender, e);
             return;
         }
+
+        private void chkAutomatedDataInterface_CheckedChanged(object sender, EventArgs e)
+        {
+            int i = 0;
+            CheckBox check;
+
+            for (i = 0; i < grpCodeFeatureDataIO.Controls.Count; i++)
+            {
+                if (grpCodeFeatureDataIO.Controls[i].Name.Substring(0, 3) == "chk")
+                { 
+                    check = (CheckBox)grpCodeFeatureDataIO.Controls[i];
+                    if (check.Name != "chkAutomatedDataInterface") check.Enabled = chkAutomatedDataInterface.Checked;
+                }
+
+            }
+
+            CodeGeneratorOptions_CheckedChanged(sender, e);
+            return;
+
+        }
+
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -4231,15 +4280,6 @@ namespace dcld
 
         private void IncludePathCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            //CheckBox chk = (CheckBox)sender;
-            //if (chk.Name == chkCLibIncludePath.Name)
-            //{ genericControlLibraryHeaderExportToolStripMenuItem.Checked = true; }
-            //else if (chk.Name == chkCHeaderIncludePath.Name)
-            //{ genericControlLibraryHeaderExportToolStripMenuItem.Checked = true; }
-            //else if (chk.Name == chkCSourceIncludePath.Name)
-            //{ genericControlLibraryHeaderExportToolStripMenuItem.Checked = true; }
-            //else if (chk.Name == chkASMIncludePath.Name)
-            //{ genericControlLibraryHeaderExportToolStripMenuItem.Checked = true; }
 
             GenerateCode(sender, e);
             eventProjectFileChanged(sender, e);
@@ -4586,11 +4626,11 @@ namespace dcld
             CodeGeneratorOptions_CheckedChanged(sender, e);
         }
 
-        private void chkAddDataProviderSource_CheckedChanged(object sender, EventArgs e)
+        private void chkDataProviderSource_CheckedChanged(object sender, EventArgs e)
         {
-            chkAddDataProviderControlInput.Enabled = chkAddDataProviderSource.Checked;
-            chkAddDataProviderControlOutput.Enabled = chkAddDataProviderSource.Checked;
-            chkAddDataProviderErrorInput.Enabled = chkAddDataProviderSource.Checked;
+            chkAddDataProviderControlInput.Enabled = chkDataProviderSource.Checked;
+            chkAddDataProviderControlOutput.Enabled = chkDataProviderSource.Checked;
+            chkAddDataProviderErrorInput.Enabled = chkDataProviderSource.Checked;
             CodeGeneratorOptions_CheckedChanged(sender, e);
         }
 
