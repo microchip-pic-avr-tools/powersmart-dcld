@@ -937,6 +937,34 @@
         rkJggg==
 </value>
   </data>
+  <data name="toolStripButtonBrowse.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIDSURBVDhPpZLrS5NhGMb3j4SWh0oRQVExD4gonkDpg4hG
+        YKxG6WBogkMZKgPNCEVJFBGdGETEvgwyO9DJE5syZw3PIlPEE9pgBCLZ5XvdMB8Ew8gXbl54nuf63dd9
+        0OGSnwCahxbPRNPAPMw9Xpg6ZmF46kZZ0xSKzJPIrhpDWsVnpBhGkKx3nAX8Pv7z1zg8OoY/cITdn4fw
+        bf/C0kYAN3Ma/w3gWfZL5kzTKBxjWyK2DftwI9tyMYCZKXbNHaD91bLYJrDXsYbrWfUKwJrPE9M2M1Oc
+        VzOOpHI7Jr376Hi9ogHqFIANO0/MmmmbmSmm9a8ze+I4MrNWAdjtoJgWcx+PSzg166yZZ8xM8XvXDix9
+        c4jIqFYAjoriBV9AhEPv1mH/sonogha0afbZMMZz+yreTGyhpusHwtNNCsA5U1zS4BLxzJIfg299qO32
+        Ir7UJtZfftyATqeT+8o2D8JSjQrAJblrncYL7ZJ2+bfaFnC/1S1NjL3diRat7qrO7wLRP3HjWsojBeCo
+        mDEo5mNjuweFGvjWg2EBhCbpkW78htSHHwRyNdmgAFzPEee2iFkzayy2OLXzT4gr6UdUnlXrullsxxQ+
+        kx0g8BTA3aZlButjSTyjODq/WcQcW/B/Je4OQhLvKQDnzN1mp0nnkvAhR8VuMzNrpm1mpjgkoVwB/v8D
+        TgDQASA1MVpwzwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="toolStripButtonMPLABXPathWarning.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAF6SURBVDhPpY/bSgJRFIZ9g6A8RVGMpJ00orrreCNpQlK3
+        vUC3vUcPkhXdRxcdzKm0ISpSTKJIjZIOc9R0Lv7ce5yxEGuqDd/ezF5rf+sfS7MVX7PiM7Vr84s8utpm
+        cMN6fy/Qpwp5P5TnEBIRm3mJ/ji50wNVWaToKUxJaGPECukxYAiKLyZT6FPSux6oxSXSTNFS+H5OQYpk
+        klwIQpUXDEFFDKNYCHyfQrdnDvqhSmFUhPm64G2OcssONk9BLhPr9uqkWVT4EMqvQUNQLvgpSn6G9jQI
+        dCuZ8P4wjVJuCqXsJFaWOyml+3GN7ATujgYaU5APbtMBOTMGJT0MJeWDnPRSlNSQdkfIjEC6Hv2aQrfl
+        WA+kcw9EjoGY6IYY7zJ+QeJctCZf9EK+7EM25q6nINvZlrP60AXhuANCzAnh0A4+ajcEAttOa0RKEE4Z
+        cBu1FGR7OnHTJv7ABn6/Dfxeq3YaWLValGCvDnAgF2Xqgshqy5+ggv8ti+UDJBqwikqSLLEAAAAASUVO
+        RK5CYII=
+</value>
+  </data>
   <metadata name="timToolHelp.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>742, 17</value>
   </metadata>

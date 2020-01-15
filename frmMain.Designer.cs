@@ -104,8 +104,6 @@
             ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer visualStudio2005SyntaxEditorRenderer3 = new ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer();
             ActiproSoftware.SyntaxEditor.Document document4 = new ActiproSoftware.SyntaxEditor.Document();
             ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer visualStudio2005SyntaxEditorRenderer4 = new ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer();
-            ActiproSoftware.SyntaxEditor.Document document5 = new ActiproSoftware.SyntaxEditor.Document();
-            ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer visualStudio2005SyntaxEditorRenderer5 = new ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer();
             this.mnuMain = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -142,6 +140,9 @@
             this.coefficentTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.userGuideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.visitURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator28 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stbMain = new System.Windows.Forms.StatusStrip();
             this.stbMainStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -220,16 +221,21 @@
             this.chkAntiWindupClampMin = new System.Windows.Forms.CheckBox();
             this.chkAntiWindupClampMax = new System.Windows.Forms.CheckBox();
             this.chkAntiWindup = new System.Windows.Forms.CheckBox();
-            this.grpCodeFeatureOptions = new System.Windows.Forms.GroupBox();
             this.grpDataProviderSources = new System.Windows.Forms.GroupBox();
-            this.chkAddDataProviderSource = new System.Windows.Forms.CheckBox();
+            this.chkDataProviderSource = new System.Windows.Forms.CheckBox();
             this.chkAddDataProviderControlInput = new System.Windows.Forms.CheckBox();
             this.chkAddDataProviderErrorInput = new System.Windows.Forms.CheckBox();
             this.chkAddDataProviderControlOutput = new System.Windows.Forms.CheckBox();
+            this.grpCodeFeatureDataIO = new System.Windows.Forms.GroupBox();
+            this.chkAddAlternateTarget = new System.Windows.Forms.CheckBox();
+            this.chkAddAlternateSource = new System.Windows.Forms.CheckBox();
+            this.chkAutomatedDataInterface = new System.Windows.Forms.CheckBox();
+            this.grpCodeFeatureOptions = new System.Windows.Forms.GroupBox();
+            this.chkCodeFeatureOptions = new System.Windows.Forms.CheckBox();
+            this.chkAddCascadedFunctionCall = new System.Windows.Forms.CheckBox();
             this.chkAddADCTriggerBPlacement = new System.Windows.Forms.CheckBox();
             this.chkAddDisableDummyRead = new System.Windows.Forms.CheckBox();
             this.chkAddErrorNormalization = new System.Windows.Forms.CheckBox();
-            this.chkCodeFeatureOptions = new System.Windows.Forms.CheckBox();
             this.chkStoreReloadAccLevel1 = new System.Windows.Forms.CheckBox();
             this.chkAddADCTriggerAPlacement = new System.Windows.Forms.CheckBox();
             this.chkAddEnableDisable = new System.Windows.Forms.CheckBox();
@@ -440,10 +446,8 @@
             this.txtCLibPath = new System.Windows.Forms.TextBox();
             this.lblCLibPath = new System.Windows.Forms.Label();
             this.cmdCLibPath = new System.Windows.Forms.Button();
-            this.tabPageOutput = new System.Windows.Forms.TabPage();
+            this.tabPageInfo = new System.Windows.Forms.TabPage();
             this.txtOutput = new System.Windows.Forms.TextBox();
-            this.tabPageGeneratorDefinitions = new System.Windows.Forms.TabPage();
-            this.txtSyntaxEditorINIFile = new ActiproSoftware.SyntaxEditor.SyntaxEditor();
             this.timRefresh = new System.Windows.Forms.Timer(this.components);
             this.tsbMain = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonOpen = new System.Windows.Forms.ToolStripButton();
@@ -460,6 +464,14 @@
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonBrowse = new System.Windows.Forms.ToolStripButton();
+            this.txtMPLABXProjectDir = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripLabelMPLABXDirectory = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripButtonMPLABXPathWarning = new System.Windows.Forms.ToolStripButton();
             this.timToolHelp = new System.Windows.Forms.Timer(this.components);
             this.mnuMain.SuspendLayout();
             this.stbMain.SuspendLayout();
@@ -478,8 +490,9 @@
             this.tabSourceCodeConfig.SuspendLayout();
             this.pnlCodeGeneratorOptions.SuspendLayout();
             this.grpAntiWindup.SuspendLayout();
-            this.grpCodeFeatureOptions.SuspendLayout();
             this.grpDataProviderSources.SuspendLayout();
+            this.grpCodeFeatureDataIO.SuspendLayout();
+            this.grpCodeFeatureOptions.SuspendLayout();
             this.grpContextSaving.SuspendLayout();
             this.grpFunctionLabel.SuspendLayout();
             this.tabAnalysis.SuspendLayout();
@@ -528,8 +541,7 @@
             this.tabPageLibraryHeader.SuspendLayout();
             this.tsbCodeGenUpdateWarningLibHeader.SuspendLayout();
             this.panelCLibPath.SuspendLayout();
-            this.tabPageOutput.SuspendLayout();
-            this.tabPageGeneratorDefinitions.SuspendLayout();
+            this.tabPageInfo.SuspendLayout();
             this.tsbMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -566,7 +578,7 @@
             this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.openToolStripMenuItem.Text = "&Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -575,27 +587,27 @@
             this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -839,16 +851,40 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.userGuideToolStripMenuItem,
+            this.visitURLToolStripMenuItem,
+            this.toolStripSeparator28,
             this.aboutToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(25, 20);
             this.toolStripMenuItem1.Text = "&?";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
+            // userGuideToolStripMenuItem
+            // 
+            this.userGuideToolStripMenuItem.Name = "userGuideToolStripMenuItem";
+            this.userGuideToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
+            this.userGuideToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.userGuideToolStripMenuItem.Text = "Open &User Guide...";
+            this.userGuideToolStripMenuItem.Click += new System.EventHandler(this.userGuideToolStripMenuItem_Click);
+            // 
+            // visitURLToolStripMenuItem
+            // 
+            this.visitURLToolStripMenuItem.Name = "visitURLToolStripMenuItem";
+            this.visitURLToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.visitURLToolStripMenuItem.Text = "Visit DCLD &Website";
+            this.visitURLToolStripMenuItem.Click += new System.EventHandler(this.visitURLToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator28
+            // 
+            this.toolStripSeparator28.Name = "toolStripSeparator28";
+            this.toolStripSeparator28.Size = new System.Drawing.Size(192, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.aboutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.F1)));
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.aboutToolStripMenuItem.Text = "About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -1718,6 +1754,8 @@
             this.pnlCodeGeneratorOptions.AutoScroll = true;
             this.pnlCodeGeneratorOptions.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pnlCodeGeneratorOptions.Controls.Add(this.grpAntiWindup);
+            this.pnlCodeGeneratorOptions.Controls.Add(this.grpDataProviderSources);
+            this.pnlCodeGeneratorOptions.Controls.Add(this.grpCodeFeatureDataIO);
             this.pnlCodeGeneratorOptions.Controls.Add(this.grpCodeFeatureOptions);
             this.pnlCodeGeneratorOptions.Controls.Add(this.grpContextSaving);
             this.pnlCodeGeneratorOptions.Controls.Add(this.grpFunctionLabel);
@@ -1737,10 +1775,10 @@
             this.grpAntiWindup.Controls.Add(this.chkAntiWindupClampMax);
             this.grpAntiWindup.Controls.Add(this.chkAntiWindup);
             this.grpAntiWindup.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpAntiWindup.Location = new System.Drawing.Point(0, 680);
+            this.grpAntiWindup.Location = new System.Drawing.Point(0, 790);
             this.grpAntiWindup.Name = "grpAntiWindup";
             this.grpAntiWindup.Size = new System.Drawing.Size(405, 170);
-            this.grpAntiWindup.TabIndex = 4;
+            this.grpAntiWindup.TabIndex = 6;
             this.grpAntiWindup.TabStop = false;
             // 
             // chkAntiWindupSoftDesaturationFlag
@@ -1758,10 +1796,8 @@
             // chkAntiWindupMinStatusFlag
             // 
             this.chkAntiWindupMinStatusFlag.AutoSize = true;
-            this.chkAntiWindupMinStatusFlag.Checked = true;
-            this.chkAntiWindupMinStatusFlag.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAntiWindupMinStatusFlag.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAntiWindupMinStatusFlag.Location = new System.Drawing.Point(53, 100);
+            this.chkAntiWindupMinStatusFlag.Location = new System.Drawing.Point(56, 100);
             this.chkAntiWindupMinStatusFlag.Name = "chkAntiWindupMinStatusFlag";
             this.chkAntiWindupMinStatusFlag.Size = new System.Drawing.Size(251, 19);
             this.chkAntiWindupMinStatusFlag.TabIndex = 4;
@@ -1772,8 +1808,6 @@
             // chkAntiWindupMaxStatusFlag
             // 
             this.chkAntiWindupMaxStatusFlag.AutoSize = true;
-            this.chkAntiWindupMaxStatusFlag.Checked = true;
-            this.chkAntiWindupMaxStatusFlag.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAntiWindupMaxStatusFlag.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkAntiWindupMaxStatusFlag.Location = new System.Drawing.Point(56, 50);
             this.chkAntiWindupMaxStatusFlag.Name = "chkAntiWindupMaxStatusFlag";
@@ -1825,60 +1859,41 @@
             this.chkAntiWindup.UseVisualStyleBackColor = true;
             this.chkAntiWindup.CheckedChanged += new System.EventHandler(this.chkAntiWindup_CheckedChanged);
             // 
-            // grpCodeFeatureOptions
-            // 
-            this.grpCodeFeatureOptions.Controls.Add(this.grpDataProviderSources);
-            this.grpCodeFeatureOptions.Controls.Add(this.chkAddADCTriggerBPlacement);
-            this.grpCodeFeatureOptions.Controls.Add(this.chkAddDisableDummyRead);
-            this.grpCodeFeatureOptions.Controls.Add(this.chkAddErrorNormalization);
-            this.grpCodeFeatureOptions.Controls.Add(this.chkCodeFeatureOptions);
-            this.grpCodeFeatureOptions.Controls.Add(this.chkStoreReloadAccLevel1);
-            this.grpCodeFeatureOptions.Controls.Add(this.chkAddADCTriggerAPlacement);
-            this.grpCodeFeatureOptions.Controls.Add(this.chkAddEnableDisable);
-            this.grpCodeFeatureOptions.Controls.Add(this.chkAddCoreConfig);
-            this.grpCodeFeatureOptions.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpCodeFeatureOptions.Location = new System.Drawing.Point(0, 360);
-            this.grpCodeFeatureOptions.Name = "grpCodeFeatureOptions";
-            this.grpCodeFeatureOptions.Size = new System.Drawing.Size(405, 320);
-            this.grpCodeFeatureOptions.TabIndex = 3;
-            this.grpCodeFeatureOptions.TabStop = false;
-            // 
             // grpDataProviderSources
             // 
-            this.grpDataProviderSources.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.grpDataProviderSources.Controls.Add(this.chkAddDataProviderSource);
+            this.grpDataProviderSources.Controls.Add(this.chkDataProviderSource);
             this.grpDataProviderSources.Controls.Add(this.chkAddDataProviderControlInput);
             this.grpDataProviderSources.Controls.Add(this.chkAddDataProviderErrorInput);
             this.grpDataProviderSources.Controls.Add(this.chkAddDataProviderControlOutput);
-            this.grpDataProviderSources.Location = new System.Drawing.Point(20, 201);
+            this.grpDataProviderSources.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpDataProviderSources.Location = new System.Drawing.Point(0, 682);
             this.grpDataProviderSources.Name = "grpDataProviderSources";
-            this.grpDataProviderSources.Size = new System.Drawing.Size(362, 108);
-            this.grpDataProviderSources.TabIndex = 8;
+            this.grpDataProviderSources.Size = new System.Drawing.Size(405, 108);
+            this.grpDataProviderSources.TabIndex = 5;
             this.grpDataProviderSources.TabStop = false;
             // 
-            // chkAddDataProviderSource
+            // chkDataProviderSource
             // 
-            this.chkAddDataProviderSource.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.chkAddDataProviderSource.AutoSize = true;
-            this.chkAddDataProviderSource.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddDataProviderSource.Location = new System.Drawing.Point(11, 0);
-            this.chkAddDataProviderSource.Name = "chkAddDataProviderSource";
-            this.chkAddDataProviderSource.Size = new System.Drawing.Size(172, 19);
-            this.chkAddDataProviderSource.TabIndex = 9;
-            this.chkAddDataProviderSource.Text = "Add Data &Provider Sources";
-            this.chkAddDataProviderSource.UseVisualStyleBackColor = true;
-            this.chkAddDataProviderSource.CheckedChanged += new System.EventHandler(this.chkAddDataProviderSource_CheckedChanged);
+            this.chkDataProviderSource.AutoSize = true;
+            this.chkDataProviderSource.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkDataProviderSource.Location = new System.Drawing.Point(10, 0);
+            this.chkDataProviderSource.Name = "chkDataProviderSource";
+            this.chkDataProviderSource.Size = new System.Drawing.Size(148, 19);
+            this.chkDataProviderSource.TabIndex = 9;
+            this.chkDataProviderSource.Text = "Data &Provider Sources";
+            this.chkDataProviderSource.UseVisualStyleBackColor = true;
+            this.chkDataProviderSource.CheckedChanged += new System.EventHandler(this.chkDataProviderSource_CheckedChanged);
             // 
             // chkAddDataProviderControlInput
             // 
             this.chkAddDataProviderControlInput.AutoSize = true;
             this.chkAddDataProviderControlInput.Enabled = false;
             this.chkAddDataProviderControlInput.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddDataProviderControlInput.Location = new System.Drawing.Point(36, 25);
+            this.chkAddDataProviderControlInput.Location = new System.Drawing.Point(30, 25);
             this.chkAddDataProviderControlInput.Name = "chkAddDataProviderControlInput";
-            this.chkAddDataProviderControlInput.Size = new System.Drawing.Size(169, 19);
+            this.chkAddDataProviderControlInput.Size = new System.Drawing.Size(199, 19);
             this.chkAddDataProviderControlInput.TabIndex = 10;
-            this.chkAddDataProviderControlInput.Text = "Most Recent Control Input";
+            this.chkAddDataProviderControlInput.Text = "Push Most Recent Control Input";
             this.chkAddDataProviderControlInput.UseVisualStyleBackColor = true;
             this.chkAddDataProviderControlInput.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
@@ -1887,11 +1902,11 @@
             this.chkAddDataProviderErrorInput.AutoSize = true;
             this.chkAddDataProviderErrorInput.Enabled = false;
             this.chkAddDataProviderErrorInput.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddDataProviderErrorInput.Location = new System.Drawing.Point(36, 50);
+            this.chkAddDataProviderErrorInput.Location = new System.Drawing.Point(30, 50);
             this.chkAddDataProviderErrorInput.Name = "chkAddDataProviderErrorInput";
-            this.chkAddDataProviderErrorInput.Size = new System.Drawing.Size(156, 19);
+            this.chkAddDataProviderErrorInput.Size = new System.Drawing.Size(186, 19);
             this.chkAddDataProviderErrorInput.TabIndex = 11;
-            this.chkAddDataProviderErrorInput.Text = "Most Recent Error Input";
+            this.chkAddDataProviderErrorInput.Text = "Push Most Recent Error Input";
             this.chkAddDataProviderErrorInput.UseVisualStyleBackColor = true;
             this.chkAddDataProviderErrorInput.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
@@ -1900,13 +1915,104 @@
             this.chkAddDataProviderControlOutput.AutoSize = true;
             this.chkAddDataProviderControlOutput.Enabled = false;
             this.chkAddDataProviderControlOutput.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddDataProviderControlOutput.Location = new System.Drawing.Point(36, 75);
+            this.chkAddDataProviderControlOutput.Location = new System.Drawing.Point(30, 75);
             this.chkAddDataProviderControlOutput.Name = "chkAddDataProviderControlOutput";
-            this.chkAddDataProviderControlOutput.Size = new System.Drawing.Size(178, 19);
+            this.chkAddDataProviderControlOutput.Size = new System.Drawing.Size(208, 19);
             this.chkAddDataProviderControlOutput.TabIndex = 12;
-            this.chkAddDataProviderControlOutput.Text = "Most Recent Control Output";
+            this.chkAddDataProviderControlOutput.Text = "Push Most Recent Control Output";
             this.chkAddDataProviderControlOutput.UseVisualStyleBackColor = true;
             this.chkAddDataProviderControlOutput.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            // 
+            // grpCodeFeatureDataIO
+            // 
+            this.grpCodeFeatureDataIO.Controls.Add(this.chkAddAlternateTarget);
+            this.grpCodeFeatureDataIO.Controls.Add(this.chkAddAlternateSource);
+            this.grpCodeFeatureDataIO.Controls.Add(this.chkAutomatedDataInterface);
+            this.grpCodeFeatureDataIO.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpCodeFeatureDataIO.Location = new System.Drawing.Point(0, 597);
+            this.grpCodeFeatureDataIO.Name = "grpCodeFeatureDataIO";
+            this.grpCodeFeatureDataIO.Size = new System.Drawing.Size(405, 85);
+            this.grpCodeFeatureDataIO.TabIndex = 4;
+            this.grpCodeFeatureDataIO.TabStop = false;
+            // 
+            // chkAddAlternateTarget
+            // 
+            this.chkAddAlternateTarget.AutoSize = true;
+            this.chkAddAlternateTarget.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAddAlternateTarget.Location = new System.Drawing.Point(30, 50);
+            this.chkAddAlternateTarget.Name = "chkAddAlternateTarget";
+            this.chkAddAlternateTarget.Size = new System.Drawing.Size(186, 19);
+            this.chkAddAlternateTarget.TabIndex = 3;
+            this.chkAddAlternateTarget.Text = "Add Alternative Ouptut Target";
+            this.chkAddAlternateTarget.UseVisualStyleBackColor = true;
+            this.chkAddAlternateTarget.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            // 
+            // chkAddAlternateSource
+            // 
+            this.chkAddAlternateSource.AutoSize = true;
+            this.chkAddAlternateSource.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAddAlternateSource.Location = new System.Drawing.Point(30, 25);
+            this.chkAddAlternateSource.Name = "chkAddAlternateSource";
+            this.chkAddAlternateSource.Size = new System.Drawing.Size(181, 19);
+            this.chkAddAlternateSource.TabIndex = 1;
+            this.chkAddAlternateSource.Text = "Add Alternative Input Source";
+            this.chkAddAlternateSource.UseVisualStyleBackColor = true;
+            this.chkAddAlternateSource.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            // 
+            // chkAutomatedDataInterface
+            // 
+            this.chkAutomatedDataInterface.AutoSize = true;
+            this.chkAutomatedDataInterface.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAutomatedDataInterface.Location = new System.Drawing.Point(10, 0);
+            this.chkAutomatedDataInterface.Name = "chkAutomatedDataInterface";
+            this.chkAutomatedDataInterface.Size = new System.Drawing.Size(166, 19);
+            this.chkAutomatedDataInterface.TabIndex = 0;
+            this.chkAutomatedDataInterface.Text = "Automated Data Interface";
+            this.chkAutomatedDataInterface.UseVisualStyleBackColor = true;
+            this.chkAutomatedDataInterface.CheckedChanged += new System.EventHandler(this.chkAutomatedDataInterface_CheckedChanged);
+            // 
+            // grpCodeFeatureOptions
+            // 
+            this.grpCodeFeatureOptions.Controls.Add(this.chkCodeFeatureOptions);
+            this.grpCodeFeatureOptions.Controls.Add(this.chkAddCascadedFunctionCall);
+            this.grpCodeFeatureOptions.Controls.Add(this.chkAddADCTriggerBPlacement);
+            this.grpCodeFeatureOptions.Controls.Add(this.chkAddDisableDummyRead);
+            this.grpCodeFeatureOptions.Controls.Add(this.chkAddErrorNormalization);
+            this.grpCodeFeatureOptions.Controls.Add(this.chkStoreReloadAccLevel1);
+            this.grpCodeFeatureOptions.Controls.Add(this.chkAddADCTriggerAPlacement);
+            this.grpCodeFeatureOptions.Controls.Add(this.chkAddEnableDisable);
+            this.grpCodeFeatureOptions.Controls.Add(this.chkAddCoreConfig);
+            this.grpCodeFeatureOptions.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpCodeFeatureOptions.Location = new System.Drawing.Point(0, 360);
+            this.grpCodeFeatureOptions.Name = "grpCodeFeatureOptions";
+            this.grpCodeFeatureOptions.Size = new System.Drawing.Size(405, 237);
+            this.grpCodeFeatureOptions.TabIndex = 3;
+            this.grpCodeFeatureOptions.TabStop = false;
+            // 
+            // chkCodeFeatureOptions
+            // 
+            this.chkCodeFeatureOptions.AutoSize = true;
+            this.chkCodeFeatureOptions.Checked = true;
+            this.chkCodeFeatureOptions.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCodeFeatureOptions.Location = new System.Drawing.Point(10, 0);
+            this.chkCodeFeatureOptions.Name = "chkCodeFeatureOptions";
+            this.chkCodeFeatureOptions.Size = new System.Drawing.Size(124, 19);
+            this.chkCodeFeatureOptions.TabIndex = 0;
+            this.chkCodeFeatureOptions.Text = "&Optional Features";
+            this.chkCodeFeatureOptions.UseVisualStyleBackColor = true;
+            this.chkCodeFeatureOptions.CheckedChanged += new System.EventHandler(this.chkCodeFeatureOptions_CheckedChanged);
+            // 
+            // chkAddCascadedFunctionCall
+            // 
+            this.chkAddCascadedFunctionCall.AutoSize = true;
+            this.chkAddCascadedFunctionCall.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAddCascadedFunctionCall.Location = new System.Drawing.Point(30, 200);
+            this.chkAddCascadedFunctionCall.Name = "chkAddCascadedFunctionCall";
+            this.chkAddCascadedFunctionCall.Size = new System.Drawing.Size(171, 19);
+            this.chkAddCascadedFunctionCall.TabIndex = 9;
+            this.chkAddCascadedFunctionCall.Text = "Add Cascade Function Call";
+            this.chkAddCascadedFunctionCall.UseVisualStyleBackColor = true;
+            this.chkAddCascadedFunctionCall.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
             // chkAddADCTriggerBPlacement
             // 
@@ -1924,7 +2030,7 @@
             // 
             this.chkAddDisableDummyRead.AutoSize = true;
             this.chkAddDisableDummyRead.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddDisableDummyRead.Location = new System.Drawing.Point(46, 100);
+            this.chkAddDisableDummyRead.Location = new System.Drawing.Point(56, 100);
             this.chkAddDisableDummyRead.Name = "chkAddDisableDummyRead";
             this.chkAddDisableDummyRead.Size = new System.Drawing.Size(245, 19);
             this.chkAddDisableDummyRead.TabIndex = 4;
@@ -1946,19 +2052,6 @@
             this.chkAddErrorNormalization.UseVisualStyleBackColor = true;
             this.chkAddErrorNormalization.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
-            // chkCodeFeatureOptions
-            // 
-            this.chkCodeFeatureOptions.AutoSize = true;
-            this.chkCodeFeatureOptions.Checked = true;
-            this.chkCodeFeatureOptions.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkCodeFeatureOptions.Location = new System.Drawing.Point(10, 0);
-            this.chkCodeFeatureOptions.Name = "chkCodeFeatureOptions";
-            this.chkCodeFeatureOptions.Size = new System.Drawing.Size(124, 19);
-            this.chkCodeFeatureOptions.TabIndex = 0;
-            this.chkCodeFeatureOptions.Text = "&Optional Features";
-            this.chkCodeFeatureOptions.UseVisualStyleBackColor = true;
-            this.chkCodeFeatureOptions.CheckedChanged += new System.EventHandler(this.chkCodeFeatureOptions_CheckedChanged);
-            // 
             // chkStoreReloadAccLevel1
             // 
             this.chkStoreReloadAccLevel1.AutoSize = true;
@@ -1979,7 +2072,7 @@
             this.chkAddADCTriggerAPlacement.Checked = true;
             this.chkAddADCTriggerAPlacement.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAddADCTriggerAPlacement.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddADCTriggerAPlacement.Location = new System.Drawing.Point(31, 150);
+            this.chkAddADCTriggerAPlacement.Location = new System.Drawing.Point(30, 150);
             this.chkAddADCTriggerAPlacement.Name = "chkAddADCTriggerAPlacement";
             this.chkAddADCTriggerAPlacement.Size = new System.Drawing.Size(301, 19);
             this.chkAddADCTriggerAPlacement.TabIndex = 6;
@@ -1993,7 +2086,7 @@
             this.chkAddEnableDisable.Checked = true;
             this.chkAddEnableDisable.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAddEnableDisable.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddEnableDisable.Location = new System.Drawing.Point(31, 75);
+            this.chkAddEnableDisable.Location = new System.Drawing.Point(30, 75);
             this.chkAddEnableDisable.Name = "chkAddEnableDisable";
             this.chkAddEnableDisable.Size = new System.Drawing.Size(178, 19);
             this.chkAddEnableDisable.TabIndex = 3;
@@ -2007,11 +2100,11 @@
             this.chkAddCoreConfig.Checked = true;
             this.chkAddCoreConfig.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAddCoreConfig.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddCoreConfig.Location = new System.Drawing.Point(31, 50);
+            this.chkAddCoreConfig.Location = new System.Drawing.Point(30, 50);
             this.chkAddCoreConfig.Name = "chkAddCoreConfig";
-            this.chkAddCoreConfig.Size = new System.Drawing.Size(152, 19);
+            this.chkAddCoreConfig.Size = new System.Drawing.Size(176, 19);
             this.chkAddCoreConfig.TabIndex = 2;
-            this.chkAddCoreConfig.Text = "A&dd Core Configuration";
+            this.chkAddCoreConfig.Text = "A&dd DSP Core Configuration";
             this.chkAddCoreConfig.UseVisualStyleBackColor = true;
             this.chkAddCoreConfig.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
@@ -2080,11 +2173,11 @@
             this.chkSaveRestoreCoreConfig.Checked = true;
             this.chkSaveRestoreCoreConfig.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkSaveRestoreCoreConfig.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkSaveRestoreCoreConfig.Location = new System.Drawing.Point(31, 152);
+            this.chkSaveRestoreCoreConfig.Location = new System.Drawing.Point(30, 152);
             this.chkSaveRestoreCoreConfig.Name = "chkSaveRestoreCoreConfig";
-            this.chkSaveRestoreCoreConfig.Size = new System.Drawing.Size(202, 19);
+            this.chkSaveRestoreCoreConfig.Size = new System.Drawing.Size(226, 19);
             this.chkSaveRestoreCoreConfig.TabIndex = 6;
-            this.chkSaveRestoreCoreConfig.Text = "Save/Restore &Core Configuration";
+            this.chkSaveRestoreCoreConfig.Text = "Save/Restore DSP &Core Configuration";
             this.chkSaveRestoreCoreConfig.UseVisualStyleBackColor = true;
             this.chkSaveRestoreCoreConfig.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
@@ -2094,7 +2187,7 @@
             this.chkSaveRestoreAccumulators.Checked = true;
             this.chkSaveRestoreAccumulators.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkSaveRestoreAccumulators.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkSaveRestoreAccumulators.Location = new System.Drawing.Point(31, 77);
+            this.chkSaveRestoreAccumulators.Location = new System.Drawing.Point(30, 77);
             this.chkSaveRestoreAccumulators.Name = "chkSaveRestoreAccumulators";
             this.chkSaveRestoreAccumulators.Size = new System.Drawing.Size(176, 19);
             this.chkSaveRestoreAccumulators.TabIndex = 3;
@@ -2108,7 +2201,7 @@
             this.chkSaveRestoreMACRegisters.Checked = true;
             this.chkSaveRestoreMACRegisters.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkSaveRestoreMACRegisters.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkSaveRestoreMACRegisters.Location = new System.Drawing.Point(31, 51);
+            this.chkSaveRestoreMACRegisters.Location = new System.Drawing.Point(30, 51);
             this.chkSaveRestoreMACRegisters.Name = "chkSaveRestoreMACRegisters";
             this.chkSaveRestoreMACRegisters.Size = new System.Drawing.Size(227, 19);
             this.chkSaveRestoreMACRegisters.TabIndex = 2;
@@ -2122,7 +2215,7 @@
             this.chkSaveRestoreShadowRegisters.Checked = true;
             this.chkSaveRestoreShadowRegisters.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkSaveRestoreShadowRegisters.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkSaveRestoreShadowRegisters.Location = new System.Drawing.Point(31, 26);
+            this.chkSaveRestoreShadowRegisters.Location = new System.Drawing.Point(30, 26);
             this.chkSaveRestoreShadowRegisters.Name = "chkSaveRestoreShadowRegisters";
             this.chkSaveRestoreShadowRegisters.Size = new System.Drawing.Size(196, 19);
             this.chkSaveRestoreShadowRegisters.TabIndex = 1;
@@ -2170,7 +2263,7 @@
             this.chkUserVariableNamePrefix.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkUserVariableNamePrefix.Enabled = false;
             this.chkUserVariableNamePrefix.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkUserVariableNamePrefix.Location = new System.Drawing.Point(77, 111);
+            this.chkUserVariableNamePrefix.Location = new System.Drawing.Point(68, 111);
             this.chkUserVariableNamePrefix.Name = "chkUserVariableNamePrefix";
             this.chkUserVariableNamePrefix.Size = new System.Drawing.Size(240, 19);
             this.chkUserVariableNamePrefix.TabIndex = 31;
@@ -2183,7 +2276,7 @@
             this.lblControllerNamePrefix.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblControllerNamePrefix.AutoSize = true;
             this.lblControllerNamePrefix.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblControllerNamePrefix.Location = new System.Drawing.Point(45, 26);
+            this.lblControllerNamePrefix.Location = new System.Drawing.Point(36, 26);
             this.lblControllerNamePrefix.Name = "lblControllerNamePrefix";
             this.lblControllerNamePrefix.Size = new System.Drawing.Size(75, 15);
             this.lblControllerNamePrefix.TabIndex = 24;
@@ -2194,7 +2287,7 @@
             this.txtControllerNamePrefix1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.txtControllerNamePrefix1.Enabled = false;
             this.txtControllerNamePrefix1.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtControllerNamePrefix1.Location = new System.Drawing.Point(145, 23);
+            this.txtControllerNamePrefix1.Location = new System.Drawing.Point(136, 23);
             this.txtControllerNamePrefix1.MaxLength = 255;
             this.txtControllerNamePrefix1.Name = "txtControllerNamePrefix1";
             this.txtControllerNamePrefix1.Size = new System.Drawing.Size(97, 23);
@@ -2206,7 +2299,7 @@
             this.chkUserControllerNamePrefix.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.chkUserControllerNamePrefix.AutoSize = true;
             this.chkUserControllerNamePrefix.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkUserControllerNamePrefix.Location = new System.Drawing.Point(77, 86);
+            this.chkUserControllerNamePrefix.Location = new System.Drawing.Point(68, 86);
             this.chkUserControllerNamePrefix.Name = "chkUserControllerNamePrefix";
             this.chkUserControllerNamePrefix.Size = new System.Drawing.Size(250, 19);
             this.chkUserControllerNamePrefix.TabIndex = 3;
@@ -2218,7 +2311,7 @@
             // 
             this.txtControllerNamePrefix2.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.txtControllerNamePrefix2.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtControllerNamePrefix2.Location = new System.Drawing.Point(250, 23);
+            this.txtControllerNamePrefix2.Location = new System.Drawing.Point(241, 23);
             this.txtControllerNamePrefix2.MaxLength = 255;
             this.txtControllerNamePrefix2.Name = "txtControllerNamePrefix2";
             this.txtControllerNamePrefix2.Size = new System.Drawing.Size(97, 23);
@@ -2231,7 +2324,7 @@
             this.lblFinalNamePrefixOutput.AutoSize = true;
             this.lblFinalNamePrefixOutput.Enabled = false;
             this.lblFinalNamePrefixOutput.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblFinalNamePrefixOutput.Location = new System.Drawing.Point(247, 58);
+            this.lblFinalNamePrefixOutput.Location = new System.Drawing.Point(238, 58);
             this.lblFinalNamePrefixOutput.Name = "lblFinalNamePrefixOutput";
             this.lblFinalNamePrefixOutput.Size = new System.Drawing.Size(80, 15);
             this.lblFinalNamePrefixOutput.TabIndex = 30;
@@ -2244,7 +2337,7 @@
             this.lblFinalNamePrefix.AutoSize = true;
             this.lblFinalNamePrefix.Enabled = false;
             this.lblFinalNamePrefix.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblFinalNamePrefix.Location = new System.Drawing.Point(118, 58);
+            this.lblFinalNamePrefix.Location = new System.Drawing.Point(109, 58);
             this.lblFinalNamePrefix.Name = "lblFinalNamePrefix";
             this.lblFinalNamePrefix.Size = new System.Drawing.Size(106, 15);
             this.lblFinalNamePrefix.TabIndex = 29;
@@ -2875,10 +2968,10 @@
             // tabPageTiming
             // 
             this.tabPageTiming.Controls.Add(this.splitContainerTiming);
-            this.tabPageTiming.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTiming.Location = new System.Drawing.Point(4, 24);
             this.tabPageTiming.Name = "tabPageTiming";
             this.tabPageTiming.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTiming.Size = new System.Drawing.Size(944, 749);
+            this.tabPageTiming.Size = new System.Drawing.Size(944, 747);
             this.tabPageTiming.TabIndex = 4;
             this.tabPageTiming.Text = "Timing";
             this.tabPageTiming.UseVisualStyleBackColor = true;
@@ -2902,8 +2995,8 @@
             this.splitContainerTiming.Panel2.AutoScroll = true;
             this.splitContainerTiming.Panel2.Controls.Add(this.grpExecutionTime);
             this.splitContainerTiming.Panel2MinSize = 248;
-            this.splitContainerTiming.Size = new System.Drawing.Size(938, 743);
-            this.splitContainerTiming.SplitterDistance = 485;
+            this.splitContainerTiming.Size = new System.Drawing.Size(938, 741);
+            this.splitContainerTiming.SplitterDistance = 483;
             this.splitContainerTiming.TabIndex = 0;
             // 
             // pnlTimingChart
@@ -2917,7 +3010,7 @@
             this.pnlTimingChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlTimingChart.Location = new System.Drawing.Point(0, 0);
             this.pnlTimingChart.Name = "pnlTimingChart";
-            this.pnlTimingChart.Size = new System.Drawing.Size(936, 483);
+            this.pnlTimingChart.Size = new System.Drawing.Size(936, 481);
             this.pnlTimingChart.TabIndex = 0;
             // 
             // tsbCodeGenUpdateWarningTiming
@@ -2928,7 +3021,7 @@
             this.tsbCodeGenUpdateWarningTiming.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel2,
             this.toolStripLabel3});
-            this.tsbCodeGenUpdateWarningTiming.Location = new System.Drawing.Point(0, 458);
+            this.tsbCodeGenUpdateWarningTiming.Location = new System.Drawing.Point(0, 456);
             this.tsbCodeGenUpdateWarningTiming.Name = "tsbCodeGenUpdateWarningTiming";
             this.tsbCodeGenUpdateWarningTiming.Size = new System.Drawing.Size(936, 25);
             this.tsbCodeGenUpdateWarningTiming.TabIndex = 54;
@@ -3110,7 +3203,7 @@
             this.chartTiming.Series.Add(series5);
             this.chartTiming.Series.Add(series6);
             this.chartTiming.Series.Add(series7);
-            this.chartTiming.Size = new System.Drawing.Size(936, 458);
+            this.chartTiming.Size = new System.Drawing.Size(936, 456);
             this.chartTiming.TabIndex = 2;
             this.chartTiming.Text = "Control Timing";
             this.chartTiming.CursorPositionChanged += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.CursorEventArgs>(this.chartTiming_CursorPositionChanged);
@@ -3718,7 +3811,7 @@
             this.txtCPUClock.Name = "txtCPUClock";
             this.txtCPUClock.Size = new System.Drawing.Size(72, 23);
             this.txtCPUClock.TabIndex = 2;
-            this.txtCPUClock.Text = "70";
+            this.txtCPUClock.Text = "100";
             this.txtCPUClock.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtCPUClock.TextChanged += new System.EventHandler(this.UpdateExecutionRuntime);
             this.txtCPUClock.Enter += new System.EventHandler(this.NumberTextBox_Enter);
@@ -4014,8 +4107,7 @@
             this.tabSourceCode.Controls.Add(this.tabPageCSource);
             this.tabSourceCode.Controls.Add(this.tabPageCHeader);
             this.tabSourceCode.Controls.Add(this.tabPageLibraryHeader);
-            this.tabSourceCode.Controls.Add(this.tabPageOutput);
-            this.tabSourceCode.Controls.Add(this.tabPageGeneratorDefinitions);
+            this.tabSourceCode.Controls.Add(this.tabPageInfo);
             this.tabSourceCode.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabSourceCode.Location = new System.Drawing.Point(3, 3);
             this.tabSourceCode.Name = "tabSourceCode";
@@ -4486,16 +4578,16 @@
             this.cmdCLibPath.UseVisualStyleBackColor = true;
             this.cmdCLibPath.Click += new System.EventHandler(this.GetCodeGeneratorPath);
             // 
-            // tabPageOutput
+            // tabPageInfo
             // 
-            this.tabPageOutput.Controls.Add(this.txtOutput);
-            this.tabPageOutput.Location = new System.Drawing.Point(4, 22);
-            this.tabPageOutput.Name = "tabPageOutput";
-            this.tabPageOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOutput.Size = new System.Drawing.Size(930, 717);
-            this.tabPageOutput.TabIndex = 5;
-            this.tabPageOutput.Text = "Output";
-            this.tabPageOutput.UseVisualStyleBackColor = true;
+            this.tabPageInfo.Controls.Add(this.txtOutput);
+            this.tabPageInfo.Location = new System.Drawing.Point(4, 22);
+            this.tabPageInfo.Name = "tabPageInfo";
+            this.tabPageInfo.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageInfo.Size = new System.Drawing.Size(930, 717);
+            this.tabPageInfo.TabIndex = 5;
+            this.tabPageInfo.Text = "Info";
+            this.tabPageInfo.UseVisualStyleBackColor = true;
             // 
             // txtOutput
             // 
@@ -4509,36 +4601,6 @@
             this.txtOutput.Size = new System.Drawing.Size(924, 711);
             this.txtOutput.TabIndex = 0;
             this.txtOutput.WordWrap = false;
-            // 
-            // tabPageGeneratorDefinitions
-            // 
-            this.tabPageGeneratorDefinitions.BackColor = System.Drawing.Color.Transparent;
-            this.tabPageGeneratorDefinitions.Controls.Add(this.txtSyntaxEditorINIFile);
-            this.tabPageGeneratorDefinitions.Location = new System.Drawing.Point(4, 22);
-            this.tabPageGeneratorDefinitions.Name = "tabPageGeneratorDefinitions";
-            this.tabPageGeneratorDefinitions.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneratorDefinitions.Size = new System.Drawing.Size(930, 717);
-            this.tabPageGeneratorDefinitions.TabIndex = 4;
-            this.tabPageGeneratorDefinitions.Text = "Generator Definitions";
-            // 
-            // txtSyntaxEditorINIFile
-            // 
-            this.txtSyntaxEditorINIFile.AutoScroll = true;
-            this.txtSyntaxEditorINIFile.BracketHighlightingInclusive = true;
-            this.txtSyntaxEditorINIFile.BracketHighlightingVisible = true;
-            this.txtSyntaxEditorINIFile.CurrentLineHighlightingVisible = true;
-            this.txtSyntaxEditorINIFile.Dock = System.Windows.Forms.DockStyle.Fill;
-            document5.Filename = "";
-            document5.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
-            this.txtSyntaxEditorINIFile.Document = document5;
-            this.txtSyntaxEditorINIFile.LineNumberMarginVisible = true;
-            this.txtSyntaxEditorINIFile.Location = new System.Drawing.Point(3, 3);
-            this.txtSyntaxEditorINIFile.Name = "txtSyntaxEditorINIFile";
-            visualStudio2005SyntaxEditorRenderer5.ResetAllPropertiesOnSystemColorChange = false;
-            this.txtSyntaxEditorINIFile.Renderer = visualStudio2005SyntaxEditorRenderer5;
-            this.txtSyntaxEditorINIFile.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorINIFile.Size = new System.Drawing.Size(924, 711);
-            this.txtSyntaxEditorINIFile.TabIndex = 6;
             // 
             // timRefresh
             // 
@@ -4561,7 +4623,15 @@
             this.toolStripButtonUpdateExportCode,
             this.toolStripSeparator16,
             this.toolStripSeparator21,
-            this.toolStripButtonHelp});
+            this.toolStripButtonHelp,
+            this.toolStripSeparator25,
+            this.toolStripSeparator26,
+            this.toolStripSeparator27,
+            this.toolStripSeparator24,
+            this.toolStripButtonBrowse,
+            this.txtMPLABXProjectDir,
+            this.toolStripLabelMPLABXDirectory,
+            this.toolStripButtonMPLABXPathWarning});
             this.tsbMain.Location = new System.Drawing.Point(0, 24);
             this.tsbMain.Name = "tsbMain";
             this.tsbMain.Size = new System.Drawing.Size(1408, 25);
@@ -4677,7 +4747,71 @@
             this.toolStripButtonHelp.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonHelp.Text = "Help";
             this.toolStripButtonHelp.ToolTipText = "Help";
-            this.toolStripButtonHelp.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.toolStripButtonHelp.Click += new System.EventHandler(this.userGuideToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator25
+            // 
+            this.toolStripSeparator25.Name = "toolStripSeparator25";
+            this.toolStripSeparator25.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator26
+            // 
+            this.toolStripSeparator26.Name = "toolStripSeparator26";
+            this.toolStripSeparator26.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator27
+            // 
+            this.toolStripSeparator27.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripSeparator27.Name = "toolStripSeparator27";
+            this.toolStripSeparator27.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator24
+            // 
+            this.toolStripSeparator24.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripSeparator24.Name = "toolStripSeparator24";
+            this.toolStripSeparator24.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonBrowse
+            // 
+            this.toolStripButtonBrowse.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButtonBrowse.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.toolStripButtonBrowse.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonBrowse.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonBrowse.Image")));
+            this.toolStripButtonBrowse.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonBrowse.Name = "toolStripButtonBrowse";
+            this.toolStripButtonBrowse.Size = new System.Drawing.Size(49, 22);
+            this.toolStripButtonBrowse.Text = "Bro&wse";
+            this.toolStripButtonBrowse.ToolTipText = "Browse for MPLAB X Project Directory";
+            this.toolStripButtonBrowse.Click += new System.EventHandler(this.toolStripButtonBrowse_Click);
+            // 
+            // txtMPLABXProjectDir
+            // 
+            this.txtMPLABXProjectDir.AcceptsTab = true;
+            this.txtMPLABXProjectDir.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.txtMPLABXProjectDir.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtMPLABXProjectDir.Name = "txtMPLABXProjectDir";
+            this.txtMPLABXProjectDir.Size = new System.Drawing.Size(500, 25);
+            this.txtMPLABXProjectDir.ToolTipText = "MPLAB X Project Directory";
+            this.txtMPLABXProjectDir.TextChanged += new System.EventHandler(this.SourcePathTextBox_TextChanged);
+            // 
+            // toolStripLabelMPLABXDirectory
+            // 
+            this.toolStripLabelMPLABXDirectory.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripLabelMPLABXDirectory.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripLabelMPLABXDirectory.Name = "toolStripLabelMPLABXDirectory";
+            this.toolStripLabelMPLABXDirectory.Size = new System.Drawing.Size(207, 22);
+            this.toolStripLabelMPLABXDirectory.Text = "MPLAB X® Project Reference Path: ";
+            // 
+            // toolStripButtonMPLABXPathWarning
+            // 
+            this.toolStripButtonMPLABXPathWarning.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButtonMPLABXPathWarning.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonMPLABXPathWarning.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonMPLABXPathWarning.Image")));
+            this.toolStripButtonMPLABXPathWarning.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonMPLABXPathWarning.Name = "toolStripButtonMPLABXPathWarning";
+            this.toolStripButtonMPLABXPathWarning.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonMPLABXPathWarning.Text = "MPLAB X Project Directory Warning";
+            this.toolStripButtonMPLABXPathWarning.Visible = false;
             // 
             // timToolHelp
             // 
@@ -4695,6 +4829,7 @@
             this.Controls.Add(this.tabMain);
             this.Controls.Add(this.stbMain);
             this.Controls.Add(this.mnuMain);
+            this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
@@ -4730,10 +4865,12 @@
             this.pnlCodeGeneratorOptions.ResumeLayout(false);
             this.grpAntiWindup.ResumeLayout(false);
             this.grpAntiWindup.PerformLayout();
-            this.grpCodeFeatureOptions.ResumeLayout(false);
-            this.grpCodeFeatureOptions.PerformLayout();
             this.grpDataProviderSources.ResumeLayout(false);
             this.grpDataProviderSources.PerformLayout();
+            this.grpCodeFeatureDataIO.ResumeLayout(false);
+            this.grpCodeFeatureDataIO.PerformLayout();
+            this.grpCodeFeatureOptions.ResumeLayout(false);
+            this.grpCodeFeatureOptions.PerformLayout();
             this.grpContextSaving.ResumeLayout(false);
             this.grpContextSaving.PerformLayout();
             this.grpFunctionLabel.ResumeLayout(false);
@@ -4804,9 +4941,8 @@
             this.tsbCodeGenUpdateWarningLibHeader.PerformLayout();
             this.panelCLibPath.ResumeLayout(false);
             this.panelCLibPath.PerformLayout();
-            this.tabPageOutput.ResumeLayout(false);
-            this.tabPageOutput.PerformLayout();
-            this.tabPageGeneratorDefinitions.ResumeLayout(false);
+            this.tabPageInfo.ResumeLayout(false);
+            this.tabPageInfo.PerformLayout();
             this.tsbMain.ResumeLayout(false);
             this.tsbMain.PerformLayout();
             this.ResumeLayout(false);
@@ -5039,9 +5175,7 @@
         private ActiproSoftware.SyntaxEditor.SyntaxEditor txtSyntaxEditorCSource;
         private System.Windows.Forms.TabPage tabPageCHeader;
         private ActiproSoftware.SyntaxEditor.SyntaxEditor txtSyntaxEditorCHeader;
-        private System.Windows.Forms.TabPage tabPageGeneratorDefinitions;
-        private ActiproSoftware.SyntaxEditor.SyntaxEditor txtSyntaxEditorINIFile;
-        private System.Windows.Forms.TabPage tabPageOutput;
+        private System.Windows.Forms.TabPage tabPageInfo;
         private System.Windows.Forms.TextBox txtOutput;
         private System.Windows.Forms.TabPage tabPageLibraryHeader;
         private ActiproSoftware.SyntaxEditor.SyntaxEditor txtSyntaxEditorCLibHeader;
@@ -5168,9 +5302,25 @@
         private System.Windows.Forms.CheckBox chkAddDisableDummyRead;
         private System.Windows.Forms.CheckBox chkAddADCTriggerBPlacement;
         private System.Windows.Forms.GroupBox grpDataProviderSources;
-        private System.Windows.Forms.CheckBox chkAddDataProviderSource;
+        private System.Windows.Forms.CheckBox chkDataProviderSource;
         private System.Windows.Forms.ToolStripMenuItem showSDomainTransferFunctionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator23;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
+        private System.Windows.Forms.ToolStripLabel toolStripLabelMPLABXDirectory;
+        private System.Windows.Forms.ToolStripTextBox txtMPLABXProjectDir;
+        private System.Windows.Forms.ToolStripButton toolStripButtonBrowse;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator26;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator27;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator24;
+        private System.Windows.Forms.ToolStripButton toolStripButtonMPLABXPathWarning;
+        private System.Windows.Forms.CheckBox chkAddCascadedFunctionCall;
+        private System.Windows.Forms.GroupBox grpCodeFeatureDataIO;
+        private System.Windows.Forms.CheckBox chkAddAlternateTarget;
+        private System.Windows.Forms.CheckBox chkAddAlternateSource;
+        private System.Windows.Forms.CheckBox chkAutomatedDataInterface;
+        private System.Windows.Forms.ToolStripMenuItem userGuideToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator28;
+        private System.Windows.Forms.ToolStripMenuItem visitURLToolStripMenuItem;
     }
 }
 
