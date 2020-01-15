@@ -2968,10 +2968,10 @@
             // tabPageTiming
             // 
             this.tabPageTiming.Controls.Add(this.splitContainerTiming);
-            this.tabPageTiming.Location = new System.Drawing.Point(4, 24);
+            this.tabPageTiming.Location = new System.Drawing.Point(4, 22);
             this.tabPageTiming.Name = "tabPageTiming";
             this.tabPageTiming.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTiming.Size = new System.Drawing.Size(944, 747);
+            this.tabPageTiming.Size = new System.Drawing.Size(944, 749);
             this.tabPageTiming.TabIndex = 4;
             this.tabPageTiming.Text = "Timing";
             this.tabPageTiming.UseVisualStyleBackColor = true;
@@ -2995,8 +2995,8 @@
             this.splitContainerTiming.Panel2.AutoScroll = true;
             this.splitContainerTiming.Panel2.Controls.Add(this.grpExecutionTime);
             this.splitContainerTiming.Panel2MinSize = 248;
-            this.splitContainerTiming.Size = new System.Drawing.Size(938, 741);
-            this.splitContainerTiming.SplitterDistance = 483;
+            this.splitContainerTiming.Size = new System.Drawing.Size(938, 743);
+            this.splitContainerTiming.SplitterDistance = 485;
             this.splitContainerTiming.TabIndex = 0;
             // 
             // pnlTimingChart
@@ -3010,7 +3010,7 @@
             this.pnlTimingChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlTimingChart.Location = new System.Drawing.Point(0, 0);
             this.pnlTimingChart.Name = "pnlTimingChart";
-            this.pnlTimingChart.Size = new System.Drawing.Size(936, 481);
+            this.pnlTimingChart.Size = new System.Drawing.Size(936, 483);
             this.pnlTimingChart.TabIndex = 0;
             // 
             // tsbCodeGenUpdateWarningTiming
@@ -3021,7 +3021,7 @@
             this.tsbCodeGenUpdateWarningTiming.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel2,
             this.toolStripLabel3});
-            this.tsbCodeGenUpdateWarningTiming.Location = new System.Drawing.Point(0, 456);
+            this.tsbCodeGenUpdateWarningTiming.Location = new System.Drawing.Point(0, 458);
             this.tsbCodeGenUpdateWarningTiming.Name = "tsbCodeGenUpdateWarningTiming";
             this.tsbCodeGenUpdateWarningTiming.Size = new System.Drawing.Size(936, 25);
             this.tsbCodeGenUpdateWarningTiming.TabIndex = 54;
@@ -3203,7 +3203,7 @@
             this.chartTiming.Series.Add(series5);
             this.chartTiming.Series.Add(series6);
             this.chartTiming.Series.Add(series7);
-            this.chartTiming.Size = new System.Drawing.Size(936, 456);
+            this.chartTiming.Size = new System.Drawing.Size(936, 458);
             this.chartTiming.TabIndex = 2;
             this.chartTiming.Text = "Control Timing";
             this.chartTiming.CursorPositionChanged += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.CursorEventArgs>(this.chartTiming_CursorPositionChanged);
