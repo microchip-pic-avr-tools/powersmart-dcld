@@ -1,18 +1,15 @@
 [generic]
 Name=C-Source and Header Generator Script
 Description=this scriptprovides C-source and header files for user-tailored SMPS control loops based on DSP assembly code modules templates generated using the DCLD SDK
-Author=Andreas Reiter - M91406
-Version=1.1.5
+Author=M91406
+Version=1.1.1
 Date=01/13/2020
+
 [history]
 count=7
 0=11/08/19;1.0.0;Initial version after moving C-sources and headers from application code to external script
 1=01/10/20;1.1.0;Added support for cascaded functions. This allows the assembly routine to call another controller or user-defined function extension code module.\r\nAdded pointers to alternate source and terget register supporting bi-directional control and advanced adaptive control methods
-2=01/13/2020;1.1.1;COMMENT
-3=01/13/2020;1.1.2;COMMENT
-4=01/13/2020;1.1.3;COMMENT
-5=01/13/2020;1.1.4;COMMENT
-6=01/13/2020;1.1.5;COMMENT
+2=01/13/2020;1.1.1;Added support for alternate data input source register/variable and alternate data output target register/variable
 
 [tokens]
 count=17
