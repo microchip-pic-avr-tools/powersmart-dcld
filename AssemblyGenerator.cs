@@ -129,6 +129,13 @@ namespace dcld
             set { _AddADCTriggerBPlacement = value; return; }
         }
 
+        private bool _AddCascadedFunctionCall = false;
+        internal bool AddCascadedFunctionCall
+        {
+            get { return _AddCascadedFunctionCall; }
+            set { _AddCascadedFunctionCall = value; return; }
+        }
+
         private bool _AddAntiWindup = true;
         internal bool AddAntiWindup
         {
@@ -670,6 +677,10 @@ namespace dcld
                                 if (_SpreadSpectrumModulation) { command = command + "_ssm"; }
                                 str_dum = BuildCodeBlock(command);
                             }
+                            break;
+
+                        case "cascaded_function_call":
+                            if (_AddCascadedFunctionCall) str_dum = BuildCodeBlock(command);
                             break;
 
                         case "update_status_bitfield":
