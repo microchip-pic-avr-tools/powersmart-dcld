@@ -606,18 +606,6 @@ namespace dcld
                                 if (_AntiWindupClampMaxWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_max_set_status_flag");
                                 if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_end");
 
-                                //if (_AntiWindupClampMaxWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_max_set_status_flag");
-                                //if (_AntiWindupSoftDesaturationFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_soft_desaturation");
-                                //if (needs_bypass)
-                                //{
-                                //    if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_override");
-                                //    if (_AntiWindupClampMaxWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_max_clear_status_flag");
-                                //    if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_end");
-                                //}
-                                //else
-                                //{
-                                    
-                                //}
                             }
                             break;
 
@@ -640,26 +628,6 @@ namespace dcld
                                 if (_AntiWindupClampMinWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_min_set_status_flag");
                                 if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_end");
 
-                                //bool needs_bypass = false;
-
-                                //bool_dummy = ((_AntiWindupClampMinWithStatusFlag) || (_AntiWindupSoftDesaturationFlag));
-                                //needs_bypass = (_AntiWindupClampMinWithStatusFlag);
-
-                                //str_dum = BuildCodeBlock("anti_windup_min_start");
-                                //if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_start");
-                                //if (_AntiWindupClampMinWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_min_set_status_flag");
-                                //if (_AntiWindupSoftDesaturationFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_soft_desaturation");
-                                //str_dum = str_dum + BuildCodeBlock("anti_windup_min_override");
-                                //if (needs_bypass)
-                                //{
-                                //    if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_bypass");
-                                //    if (_AntiWindupClampMinWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_min_clear_status_flag");
-                                //    if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_end");
-                                //}
-                                //else 
-                                //{
-                                //    if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_bypass_end");
-                                //}
                             }
                             break;
 
