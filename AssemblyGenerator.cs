@@ -101,6 +101,20 @@ namespace dcld
             set { _AddErrorInputNormalization = value; return; }
         }
 
+        private bool _AddAlternateSource = false;
+        internal bool AddAlternateSource
+        {
+            get { return (_AddAlternateSource); }
+            set { _AddAlternateSource = value; return; }
+        }
+
+        private bool _AddAlternateTarget = false;
+        internal bool AddAlternateTarget
+        {
+            get { return (_AddAlternateTarget); }
+            set { _AddAlternateTarget = value; return; }
+        }
+
         private bool _AddADCTriggerAPlacement = true;
         internal bool AddADCTriggerAPlacement
         {
@@ -548,11 +562,13 @@ namespace dcld
 
                         case "comp_writeback":
                             if (_SpreadSpectrumModulation) { command = command + "_ssm"; }
+                            if (_AddAlternateTarget) { command = command + "_with_alt_target_switch"; }
                             str_dum = BuildCodeBlock(command);
                             _CycleCountToWriteback = _CycleCountTotal;  // Capture value from most recent cycle count
                             break;
 
                         case "comp_read_input":
+                            if (_AddAlternateSource) { command = command + "_with_alt_source_switch"; }
                             str_dum = BuildCodeBlock(command);
                             _CycleCountToDataCapture = _CycleCountTotal;  // Capture value from most recent cycle count
                             break;

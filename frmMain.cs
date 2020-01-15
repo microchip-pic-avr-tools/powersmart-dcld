@@ -1531,6 +1531,10 @@ namespace dcld
                 WriteConfigString(str_path, "AssemblyGenerator", "AddADCTriggerAPlacement", Convert.ToUInt16(this.chkAddADCTriggerAPlacement.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddADCTriggerBPlacement", Convert.ToUInt16(this.chkAddADCTriggerBPlacement.Checked).ToString());
 
+                WriteConfigString(str_path, "AssemblyGenerator", "AddAutomatedDataInterface", Convert.ToUInt16(this.chkAutomatedDataInterface.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "AddAlternateSource", Convert.ToUInt16(this.chkAddAlternateSource.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "AddAlternateTarget", Convert.ToUInt16(this.chkAddAlternateTarget.Checked).ToString());
+
                 WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderSource", Convert.ToUInt16(this.chkAddDataProviderSource.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlInput", Convert.ToUInt16(this.chkAddDataProviderControlInput.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderErrorInput", Convert.ToUInt16(this.chkAddDataProviderErrorInput.Checked).ToString());
