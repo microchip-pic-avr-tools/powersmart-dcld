@@ -178,6 +178,9 @@ namespace dcld
                 sDum = sDum.Replace("%STRUCTURE_LABEL%", _str_struct_label);
                 sDum = sDum.Replace("%USER_NAME%", Environment.UserName);
                 sDum = sDum.Replace("%DATE_TODAY%", System.DateTime.Now.ToString());
+                sDum = sDum.Replace("%SUPPORT_URL%", ReadConfigString(_TemplateFile, "labels", "%SUPPORT_URL%", "").Trim());
+                sDum = sDum.Replace("%VENDOR_URL%", ReadConfigString(_TemplateFile, "labels", "%VENDOR_URL%", "").Trim());
+                sDum = sDum.Replace("%TOOL_HOME_URL%", ReadConfigString(_TemplateFile, "labels", "%TOOL_HOME_URL%", "").Trim());
                 sDum = sDum + "\r\n";
             }
 
@@ -341,7 +344,8 @@ namespace dcld
             }
             catch
             {
-                strBuffer.Append("\r\n\r\n#error [Invalid values detected during body generation]\r\n\r\n");
+                strBuffer.Append("\r\n\r\n#error [Invalid values detected during body generation]\r\n");
+                strBuffer.Append("       => error triggered by " + _TemplateFile + ", " + block_name + ", line " + i.ToString() + "\r\n\r\n");
             }
 
             return (strBuffer);

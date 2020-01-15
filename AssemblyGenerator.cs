@@ -101,6 +101,20 @@ namespace dcld
             set { _AddErrorInputNormalization = value; return; }
         }
 
+        private bool _AddAlternateSource = false;
+        internal bool AddAlternateSource
+        {
+            get { return (_AddAlternateSource); }
+            set { _AddAlternateSource = value; return; }
+        }
+
+        private bool _AddAlternateTarget = false;
+        internal bool AddAlternateTarget
+        {
+            get { return (_AddAlternateTarget); }
+            set { _AddAlternateTarget = value; return; }
+        }
+
         private bool _AddADCTriggerAPlacement = true;
         internal bool AddADCTriggerAPlacement
         {
@@ -113,6 +127,13 @@ namespace dcld
         {
             get { return (_AddADCTriggerBPlacement); }
             set { _AddADCTriggerBPlacement = value; return; }
+        }
+
+        private bool _AddCascadedFunctionCall = false;
+        internal bool AddCascadedFunctionCall
+        {
+            get { return _AddCascadedFunctionCall; }
+            set { _AddCascadedFunctionCall = value; return; }
         }
 
         private bool _AddAntiWindup = true;
@@ -548,11 +569,13 @@ namespace dcld
 
                         case "comp_writeback":
                             if (_SpreadSpectrumModulation) { command = command + "_ssm"; }
+                            if (_AddAlternateTarget) { command = command + "_with_alt_target_switch"; }
                             str_dum = BuildCodeBlock(command);
                             _CycleCountToWriteback = _CycleCountTotal;  // Capture value from most recent cycle count
                             break;
 
                         case "comp_read_input":
+                            if (_AddAlternateSource) { command = command + "_with_alt_source_switch"; }
                             str_dum = BuildCodeBlock(command);
                             _CycleCountToDataCapture = _CycleCountTotal;  // Capture value from most recent cycle count
                             break;
@@ -583,18 +606,6 @@ namespace dcld
                                 if (_AntiWindupClampMaxWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_max_set_status_flag");
                                 if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_end");
 
-                                //if (_AntiWindupClampMaxWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_max_set_status_flag");
-                                //if (_AntiWindupSoftDesaturationFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_soft_desaturation");
-                                //if (needs_bypass)
-                                //{
-                                //    if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_override");
-                                //    if (_AntiWindupClampMaxWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_max_clear_status_flag");
-                                //    if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_end");
-                                //}
-                                //else
-                                //{
-                                    
-                                //}
                             }
                             break;
 
@@ -617,26 +628,6 @@ namespace dcld
                                 if (_AntiWindupClampMinWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_min_set_status_flag");
                                 if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_end");
 
-                                //bool needs_bypass = false;
-
-                                //bool_dummy = ((_AntiWindupClampMinWithStatusFlag) || (_AntiWindupSoftDesaturationFlag));
-                                //needs_bypass = (_AntiWindupClampMinWithStatusFlag);
-
-                                //str_dum = BuildCodeBlock("anti_windup_min_start");
-                                //if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_start");
-                                //if (_AntiWindupClampMinWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_min_set_status_flag");
-                                //if (_AntiWindupSoftDesaturationFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_soft_desaturation");
-                                //str_dum = str_dum + BuildCodeBlock("anti_windup_min_override");
-                                //if (needs_bypass)
-                                //{
-                                //    if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_bypass");
-                                //    if (_AntiWindupClampMinWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_min_clear_status_flag");
-                                //    if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_end");
-                                //}
-                                //else 
-                                //{
-                                //    if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_bypass_end");
-                                //}
                             }
                             break;
 
@@ -654,6 +645,10 @@ namespace dcld
                                 if (_SpreadSpectrumModulation) { command = command + "_ssm"; }
                                 str_dum = BuildCodeBlock(command);
                             }
+                            break;
+
+                        case "cascaded_function_call":
+                            if (_AddCascadedFunctionCall) str_dum = BuildCodeBlock(command);
                             break;
 
                         case "update_status_bitfield":
