@@ -762,9 +762,9 @@ namespace dcld
                     }
 
                     // update file prefix
-                    if (!chkUserControllerNamePrefix.Checked)
+                    if (!chkUserControllerNameLabel.Checked)
                     {
-                        txtControllerNamePrefix1.Text = DefaultFilePrefix;
+                        txtControllerNamePrefix.Text = DefaultFilePrefix;
                     }
 
                     
@@ -1652,9 +1652,9 @@ namespace dcld
                 Application.DoEvents();
 
                 // Code Generator Tab
-                WriteConfigString(str_path, "AssemblyGenerator", "UserPrefix1", txtControllerNamePrefix1.Text);
-                WriteConfigString(str_path, "AssemblyGenerator", "UserPrefix2", txtControllerNamePrefix2.Text);
-                WriteConfigString(str_path, "AssemblyGenerator", "UseUserPrefix", Convert.ToUInt16(chkUserControllerNamePrefix.Checked).ToString());
+                WriteConfigString(str_path, "AssemblyGenerator", "UserPrefix1", txtControllerNamePrefix.Text);
+                WriteConfigString(str_path, "AssemblyGenerator", "UserPrefix2", txtControllerNameLabel.Text);
+                WriteConfigString(str_path, "AssemblyGenerator", "UseUserPrefix", Convert.ToUInt16(chkUserControllerNameLabel.Checked).ToString());
                 WriteConfigString(str_path, "AssemblyGenerator", "UseUserPrefixVar", Convert.ToUInt16(chkUserVariableNamePrefix.Checked).ToString());
 
                 WriteConfigString(str_path, "AssemblyGenerator", "ContextSaving", Convert.ToUInt16(this.chkContextSaving.Checked).ToString());
@@ -1808,9 +1808,9 @@ namespace dcld
                 Application.DoEvents();
 
                 // Code Generator Tab
-                txtControllerNamePrefix1.Text = ReadConfigString(str_path, "AssemblyGenerator", "UserPrefix1", "");
-                txtControllerNamePrefix2.Text = ReadConfigString(str_path, "AssemblyGenerator", "UserPrefix2", "");
-                chkUserControllerNamePrefix.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "UseUserPrefix", "1")));
+                txtControllerNamePrefix.Text = ReadConfigString(str_path, "AssemblyGenerator", "UserPrefix1", "");
+                txtControllerNameLabel.Text = ReadConfigString(str_path, "AssemblyGenerator", "UserPrefix2", "");
+                chkUserControllerNameLabel.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "UseUserPrefix", "1")));
                 chkUserVariableNamePrefix.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "UseUserPrefixVar", "1")));
 
                 stbProgressBar.Value = 30;
@@ -3297,11 +3297,12 @@ namespace dcld
             // Set common C-Code Generator Settings
             clsCCodeGenerator cGen = new clsCCodeGenerator();
 
-            cGen.FileNamePattern = txtControllerNamePrefix1.Text.Trim() + txtControllerNamePrefix2.Text.Trim();
+            cGen.FileNamePattern = txtControllerNamePrefix.Text.Trim() + txtControllerNameLabel.Text.Trim();
             cGen.PreShift = (int)(Convert.ToUInt32(cmbQFormat.Text.Substring(1, (int)cmbQFormat.Text.Length - 1)) - Convert.ToUInt32(txtInputDataResolution.Text));
 
             if ((chkUserVariableNamePrefix.Checked) && (chkUserVariableNamePrefix.Enabled))
-            { cGen.PreFix = cGen.FileNamePattern + "_"; }
+            //            { cGen.PreFix = cGen.FileNamePattern + "_"; }
+            { cGen.PreFix = txtControllerNamePrefix.Text.Trim() + "_"; }
             else { cGen.PreFix = DefaultVariablePrefix + "_"; }
 
             if (chkCSourceIncludePath.Checked)
@@ -3407,13 +3408,13 @@ namespace dcld
             //CursorPositionColumn = txtSyntaxEditorAssembly.Caret.CharacterColumn;
 
             // Determine file _Prefix
-            prefix = txtControllerNamePrefix1.Text.Trim() + txtControllerNamePrefix2.Text.Trim();
+            prefix = txtControllerNamePrefix.Text.Trim() + txtControllerNameLabel.Text.Trim();
             if (prefix.Length == 0)
             {
                 MessageBox.Show("Please enter a valid controller name _Prefix or disable the user customization option.\t", "Assembly Code Generator", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 try
                 {
-                    txtControllerNamePrefix1.Select();
+                    txtControllerNamePrefix.Select();
                 }
                 catch { }
                 return (code);
@@ -3495,7 +3496,7 @@ namespace dcld
             int i = 0;
             double pwm_freq = 0.0, pwm_per = 0.0, pwm_dc = 0.0;
             double adc_latency = 0.0, adc_trig = 0.0;
-            double cpu_clk = 0.0, control_start_delay = 0.0, control_latency = 0.0, control_read = 0.0, control_write = 0.0;
+            double cpu_clk = 0.0, cpu_load = 0.0, control_start_delay = 0.0, control_latency = 0.0, control_read = 0.0, control_write = 0.0;
             double execution_time = 0.0, read_delay = 0.0, response_delay = 0.0;
             double pwm_fragment_start = 0.0, pwm_fragment_end = 0.0;
             int pwm_cycles = 0;
@@ -3670,7 +3671,10 @@ namespace dcld
                 read_delay = (adc_trig + control_start_delay + control_read) - adc_trig;
                 response_delay = (adc_trig + control_start_delay + control_write) - adc_trig;
 
-                lblCPULoad.Text = Math.Round(100.0 * (double)(control_start_delay + control_latency) / (1e+9 * cNPNZ.SamplingInterval)).ToString("#0.0", CultureInfo.CurrentCulture);
+                cpu_load = (double)(control_start_delay + control_latency) / (1e+9 * cNPNZ.SamplingInterval);
+                lblCPULoad.Text = Math.Round(100.0 * cpu_load, 1).ToString("#0.0", CultureInfo.CurrentCulture);
+                lblCPULoadRatio.Text = lblCPULoad.Text + " %";
+                lblCPULoadRatio.Height = Convert.ToInt32(cpu_load * pnlCPULoadRatio.Height);
 
                 lblExecutionPeriod.Text = Math.Round(execution_time / 1e+3, 3).ToString("0.000", CultureInfo.CurrentCulture);
                 lblDataReadDelay.Text = Math.Round(read_delay / 1e+3, 3).ToString("0.000", CultureInfo.CurrentCulture);
@@ -3725,20 +3729,20 @@ namespace dcld
             return;
         }
 
-        private void chkUserControllerNamePrefix_CheckedChanged(object sender, EventArgs e)
+        private void chkUserControllerNameLabel_CheckedChanged(object sender, EventArgs e)
         {
-            txtControllerNamePrefix1.Enabled = chkUserControllerNamePrefix.Checked;
-            chkUserVariableNamePrefix.Enabled = chkUserControllerNamePrefix.Checked;
-            if (!chkUserControllerNamePrefix.Checked) { txtControllerNamePrefix1.Text = DefaultFilePrefix; }
+            txtControllerNamePrefix.Enabled = chkUserControllerNameLabel.Checked;
+            chkUserVariableNamePrefix.Enabled = chkUserControllerNameLabel.Checked;
+            if (!chkUserControllerNameLabel.Checked) { txtControllerNamePrefix.Text = DefaultFilePrefix; }
             GenerateCode(sender, e);
 
             return;
 
         }
 
-        private void txtControllerNamePrefix1_TextChanged(object sender, EventArgs e)
+        private void txtControllerNamePrefix_TextChanged(object sender, EventArgs e)
         {
-            lblFinalNamePrefixOutput.Text = txtControllerNamePrefix1.Text.Trim() + txtControllerNamePrefix2.Text.Trim();
+            lblFinalNamePrefixOutput.Text = txtControllerNamePrefix.Text.Trim() + txtControllerNameLabel.Text.Trim();
             return;
         }
 

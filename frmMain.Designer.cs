@@ -252,9 +252,9 @@
             this.grpFunctionLabel = new System.Windows.Forms.GroupBox();
             this.chkUserVariableNamePrefix = new System.Windows.Forms.CheckBox();
             this.lblControllerNamePrefix = new System.Windows.Forms.Label();
-            this.txtControllerNamePrefix1 = new System.Windows.Forms.TextBox();
-            this.chkUserControllerNamePrefix = new System.Windows.Forms.CheckBox();
-            this.txtControllerNamePrefix2 = new System.Windows.Forms.TextBox();
+            this.txtControllerNamePrefix = new System.Windows.Forms.TextBox();
+            this.chkUserControllerNameLabel = new System.Windows.Forms.CheckBox();
+            this.txtControllerNameLabel = new System.Windows.Forms.TextBox();
             this.lblFinalNamePrefixOutput = new System.Windows.Forms.Label();
             this.lblFinalNamePrefix = new System.Windows.Forms.Label();
             this.tabAnalysis = new System.Windows.Forms.TabControl();
@@ -317,6 +317,9 @@
             this.tabPageTiming = new System.Windows.Forms.TabPage();
             this.splitContainerTiming = new System.Windows.Forms.SplitContainer();
             this.pnlTimingChart = new System.Windows.Forms.Panel();
+            this.pnlCPULoadRatio = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.lblCPULoadRatio = new System.Windows.Forms.Label();
             this.tsbCodeGenUpdateWarningTiming = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
@@ -388,7 +391,7 @@
             this.lblFilterOrder = new System.Windows.Forms.Label();
             this.picZTransform = new System.Windows.Forms.PictureBox();
             this.lblFilterOrderLabel = new System.Windows.Forms.Label();
-            this.grpBlockDiagram = new System.Windows.Forms.GroupBox();
+            this.grpCompBlockDiagram = new System.Windows.Forms.GroupBox();
             this.lblBDReferenceResolutionUnit = new System.Windows.Forms.Label();
             this.lblBDReferenceResolution = new System.Windows.Forms.Label();
             this.lblBDReferenceResolutionLabel = new System.Windows.Forms.Label();
@@ -403,6 +406,8 @@
             this.lblTickRateUnit = new System.Windows.Forms.Label();
             this.lblTickRate = new System.Windows.Forms.Label();
             this.lblTickRateLabel = new System.Windows.Forms.Label();
+            this.picCompBlockDiagram = new System.Windows.Forms.PictureBox();
+            this.grpControlBlockDiagram = new System.Windows.Forms.GroupBox();
             this.picControlBlockDiagram = new System.Windows.Forms.PictureBox();
             this.tabPageCodeOutput = new System.Windows.Forms.TabPage();
             this.tabSourceCode = new System.Windows.Forms.TabControl();
@@ -514,6 +519,7 @@
             this.splitContainerTiming.Panel2.SuspendLayout();
             this.splitContainerTiming.SuspendLayout();
             this.pnlTimingChart.SuspendLayout();
+            this.pnlCPULoadRatio.SuspendLayout();
             this.tsbCodeGenUpdateWarningTiming.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartTiming)).BeginInit();
             this.toolStripTiming.SuspendLayout();
@@ -525,7 +531,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.picFlowChart)).BeginInit();
             this.grpEquation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picZTransform)).BeginInit();
-            this.grpBlockDiagram.SuspendLayout();
+            this.grpCompBlockDiagram.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picCompBlockDiagram)).BeginInit();
+            this.grpControlBlockDiagram.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picControlBlockDiagram)).BeginInit();
             this.tabPageCodeOutput.SuspendLayout();
             this.tabSourceCode.SuspendLayout();
@@ -1848,6 +1856,7 @@
             // chkAntiWindup
             // 
             this.chkAntiWindup.AutoSize = true;
+            this.chkAntiWindup.BackColor = System.Drawing.Color.White;
             this.chkAntiWindup.Checked = true;
             this.chkAntiWindup.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAntiWindup.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1856,7 +1865,7 @@
             this.chkAntiWindup.Size = new System.Drawing.Size(95, 19);
             this.chkAntiWindup.TabIndex = 0;
             this.chkAntiWindup.Text = "Anti-&Windup";
-            this.chkAntiWindup.UseVisualStyleBackColor = true;
+            this.chkAntiWindup.UseVisualStyleBackColor = false;
             this.chkAntiWindup.CheckedChanged += new System.EventHandler(this.chkAntiWindup_CheckedChanged);
             // 
             // grpDataProviderSources
@@ -1875,13 +1884,14 @@
             // chkDataProviderSource
             // 
             this.chkDataProviderSource.AutoSize = true;
+            this.chkDataProviderSource.BackColor = System.Drawing.Color.White;
             this.chkDataProviderSource.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkDataProviderSource.Location = new System.Drawing.Point(10, 0);
             this.chkDataProviderSource.Name = "chkDataProviderSource";
             this.chkDataProviderSource.Size = new System.Drawing.Size(148, 19);
             this.chkDataProviderSource.TabIndex = 9;
             this.chkDataProviderSource.Text = "Data &Provider Sources";
-            this.chkDataProviderSource.UseVisualStyleBackColor = true;
+            this.chkDataProviderSource.UseVisualStyleBackColor = false;
             this.chkDataProviderSource.CheckedChanged += new System.EventHandler(this.chkDataProviderSource_CheckedChanged);
             // 
             // chkAddDataProviderControlInput
@@ -1941,9 +1951,9 @@
             this.chkAddAlternateTarget.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkAddAlternateTarget.Location = new System.Drawing.Point(30, 50);
             this.chkAddAlternateTarget.Name = "chkAddAlternateTarget";
-            this.chkAddAlternateTarget.Size = new System.Drawing.Size(186, 19);
+            this.chkAddAlternateTarget.Size = new System.Drawing.Size(177, 19);
             this.chkAddAlternateTarget.TabIndex = 3;
-            this.chkAddAlternateTarget.Text = "Add Alternative Ouptut Target";
+            this.chkAddAlternateTarget.Text = "Add Alternate Ouptut Target";
             this.chkAddAlternateTarget.UseVisualStyleBackColor = true;
             this.chkAddAlternateTarget.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
@@ -1953,22 +1963,23 @@
             this.chkAddAlternateSource.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkAddAlternateSource.Location = new System.Drawing.Point(30, 25);
             this.chkAddAlternateSource.Name = "chkAddAlternateSource";
-            this.chkAddAlternateSource.Size = new System.Drawing.Size(181, 19);
+            this.chkAddAlternateSource.Size = new System.Drawing.Size(172, 19);
             this.chkAddAlternateSource.TabIndex = 1;
-            this.chkAddAlternateSource.Text = "Add Alternative Input Source";
+            this.chkAddAlternateSource.Text = "Add Alternate Input Source";
             this.chkAddAlternateSource.UseVisualStyleBackColor = true;
             this.chkAddAlternateSource.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
             // chkAutomatedDataInterface
             // 
             this.chkAutomatedDataInterface.AutoSize = true;
+            this.chkAutomatedDataInterface.BackColor = System.Drawing.Color.White;
             this.chkAutomatedDataInterface.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkAutomatedDataInterface.Location = new System.Drawing.Point(10, 0);
             this.chkAutomatedDataInterface.Name = "chkAutomatedDataInterface";
             this.chkAutomatedDataInterface.Size = new System.Drawing.Size(166, 19);
             this.chkAutomatedDataInterface.TabIndex = 0;
-            this.chkAutomatedDataInterface.Text = "Automated Data Interface";
-            this.chkAutomatedDataInterface.UseVisualStyleBackColor = true;
+            this.chkAutomatedDataInterface.Text = "Automated Data &Interface";
+            this.chkAutomatedDataInterface.UseVisualStyleBackColor = false;
             this.chkAutomatedDataInterface.CheckedChanged += new System.EventHandler(this.chkAutomatedDataInterface_CheckedChanged);
             // 
             // grpCodeFeatureOptions
@@ -1992,14 +2003,15 @@
             // chkCodeFeatureOptions
             // 
             this.chkCodeFeatureOptions.AutoSize = true;
+            this.chkCodeFeatureOptions.BackColor = System.Drawing.Color.White;
             this.chkCodeFeatureOptions.Checked = true;
             this.chkCodeFeatureOptions.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkCodeFeatureOptions.Location = new System.Drawing.Point(10, 0);
             this.chkCodeFeatureOptions.Name = "chkCodeFeatureOptions";
-            this.chkCodeFeatureOptions.Size = new System.Drawing.Size(124, 19);
+            this.chkCodeFeatureOptions.Size = new System.Drawing.Size(162, 19);
             this.chkCodeFeatureOptions.TabIndex = 0;
-            this.chkCodeFeatureOptions.Text = "&Optional Features";
-            this.chkCodeFeatureOptions.UseVisualStyleBackColor = true;
+            this.chkCodeFeatureOptions.Text = "&Basic Feature Extensions";
+            this.chkCodeFeatureOptions.UseVisualStyleBackColor = false;
             this.chkCodeFeatureOptions.CheckedChanged += new System.EventHandler(this.chkCodeFeatureOptions_CheckedChanged);
             // 
             // chkAddCascadedFunctionCall
@@ -2226,25 +2238,26 @@
             // chkContextSaving
             // 
             this.chkContextSaving.AutoSize = true;
+            this.chkContextSaving.BackColor = System.Drawing.Color.White;
             this.chkContextSaving.Checked = true;
             this.chkContextSaving.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkContextSaving.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkContextSaving.Location = new System.Drawing.Point(10, 0);
             this.chkContextSaving.Name = "chkContextSaving";
-            this.chkContextSaving.Size = new System.Drawing.Size(144, 19);
+            this.chkContextSaving.Size = new System.Drawing.Size(141, 19);
             this.chkContextSaving.TabIndex = 0;
             this.chkContextSaving.Tag = "";
-            this.chkContextSaving.Text = "&Save/Restore Context ";
-            this.chkContextSaving.UseVisualStyleBackColor = true;
+            this.chkContextSaving.Text = "Context &Management";
+            this.chkContextSaving.UseVisualStyleBackColor = false;
             this.chkContextSaving.CheckedChanged += new System.EventHandler(this.chkContextSaving_CheckedChanged);
             // 
             // grpFunctionLabel
             // 
             this.grpFunctionLabel.Controls.Add(this.chkUserVariableNamePrefix);
             this.grpFunctionLabel.Controls.Add(this.lblControllerNamePrefix);
-            this.grpFunctionLabel.Controls.Add(this.txtControllerNamePrefix1);
-            this.grpFunctionLabel.Controls.Add(this.chkUserControllerNamePrefix);
-            this.grpFunctionLabel.Controls.Add(this.txtControllerNamePrefix2);
+            this.grpFunctionLabel.Controls.Add(this.txtControllerNamePrefix);
+            this.grpFunctionLabel.Controls.Add(this.chkUserControllerNameLabel);
+            this.grpFunctionLabel.Controls.Add(this.txtControllerNameLabel);
             this.grpFunctionLabel.Controls.Add(this.lblFinalNamePrefixOutput);
             this.grpFunctionLabel.Controls.Add(this.lblFinalNamePrefix);
             this.grpFunctionLabel.Dock = System.Windows.Forms.DockStyle.Top;
@@ -2269,7 +2282,7 @@
             this.chkUserVariableNamePrefix.TabIndex = 31;
             this.chkUserVariableNamePrefix.Text = "&Overwrite Default Variable Name Prefix";
             this.chkUserVariableNamePrefix.UseVisualStyleBackColor = true;
-            this.chkUserVariableNamePrefix.CheckedChanged += new System.EventHandler(this.chkUserControllerNamePrefix_CheckedChanged);
+            this.chkUserVariableNamePrefix.CheckedChanged += new System.EventHandler(this.chkUserControllerNameLabel_CheckedChanged);
             // 
             // lblControllerNamePrefix
             // 
@@ -2282,41 +2295,41 @@
             this.lblControllerNamePrefix.TabIndex = 24;
             this.lblControllerNamePrefix.Text = "Name Prefix:";
             // 
-            // txtControllerNamePrefix1
+            // txtControllerNamePrefix
             // 
-            this.txtControllerNamePrefix1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtControllerNamePrefix1.Enabled = false;
-            this.txtControllerNamePrefix1.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtControllerNamePrefix1.Location = new System.Drawing.Point(136, 23);
-            this.txtControllerNamePrefix1.MaxLength = 255;
-            this.txtControllerNamePrefix1.Name = "txtControllerNamePrefix1";
-            this.txtControllerNamePrefix1.Size = new System.Drawing.Size(97, 23);
-            this.txtControllerNamePrefix1.TabIndex = 1;
-            this.txtControllerNamePrefix1.TextChanged += new System.EventHandler(this.txtControllerNamePrefix1_TextChanged);
+            this.txtControllerNamePrefix.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtControllerNamePrefix.Enabled = false;
+            this.txtControllerNamePrefix.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtControllerNamePrefix.Location = new System.Drawing.Point(136, 23);
+            this.txtControllerNamePrefix.MaxLength = 255;
+            this.txtControllerNamePrefix.Name = "txtControllerNamePrefix";
+            this.txtControllerNamePrefix.Size = new System.Drawing.Size(97, 23);
+            this.txtControllerNamePrefix.TabIndex = 1;
+            this.txtControllerNamePrefix.TextChanged += new System.EventHandler(this.txtControllerNamePrefix_TextChanged);
             // 
-            // chkUserControllerNamePrefix
+            // chkUserControllerNameLabel
             // 
-            this.chkUserControllerNamePrefix.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.chkUserControllerNamePrefix.AutoSize = true;
-            this.chkUserControllerNamePrefix.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkUserControllerNamePrefix.Location = new System.Drawing.Point(68, 86);
-            this.chkUserControllerNamePrefix.Name = "chkUserControllerNamePrefix";
-            this.chkUserControllerNamePrefix.Size = new System.Drawing.Size(250, 19);
-            this.chkUserControllerNamePrefix.TabIndex = 3;
-            this.chkUserControllerNamePrefix.Text = "&Overwrite Default Controller Name Prefix";
-            this.chkUserControllerNamePrefix.UseVisualStyleBackColor = true;
-            this.chkUserControllerNamePrefix.CheckedChanged += new System.EventHandler(this.chkUserControllerNamePrefix_CheckedChanged);
+            this.chkUserControllerNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.chkUserControllerNameLabel.AutoSize = true;
+            this.chkUserControllerNameLabel.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkUserControllerNameLabel.Location = new System.Drawing.Point(68, 86);
+            this.chkUserControllerNameLabel.Name = "chkUserControllerNameLabel";
+            this.chkUserControllerNameLabel.Size = new System.Drawing.Size(248, 19);
+            this.chkUserControllerNameLabel.TabIndex = 3;
+            this.chkUserControllerNameLabel.Text = "&Overwrite Default Controller Name Label";
+            this.chkUserControllerNameLabel.UseVisualStyleBackColor = true;
+            this.chkUserControllerNameLabel.CheckedChanged += new System.EventHandler(this.chkUserControllerNameLabel_CheckedChanged);
             // 
-            // txtControllerNamePrefix2
+            // txtControllerNameLabel
             // 
-            this.txtControllerNamePrefix2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtControllerNamePrefix2.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtControllerNamePrefix2.Location = new System.Drawing.Point(241, 23);
-            this.txtControllerNamePrefix2.MaxLength = 255;
-            this.txtControllerNamePrefix2.Name = "txtControllerNamePrefix2";
-            this.txtControllerNamePrefix2.Size = new System.Drawing.Size(97, 23);
-            this.txtControllerNamePrefix2.TabIndex = 2;
-            this.txtControllerNamePrefix2.TextChanged += new System.EventHandler(this.txtControllerNamePrefix1_TextChanged);
+            this.txtControllerNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtControllerNameLabel.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtControllerNameLabel.Location = new System.Drawing.Point(241, 23);
+            this.txtControllerNameLabel.MaxLength = 255;
+            this.txtControllerNameLabel.Name = "txtControllerNameLabel";
+            this.txtControllerNameLabel.Size = new System.Drawing.Size(97, 23);
+            this.txtControllerNameLabel.TabIndex = 2;
+            this.txtControllerNameLabel.TextChanged += new System.EventHandler(this.txtControllerNamePrefix_TextChanged);
             // 
             // lblFinalNamePrefixOutput
             // 
@@ -2337,11 +2350,11 @@
             this.lblFinalNamePrefix.AutoSize = true;
             this.lblFinalNamePrefix.Enabled = false;
             this.lblFinalNamePrefix.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblFinalNamePrefix.Location = new System.Drawing.Point(109, 58);
+            this.lblFinalNamePrefix.Location = new System.Drawing.Point(145, 58);
             this.lblFinalNamePrefix.Name = "lblFinalNamePrefix";
-            this.lblFinalNamePrefix.Size = new System.Drawing.Size(106, 15);
+            this.lblFinalNamePrefix.Size = new System.Drawing.Size(87, 15);
             this.lblFinalNamePrefix.TabIndex = 29;
-            this.lblFinalNamePrefix.Text = "Final Name Prefix:";
+            this.lblFinalNamePrefix.Text = "Name Preview:";
             // 
             // tabAnalysis
             // 
@@ -2364,7 +2377,7 @@
             this.tabPageBode.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageBode.Size = new System.Drawing.Size(944, 747);
             this.tabPageBode.TabIndex = 5;
-            this.tabPageBode.Text = "Bode Plot";
+            this.tabPageBode.Text = "Frequency Domain";
             this.tabPageBode.UseVisualStyleBackColor = true;
             // 
             // splitContainerCoefficients
@@ -2973,7 +2986,7 @@
             this.tabPageTiming.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageTiming.Size = new System.Drawing.Size(944, 749);
             this.tabPageTiming.TabIndex = 4;
-            this.tabPageTiming.Text = "Timing";
+            this.tabPageTiming.Text = "Time Domain";
             this.tabPageTiming.UseVisualStyleBackColor = true;
             // 
             // splitContainerTiming
@@ -3001,6 +3014,7 @@
             // 
             // pnlTimingChart
             // 
+            this.pnlTimingChart.Controls.Add(this.pnlCPULoadRatio);
             this.pnlTimingChart.Controls.Add(this.tsbCodeGenUpdateWarningTiming);
             this.pnlTimingChart.Controls.Add(this.lblAnnoDataWrite);
             this.pnlTimingChart.Controls.Add(this.lblAnnoDataRead);
@@ -3012,6 +3026,41 @@
             this.pnlTimingChart.Name = "pnlTimingChart";
             this.pnlTimingChart.Size = new System.Drawing.Size(936, 483);
             this.pnlTimingChart.TabIndex = 0;
+            // 
+            // pnlCPULoadRatio
+            // 
+            this.pnlCPULoadRatio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlCPULoadRatio.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlCPULoadRatio.Controls.Add(this.label2);
+            this.pnlCPULoadRatio.Controls.Add(this.lblCPULoadRatio);
+            this.pnlCPULoadRatio.Location = new System.Drawing.Point(825, 324);
+            this.pnlCPULoadRatio.Name = "pnlCPULoadRatio";
+            this.pnlCPULoadRatio.Size = new System.Drawing.Size(71, 114);
+            this.pnlCPULoadRatio.TabIndex = 56;
+            this.pnlCPULoadRatio.Resize += new System.EventHandler(this.UpdateExecutionRuntime);
+            // 
+            // label2
+            // 
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label2.Location = new System.Drawing.Point(0, 47);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(69, 16);
+            this.label2.TabIndex = 57;
+            this.label2.Text = "CPU LOAD";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // lblCPULoadRatio
+            // 
+            this.lblCPULoadRatio.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.lblCPULoadRatio.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblCPULoadRatio.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lblCPULoadRatio.Location = new System.Drawing.Point(0, 63);
+            this.lblCPULoadRatio.Name = "lblCPULoadRatio";
+            this.lblCPULoadRatio.Size = new System.Drawing.Size(69, 49);
+            this.lblCPULoadRatio.TabIndex = 56;
+            this.lblCPULoadRatio.Text = "25 %";
+            this.lblCPULoadRatio.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // tsbCodeGenUpdateWarningTiming
             // 
@@ -3822,7 +3871,8 @@
             this.tabPageBlockDiagram.AutoScroll = true;
             this.tabPageBlockDiagram.Controls.Add(this.grpFilterProcessing);
             this.tabPageBlockDiagram.Controls.Add(this.grpEquation);
-            this.tabPageBlockDiagram.Controls.Add(this.grpBlockDiagram);
+            this.tabPageBlockDiagram.Controls.Add(this.grpCompBlockDiagram);
+            this.tabPageBlockDiagram.Controls.Add(this.grpControlBlockDiagram);
             this.tabPageBlockDiagram.Location = new System.Drawing.Point(4, 22);
             this.tabPageBlockDiagram.Name = "tabPageBlockDiagram";
             this.tabPageBlockDiagram.Padding = new System.Windows.Forms.Padding(3);
@@ -3836,7 +3886,7 @@
             this.grpFilterProcessing.Controls.Add(this.lblWorkflowInfo);
             this.grpFilterProcessing.Controls.Add(this.picFlowChart);
             this.grpFilterProcessing.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpFilterProcessing.Location = new System.Drawing.Point(3, 502);
+            this.grpFilterProcessing.Location = new System.Drawing.Point(3, 905);
             this.grpFilterProcessing.MinimumSize = new System.Drawing.Size(0, 325);
             this.grpFilterProcessing.Name = "grpFilterProcessing";
             this.grpFilterProcessing.Size = new System.Drawing.Size(921, 325);
@@ -3857,7 +3907,7 @@
             // picFlowChart
             // 
             this.picFlowChart.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.picFlowChart.Image = global::dcld.Properties.Resources.hz_flowchart;
+            this.picFlowChart.Image = ((System.Drawing.Image)(resources.GetObject("picFlowChart.Image")));
             this.picFlowChart.Location = new System.Drawing.Point(9, 22);
             this.picFlowChart.Name = "picFlowChart";
             this.picFlowChart.Size = new System.Drawing.Size(903, 303);
@@ -3871,7 +3921,7 @@
             this.grpEquation.Controls.Add(this.picZTransform);
             this.grpEquation.Controls.Add(this.lblFilterOrderLabel);
             this.grpEquation.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpEquation.Location = new System.Drawing.Point(3, 356);
+            this.grpEquation.Location = new System.Drawing.Point(3, 759);
             this.grpEquation.Name = "grpEquation";
             this.grpEquation.Size = new System.Drawing.Size(921, 146);
             this.grpEquation.TabIndex = 4;
@@ -3910,30 +3960,30 @@
             this.lblFilterOrderLabel.TabIndex = 17;
             this.lblFilterOrderLabel.Text = "with n :=";
             // 
-            // grpBlockDiagram
+            // grpCompBlockDiagram
             // 
-            this.grpBlockDiagram.Controls.Add(this.lblBDReferenceResolutionUnit);
-            this.grpBlockDiagram.Controls.Add(this.lblBDReferenceResolution);
-            this.grpBlockDiagram.Controls.Add(this.lblBDReferenceResolutionLabel);
-            this.grpBlockDiagram.Controls.Add(this.lblCompTypeDescr);
-            this.grpBlockDiagram.Controls.Add(this.lblPostScaler);
-            this.grpBlockDiagram.Controls.Add(this.lblPreScaler);
-            this.grpBlockDiagram.Controls.Add(this.lblBDInputResolutionUnit);
-            this.grpBlockDiagram.Controls.Add(this.lblBDInputResolution);
-            this.grpBlockDiagram.Controls.Add(this.lblBDInputResolutionLabel);
-            this.grpBlockDiagram.Controls.Add(this.lblBDInputGain);
-            this.grpBlockDiagram.Controls.Add(this.lblBDInputGainLabel);
-            this.grpBlockDiagram.Controls.Add(this.lblTickRateUnit);
-            this.grpBlockDiagram.Controls.Add(this.lblTickRate);
-            this.grpBlockDiagram.Controls.Add(this.lblTickRateLabel);
-            this.grpBlockDiagram.Controls.Add(this.picControlBlockDiagram);
-            this.grpBlockDiagram.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpBlockDiagram.Location = new System.Drawing.Point(3, 3);
-            this.grpBlockDiagram.Name = "grpBlockDiagram";
-            this.grpBlockDiagram.Size = new System.Drawing.Size(921, 353);
-            this.grpBlockDiagram.TabIndex = 3;
-            this.grpBlockDiagram.TabStop = false;
-            this.grpBlockDiagram.Text = "Controller Block Diagram";
+            this.grpCompBlockDiagram.Controls.Add(this.lblBDReferenceResolutionUnit);
+            this.grpCompBlockDiagram.Controls.Add(this.lblBDReferenceResolution);
+            this.grpCompBlockDiagram.Controls.Add(this.lblBDReferenceResolutionLabel);
+            this.grpCompBlockDiagram.Controls.Add(this.lblCompTypeDescr);
+            this.grpCompBlockDiagram.Controls.Add(this.lblPostScaler);
+            this.grpCompBlockDiagram.Controls.Add(this.lblPreScaler);
+            this.grpCompBlockDiagram.Controls.Add(this.lblBDInputResolutionUnit);
+            this.grpCompBlockDiagram.Controls.Add(this.lblBDInputResolution);
+            this.grpCompBlockDiagram.Controls.Add(this.lblBDInputResolutionLabel);
+            this.grpCompBlockDiagram.Controls.Add(this.lblBDInputGain);
+            this.grpCompBlockDiagram.Controls.Add(this.lblBDInputGainLabel);
+            this.grpCompBlockDiagram.Controls.Add(this.lblTickRateUnit);
+            this.grpCompBlockDiagram.Controls.Add(this.lblTickRate);
+            this.grpCompBlockDiagram.Controls.Add(this.lblTickRateLabel);
+            this.grpCompBlockDiagram.Controls.Add(this.picCompBlockDiagram);
+            this.grpCompBlockDiagram.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpCompBlockDiagram.Location = new System.Drawing.Point(3, 406);
+            this.grpCompBlockDiagram.Name = "grpCompBlockDiagram";
+            this.grpCompBlockDiagram.Size = new System.Drawing.Size(921, 353);
+            this.grpCompBlockDiagram.TabIndex = 3;
+            this.grpCompBlockDiagram.TabStop = false;
+            this.grpCompBlockDiagram.Text = "Compensator Block Diagram";
             // 
             // lblBDReferenceResolutionUnit
             // 
@@ -4079,14 +4129,36 @@
             this.lblTickRateLabel.TabIndex = 2;
             this.lblTickRateLabel.Text = "Tick Rate:";
             // 
+            // picCompBlockDiagram
+            // 
+            this.picCompBlockDiagram.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.picCompBlockDiagram.Image = ((System.Drawing.Image)(resources.GetObject("picCompBlockDiagram.Image")));
+            this.picCompBlockDiagram.Location = new System.Drawing.Point(6, 22);
+            this.picCompBlockDiagram.Name = "picCompBlockDiagram";
+            this.picCompBlockDiagram.Size = new System.Drawing.Size(906, 295);
+            this.picCompBlockDiagram.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.picCompBlockDiagram.TabIndex = 1;
+            this.picCompBlockDiagram.TabStop = false;
+            // 
+            // grpControlBlockDiagram
+            // 
+            this.grpControlBlockDiagram.Controls.Add(this.picControlBlockDiagram);
+            this.grpControlBlockDiagram.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpControlBlockDiagram.Location = new System.Drawing.Point(3, 3);
+            this.grpControlBlockDiagram.Name = "grpControlBlockDiagram";
+            this.grpControlBlockDiagram.Size = new System.Drawing.Size(921, 403);
+            this.grpControlBlockDiagram.TabIndex = 6;
+            this.grpControlBlockDiagram.TabStop = false;
+            this.grpControlBlockDiagram.Text = "Controller Block Diagram";
+            // 
             // picControlBlockDiagram
             // 
-            this.picControlBlockDiagram.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.picControlBlockDiagram.Dock = System.Windows.Forms.DockStyle.Fill;
             this.picControlBlockDiagram.Image = ((System.Drawing.Image)(resources.GetObject("picControlBlockDiagram.Image")));
-            this.picControlBlockDiagram.Location = new System.Drawing.Point(6, 22);
+            this.picControlBlockDiagram.Location = new System.Drawing.Point(3, 19);
             this.picControlBlockDiagram.Name = "picControlBlockDiagram";
-            this.picControlBlockDiagram.Size = new System.Drawing.Size(906, 295);
-            this.picControlBlockDiagram.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.picControlBlockDiagram.Size = new System.Drawing.Size(915, 381);
+            this.picControlBlockDiagram.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picControlBlockDiagram.TabIndex = 1;
             this.picControlBlockDiagram.TabStop = false;
             // 
@@ -4098,7 +4170,7 @@
             this.tabPageCodeOutput.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageCodeOutput.Size = new System.Drawing.Size(944, 749);
             this.tabPageCodeOutput.TabIndex = 0;
-            this.tabPageCodeOutput.Text = "Source Code";
+            this.tabPageCodeOutput.Text = "Source Code Output";
             this.tabPageCodeOutput.UseVisualStyleBackColor = true;
             // 
             // tabSourceCode
@@ -4723,8 +4795,8 @@
             this.toolStripButtonUpdateExportCode.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUpdateExportCode.Image")));
             this.toolStripButtonUpdateExportCode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUpdateExportCode.Name = "toolStripButtonUpdateExportCode";
-            this.toolStripButtonUpdateExportCode.Size = new System.Drawing.Size(74, 22);
-            this.toolStripButtonUpdateExportCode.Text = "Generate";
+            this.toolStripButtonUpdateExportCode.Size = new System.Drawing.Size(61, 22);
+            this.toolStripButtonUpdateExportCode.Text = "Export";
             this.toolStripButtonUpdateExportCode.ToolTipText = "Generate and Export Source Code";
             this.toolStripButtonUpdateExportCode.Click += new System.EventHandler(this.ExportGeneratedFiles);
             // 
@@ -4897,6 +4969,7 @@
             this.splitContainerTiming.ResumeLayout(false);
             this.pnlTimingChart.ResumeLayout(false);
             this.pnlTimingChart.PerformLayout();
+            this.pnlCPULoadRatio.ResumeLayout(false);
             this.tsbCodeGenUpdateWarningTiming.ResumeLayout(false);
             this.tsbCodeGenUpdateWarningTiming.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartTiming)).EndInit();
@@ -4912,8 +4985,10 @@
             this.grpEquation.ResumeLayout(false);
             this.grpEquation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picZTransform)).EndInit();
-            this.grpBlockDiagram.ResumeLayout(false);
-            this.grpBlockDiagram.PerformLayout();
+            this.grpCompBlockDiagram.ResumeLayout(false);
+            this.grpCompBlockDiagram.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picCompBlockDiagram)).EndInit();
+            this.grpControlBlockDiagram.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picControlBlockDiagram)).EndInit();
             this.tabPageCodeOutput.ResumeLayout(false);
             this.tabSourceCode.ResumeLayout(false);
@@ -4979,10 +5054,10 @@
         private System.Windows.Forms.ToolStripMenuItem showCoeffficientDataTableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showSourceCodeTimingToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainerContents;
-        private System.Windows.Forms.TextBox txtControllerNamePrefix1;
+        private System.Windows.Forms.TextBox txtControllerNamePrefix;
         private System.Windows.Forms.Label lblControllerNamePrefix;
-        private System.Windows.Forms.CheckBox chkUserControllerNamePrefix;
-        private System.Windows.Forms.TextBox txtControllerNamePrefix2;
+        private System.Windows.Forms.CheckBox chkUserControllerNameLabel;
+        private System.Windows.Forms.TextBox txtControllerNameLabel;
         private System.Windows.Forms.Label lblFinalNamePrefix;
         private System.Windows.Forms.Label lblFinalNamePrefixOutput;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
@@ -5236,8 +5311,8 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonHelp;
         private System.Windows.Forms.ToolStripProgressBar stbProgressBar;
         private System.Windows.Forms.TabPage tabPageBlockDiagram;
-        private System.Windows.Forms.GroupBox grpBlockDiagram;
-        private System.Windows.Forms.PictureBox picControlBlockDiagram;
+        private System.Windows.Forms.GroupBox grpCompBlockDiagram;
+        private System.Windows.Forms.PictureBox picCompBlockDiagram;
         private System.Windows.Forms.Label lblTickRateUnit;
         private System.Windows.Forms.Label lblTickRate;
         private System.Windows.Forms.Label lblTickRateLabel;
@@ -5321,6 +5396,11 @@
         private System.Windows.Forms.ToolStripMenuItem userGuideToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator28;
         private System.Windows.Forms.ToolStripMenuItem visitURLToolStripMenuItem;
+        private System.Windows.Forms.GroupBox grpControlBlockDiagram;
+        private System.Windows.Forms.PictureBox picControlBlockDiagram;
+        private System.Windows.Forms.Panel pnlCPULoadRatio;
+        private System.Windows.Forms.Label lblCPULoadRatio;
+        private System.Windows.Forms.Label label2;
     }
 }
 

@@ -1,12 +1,12 @@
 [generic]
 Name=Assembly Generator Script
 Description=this script defines DSP assembly code generation templates used to generate user-tailored SMPS control loops using the DCLD SDK
-Author=M91406
-Version=1.3.1
-Date=01/13/2020
+Author=Andreas Reiter - M91406
+Version=1.3.2
+Date=01/17/2020
 
 [history]
-count=8
+count=9
 0=04/03/19;1.1.1;Added input offset compensation applied to input source
 1=10/18/19;1.2.0;Changed existing input offset compensation to full bi-directional feedback implementation
 2=10/19/19;1.2.1;Added code option for feedback signal rectification
@@ -14,7 +14,8 @@ count=8
 4=11/07/19;1.2.3;Added 'Dummy Read of Source Buffer' when control loop is disabled\r\nAdded second ADC trigger placement target and offset
 5=11/08/19;1.2.4;Added 'Changed data provider items from local copies in cNPNZ16b_t data structure to poinbter to external data buffers
 6=01/10/19;1.3.0;Added support for cascaded functions. This allows a controller to call another controller or user-defined function extension code module
-7=01/13/2020;1.3.1;Added support for alternate data input source register/variable and alternate data output target register/variable
+7=01/13/2020;1.3.1;Added support for alternate source register/variable and alternate target register/variable
+8=01/17/2020;1.3.1;Reordered cascaded function call to execute full cascade even if controller is disabled.
 
 [filter_block_scaling_modes]
 count=6
@@ -28,7 +29,7 @@ count=6
 [filter_block_scaling_modes_descritpion]
 sbsft=Single Bitshift-Scaling Mode
 scscl=Single Coefficient Factor Scaling Mode
-dbsft=Dual Bitshift-Scaliing Mode
+dbsft=Dual Bitshift-Scaling Mode
 fscl=Fast Floating Point Coefficient Scaling Mode
 ffloat=Fast Floating Point Mode
 
@@ -43,6 +44,7 @@ addr_offset_ffloat=4
 PoleAtOrigin=IMDIV(wp0 ,COMPLEX(0,[<SHEET.CELL.RADIANDS>]))
 LeadLagBlock=IMDIV(IMSUM(IMDIV(COMPLEX(0,[<SHEET.CELL.RADIANDS>]),wz%FO%,1),IMSUM(IMDIV(COMPLEX(0,[<SHEET.CELL.RADIANDS>]),wp%FO%),1))
 FORMULA=IMPRODUCT(%PoleAtOrigin%, %LeadLagBlock%)
+
 
 [add_data_structure_sbsft]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
@@ -109,6 +111,7 @@ code27=.equ offPtrControlOutput,       54
 code28=.equ offPtrCascadedFunction,    56 
 code29=.equ offPtrCascadedFunParam,    58
 
+
 [blockset_sbsft_0]
 ;Instruction blockset for signle-bitshed 16-bit fixed point controllers
 ;linear execution of compensation filter (MAC_A - READ - UPDATE_B - MAC_B - CLAMP - WRITE - ATRIG - UPDATE_A)
@@ -164,17 +167,17 @@ count=81
 46=load_control_history_array_ptr
 47=comp_control_history_update
 48=comp_control_add_most_recent_to_history
-49=cascaded_function_call
-50=update_status_bitfield
-51=context_restore
-52=context_restore_mac_registers
-53=context_restore_accumulator_a
-54=context_restore_accumulator_b
-55=context_restore_core_config
-56=context_restore_core_status
-57=enable_disable_end
-58=enable_disable_end_dummy_read
-59=enable_disable_end_dummy_read_end
+49=update_status_bitfield
+50=context_restore
+51=context_restore_mac_registers
+52=context_restore_accumulator_a
+53=context_restore_accumulator_b
+54=context_restore_core_config
+55=context_restore_core_status
+56=enable_disable_end
+57=enable_disable_end_dummy_read
+58=enable_disable_end_dummy_read_end
+59=cascaded_function_call
 60=context_restore
 61=context_restore_shadow
 62=context_restore_status_word_wreg
@@ -196,6 +199,7 @@ count=81
 78=charge_control_history_end
 79=return
 80=end
+
 
 [blockset_sbsft_1]
 ;Instruction blockset for signle-bitshed 16-bit fixed point controllers
@@ -256,8 +260,8 @@ count=85
 50=comp_mac_end_acca
 51=comp_control_history_update
 52=comp_mac_store32b_a
-53=cascaded_function_call
-54=update_status_bitfield
+53=update_status_bitfield
+54=cascaded_function_call
 55=context_restore
 56=context_restore_mac_registers
 57=context_restore_accumulator_a
@@ -288,6 +292,7 @@ count=85
 82=charge_control_history_end
 83=return
 84=end
+
 
 [add_data_structure_scscl]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
@@ -354,6 +359,7 @@ code27=.equ offPtrControlOutput,       54
 code28=.equ offPtrCascadedFunction,    56 
 code29=.equ offPtrCascadedFunParam,    58
 
+
 [blockset_scscl_0]
 ;Instruction blockset for output factor modulated, signle-bitshed 16-bit fixed point controllers
 ;linear execution of compensation filter
@@ -411,17 +417,17 @@ count=83
 48=load_control_history_array_ptr
 49=comp_control_history_update
 50=comp_control_add_most_recent_to_history
-51=cascaded_function_call
-52=update_status_bitfield
-53=context_restore
-54=context_restore_mac_registers
-55=context_restore_accumulator_a
-56=context_restore_accumulator_b
-57=context_restore_core_config
-58=context_restore_core_status
-59=enable_disable_end
-60=enable_disable_end_dummy_read
-61=enable_disable_end_dummy_read_end
+51=update_status_bitfield
+52=context_restore
+53=context_restore_mac_registers
+54=context_restore_accumulator_a
+55=context_restore_accumulator_b
+56=context_restore_core_config
+57=context_restore_core_status
+58=enable_disable_end
+59=enable_disable_end_dummy_read
+60=enable_disable_end_dummy_read_end
+61=cascaded_function_call
 62=context_restore
 63=context_restore_shadow
 64=context_restore_status_word_wreg
@@ -443,6 +449,7 @@ count=83
 80=charge_control_history_end
 81=return
 82=end
+
 
 [add_data_structure_dbsft]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
@@ -509,6 +516,7 @@ code27=.equ offPtrControlOutput,       54
 code28=.equ offPtrCascadedFunction,    56 
 code29=.equ offPtrCascadedFunParam,    58
 
+
 [blockset_dbsft_0]
 ;Instruction blockset for double-bitshed 16-bit fixed point controllers
 ;linear execution of compensation filter
@@ -566,17 +574,17 @@ count=83
 48=load_control_history_array_ptr
 49=comp_control_history_update
 50=comp_control_add_most_recent_to_history
-51=cascaded_function_call
-52=update_status_bitfield
-53=context_restore
-54=context_restore_mac_registers
-55=context_restore_accumulator_a
-56=context_restore_accumulator_b
-57=context_restore_core_config
-58=context_restore_core_status
-59=enable_disable_end
-60=enable_disable_end_dummy_read
-61=enable_disable_end_dummy_read_end
+51=update_status_bitfield
+52=context_restore
+53=context_restore_mac_registers
+54=context_restore_accumulator_a
+55=context_restore_accumulator_b
+56=context_restore_core_config
+57=context_restore_core_status
+58=enable_disable_end
+59=enable_disable_end_dummy_read
+60=enable_disable_end_dummy_read_end
+61=cascaded_function_call
 62=context_restore
 63=context_restore_shadow
 64=context_restore_status_word_wreg
@@ -598,6 +606,7 @@ count=83
 80=charge_control_history_end
 81=return
 82=end
+
 
 [add_data_structure_fscl]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
@@ -664,6 +673,7 @@ code27=.equ offPtrControlOutput,       54
 code28=.equ offPtrCascadedFunction,    56 
 code29=.equ offPtrCascadedFunParam,    58
 
+
 [blockset_fscl_0]
 ;Instruction blockset for double-bitshed 16-bit fixed point controllers
 ;linear execution of compensation filter
@@ -720,17 +730,17 @@ count=82
 47=load_control_history_array_ptr
 48=comp_control_history_update
 49=comp_control_add_most_recent_to_history
-50=cascaded_function_call
-51=update_status_bitfield
-52=context_restore
-53=fscl_context_restore_mac_registers
-54=context_restore_accumulator_a
-55=context_restore_accumulator_b
-56=context_restore_core_config
-57=context_restore_core_status
-58=enable_disable_end
-59=enable_disable_end_dummy_read
-60=enable_disable_end_dummy_read_end
+50=update_status_bitfield
+51=context_restore
+52=fscl_context_restore_mac_registers
+53=context_restore_accumulator_a
+54=context_restore_accumulator_b
+55=context_restore_core_config
+56=context_restore_core_status
+57=enable_disable_end
+58=enable_disable_end_dummy_read
+59=enable_disable_end_dummy_read_end
+60=cascaded_function_call
 61=context_restore
 62=context_restore_shadow
 63=context_restore_status_word_wreg
@@ -752,6 +762,7 @@ count=82
 79=charge_control_history_end
 80=return
 81=end
+
 
 [disclaimer]
 ;head_comment=;LICENSE / DISCLAIMER ************************************************************\n;  Microchip Technology Inc. and its subsidiaries.  You may use this software \n;  and any derivatives exclusively with Microchip products. \n;  \n;  THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS".  NO WARRANTIES, WHETHER \n;  EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED \n;  WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A \n;  PARTICULAR PURPOSE, OR ITS INTERACTION WITH MICROCHIP PRODUCTS, COMBINATION \n;  WITH ANY OTHER PRODUCTS, OR USE IN ANY APPLICATION. \n;  \n;  IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, \n;  INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND \n;  WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS \n;  BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE.  TO THE \n;  FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS \n;  IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF \n;  ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE. \n;  \n;  MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE \n;  TERMS. \n; **********************************************************************************
@@ -1917,6 +1928,7 @@ code0=mov [w8 - #%ADDR*3%], w5
 code1=mpy w4*w6, a
 code2=sftac a, w5
 code3=add b
+
 
 ___________________________________________________
 (C)2020, Microchipt Technology Inc.
