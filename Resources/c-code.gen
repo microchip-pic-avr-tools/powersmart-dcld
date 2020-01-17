@@ -4,6 +4,7 @@ Description=this scriptprovides C-source and header files for user-tailored SMPS
 Author=Andreas Reiter - M91406
 Version=1.1.5
 Date=01/13/2020
+
 [history]
 count=7
 0=11/08/19;1.0.0;Initial version after moving C-sources and headers from application code to external script
