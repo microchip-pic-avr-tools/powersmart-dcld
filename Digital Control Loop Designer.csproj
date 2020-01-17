@@ -34,7 +34,7 @@
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <AutorunEnabled>true</AutorunEnabled>
     <DisallowUrlActivation>true</DisallowUrlActivation>
-    <ApplicationRevision>80</ApplicationRevision>
+    <ApplicationRevision>81</ApplicationRevision>
     <ApplicationVersion>0.9.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -182,9 +182,11 @@
     <Content Include="Resources\c-code.gen">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\181026e_dcld_beta_user_guide.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\z-domain_compensator_block_diagram.png" />
     <None Include="Resources\z-transform_euqations.PNG" />
-    <None Include="Resources\help.ico" />
     <None Include="Resources\hz_flowchart.PNG" />
     <Content Include="Resources\icon_bode.ico" />
     <Content Include="Resources\icon_generate_export.ico" />
@@ -193,7 +195,6 @@
     <None Include="Resources\icon_rotate4.ico" />
     <None Include="Resources\icon_table.ico" />
     <None Include="Resources\icon_time_table.ico" />
-    <Content Include="Resources\legend.ico" />
     <Content Include="Resources\ActiproSoftware.dsPICAssembly.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -203,7 +204,6 @@
     <Content Include="Resources\ActiproSoftware.INIFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\time_table.ico" />
     <EmbeddedResource Include="frmGenerate.resx">
       <DependentUpon>frmGenerate.cs</DependentUpon>
     </EmbeddedResource>
@@ -236,7 +236,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Resources\table.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -246,7 +245,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Resources\ActiproSoftware.SyntaxEditor.LanguageDefinition.xsx" />
-    <None Include="Resources\Rotate4.ico" />
     <None Include="Resources\icon_critical.ico" />
     <None Include="Resources\icon_generate.ico" />
     <None Include="Resources\icon_chart_line.ico" />
@@ -342,16 +340,6 @@
       <FileType>File</FileType>
     </PublishFile>
     <PublishFile Include="Resources\icon_generate_export.ico">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\legend.ico">
       <Visible>False</Visible>
       <Group>
       </Group>
