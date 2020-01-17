@@ -67,3 +67,5 @@ Makefile-genesis.properties
 !README.md
 !readme.txt
 
+dcld.ini
+Digital Control Loop Designer.csproj.user
