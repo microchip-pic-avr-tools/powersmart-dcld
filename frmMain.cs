@@ -3496,7 +3496,7 @@ namespace dcld
             int i = 0;
             double pwm_freq = 0.0, pwm_per = 0.0, pwm_dc = 0.0;
             double adc_latency = 0.0, adc_trig = 0.0;
-            double cpu_clk = 0.0, control_start_delay = 0.0, control_latency = 0.0, control_read = 0.0, control_write = 0.0;
+            double cpu_clk = 0.0, cpu_load = 0.0, control_start_delay = 0.0, control_latency = 0.0, control_read = 0.0, control_write = 0.0;
             double execution_time = 0.0, read_delay = 0.0, response_delay = 0.0;
             double pwm_fragment_start = 0.0, pwm_fragment_end = 0.0;
             int pwm_cycles = 0;
@@ -3671,7 +3671,10 @@ namespace dcld
                 read_delay = (adc_trig + control_start_delay + control_read) - adc_trig;
                 response_delay = (adc_trig + control_start_delay + control_write) - adc_trig;
 
-                lblCPULoad.Text = Math.Round(100.0 * (double)(control_start_delay + control_latency) / (1e+9 * cNPNZ.SamplingInterval)).ToString("#0.0", CultureInfo.CurrentCulture);
+                cpu_load = (double)(control_start_delay + control_latency) / (1e+9 * cNPNZ.SamplingInterval);
+                lblCPULoad.Text = Math.Round(100.0 * cpu_load, 1).ToString("#0.0", CultureInfo.CurrentCulture);
+                lblCPULoadRatio.Text = lblCPULoad.Text + " %";
+                lblCPULoadRatio.Height = Convert.ToInt32(cpu_load * pnlCPULoadRatio.Height);
 
                 lblExecutionPeriod.Text = Math.Round(execution_time / 1e+3, 3).ToString("0.000", CultureInfo.CurrentCulture);
                 lblDataReadDelay.Text = Math.Round(read_delay / 1e+3, 3).ToString("0.000", CultureInfo.CurrentCulture);
