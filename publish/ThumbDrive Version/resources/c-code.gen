@@ -1,0 +1,473 @@
+[generic]
+Name=C-Source and Header Generator Script
+Description=this scriptprovides C-source and header files for user-tailored SMPS control loops based on DSP assembly code modules templates generated using the DCLD SDK
+Author=M91406
+Version=1.1.1
+Date=01/13/2020
+
+[history]
+count=7
+0=11/08/19;1.0.0;Initial version after moving C-sources and headers from application code to external script
+1=01/10/20;1.1.0;Added support for cascaded functions. This allows the assembly routine to call another controller or user-defined function extension code module.\r\nAdded pointers to alternate source and terget register supporting bi-directional control and advanced adaptive control methods
+2=01/13/2020;1.1.1;Added support for alternate data input source register/variable and alternate data output target register/variable
+
+[tokens]
+count=17
+0=%EMPTY%
+1=%SPACE%
+2=%IDENT%
+3=%DATA_TYPE_FRACTIONAL%
+4=%DATA_TYPE_INT32%
+5=%FILE_NAME_PATTERN%
+6=%PREFIX%
+7=%FILTER_ORDER%
+8=%FILTER_ORDER+1%
+9=%STRUCTURE_LABEL%
+10=%CGS_VERSION%
+11=%CSG_VERSION_DATE%
+12=%APP_PRODUCT_NAME%
+13=%APP_PRODUCT_VERSION%
+14=%SUPPORT_URL%
+15=%VENDOR_URL%
+16=%TOOL_HOME_URL%
+
+[labels]
+%SUPPORT_URL%=https://www.microchip.com/SMPS/
+%VENDOR_URL%=https://www.microchip.com/
+%TOOL_HOME_URL%=https://areiter128.github.io/DCLD
+
+[library_header]
+count=183
+line0=/* ********************************************************************************
+line1= * %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
+line2= * ********************************************************************************
+line3= * Generic library header for z-domain compensation filter assembly functions
+line4= * CGS Version: %CGS_VERSION%
+line5= * CGS Date:    %CSG_VERSION_DATE%
+line6= * ********************************************************************************/
+line7=#ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
+line8=#define __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
+line9=%EMPTY%
+line10=#include <xc.h> // include processor files - each processor file is guarded 
+line11=#include <dsp.h> // include DSP data types (e.g. fractional)
+line12=#include <stdint.h> // include standard integer number data types 
+line13=#include <stdbool.h> // include standard boolean data types (true/false)
+line14=%EMPTY%
+line15=/* Status flags (Single Bit) */
+line16=#define NPNZ16_STATUS_LSAT_SET             1
+line17=#define NPNZ16_STATUS_LSAT_CLEAR           0
+line18=#define NPNZ16_STATUS_USAT_SET             1
+line19=#define NPNZ16_STATUS_USAT_CLEAR           0
+line20=#define NPNZ16_STATUS_TARGET_SWAPPED       1
+line21=#define NPNZ16_STATUS_TARGET_NOT_SWAPPED   0
+line22=#define NPNZ16_STATUS_SOURCE_SWAPPED       1
+line23=#define NPNZ16_STATUS_SOURCE_NOT_SWAPPED   0
+line24=#define NPNZ16_STATUS_INPUT_INVERTED       1
+line25=#define NPNZ16_STATUS_INPUT_NOT_INVERTED   0
+line26=#define NPNZ16_STATUS_ENABLED              1
+line27=#define NPNZ16_STATUS_DISABLED             0
+line28=%EMPTY%
+line29=/* Status flags (bit-field) */
+line30=typedef enum {
+line31=%IDENT%CONTROLLER_STATUS_CLEAR           = 0b0000000000000000,
+line32=%IDENT%CONTROLLER_STATUS_SATUATION_MSK   = 0b0000000000000011,
+line33=%IDENT%CONTROLLER_STATUS_LSAT_ACTIVE     = 0b0000000000000001,
+line34=%IDENT%CONTROLLER_STATUS_LSAT_CLEAR      = 0b0000000000000000,
+line35=%IDENT%CONTROLLER_STATUS_USAT_ACTIVE     = 0b0000000000000010,
+line36=%IDENT%CONTROLLER_STATUS_USAT_CLEAR      = 0b0000000000000000,
+line37=%IDENT%CONTROLLER_STATUS_TARGET_DEFAULT  = 0b0000000000000000,
+line38=%IDENT%CONTROLLER_STATUS_TARGET_SWAPED   = 0b0001000000000000,
+line39=%IDENT%CONTROLLER_STATUS_SOURCE_DEFAULT  = 0b0000000000000000,
+line40=%IDENT%CONTROLLER_STATUS_SOURCE_SWAPED   = 0b0010000000000000,
+line41=%IDENT%CONTROLLER_STATUS_INV_INPUT_OFF   = 0b0000000000000000,
+line42=%IDENT%CONTROLLER_STATUS_INV_INPUT_ON    = 0b0100000000000000,
+line43=%IDENT%CONTROLLER_STATUS_ENABLE_OFF      = 0b0000000000000011,
+line44=%IDENT%CONTROLLER_STATUS_ENABLE_ON       = 0b1000000000000000
+line45=} CONTROLLER_STATUS_FLAGS_t;
+line46=%EMPTY%
+line47=typedef union {
+line48=%IDENT%struct {
+line49=%IDENT%%IDENT%volatile unsigned flt_clamp_min : 1; // Bit 0: control loop is clamped at minimum output level
+line50=%IDENT%%IDENT%volatile unsigned flt_clamp_max : 1; // Bit 1: control loop is clamped at maximum output level
+line51=%IDENT%%IDENT%volatile unsigned : 1; // Bit 2: reserved
+line52=%IDENT%%IDENT%volatile unsigned : 1; // Bit 3: reserved
+line53=%IDENT%%IDENT%volatile unsigned : 1; // Bit 4: reserved
+line54=%IDENT%%IDENT%volatile unsigned : 1; // Bit 5: reserved
+line55=%IDENT%%IDENT%volatile unsigned : 1; // Bit 6: reserved
+line56=%IDENT%%IDENT%volatile unsigned : 1; // Bit 7: reserved
+line57=%IDENT%%IDENT%volatile unsigned : 1; // Bit 8: reserved
+line58=%IDENT%%IDENT%volatile unsigned : 1; // Bit 9: reserved
+line59=%IDENT%%IDENT%volatile unsigned : 1; // Bit 11: reserved
+line60=%IDENT%%IDENT%volatile unsigned : 1; // Bit 11: reserved
+line61=%IDENT%%IDENT%volatile unsigned swap_target: 1; // Bit 12: when set, AltTarget is used as data output of controller
+line62=%IDENT%%IDENT%volatile unsigned swap_source: 1; // Bit 13: when set, AltSource is used as data input to controller
+line63=%IDENT%%IDENT%volatile unsigned invert_input: 1; // Bit 14: when set, most recent error input value to controller is inverted
+line64=%IDENT%%IDENT%volatile unsigned enable : 1; // Bit 15: enables/disables control loop execution
+line65=%IDENT%} __attribute__((packed))bits;    // Controller status bit-field for direct bit access
+line66=%IDENT%volatile uint16_t value;          // Controller status full register access
+line67=} __attribute__((packed))CONTROLLER_STATUS_t; // Controller status data structure
+line68=%EMPTY%
+line69=typedef struct {
+line70=%IDENT%// External control and monitoring
+line71=%IDENT%volatile CONTROLLER_STATUS_t status; // Control Loop Status flags
+line72=%EMPTY%
+line73=%IDENT%// Input/Output to controller
+line74=%IDENT%volatile uint16_t* ptrSource; // Pointer to source register or variable where the input value is read from (e.g. ADCBUFx)
+line75=%IDENT%volatile uint16_t* ptrAltSource; // Pointer to alternate source register or variable where the alternate input value is read from (e.g. ADCBUFy)
+line76=%IDENT%volatile uint16_t* ptrTarget; // Pointer to target register or variable where the control output is written to (e.g. PCDx)
+line77=%IDENT%volatile uint16_t* ptrAltTarget; // Pointer to alternate target register or variable where the alternate control output is written to (e.g. PCDy)
+line78=%IDENT%volatile uint16_t* ptrControlReference; // Pointer to global variable of input register holding the controller reference value (e.g. uint16_t my_ref)
+line79=%EMPTY%
+line80=%IDENT%// Filter coefficients and input/output histories
+line81=%IDENT%volatile fractional* ptrACoefficients; // Pointer to A coefficients located in X-space 
+line82=%IDENT%volatile fractional* ptrBCoefficients; // Pointer to B coefficients located in X-space 
+line83=%IDENT%volatile fractional* ptrControlHistory; // Pointer to n delay-line samples located in Y-space with first sample being the most recent 
+line84=%IDENT%volatile fractional* ptrErrorHistory; // Pointer to n+1 delay-line samples located in Y-space with first sample being the most recent 
+line85=%EMPTY%
+line86=%IDENT%// Array size information
+line87=%IDENT%volatile uint16_t ACoefficientsArraySize; // Size of the A coefficients array in X-space
+line88=%IDENT%volatile uint16_t BCoefficientsArraySize; // Size of the B coefficients array in X-space
+line89=%IDENT%volatile uint16_t ControlHistoryArraySize; // Size of the control history array in Y-space
+line90=%IDENT%volatile uint16_t ErrorHistoryArraySize; // Size of the error history array in Y-space
+line91=%EMPTY%
+line92=%IDENT%// Feedback scaling Input/Output Normalization
+line93=%IDENT%volatile int16_t normPreShift; // Normalization of ADC-resolution to Q15 (R/W)
+line94=%IDENT%volatile int16_t normPostShiftA; // Normalization of A-term control output to Q15 (R/W)
+line95=%IDENT%volatile int16_t normPostShiftB; // Normalization of B-term control output to Q15 (R/W)
+line96=%IDENT%volatile int16_t normPostScaler; // Control output normalization factor (Q15) (R/W)
+line97=%EMPTY%
+line98=%IDENT%// Feedback conditioning
+line99=%IDENT%volatile int16_t InputOffset; // Control input source offset value (R/W)
+line100=%EMPTY%
+line101=%IDENT%// System clamping/Anti-windup
+line102=%IDENT%volatile int16_t MinOutput; // Minimum output value used for clamping (R/W)
+line103=%IDENT%volatile int16_t MaxOutput; // Maximum output value used for clamping (R/W)
+line104=%EMPTY%
+line105=%IDENT%// Voltage/Average Current Mode Control Trigger handling
+line106=%IDENT%volatile uint16_t* ptrADCTriggerARegister; // Pointer to ADC trigger #1 register (e.g. TRIG1)
+line107=%IDENT%volatile uint16_t ADCTriggerAOffset; // ADC trigger #1 offset to compensate propagation delays 
+line108=%IDENT%volatile uint16_t* ptrADCTriggerBRegister; // Pointer to ADC trigger #2 register (e.g. TRIG2)
+line109=%IDENT%volatile uint16_t ADCTriggerBOffset; // ADC trigger #2 offset to compensate propagation delays 
+line110=%EMPTY%
+line111=%IDENT%// Data Provider Sources
+line112=%IDENT%volatile uint16_t* ptrDataProviderControlInput; // Pointer to external data buffer of most recent control input 
+line113=%IDENT%volatile uint16_t* ptrDataProviderControlError; // Pointer to external data buffer of most recent control error 
+line114=%IDENT%volatile uint16_t* ptrDataProviderControlOutput; // Pointer to external data buffer of most recent control output 
+line115=%EMPTY%
+line116=%IDENT%volatile uint16_t CascadedFunction; // Pointer to Function which should be called at the end of the control loop
+line117=%IDENT%volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
+line118=%EMPTY%
+line119=} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output
+line120=%EMPTY%
+line121=%EMPTY%
+line122=typedef struct {
+line123=%IDENT%// External control and monitoring
+line124=%IDENT%volatile CONTROLLER_STATUS_t status; // Control Loop Status flags
+line125=%EMPTY%
+line126=%IDENT%// Input/Output to controller
+line127=%IDENT%volatile uint16_t* ptrSource; // Pointer to source register or variable where the input value is read from (e.g. ADCBUF0)
+line128=%IDENT%volatile uint16_t* ptrAltSource; // Pointer to alternate source register or variable where the alternate input value is read from (e.g. ADCBUF0)
+line129=%IDENT%volatile uint16_t* ptrTarget; // Pointer to target register or variable where the control output is written to (e.g. PCD1)
+line130=%IDENT%volatile uint16_t* ptrAltTarget; // Pointer to alternate target register or variable where the alternate control output is written to (e.g. PCD1)
+line131=%IDENT%volatile uint16_t* ptrControlReference; // Pointer to global variable of input register holding the controller reference value (e.g. uint16_t my_ref)
+line132=%EMPTY%
+line133=%IDENT%// Filter coefficients and input/output histories
+line134=%IDENT%volatile int32_t* ptrACoefficients; // Pointer to A coefficients located in X-space 
+line135=%IDENT%volatile int32_t* ptrBCoefficients; // Pointer to B coefficients located in X-space 
+line136=%IDENT%volatile fractional* ptrControlHistory; // Pointer to n delay-line samples located in Y-space with first sample being the most recent 
+line137=%IDENT%volatile fractional* ptrErrorHistory; // Pointer to n+1 delay-line samples located in Y-space with first sample being the most recent 
+line138=%EMPTY%
+line139=%IDENT%// Array size information
+line140=%IDENT%volatile uint16_t ACoefficientsArraySize; // Size of the A coefficients array in X-space
+line141=%IDENT%volatile uint16_t BCoefficientsArraySize; // Size of the B coefficients array in X-space
+line142=%IDENT%volatile uint16_t ControlHistoryArraySize; // Size of the control history array in Y-space
+line143=%IDENT%volatile uint16_t ErrorHistoryArraySize; // Size of the error history array in Y-space
+line144=%EMPTY%
+line145=%IDENT%// Feedback scaling Input/Output Normalization
+line146=%IDENT%volatile int16_t normPreShift; // Normalization of ADC-resolution to Q15 (R/W)
+line147=%IDENT%volatile int16_t normPostShiftA; // Normalization of A-term control output to Q15 (R/W)
+line148=%IDENT%volatile int16_t normPostShiftB; // Normalization of B-term control output to Q15 (R/W)
+line149=%IDENT%volatile int16_t normPostScaler; // Control output normalization factor (Q15) (R/W)
+line150=%EMPTY%
+line151=%IDENT%// Feedback conditioning
+line152=%IDENT%volatile int16_t InputOffset; // Control input source offset value (R/W)
+line153=%EMPTY%
+line154=%IDENT%// System clamping/Anti-windup
+line155=%IDENT%volatile int16_t MinOutput; // Minimum output value used for clamping (R/W)
+line156=%IDENT%volatile int16_t MaxOutput; // Maximum output value used for clamping (R/W)
+line157=%EMPTY%
+line158=%IDENT%// Voltage/Average Current Mode Control Trigger handling
+line159=%IDENT%volatile uint16_t* ptrADCTriggerARegister; // Pointer to ADC trigger #1 register (e.g. TRIG1)
+line160=%IDENT%volatile uint16_t ADCTriggerAOffset; // ADC trigger #1 offset to compensate propagation delays 
+line161=%IDENT%volatile uint16_t* ptrADCTriggerBRegister; // Pointer to ADC trigger #2 register (e.g. TRIG2)
+line162=%IDENT%volatile uint16_t ADCTriggerBOffset; // ADC trigger #2 offset to compensate propagation delays 
+line163=%EMPTY%
+line164=%IDENT%// Data Provider Sources
+line165=%IDENT%volatile uint16_t* ptrDataProviderControlInput; // Pointer to external data buffer of most recent control input 
+line166=%IDENT%volatile uint16_t* ptrDataProviderControlError; // Pointer to external data buffer of most recent control error 
+line167=%IDENT%volatile uint16_t* ptrDataProviderControlOutput; // Pointer to external data buffer of most recent control output 
+line168=%EMPTY%
+line169=%IDENT%volatile uint16_t CascadedFunction; // Pointer to Function which should be called at the end of the control loop
+line170=%IDENT%volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
+line171=%EMPTY%
+line172=} __attribute__((packed))cNPNZ3216b_t; // Generic nPnZ Controller Object with 32-bit fast floating point coefficients, 16-bit data input and data output
+line173=%EMPTY%
+line174=%EMPTY%
+line175=/* ********************************************************************************/
+line176=#endif  // end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__ header file section
+line177=%EMPTY%
+line178=%EMPTY%
+line179=//**********************************************************************************
+line180=// Download latest version of this tool here: %TOOL_HOME_URL%
+line181=//**********************************************************************************
+line182=%EMPTY%
+
+[comp_header]
+count=92
+line0=/* ********************************************************************************
+line1=%SPACE%* %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
+line2=%SPACE%* ********************************************************************************
+line3=%SPACE%* %FILTER_ORDER%p%FILTER_ORDER%z controller function declarations and compensation filter coefficients
+line4=%SPACE%* derived for following operating conditions:
+line5=%SPACE%* ********************************************************************************
+line6=%SPACE%*
+line7=%SPACE%*  Controller Type:    %COMP_TYPE_NAME%
+line8=%SPACE%*  Sampling Frequency: %SAMPLING_FREQUENCY% Hz 
+line9=%SPACE%*  Fixed Point Format: %Q_FORMAT%
+line10=%SPACE%*  Scaling Mode:       %SCALING_MODE%
+line11=%SPACE%*  Input Gain:         %INPUT_GAIN%
+line12=%SPACE%*
+line13=%SPACE%* *******************************************************************************
+line14=%SPACE%* CGS Version:         %CGS_VERSION%
+line15=%SPACE%* CGS Date:            %CSG_VERSION_DATE%
+line16=%SPACE%* *******************************************************************************
+line17=%SPACE%* User:                %USER_NAME%
+line18=%SPACE%* Date/Time:           %DATE_TODAY%
+line19=%SPACE%* *******************************************************************************/
+line20=%EMPTY%
+line21=#ifndef __SPECIAL_FUNCTION_LAYER_%FILENAME_PATTERN_U%_H__
+line22=#define __SPECIAL_FUNCTION_LAYER_%FILENAME_PATTERN_U%_H__
+line23=%EMPTY%
+line24=#include <xc.h> // include processor files - each processor file is guarded 
+line25=#include <dsp.h> // include DSP data types (e.g. fractional)
+line26=#include <stdint.h> // include standard integer number data types 
+line27=#include <stdbool.h> // include standard boolean data types (true/false)
+line28=%EMPTY%
+line29=#include "%LIB_HEADER_INCLUDE_PATH%npnz16b.h" // include NPNZ library header file
+line30=%EMPTY%
+line31=      /* *******************************************************************************
+line32=%SPACE%* Data Arrays:
+line33=%SPACE%* The cNPNZ_t data structure contains pointers to coefficient, control and error  
+line34=%SPACE%* history arrays. The pointer target objects (variables and arrays) are defined 
+line35=%SPACE%* in controller source file %FILENAME_PATTERN_L%.c
+line36=%SPACE%*
+line37=%SPACE%* Type definitions for A- and B- coefficient arrays as well as error- and control 
+line38=%SPACE%* history arrays are aligned in memory using the 'packed' attribute for optimized    
+line39=%SPACE%* addressing during DSP computations. These aligned data structures need to be   
+line40=%SPACE%* placed in specific memory locations to allow direct X/Y-access from the DSP. 
+line41=%SPACE%* This X/Y-memory placement is covered by the declarations used in controller 
+line42=%SPACE%* source file %FILENAME_PATTERN_L%.c
+line43=%SPACE%* ******************************************************************************/
+line44=typedef struct
+line45={
+line46=%IDENT%volatile %COEFF_DATA_TYPE% ACoefficients[%FILTER_ORDER%]; // A-Coefficients
+line47=%IDENT%volatile %COEFF_DATA_TYPE% BCoefficients[%FILTER_ORDER+1%]; // B-Coefficients
+line48=} __attribute__((packed)) %PREFIXU%CONTROL_LOOP_COEFFICIENTS_t;
+line49=%EMPTY%
+line50=typedef struct
+line51={
+line52=%IDENT%volatile %HISTORY_DATA_TYPE% ControlHistory[%FILTER_ORDER%];  // Control History Array
+line53=%IDENT%volatile %HISTORY_DATA_TYPE% ErrorHistory[%FILTER_ORDER+1%];  // Error History Array
+line54=} __attribute__((packed)) %PREFIXU%CONTROL_LOOP_HISTORIES_t;
+line55=%EMPTY%
+line56=%EMPTY%
+line57=extern volatile %STRUCTURE_LABEL% %FILENAME_PATTERN%; // user-controller data object
+line58=%EMPTY%
+line59=      /* *******************************************************************************
+line60=%SPACE%* Function call prototypes for initialization routines and control loops
+line61=%SPACE%* ******************************************************************************/
+line62=%EMPTY%
+line63=// Initialization of %FILENAME_PATTERN% controller object
+line64=extern volatile uint16_t %FILENAME_PATTERN%_Init( // %FILENAME_PATTERN% initialization function call
+line65=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
+line66=%IDENT%);
+line67=%EMPTY%
+line68=// Clears the %FILTER_ORDER%P%FILTER_ORDER%Z controller output and error histories
+line69=extern void %FILENAME_PATTERN%_Reset( // %FILENAME_PATTERN% reset function call (Assembly)
+line70=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
+line71=%IDENT%);
+line72=%EMPTY%
+line73=// Loads user-defined values into %FILTER_ORDER%P%FILTER_ORDER%Z controller output and error histories
+line74=extern void %FILENAME_PATTERN%_Precharge( // %FILENAME_PATTERN% history pre-charge function call (Assembly)
+line75=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller, // Pointer to nPnZ data type object
+line76=%IDENT%%IDENT%volatile %HISTORY_DATA_TYPE% ctrl_input, // user-defined, constant error history value
+line77=%IDENT%%IDENT%volatile %HISTORY_DATA_TYPE% ctrl_output // user-defined, constant control output history value
+line78=%IDENT%);
+line79=%EMPTY%
+line80=// Calls the %FILENAME_PATTERN% controller object
+line81=extern void %FILENAME_PATTERN%_Update( // Calls the %FILTER_ORDER%P%FILTER_ORDER%Z controller (Assembly)
+line82=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
+line83=%IDENT%);
+line84=%EMPTY%
+line85=%EMPTY%
+line86=#endif // end of __SPECIAL_FUNCTION_LAYER_%FILENAME_PATTERN_U%_H__
+line87=%EMPTY%
+line88=//**********************************************************************************
+line89=// Download latest version of this tool here: %TOOL_HOME_URL%
+line90=//**********************************************************************************
+line91=%EMPTY%
+
+[comp_source_head]
+count=76
+line0=      /* **********************************************************************************
+line1=%SPACE%* %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
+line2=%SPACE%* **********************************************************************************
+line3=%SPACE%* %FILTER_ORDER%p%FILTER_ORDER%z compensation filter coefficients derived for following operating 
+line4=%SPACE%* conditions:
+line5=%SPACE%* **********************************************************************************
+line6=%SPACE%*
+line7=%SPACE%*  Controller Type:    %COMP_TYPE_NAME%
+line8=%SPACE%*  Sampling Frequency: %SAMPLING_FREQUENCY% Hz 
+line9=%SPACE%*  Fixed Point Format: %Q_FORMAT%
+line10=%SPACE%*  Scaling Mode:       %SCALING_MODE%
+line11=%SPACE%*  Input Gain:         %INPUT_GAIN%
+line12=%SPACE%*
+line13=%SPACE%* *********************************************************************************
+line14=%SPACE%* CGS Version:         %CGS_VERSION%
+line15=%SPACE%* CGS Date:            %CSG_VERSION_DATE%
+line16=%SPACE%* *********************************************************************************
+line17=%SPACE%* User:                %USER_NAME%
+line18=%SPACE%* Date/Time:           %DATE_TODAY%
+line19=%SPACE%* ********************************************************************************/
+line20=%EMPTY%
+line21=#include "%C_HEADER_INCLUDE_PATH%"
+line22=%EMPTY%
+line23=      /* *********************************************************************************
+line24=%SPACE%* Data Arrays:
+line25=%SPACE%* This source file declares the default parameters of the z-domain compensation  
+line26=%SPACE%* filter. The cNPNZ_t data structure contains two pointers to A- and B- 
+line27=%SPACE%* coefficient arrays and two pointers to control and error history arrays.
+line28=%SPACE%*
+line29=%SPACE%* For optimized data processing during DSP computations, these arrays must be 
+line30=%SPACE%* located in specific memory locations (X-space for coefficient arrays and 
+line31=%SPACE%* Y-space for control and error history arrays). 
+line32=%SPACE%*
+line33=%SPACE%* The following declarations are used to define the array data contents, their 
+line34=%SPACE%* length and memory location. These declarations are made publicly accessible 
+line35=%SPACE%* through defines in source file %FILENAME_PATTERN_L%.c
+line36=%SPACE%* ********************************************************************************/
+line37=%EMPTY%
+line38=volatile %PREFIXU%CONTROL_LOOP_COEFFICIENTS_t __attribute__((space(xmemory), near)) %PREFIX%coefficients; // A/B-Coefficients 
+line39=volatile uint16_t %PREFIX%ACoefficients_size = (sizeof(%PREFIX%coefficients.ACoefficients)/sizeof(%PREFIX%coefficients.ACoefficients[0])); // A-coefficient array size
+line40=volatile uint16_t %PREFIX%BCoefficients_size = (sizeof(%PREFIX%coefficients.BCoefficients)/sizeof(%PREFIX%coefficients.BCoefficients[0])); // B-coefficient array size
+line41=%EMPTY%
+line42=volatile %PREFIXU%CONTROL_LOOP_HISTORIES_t __attribute__((space(ymemory), far)) %PREFIX%histories; // Control/Error Histories 
+line43=volatile uint16_t %PREFIX%ControlHistory_size = (sizeof(%PREFIX%histories.ControlHistory)/sizeof(%PREFIX%histories.ControlHistory[0])); // Control history array size
+line44=volatile uint16_t %PREFIX%ErrorHistory_size = (sizeof(%PREFIX%histories.ErrorHistory)/sizeof(%PREFIX%histories.ErrorHistory[0])); // Error history array size
+line45=%EMPTY%
+line46=      /* *********************************************************************************
+line47=%SPACE%* Pole&Zero Placement:
+line48=%SPACE%* *********************************************************************************
+line49=%SPACE%*
+line50=%SPACE%*%IDENT%fP%INDEX%:%IDENT%%LOOP_POLE_LOCATION_LIST% Hz
+line51=%SPACE%*%IDENT%fZ%INDEX%:%IDENT%%LOOP_ZERO_LOCATION_LIST% Hz
+line52=%SPACE%*
+line53=%SPACE%* *********************************************************************************
+line54=%SPACE%* Filter Coefficients and Parameters:
+line55=%SPACE%* ********************************************************************************/
+line56=volatile %COEFF_DATA_TYPE% %PREFIX%ACoefficients [%FILTER_ORDER%] =
+line57={
+line58=%IDENT%%LOOP_A_COEFFICIENTS_LIST% // Coefficient A%INDEX% will be multiplied with controller output u(n-%INDEX%)
+line59=};
+line60=%EMPTY%
+line61=volatile %COEFF_DATA_TYPE% %PREFIX%BCoefficients [%FILTER_ORDER+1%] =
+line62={
+line63=%IDENT%%LOOP_B_COEFFICIENTS_LIST% // Coefficient B%INDEX% will be multiplied with error input e(n-%INDEX%)
+line64=};
+line65=%EMPTY%
+line66=// Coefficient normalization factors
+line67=volatile int16_t %PREFIX%pre_scaler = %PRESCALER%;
+line68=volatile int16_t %PREFIX%post_shift_A = %POSTSHIFT_A%;
+line69=volatile int16_t %PREFIX%post_shift_B = %POSTSHIFT_B%;
+line70=volatile fractional %PREFIX%post_scaler = %POSTSCALER%;
+line71=%EMPTY%
+line72=volatile %STRUCTURE_LABEL% %FILENAME_PATTERN%; // user-controller data object
+line73=%EMPTY%
+line74=     /* ********************************************************************************/
+line75=%EMPTY%
+
+[comp_source_functions]
+count=1
+function0=comp_source_init
+
+[comp_source_init]
+count=66
+line0=      /*!%FILENAME_PATTERN%_Init()
+line1=%SPACE%* *********************************************************************************
+line2=%SPACE%* Summary: Initializes controller coefficient arrays and normalization
+line3=%SPACE%* 
+line4=%SPACE%* Parameters:
+line5=%SPACE%*     - %STRUCTURE_LABEL%* controller
+line6=%SPACE%* 
+line7=%SPACE%* Returns:
+line8=%SPACE%*     - uint16_t:  0->failure
+line9=%SPACE%*                  1->success
+line10=%EMPTY%
+line11=%SPACE%* Description:
+line12=%SPACE%* This function needs to be called from user code once to initialize coefficient 
+line13=%SPACE%* arrays and number normalization settings of the %FILENAME_PATTERN% controller 
+line14=%SPACE%* object.
+line15=%SPACE%* 
+line16=%SPACE%* PLEASE NOTE:
+line17=%SPACE%* This routine DOES NOT initialize the complete controller object.
+line18=%SPACE%* User-defined settings such as pointers to the control reference, source and  
+line19=%SPACE%* target registers, output minima and maxima and further, design-dependent  
+line20=%SPACE%* settings, need to be specified in user code.
+line21=%SPACE%* ********************************************************************************/
+line22=volatile uint16_t %FILENAME_PATTERN%_Init(volatile %STRUCTURE_LABEL%* controller)
+line23={
+line24=%IDENT%volatile uint16_t i=0;
+line25=%EMPTY%
+line26=%IDENT%// Initialize controller data structure at runtime with pre-defined default values
+line27=%IDENT%controller->status.value = CONTROLLER_STATUS_CLEAR;  // clear all status flag bits (will turn off execution))
+line28=%IDENT%
+line29=%IDENT%controller->ptrACoefficients = &%PREFIX%coefficients.ACoefficients[0]; // initialize pointer to A-coefficients array
+line30=%IDENT%controller->ptrBCoefficients = &%PREFIX%coefficients.BCoefficients[0]; // initialize pointer to B-coefficients array
+line31=%IDENT%controller->ptrControlHistory = &%PREFIX%histories.ControlHistory[0]; // initialize pointer to control history array
+line32=%IDENT%controller->ptrErrorHistory = &%PREFIX%histories.ErrorHistory[0]; // initialize pointer to error history array
+line33=%IDENT%controller->normPostShiftA = %PREFIX%post_shift_A; // initialize A-coefficients/single bit-shift scaler
+line34=%IDENT%controller->normPostShiftB = %PREFIX%post_shift_B; // initialize B-coefficients/dual/post scale factor bit-shift scaler
+line35=%IDENT%controller->normPostScaler = %PREFIX%post_scaler; // initialize control output value normalization scaling factor
+line36=%IDENT%controller->normPreShift = %PREFIX%pre_scaler; // initialize A-coefficients/single bit-shift scaler
+line37=%IDENT%
+line38=%IDENT%controller->ACoefficientsArraySize = %PREFIX%ACoefficients_size; // initialize A-coefficients array size
+line39=%IDENT%controller->BCoefficientsArraySize = %PREFIX%BCoefficients_size; // initialize A-coefficients array size
+line40=%IDENT%controller->ControlHistoryArraySize = %PREFIX%ControlHistory_size; // initialize control history array size
+line41=%IDENT%controller->ErrorHistoryArraySize = %PREFIX%ErrorHistory_size; // initialize error history array size
+line42=%IDENT%
+line43=%IDENT%
+line44=%IDENT%// Load default set of A-coefficients from user RAM into X-Space controller A-array
+line45=%IDENT%for(i=0; i<controller->ACoefficientsArraySize; i++)
+line46=%IDENT%{
+line47=%IDENT%%IDENT%%PREFIX%coefficients.ACoefficients[i] = %PREFIX%ACoefficients[i];
+line48=%IDENT%}
+line49=%EMPTY%
+line50=%IDENT%// Load default set of B-coefficients from user RAM into X-Space controller B-array
+line51=%IDENT%for(i=0; i<controller->BCoefficientsArraySize; i++)
+line52=%IDENT%{
+line53=%IDENT%%IDENT%%PREFIX%coefficients.BCoefficients[i] = %PREFIX%BCoefficients[i];
+line54=%IDENT%}
+line55=%EMPTY%
+line56=%IDENT%// Clear error and control histories of the 3P3Z controller
+line57=%IDENT%%FILENAME_PATTERN%_Reset(&%FILENAME_PATTERN%);
+line58=%IDENT%
+line59=%IDENT%return(1);
+line60=}
+line61=%SPACE%
+line62=//**********************************************************************************
+line63=// Download latest version of this tool here: %TOOL_HOME_URL%
+line64=//**********************************************************************************
+line65=%SPACE%
+
+___________________________________________________
+(C)2020, Microchipt Technology Inc.

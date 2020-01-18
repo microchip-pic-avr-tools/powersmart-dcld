@@ -13,7 +13,7 @@ In the current version the essential functions of the z-domain configuration blo
 The standardized API ensures seamless integration into the final firmware, supporting multiple, co-existing controllers in one firmware and seamless exchange between different controller types and scaling methods helping to solve typical performance vs. accuracy and feature tradeoffs.
 For simplified use during code development, the z-Domain configuration window and code generator can be called directly from the MPLAB X® environment to make changes. 
 
-(Please refer to the [PDF User Guide](https://github.com/areiter128/DCLD/blob/master/user_guide/181026d_dcld_beta_user_guide.pdf) for details)
+(Please refer to the [PDF User Guide](https://github.com/areiter128/DCLD/blob/master/user_guide/181026e_dcld_beta_user_guide.pdf) for details)
 
 ### Core Features:
 * **Supports z-Domain Compensation Filters from 1st to 6th Order**
