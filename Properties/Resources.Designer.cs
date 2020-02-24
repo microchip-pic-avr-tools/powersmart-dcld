@@ -63,9 +63,9 @@ namespace dcld.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap hz_flowchart {
+        internal static System.Drawing.Bitmap calculate {
             get {
-                object obj = ResourceManager.GetObject("hz_flowchart", resourceCulture);
+                object obj = ResourceManager.GetObject("calculate", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,10 +73,20 @@ namespace dcld.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon icon_bode {
+        internal static System.Drawing.Icon dcld {
             get {
-                object obj = ResourceManager.GetObject("icon_bode", resourceCulture);
+                object obj = ResourceManager.GetObject("dcld", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap hz_flowchart {
+            get {
+                object obj = ResourceManager.GetObject("hz_flowchart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

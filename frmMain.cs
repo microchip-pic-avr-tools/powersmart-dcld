@@ -126,7 +126,6 @@ namespace dcld
         int GroupFolding_grpDataProviderSourcesHeight = 100;
         int GroupFolding_grpAntiWindupHeight = 100;
 
-
         public frmMain(string[] args)
         {
             int i = 0;
