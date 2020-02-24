@@ -219,7 +219,8 @@ namespace dcld
             }
 
             // Preventing number conflicts with default settings 
-            txtInputGain.Text = NumberTextBox_ToDouble(txtInputGain).ToString("F", CultureInfo.CurrentCulture);
+            txtInputGain.Text = NumberTextBox_ToDouble(txtInputGain).ToString("#0.000", CultureInfo.CurrentCulture);
+            txtOutputGain.Text = NumberTextBox_ToDouble(txtOutputGain).ToString("#0.000", CultureInfo.CurrentCulture);
             txtInputDataResolution.Text = NumberTextBox_ToDouble(txtInputDataResolution).ToString();
             txtSamplingFrequency.Text = NumberTextBox_ToDouble(txtSamplingFrequency).ToString();
 
@@ -801,6 +802,9 @@ namespace dcld
                         cNPNZ.FeedbackRecitification = (chkFeedbackRectification.Checked & chkFeedbackRectification.Enabled);
                     else
                         cNPNZ.FeedbackRecitification = false;
+
+                    cNPNZ.OutputGainNormalization = chkNormalizeOutputGain.Checked;
+                    cNPNZ.OutputGain = NumberTextBox_ToDouble(txtOutputGain);
 
                     for (i = 0; i < LagElements; i++)
                     {
@@ -1679,6 +1683,8 @@ namespace dcld
                 WriteConfigString(str_path, "ControlSetup", "InputGainNormalization", Math.Abs(Convert.ToInt32(chkNormalizeInputGain.Checked)).ToString());
                 WriteConfigString(str_path, "ControlSetup", "BiDirectionalFeedback", Math.Abs(Convert.ToInt32(chkBiDirectionalFeedback.Checked)).ToString());
                 WriteConfigString(str_path, "ControlSetup", "FeedbackRectification", Math.Abs(Convert.ToInt32(chkFeedbackRectification.Checked & chkBiDirectionalFeedback.Checked)).ToString());
+                WriteConfigString(str_path, "ControlSetup", "OutputGain", txtOutputGain.Text);
+                WriteConfigString(str_path, "ControlSetup", "OutputGainNormalization", Math.Abs(Convert.ToInt32(chkNormalizeOutputGain.Checked)).ToString());
 
                 for (i = 0; i < txtPole.Length; i++)
                 { 
@@ -1833,10 +1839,12 @@ namespace dcld
                 cmbQFormat.SelectedIndex = Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "QFormat", "1"));
 
                 txtSamplingFrequency.Text = ReadConfigString(str_path, "ControlSetup", "SamplingFrequency", "50000");
-                txtInputGain.Text = ReadConfigString(str_path, "ControlSetup", "InputGain", "1");
-                chkNormalizeInputGain.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "InputGainNormalization", "0")));
+                txtInputGain.Text = ReadConfigString(str_path, "ControlSetup", "InputGain", "1.000");
+                chkNormalizeInputGain.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "InputGainNormalization", "1")));
                 chkBiDirectionalFeedback.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "BiDirectionalFeedback", "0")));
                 chkFeedbackRectification.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "FeedbackRectification", "0")));
+                txtOutputGain.Text = ReadConfigString(str_path, "ControlSetup", "OutputGain", "1.000");
+                chkNormalizeOutputGain.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "OutputGainNormalization", "1")));
 
                 for (i = 0; i < txtPole.Length; i++)
                 {
@@ -4512,7 +4520,9 @@ namespace dcld
                 txtFZ2.Text + "; " +
                 txtFZ3.Text + "; " +
                 txtFZ4.Text + "; " +
-                txtFZ5.Text;
+                txtFZ5.Text + "; " +
+                txtOutputGain.Text + "; " +
+                Convert.ToInt32(chkNormalizeOutputGain.Checked).ToString();
 
 
             itm = lstCoefficientsHistory.Items.Add(save_item.ToString());
@@ -4605,27 +4615,29 @@ namespace dcld
                     ApplicationStartUp = true;  // Prevent repeated GUI updates
 
                     // Loading transfer function settings
-                    cmbCompType.SelectedIndex = Convert.ToInt32(str_arr[0].Trim());
-                    cmbQScalingMethod.SelectedIndex = Convert.ToInt32(str_arr[1].Trim());
-                    txtInputDataResolution.Text = str_arr[2].Trim();
-                    txtInputGain.Text = str_arr[3].Trim();
+                    if (str_arr.Length > 0) cmbCompType.SelectedIndex = Convert.ToInt32(str_arr[0].Trim());
+                    if (str_arr.Length > 1) cmbQScalingMethod.SelectedIndex = Convert.ToInt32(str_arr[1].Trim());
+                    if (str_arr.Length > 2) txtInputDataResolution.Text = str_arr[2].Trim();
+                    if (str_arr.Length > 3) txtInputGain.Text = str_arr[3].Trim();
+                    if (str_arr.Length > 4) chkNormalizeInputGain.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[4].Trim()));
+                    if (str_arr.Length > 5) chkBiDirectionalFeedback.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[5].Trim()));
+                    if (str_arr.Length > 6) chkFeedbackRectification.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[6].Trim()));
 
-                    chkNormalizeInputGain.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[4].Trim()));
-                    chkBiDirectionalFeedback.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[5].Trim()));
-                    chkFeedbackRectification.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[6].Trim()));
+                    if (str_arr.Length > 7) txtSamplingFrequency.Text = str_arr[7].Trim();
+                    if (str_arr.Length > 8) txtFP0.Text = str_arr[8].Trim();
+                    if (str_arr.Length > 9) txtFP1.Text = str_arr[9].Trim();
+                    if (str_arr.Length > 10) txtFP2.Text = str_arr[10].Trim();
+                    if (str_arr.Length > 11) txtFP3.Text = str_arr[11].Trim();
+                    if (str_arr.Length > 12) txtFP4.Text = str_arr[12].Trim();
+                    if (str_arr.Length > 13) txtFP5.Text = str_arr[13].Trim();
+                    if (str_arr.Length > 14) txtFZ1.Text = str_arr[14].Trim();
+                    if (str_arr.Length > 15) txtFZ2.Text = str_arr[15].Trim();
+                    if (str_arr.Length > 16) txtFZ3.Text = str_arr[16].Trim();
+                    if (str_arr.Length > 17) txtFZ4.Text = str_arr[17].Trim();
+                    if (str_arr.Length > 18) txtFZ5.Text = str_arr[18].Trim();
 
-                    txtSamplingFrequency.Text = str_arr[7].Trim();
-                    txtFP0.Text = str_arr[8].Trim();
-                    txtFP1.Text = str_arr[9].Trim();
-                    txtFP2.Text = str_arr[10].Trim();
-                    txtFP3.Text = str_arr[11].Trim();
-                    txtFP4.Text = str_arr[12].Trim();
-                    txtFP5.Text = str_arr[13].Trim();
-                    txtFZ1.Text = str_arr[14].Trim();
-                    txtFZ2.Text = str_arr[15].Trim();
-                    txtFZ3.Text = str_arr[16].Trim();
-                    txtFZ4.Text = str_arr[17].Trim();
-                    txtFZ5.Text = str_arr[18].Trim();
+                    if (str_arr.Length > 19) txtOutputGain.Text = str_arr[19].Trim();
+                    if (str_arr.Length > 20) chkNormalizeOutputGain.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[20].Trim()));
 
                     ApplicationStartUp = false; //Enable repeated GUI updates
                     UpdateTransferFunction(this, EventArgs.Empty);
@@ -4888,6 +4900,40 @@ namespace dcld
         private void visitURLToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(ReadConfigString(INI_FILE, "common", "URL", ""));
+        }
+
+        private void cmdGetOutputGain_Click(object sender, EventArgs e)
+        {
+            // Create a new instance of the form class
+            frmCalculateOutputGain frm = new frmCalculateOutputGain();
+
+            // Show the settings form
+            frm.PWMFrequency = Convert.ToDouble(this.txtPWMFrequency.Text);
+            frm.OutputGain = Convert.ToDouble(this.txtOutputGain.Text);
+
+            if(frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                double outgain = 0.0;
+                string str_outgain = "";
+                outgain = frm.OutputGain;
+                str_outgain = outgain.ToString("#0.000000", CultureInfo.CurrentCulture);
+                txtOutputGain.Text = str_outgain;
+            }
+        }
+
+        private void chkNormalizeOutputGain_CheckedChanged(object sender, EventArgs e)
+        {
+            txtOutputGain.Enabled = chkNormalizeOutputGain.Checked;
+            lblOutputGain.Enabled = chkNormalizeOutputGain.Checked;
+            cmdGetOutputGain.Enabled = chkNormalizeOutputGain.Checked;
+            UpdateTransferFunction(sender, e);
+        }
+
+        private void chkNormalizeInputGain_CheckedChanged(object sender, EventArgs e)
+        {
+            txtInputGain.Enabled = chkNormalizeInputGain.Checked;
+            lblInputGain.Enabled = chkNormalizeInputGain.Checked;
+            UpdateTransferFunction(sender, e);
         }
 
 
