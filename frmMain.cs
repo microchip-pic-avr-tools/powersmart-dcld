@@ -1303,6 +1303,7 @@ namespace dcld
                 str_dum = GetAbsoluteFilePath(sender, e, str_dum, CurrentProjectFileName);
             }
 
+            str_dum = ConvertFilePathUnix2Win(str_dum);
             return (str_dum.Trim());
         }
 
@@ -1461,8 +1462,10 @@ namespace dcld
 
                 }
 
+                // THis conversion truns Windows file path delimiters (backslash) into Unix format (slash)
                 if (str_dum.Contains("\\" + "\\")) str_dum = str_dum.Replace("\\" + "\\", "\\");
-                if (str_dum.Contains("\\" + "./" + "\\")) str_dum = str_dum.Replace("\\" + "./" + "\\", "\\");
+                if (str_dum.Contains("/")) str_dum = str_dum.Replace("/", "\\");
+                if (str_dum.Contains("\\")) str_dum = str_dum.Replace("\\", "/");
                 return (str_dum.Trim());
 
             }
@@ -1470,6 +1473,48 @@ namespace dcld
             {
                 return (AbsoluteFilePath);
             }
+        }
+
+        private string ConvertFilePathWin2Unix(string FilePath)
+        {
+            string f_path = "";
+
+            f_path = FilePath.Trim();
+
+            if (f_path.Length > 0) { 
+                while (f_path.Contains("\\" + "\\"))
+                { f_path = f_path.Replace("\\" + "\\", "\\"); }
+
+                f_path = f_path.Replace("\\", "/");
+
+                while (f_path.Contains("/" + "/"))
+                { f_path = f_path.Replace("/" + "/", "/"); }
+
+            }
+
+
+            return (f_path);
+        }
+
+        private string ConvertFilePathUnix2Win(string FilePath)
+        {
+            string f_path = "";
+
+            f_path = FilePath.Trim();
+
+            if (f_path.Length > 0)
+            {
+                while (f_path.Contains("/" + "/"))
+                { f_path = f_path.Replace("/" + "/", "/"); }
+
+                f_path = f_path.Replace("/", "\\");
+
+                while (f_path.Contains("\\" + "\\"))
+                { f_path = f_path.Replace("\\" + "\\", "\\"); }
+
+            }
+
+            return (f_path);
         }
 
         private bool AskForFileSave(object sender, EventArgs e)
@@ -1700,10 +1745,10 @@ namespace dcld
                 WriteConfigString(str_path, "CodeGenerationPaths", "ExportCLib", Convert.ToUInt32(genericControlLibraryHeaderExportToolStripMenuItem.Checked).ToString());
                 WriteConfigString(str_path, "CodeGenerationPaths", "EnableOneClickExport", Convert.ToUInt32(generateCodeBeforeExportToolStripMenuItem.Checked).ToString());
                 WriteConfigString(str_path, "CodeGenerationPaths", "MPLABX_ProjectDirectory", txtMPLABXProjectDir.Text);
-                WriteConfigString(str_path, "CodeGenerationPaths", "ASMSourcePath", txtASMSourcePath.Text);
-                WriteConfigString(str_path, "CodeGenerationPaths", "CSourcePath", txtCSourcePath.Text);
-                WriteConfigString(str_path, "CodeGenerationPaths", "CHeaderPath", txtCHeaderPath.Text);
-                WriteConfigString(str_path, "CodeGenerationPaths", "CLibPath", txtCLibPath.Text);
+                WriteConfigString(str_path, "CodeGenerationPaths", "ASMSourcePath", ConvertFilePathUnix2Win(txtASMSourcePath.Text));
+                WriteConfigString(str_path, "CodeGenerationPaths", "CSourcePath", ConvertFilePathUnix2Win(txtCSourcePath.Text));
+                WriteConfigString(str_path, "CodeGenerationPaths", "CHeaderPath", ConvertFilePathUnix2Win(txtCHeaderPath.Text));
+                WriteConfigString(str_path, "CodeGenerationPaths", "CLibPath", ConvertFilePathUnix2Win(txtCLibPath.Text));
                 WriteConfigString(str_path, "CodeGenerationPaths", "IncludeCHeaderPathInCSource", Convert.ToUInt32(chkCSourceIncludePath.Checked).ToString());
                 WriteConfigString(str_path, "CodeGenerationPaths", "IncludeCLibPathInCHeader", Convert.ToUInt32(chkCHeaderIncludePath.Checked).ToString());
 
@@ -2403,11 +2448,11 @@ namespace dcld
                 }
 
                 // check if filename is valid
-
+                str_path = ConvertFilePathUnix2Win(str_path);   // Always switch path into Windows path format
 
                 if (str_path.Contains(".\\"))  // path contains relative path items
                 {
-                    str_path = GetAbsoluteFilePath(sender, e, str_path, MPLABXProjectDirectory);
+                    str_path = ConvertFilePathUnix2Win(GetAbsoluteFilePath(sender, e, str_path, MPLABXProjectDirectory));
                 }
                 
                 else if ((str_path.Length < 3) && (str_path.Substring(0, 2) != ".\\") && (str_path.Substring(0, 3) != "..\\"))
@@ -3146,7 +3191,7 @@ namespace dcld
             sfdlg.CheckPathExists = true;
             sfdlg.OverwritePrompt = true;
 
-            sfdlg.Filter = "Assembly files (*.s)|*.s|Header files (*.h)|*.h|Source files (*.c)|*.c|All files (*.*)|*.*";
+            sfdlg.Filter = "Assembly files (*.s)|*.s|C-Header files (*.h)|*.h|C-Source files (*.c)|*.c|All files (*.*)|*.*";
 
             try { cmd = (Button)sender; }
             catch{ return(false); }
@@ -3155,28 +3200,28 @@ namespace dcld
             switch (sender_name) 
             { 
                 case "cmdASMSourcePath":
-                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtASMSourcePath.Text, MPLABXProjectDirectory);
+                    sfdlg.InitialDirectory = ConvertFilePathUnix2Win(GetAbsoluteFilePath(sender, e, txtASMSourcePath.Text, MPLABXProjectDirectory));
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text + "_asm";
                     sfdlg.DefaultExt = ".s";
                     sfdlg.FilterIndex = 1;
                     break;
 
                 case "cmdCHeaderPath":
-                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtCHeaderPath.Text, MPLABXProjectDirectory);
+                    sfdlg.InitialDirectory = ConvertFilePathUnix2Win(GetAbsoluteFilePath(sender, e, txtCHeaderPath.Text, MPLABXProjectDirectory));
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text;
                     sfdlg.DefaultExt = ".h";
                     sfdlg.FilterIndex = 2;
                     break;
 
                 case "cmdCLibPath":
-                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtCLibPath.Text, MPLABXProjectDirectory);
+                    sfdlg.InitialDirectory = ConvertFilePathUnix2Win(GetAbsoluteFilePath(sender, e, txtCLibPath.Text, MPLABXProjectDirectory));
                     sfdlg.FileName = "npnz16b.h";
                     sfdlg.DefaultExt = ".h";
                     sfdlg.FilterIndex = 2;
                     break;
 
                 case "cmdCSourcePath":
-                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtCSourcePath.Text, MPLABXProjectDirectory);
+                    sfdlg.InitialDirectory = ConvertFilePathUnix2Win(GetAbsoluteFilePath(sender, e, txtCSourcePath.Text, MPLABXProjectDirectory));
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text;
                     sfdlg.DefaultExt = ".c";
                     sfdlg.FilterIndex = 3;
@@ -3204,19 +3249,19 @@ namespace dcld
                         {
                                 
                             case "cmdASMSourcePath":
-                                txtASMSourcePath.Text = GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory);
+                                txtASMSourcePath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory));
                                 break;
 
                             case "cmdCHeaderPath":
-                                txtCHeaderPath.Text = GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory);
+                                txtCHeaderPath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory));
                                 break;
 
                             case "cmdCLibPath":
-                                txtCLibPath.Text = GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory);
+                                txtCLibPath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory));
                                 break;
 
                             case "cmdCSourcePath":
-                                txtCSourcePath.Text = GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory);
+                                txtCSourcePath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory));
                                 break;
 
                             default:
@@ -3306,14 +3351,14 @@ namespace dcld
             else { cGen.PreFix = DefaultVariablePrefix + "_"; }
 
             if (chkCSourceIncludePath.Checked)
-            { cGen.CHeaderIncludePath = GetIncludePath(txtCHeaderPath.Text); }
+            { cGen.CHeaderIncludePath = ConvertFilePathWin2Unix(GetIncludePath(txtCHeaderPath.Text)); }
             else
             { cGen.CHeaderIncludePath = ""; }
 
             if (chkCHeaderIncludePath.Checked)
-            { cGen.LibHeaderIncludePath = GetIncludePath(txtCLibPath.Text); }
+            { cGen.LibHeaderIncludePath = ConvertFilePathWin2Unix(GetIncludePath(txtCLibPath.Text)); }
             else
-            { cGen.CHeaderIncludePath = ""; }
+            { cGen.LibHeaderIncludePath = ""; }
 
             cGen.TemplateFile = CCodeGeneratorFile;
             cGen.CGS_Version = ReadConfigString(CCodeGeneratorFile, "generic", "Version", "n/a");
@@ -4731,19 +4776,19 @@ namespace dcld
             c_lib_buf = GetAbsoluteFilePath(sender, e, txtCLibPath.Text, ref_path);
 
             // Make file locations relative
-            txtASMSourcePath.Text = GetRelativeFilePath(sender, e, asm_source_buf, MPLABXProjectDirectory);  //"./";
-            txtCSourcePath.Text = GetRelativeFilePath(sender, e, c_cource_buf, MPLABXProjectDirectory);  //"./";
-            txtCHeaderPath.Text = GetRelativeFilePath(sender, e, c_head_buf, MPLABXProjectDirectory); //"./";
-            txtCLibPath.Text = GetRelativeFilePath(sender, e, c_lib_buf, MPLABXProjectDirectory); //"./";
+            txtASMSourcePath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(sender, e, asm_source_buf, MPLABXProjectDirectory));  //"./";
+            txtCSourcePath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(sender, e, c_cource_buf, MPLABXProjectDirectory));  //"./";
+            txtCHeaderPath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(sender, e, c_head_buf, MPLABXProjectDirectory)); //"./";
+            txtCLibPath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(sender, e, c_lib_buf, MPLABXProjectDirectory)); //"./";
 
             // Determine relative path of MPLAB X Project Directory Path and show it in directory test box
 
             // Set MPLAB X Project Directory Update Flag
             MPLABXProjectDirUpdate = true;
 
-            // Update MPLAB X Project Directory TextBox
+            // Update MPLAB X Project Directory TextBox                                                                                              
             if (System.IO.Directory.Exists(str_path.Trim()))
-                txtMPLABXProjectDir.Text = GetRelativeFilePath(sender, e, str_path.Trim(), GetCurrentProjectFilePath(sender, e));
+                txtMPLABXProjectDir.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(sender, e, str_path.Trim(), GetCurrentProjectFilePath(sender, e)));
 
             // Clear MPLAB X Project Directory Update Flag
             MPLABXProjectDirUpdate = false;
