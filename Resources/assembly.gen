@@ -2,11 +2,11 @@
 Name=Assembly Generator Script
 Description=this script defines DSP assembly code generation templates used to generate user-tailored SMPS control loops using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=1.3.1
-Date=01/17/2020
+Version=1.3.3
+Date=03/04/2020
 
 [history]
-count=8
+count=10
 0=04/03/19;1.1.1;Added input offset compensation applied to input source
 1=10/18/19;1.2.0;Changed existing input offset compensation to full bi-directional feedback implementation
 2=10/19/19;1.2.1;Added code option for feedback signal rectification
@@ -15,6 +15,8 @@ count=8
 5=11/08/19;1.2.4;Added 'Changed data provider items from local copies in cNPNZ16b_t data structure to poinbter to external data buffers
 6=01/10/19;1.3.0;Added support for cascaded functions. This allows a controller to call another controller or user-defined function extension code module
 7=01/13/2020;1.3.1;Reordered cascaded function call to execute full cascade even if controller is disabled.
+8=03/02/2020;1.3.2;Added comments to source code sections
+9=03/04/2020;1.3.3;Fixed bug in single bit-shift coefficient scaler data structure
 
 [filter_block_scaling_modes]
 count=6
@@ -329,9 +331,9 @@ comment28=pointer to external, cascaded function which will be called from contr
 comment29=16-bit wide function parameter or pointer to a parameter data structure of cascaded function
 code0=.equ offStatus,                 0
 code1=.equ offSourceRegister,         2
-code2=.equ offSourceRegister,         4
+code2=.equ offAltSourceRegister,      4
 code3=.equ offTargetRegister,         6
-code4=.equ offTargetRegister,         8
+code4=.equ offAltTargetRegister,      8
 code5=.equ offControlReference,       10
 code6=.equ offACoefficients,          12
 code7=.equ offBCoefficients,          14
@@ -645,7 +647,7 @@ code0=.equ offStatus,                 0
 code1=.equ offSourceRegister,         2
 code2=.equ offAltSourceRegister,      4
 code3=.equ offTargetRegister,         6
-code4=.equ off├éltTargetRegister,      8
+code4=.equ offAltTargetRegister,      8
 code5=.equ offControlReference,       10
 code6=.equ offACoefficients,          12
 code7=.equ offBCoefficients,          14
@@ -1883,7 +1885,8 @@ code1=clr a, [w8]+=%ADDR*2%, w4, [w10]+=%ADDR%, w6
 head_comment=%SEPARATOR%; Compute compensation filter term
 cycles=2
 lines=2
-comment0=clear accumulator A, leave contents of accumulator B unchanged and prefetch first operands
+comment0=leave contents of accumulator B unchanged
+comment1=clear accumulator A and prefetch first operands
 code0=movsac b, [w8]+=%ADDR%, w5
 code1=clr a, [w8]+=%ADDR*2%, w4, [w10]+=%ADDR%, w6
 
@@ -1892,6 +1895,8 @@ head_comment=%EMPTY%
 cycles=4
 lines=4
 comment0=multiply control output (n-%INDEX%) from the delay line with coefficient X%INDEX%
+comment1=shift accumulator to post-scale floating number
+comment2=adding accumulator b to a
 code0=mpy w4*w6, a, [w8]+=%ADDR*2%, w4, [w10]+=%ADDR%, w6
 code1=sftac a, w5
 code2=add b
@@ -1901,7 +1906,10 @@ filter_order_loop=as
 head_comment=%EMPTY%
 cycles=4
 lines=4
-comment0=multiply control output (n-%INDEX%) from the delay line with coefficient X%INDEX%
+comment0=load scaler into wreg
+comment1=multiply control output (n-%INDEX%) from the delay line with coefficient X%INDEX%
+comment2=shift accumulator to post-scale floating number
+comment3=adding accumulator b to a
 code0=mov [w8 - #%ADDR*3%], w5
 code1=mpy w4*w6, a, [w8]+=%ADDR*2%, w4, [w10]+=%ADDR%, w6
 code2=sftac a, w5
@@ -1912,7 +1920,10 @@ filter_order_loop=bs
 head_comment=%EMPTY%
 cycles=4
 lines=4
-comment0=multiply control output (n-%INDEX%) from the delay line with coefficient X%INDEX%
+comment0=load scaler into wreg
+comment1=multiply control output (n-%INDEX%) from the delay line with coefficient X%INDEX%
+comment2=shift accumulator to post-scale floating number
+comment3=adding accumulator b to a
 code0=mov [w8 - #%ADDR*3%], w5
 code1=mpy w4*w6, a, [w8]+=%ADDR*2%, w4, [w10]+=%ADDR%, w6
 code2=sftac a, w5
@@ -1922,7 +1933,10 @@ code3=add b
 head_comment=%EMPTY%
 cycles=4
 lines=4
-comment0=multiply & accumulate last control output with coefficient of the delay line (no more prefetch)
+comment0=load scaler into wreg
+comment1=multiply & accumulate last control output with coefficient of the delay line (no more prefetch)
+comment2=shift accumulator to post-scale floating number
+comment3=adding accumulator b to a
 code0=mov [w8 - #%ADDR*3%], w5
 code1=mpy w4*w6, a
 code2=sftac a, w5
