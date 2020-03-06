@@ -155,15 +155,283 @@ namespace dcld
             return;
         }
 
+        private void DebugInfoPrintLine(string str_debug)
+        {
+            if ((txtOutput.TextLength + str_debug.Length) > txtOutput.MaxLength) 
+                txtOutput.Clear();
+            txtOutput.AppendText(str_debug + "\r\n");
+            txtOutput.SelectionStart = txtOutput.TextLength;
+            txtOutput.ScrollToCaret();
+        }
+
+        private bool frmMain_SetAppEnvironment()
+        {
+            string _dps = ""; // Default Path Separator
+            bool f_res = false; // function return value
+
+            try 
+            {
+                // Initialize debug output
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                DebugInfoPrintLine(
+                    "================================================================\r\n" + 
+                    ">Application start up..." + "\r\n" +
+                    "\r\n" +
+                    "Product Name:                    " + Application.ProductName.ToString() + "\r\n" +
+                    "Application Version:             " + Application.ProductVersion.ToString() + "\r\n" +
+                    "Company Name:                    " + Application.CompanyName.ToString() + "\r\n" +
+                    "\r\n" +
+                    "Operating System:\r\n" +
+                    "    - OS Version:                " + Environment.OSVersion.ToString() + "\r\n" +
+                    "    - 64-bit OS Type:            " + Environment.Is64BitOperatingSystem.ToString() + "\r\n" +
+                    "    - 64-bit Process:            " + Environment.Is64BitProcess.ToString() + "\r\n" +
+                    "    - .net Version:              " + Environment.Version.Major.ToString() + "." + Environment.Version.Minor.ToString() + " (" + Environment.Version.ToString() + ")" + "\r\n" +
+                    "\r\nHardware Information:\r\n" +
+                    "    - Machine Name:              " + Environment.MachineName.ToString() + "\r\n" +
+                    "    - No of CPUs:                " + Environment.ProcessorCount.ToString() + "\r\n" +
+                    "    - Mapped Memory:             " + Environment.WorkingSet.ToString() + "\r\n" +
+                    "    - System Page Size:          " + Environment.SystemPageSize.ToString() + "\r\n" +
+                    "\r\nSoftware Environment Information:\r\n" +
+                    "    - User Domain Name:          " + Environment.UserDomainName.ToString() + "\r\n" +
+                    "    - User Name:                 " + Environment.UserName.ToString() + "\r\n" +
+                    "    - Current Managed Thread-ID: " + Environment.CurrentManagedThreadId.ToString() + "\r\n" +
+                    "    - System Directory:          " + Environment.SystemDirectory.ToString() + "\r\n" +
+                    "    - My Documents Directory:    " + Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\r\n" +
+                    "    - User Interactive:          " + Environment.UserInteractive.ToString() + "\r\n" +
+                    "    - Version:                   " + Environment.Version.ToString() + "\r\n" +
+                    "\r\nRegional Settings:\r\n" +
+                    "    - Culture Info Name:         " + CultureInfo.CurrentCulture.NativeName + "\r\n" +
+                    "    - Keyboard Language:         " + Application.CurrentInputLanguage.Culture.DisplayName + "\r\n" +
+                    "    - Digit Substitution:        " + CultureInfo.CurrentCulture.NumberFormat.DigitSubstitution + "\r\n" +
+                    "    - NaN Symbol:                " + CultureInfo.CurrentCulture.NumberFormat.NaNSymbol + "\r\n" +
+                    "    - Negative Sign:             " + CultureInfo.CurrentCulture.NumberFormat.NegativeSign + "\r\n" +
+                    "    - Positive Sign:             " + CultureInfo.CurrentCulture.NumberFormat.PositiveSign + "\r\n" +
+                    "    - Decimal Separator:         " + CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator + "\r\n" +
+                    "    - Group Separator:           " + CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator + "\r\n" +
+                    "    - Group Sizes:               " + CultureInfo.CurrentCulture.NumberFormat.NumberGroupSizes + "\r\n" +
+                    "    - Floating Point Number:     " + Convert.ToDouble((float)1.234567).ToString("G") + "\r\n" +
+                    "    - Decimal Point Match:       " +
+                    (Convert.ToDouble((float)1.234567).ToString("G", CultureInfo.InvariantCulture) == Convert.ToDouble((float)1.234567).ToString("G", CultureInfo.CurrentCulture)).ToString() + "\r\n" +
+                    "    - Large Integer Number:      " + Convert.ToInt64(1234567).ToString("G") + "\r\n" +
+                    "\r\nApplication Environment Information:\r\n" +
+                    "    - Application Startup Path:  " + Application.StartupPath + "\r\n" +
+                    "    - Command Line:              " + Environment.CommandLine.ToString() + "\r\n" +
+                    "    - Current Directory:         " + Environment.CurrentDirectory.ToString() + "\r\n" +
+                    "    - Common AppData Path:       " + Application.CommonAppDataPath + "\r\n" +
+                    "    - User AppData Path:         " + Application.UserAppDataPath + "\r\n" + 
+                    "    - Executable Location:       " + Application.ExecutablePath + "\r\n" +
+                    "    - Start-up Path:             " + Application.StartupPath + "\r\n" +
+                    "================================================================\r\n" +
+                    "\r\n"
+                    );
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+                DebugInfoPrintLine(">Loading Application Components...");
+
+                // Set ROOT DIRECTORY
+                _dps = System.IO.Path.DirectorySeparatorChar.ToString();
+                rootPath = Application.StartupPath;
+                if (rootPath.Substring(rootPath.Length - _dps.Length, _dps.Length) != _dps) { rootPath = rootPath + _dps; }
+                if(System.IO.Directory.Exists(rootPath)) 
+                {
+                    DebugInfoPrintLine(">Set Root Path: " + rootPath);  
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Set Root Path: unable to access root directory " + rootPath + "\r\n" +
+                        ">    -> Abort setting application environment component dependnecies"
+                        );
+                    return(false);
+                }
+
+                // Set RESOURCE DIRECTORY
+                if (System.IO.Directory.Exists(rootPath + "Resources")) 
+                { 
+                    resourcePath = rootPath + "Resources" + _dps; 
+                    DebugInfoPrintLine(">Set Resource Path: " + resourcePath);  
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Set Resource Path: unable to access resource directory " + resourcePath + "\r\n" +
+                        ">    -> Abort setting application environment component dependnecies"
+                        );
+                    return(false);
+                }
+
+                // Set APPLICATION SETTINGS FILE
+                f_res = (System.IO.File.Exists(rootPath + DEFAULT_INI_FILE) && SettingsFile.SetFilename(rootPath + DEFAULT_INI_FILE));
+                if (f_res)
+                {
+                    DebugInfoPrintLine(">Load Application Settings File: " + SettingsFile.FileName); 
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Load Application Settings File: unable to access settings file " + rootPath + DEFAULT_INI_FILE + "\r\n" +
+                        ">    -> Abort setting application environment component dependnecies"
+                        );
+                    return(false);
+                }
+
+                // Set ASSEMBLY GENERATOR SCRIPT FILE
+                f_res = (System.IO.File.Exists(resourcePath + ASM_GEN_FILE) && AsmGeneratorScript.SetFilename(resourcePath + ASM_GEN_FILE));
+                if (f_res)
+                {
+                    DebugInfoPrintLine(
+                        ">Load Assembly Generator Script: " + AsmGeneratorScript.FileName + "\r\n" +
+                        ">    - AGS Version: " + AsmGeneratorScript.ReadKey("generic", "Version", "N/A") + "\r\n" +
+                        ">    - AGS Date:    " + AsmGeneratorScript.ReadKey("generic", "Date", "N/A") 
+                        );
+
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Load Assembly Generator Script: unable to access assembly generator script " + resourcePath + ASM_GEN_FILE + "\r\n" +
+                        ">    -> Abort setting application environment component dependnecies"
+                        );
+                    return(false);
+                }
+
+                // Set C-CODE GENERATOR SCRIPT FILE
+                f_res = (System.IO.File.Exists(resourcePath + C_GEN_FILE) && CCodeGeneratorScript.SetFilename(resourcePath + C_GEN_FILE));
+                if (f_res)
+                {
+                    DebugInfoPrintLine(
+                        ">Load ANSI C Generator Script: " + CCodeGeneratorScript.FileName + "\r\n" +
+                        ">    - CGS Version: " + CCodeGeneratorScript.ReadKey("generic", "Version", "N/A") + "\r\n" +
+                        ">    - CGS Date:    " + CCodeGeneratorScript.ReadKey("generic", "Date", "N/A") 
+                        );
+
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Load ANSI C Generator Script: unable to access ANSI C generator script " + resourcePath + C_GEN_FILE + "\r\n" +
+                        ">    -> Abort setting application environment component dependnecies"
+                        );
+                    return(false);
+                }
+
+                // Set ASSEMBLY PARSER FILE
+                f_res = System.IO.File.Exists(resourcePath + "ActiproSoftware.dsPICAssembly.xml");
+                if (f_res)
+                {
+                    DebugInfoPrintLine(">Load Assembly Parser Script: " + resourcePath + "ActiproSoftware.dsPICAssembly.xml");
+                    this.txtSyntaxEditorAssembly.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICAssembly.xml", 0);
+                    this.txtSyntaxEditorAssembly.LineNumberMarginVisible = true;
+                    this.txtSyntaxEditorAssembly.HideSelection = false;
+                    DebugInfoPrintLine(">    -> loaded successfully");
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Load Assembly Parser Script: unable to find/access ASM parser script " + resourcePath + "ActiproSoftware.dsPICAssembly.xml" + "\r\n" +
+                        ">    -> Assembly code highlighting might not be available."
+                        );
+                }
+
+                // Set XC16 C-CODE PARSER FILE
+                f_res = System.IO.File.Exists(resourcePath + "ActiproSoftware.dsPICXC16.xml");
+                if (f_res)
+                {
+                    DebugInfoPrintLine(">Load XC16 C-Code Parser Script: " + resourcePath + "ActiproSoftware.dsPICXC16.xml");
+                    
+                    this.txtSyntaxEditorCSource.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
+                    this.txtSyntaxEditorCSource.LineNumberMarginVisible = true;
+                    this.txtSyntaxEditorCSource.HideSelection = false;
+                    DebugInfoPrintLine(">    -> C-Source Editor: loaded successfully");
+
+                    this.txtSyntaxEditorCHeader.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
+                    this.txtSyntaxEditorCHeader.LineNumberMarginVisible = true;
+                    this.txtSyntaxEditorCHeader.HideSelection = false;
+                    DebugInfoPrintLine(">    -> C-Header Editor: loaded successfully");
+
+                    this.txtSyntaxEditorCLibHeader.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
+                    this.txtSyntaxEditorCLibHeader.LineNumberMarginVisible = true;
+                    this.txtSyntaxEditorCLibHeader.HideSelection = false;
+                    DebugInfoPrintLine(">    -> Library C-Header Editor: loaded successfully");
+
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Load XC16 C-Code Parser Script: unable to find/access XC16 C-Code parser script " + resourcePath + "ActiproSoftware.dsPICXC16.xml" + "\r\n" +
+                        ">    -> Assembly code highlighting might not be available."
+                        );
+                }
+
+                
+                // Create Default DCLD Project File 
+                NewProjectFilenameDummy = DefaultProjectFileName + DefaultProjectFileNameExtension;
+                f_res = ProjectFile.Clear();
+
+                // Set USER GUIDE/HELP FILE
+                UserGuideFileName = SettingsFile.ReadKey("common", "UserGuideFileName", "");
+                f_res = (System.IO.File.Exists(resourcePath + UserGuideFileName) && (UserGuideFileName.Trim().Length > 4));
+                if (!f_res) f_res = (System.IO.File.Exists(rootPath + UserGuideFileName) && (UserGuideFileName.Trim().Length > 4));
+
+                if (f_res)
+                {
+                    UserGuideFileName = resourcePath + UserGuideFileName;
+                    DebugInfoPrintLine(">Load User Guide: " + UserGuideFileName + "\r\n" +
+                                   ">    -> loaded successfully");
+                }
+                else
+                {
+                    DebugInfoPrintLine(">Load User Guide: " + resourcePath + UserGuideFileName + "\r\n" +
+                                   ">    -> unable to find/access user guide. File might not be availble.");
+                }
+
+                // Set return value to indicate success
+                f_res = true;
+
+            }   
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    this, 
+                    "Critical error (0x" + ex.HResult.ToString("X") + ") occured while initializing app body generator." + "\r\n" +
+                    "Error Message: " + ex.Message + "\r\n" + 
+                    "Check output window for details.", 
+                    "Critical Error",
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error
+                    );
+
+                // Set return value to indicate failure
+                f_res = false;
+            }
+
+            // Return success/failure
+            return(f_res);
+        }
+
         private void frmMain_Load(object sender, EventArgs e)
         {
-            string str_dum = "", str_file = "";
             double[,] GainSeries = new double[2, 100];
             Control[] AllControls;
             int i = 0;
 
+            // Prepare frmMain...
             this.Hide();
             Application.DoEvents();
+
+            // Load application envirnment components
+            if (!frmMain_SetAppEnvironment())
+            {
+                MessageBox.Show(
+                    this,
+                    Application.ProductName + " was not able to load all environment dependencies." + "\r\n" +
+                    "Check the messages in the output window for details.",
+                    "Critical Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                    );
+            }
 
             // Create array of text boxes for pole & zero editing
             txtPole = new TextBox[MAX_FILTER_ORDER];
@@ -315,148 +583,23 @@ namespace dcld
                                 "The recent declaration of the MPLAB X® project directory is not valid. \r\n" +
                                 "Please make sure this path is valid or empty or code generation will fail.";
 
+
+            // Initialize generator file paths...
+            this.txtMPLABXProjectDir.Text = "";
+            this.txtASMSourcePath.Text = rootPath;
+            this.txtCSourcePath.Text = rootPath;
+            this.txtCHeaderPath.Text = rootPath;
+            this.txtCLibPath.Text = rootPath;
+
+
             // Refresh GUI
             ApplicationStartUp = false;
             UpdateTransferFunction(this, EventArgs.Empty);
             GenerateCode(this, EventArgs.Empty);
 
-            // set syntax editor
+            // create debugging output
             try
             {
-                this.txtOutput.Text = "Application start up..." + "\r\n" +
-                    "\r\n" +
-                    "Product Name:                    " + Application.ProductName.ToString() + "\r\n" +
-                    "Application Version:             " + Application.ProductVersion.ToString() + "\r\n" +
-                    "AGS Version:                     " + ReadConfigString(AssemblyGeneratorFile, "generic", "Version", "N/A") + "\r\n" +
-                    "CGS Version:                     " + ReadConfigString(CCodeGeneratorFile, "generic", "Version", "N/A") + "\r\n" +
-                    "Company Name:                    " + Application.CompanyName.ToString() + "\r\n" +
-                "\r\n";
-
-                this.txtOutput.Text = txtOutput.Text + 
-                    "Operating System:\r\n" +
-                    "    - OS Version:                " + Environment.OSVersion.ToString() + "\r\n" +
-                    "    - 64-bit OS Type:            " + Environment.Is64BitOperatingSystem.ToString() + "\r\n" +
-                    "    - 64-bit Process:            " + Environment.Is64BitProcess.ToString() + "\r\n" +
-                    "    - .net Version:              " + Environment.Version.Major.ToString() + "." + Environment.Version.Minor.ToString() + " (" + Environment.Version.ToString() + ")" + "\r\n" +
-                    "\r\nHardware Information:\r\n" +
-                    "    - Machine Name:              " + Environment.MachineName.ToString() + "\r\n" +
-                    "    - No of CPUs:                " + Environment.ProcessorCount.ToString() + "\r\n" +
-                    "    - Mapped Memory:             " + Environment.WorkingSet.ToString() + "\r\n" +
-                    "    - System Page Size:          " + Environment.SystemPageSize.ToString() + "\r\n" +
-                    "\r\nSoftware Environment Information:\r\n" +
-                    "    - User Domain Name:          " + Environment.UserDomainName.ToString() + "\r\n" +
-                    "    - User Name:                 " + Environment.UserName.ToString() + "\r\n" +
-                    "    - Current Managed Thread-ID: " + Environment.CurrentManagedThreadId.ToString() + "\r\n" +
-                    "    - Command Line:              " + Environment.CommandLine.ToString() + "\r\n" +
-                    "    - Current Directory:         " + Environment.CurrentDirectory.ToString() + "\r\n" +
-                    "    - AGS Filename:              " + AssemblyGeneratorFile + "\r\n" +
-                    "    - CGS Filename:              " + CCodeGeneratorFile + "\r\n" +
-                    "    - System Directory:          " + Environment.SystemDirectory.ToString() + "\r\n" +
-                    "    - User Interactive:          " + Environment.UserInteractive.ToString() + "\r\n" +
-                    "    - Version:                   " + Environment.Version.ToString() + "\r\n" +
-                    "\r\nRegional Settings:\r\n" +
-                    "    - Culture Info Name:         " + CultureInfo.CurrentCulture.NativeName + "\r\n" +
-                    "    - Keyboard Language:         " + Application.CurrentInputLanguage.Culture.DisplayName + "\r\n" +
-                    "    - Digit Substitution:        " + CultureInfo.CurrentCulture.NumberFormat.DigitSubstitution + "\r\n" +
-                    "    - NaN Symbol:                " + CultureInfo.CurrentCulture.NumberFormat.NaNSymbol + "\r\n" +
-                    "    - Negative Sign:             " + CultureInfo.CurrentCulture.NumberFormat.NegativeSign + "\r\n" +
-                    "    - Positive Sign:             " + CultureInfo.CurrentCulture.NumberFormat.PositiveSign + "\r\n" +
-                    "    - Decimal Separator:         " + CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator + "\r\n" +
-                    "    - Group Separator:           " + CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator + "\r\n" +
-                    "    - Group Sizes:               " + CultureInfo.CurrentCulture.NumberFormat.NumberGroupSizes + "\r\n" +
-                    "    - Floating Point Number:     " + Convert.ToDouble((float)1.234567).ToString("G") + "\r\n" +
-                    "    - Decimal Point Match:       " + 
-                    (Convert.ToDouble((float)1.234567).ToString("G", CultureInfo.InvariantCulture) == Convert.ToDouble((float)1.234567).ToString("G", CultureInfo.CurrentCulture)).ToString() + "\r\n" +
-                    "    - Large Integer Number:      " + Convert.ToInt64(1234567).ToString("G") + "\r\n" +
-                    "\r\n";
-
-                this.txtOutput.Text = txtOutput.Text + "00:    " + "common app data path: " + Application.CommonAppDataPath + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "01:    " + "user app data path: " + Application.UserAppDataPath + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "02:    " + "executable location: " + Application.ExecutablePath + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "03:    " + "start-up path: " + Application.StartupPath + "\r\n";
-
-                this.txtOutput.Text = txtOutput.Text + "04:    " + "root path: " + rootPath + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "05:    " + "resource path: " + resourcePath + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "06:    " + "settings file path: " + INI_FILE + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "07:    " + "assembly code generator file path: " + AssemblyGeneratorFile + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "08:    " + "c-code generator file path:" + CCodeGeneratorFile + "\r\n"; 
-
-                this.txtOutput.Text = txtOutput.Text + "09:    " + "assembly parser file: " + resourcePath + "ActiproSoftware.dsPICAssembly.xml";
-                if (System.IO.File.Exists(resourcePath + "ActiproSoftware.dsPICAssembly.xml"))
-                {
-                    this.txtSyntaxEditorAssembly.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICAssembly.xml", 0);
-                    this.txtSyntaxEditorAssembly.LineNumberMarginVisible = true;
-                    this.txtSyntaxEditorAssembly.HideSelection = false;
-                    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
-                }
-                else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
-
-                this.txtOutput.Text = txtOutput.Text + "10:    " + "XC16 parser file (source file): " + resourcePath + "ActiproSoftware.dsPICXC16.xml";
-                if (System.IO.File.Exists(resourcePath + "ActiproSoftware.dsPICXC16.xml"))
-                {
-                    this.txtSyntaxEditorCSource.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
-                    this.txtSyntaxEditorCSource.LineNumberMarginVisible = true;
-                    this.txtSyntaxEditorCSource.HideSelection = false;
-                    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
-
-                    this.txtOutput.Text = txtOutput.Text + "11:    " + "XC16 parser file (header file): " + resourcePath + "ActiproSoftware.dsPICXC16.xml";
-                    this.txtSyntaxEditorCHeader.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
-                    this.txtSyntaxEditorCHeader.LineNumberMarginVisible = true;
-                    this.txtSyntaxEditorCHeader.HideSelection = false;
-                    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
-
-                    this.txtOutput.Text = txtOutput.Text + "12:    " + "XC16 parser file (library API header): " + resourcePath + "ActiproSoftware.dsPICXC16.xml";
-                    this.txtSyntaxEditorCLibHeader.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
-                    this.txtSyntaxEditorCLibHeader.LineNumberMarginVisible = true;
-                    this.txtSyntaxEditorCLibHeader.HideSelection = false;
-                    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
-                }
-                else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
-
-                //this.txtOutput.Text = txtOutput.Text + "13:    " + "INI script parser file: " + resourcePath + "ActiproSoftware.INIFile.xml";
-                //if (System.IO.File.Exists(resourcePath + "ActiproSoftware.INIFile.xml"))
-                //{
-                //    this.txtSyntaxEditorINIFile.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.INIFile.xml", 0);
-                //    this.txtSyntaxEditorINIFile.LineNumberMarginVisible = true;
-                //    this.txtSyntaxEditorINIFile.HideSelection = false;
-                //    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
-                //}
-                //else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
-
-                this.txtOutput.Text = txtOutput.Text + "14:    " + "ASM gemerator file: " + AssemblyGeneratorFile;
-                if (System.IO.File.Exists(AssemblyGeneratorFile))
-                {
-                    //this.txtSyntaxEditorINIFile.Document.LoadFile(AssemblyGeneratorFile);
-                    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
-                }
-                else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
-
-                this.txtOutput.Text = txtOutput.Text + "15:    " + "C-Code gemerator file: " + CCodeGeneratorFile;
-                if (System.IO.File.Exists(CCodeGeneratorFile))
-                { this.txtOutput.Text = txtOutput.Text + " ... OK\r\n"; }
-                else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
-
-                this.txtOutput.Text = txtOutput.Text + "16:    " + "My Documents path: ";
-                str_dum = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                this.txtOutput.Text = txtOutput.Text + str_dum + "\r\n";
-
-                str_file = lblFinalNamePrefixOutput.Text;
-                this.txtMPLABXProjectDir.Text = "";
-                this.txtASMSourcePath.Text = str_dum + "\\"; // +str_file + "_asm.s";
-                this.txtCSourcePath.Text = str_dum + "\\"; // + str_file + ".c";
-                this.txtCHeaderPath.Text = str_dum + "\\"; // + str_file + ".h";
-                this.txtCLibPath.Text = str_dum + "\\"; // + "npnz16b.h";
-
-                this.txtOutput.Text = txtOutput.Text + "17:    " + "MPLAB X Project Directory: " + this.txtMPLABXProjectDir.Text + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "18:    " + "ASM source file path: " + str_dum + "\\" + str_file + "_asm.s" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "19:    " + "C-source file path: " + str_dum + "\\" + str_file + ".c" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "20:    " + "C-header file path: " + str_dum + "\\" + str_file + ".h" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "21:    " + "C-API header file path: " + str_dum + "\\npnz16b.h" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "\r\n" + 
-                    "Application start up complete" + "\r\n" + "\r\n";
-
-                txtOutput.SelectionStart = txtOutput.TextLength;
-                txtOutput.ScrollToCaret();
 
                 // ensure visibility of all active controls
                 for (i = 0; i < cNPNZ.FilterOrder; i++)
@@ -509,6 +652,38 @@ namespace dcld
                     MessageBoxIcon.Error
                     );
             }
+
+            // if external file is loaded, read configuration here
+            if (ExternalFileOpenEvent)
+            {
+                if (System.IO.File.Exists(ExternalFileOpenPath))
+                {
+                    DebugInfoPrintLine(">Open file by external call: " + ExternalFileOpenPath);
+
+                    if (OpenFile(ExternalFileOpenPath))
+                        DebugInfoPrintLine(">    -> File loaded successfully");
+                    else
+                        DebugInfoPrintLine(">    -> File loaded with errors");
+
+                    UpdateTransferFunction(this, EventArgs.Empty);
+                    GenerateCode(this, EventArgs.Empty);
+
+                    if (this.txtMPLABXProjectDir.Text.Trim().Length == 0)
+                        DebugInfoPrintLine(">MPLAB X Project Directory: " + this.txtMPLABXProjectDir.Text + "(not set)");
+                    else
+                        DebugInfoPrintLine(">MPLAB X Project Directory: " + this.txtMPLABXProjectDir.Text);
+
+
+                }
+                else
+                {
+                    DebugInfoPrintLine(">    -> Cannot open/access external file");
+                }
+                ExternalFileOpenPath = "";
+                ExternalFileOpenEvent = false;
+            }
+
+
 
             return;
         }
@@ -869,11 +1044,7 @@ namespace dcld
                         "Sample History Timespan: " + (1e+6 * (cNPNZ.FilterOrder + 1) * cNPNZ.SamplingInterval).ToString("#0.000 usec", CultureInfo.CurrentCulture) + "\r\n";
 
                     // plot debug info to output window
-                    if ((txtOutput.TextLength + cNPNZ.DebugInfo.Length) > txtOutput.MaxLength) txtOutput.Clear();
-                    txtOutput.SelectionStart = txtOutput.TextLength;
-                    txtOutput.AppendText("\r\n" + cNPNZ.DebugInfo.ToString());
-                    txtOutput.SelectionStart = txtOutput.TextLength;
-                    txtOutput.ScrollToCaret();
+                    DebugInfoPrintLine(">" + cNPNZ.DebugInfo.ToString().Replace("\r\n", "\r\n>"));
 
                     // Update displayed data => A-Coefficients
                     for (i = 1; i <= LagElements; i++)
@@ -1166,7 +1337,7 @@ namespace dcld
             }
             catch
             {
-                txtOutput.AppendText("UpdateBodePlot(" + ForceAnnotationUpdate.ToString() + ") Exception\r\n");
+                DebugInfoPrintLine("UpdateBodePlot(" + ForceAnnotationUpdate.ToString() + ") Exception");
             }
 
             return (true);
