@@ -241,10 +241,18 @@ namespace dcld
             set { _OutputGainNormalization = value; UpdateCoefficients(); return; }
         }
 
+        private void DebugInfoAppend(string debug_msg)
+        {
+            _debugInfo.Append(debug_msg);
+            if (_debugInfo.Length > 2)
+                if (_debugInfo.ToString().Substring(0, 2) == "\r\n")
+                    _debugInfo.Replace("\r\n", "", 0, 1);
+        }
+
         private StringBuilder _debugInfo = new StringBuilder();
         internal StringBuilder DebugInfo
         {
-            get { return _debugInfo; }
+            get { return (_debugInfo);  }
         }
 
         internal clsPoleZeroObject[] Pole;
@@ -783,9 +791,9 @@ namespace dcld
 
             _AutoUpdate = true;
             _debugInfo.Clear();
-            _debugInfo.Append("\r\nnPnZ Generation Debug Info:\r\n");
+            _debugInfo.Append("nPnZ Generation Debug Info:\r\n");
             fres = UpdateCoefficients();
-            _debugInfo.Append("\r\nnPnZ debug info complete\r\n");
+            _debugInfo.Append("nPnZ debug info complete\r\n");
             _AutoUpdate = bdum;
 
             return;
