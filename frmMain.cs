@@ -39,13 +39,7 @@ namespace dcld
         string QFormatStr = "{0:0.000000000000000}";
 
 
-        // Settings file handling
-        [DllImport("kernel32.dll", EntryPoint = "GetPrivateProfileString", CallingConvention = CallingConvention.StdCall)]
-            static extern int GetPrivateProfileString(string lpAppName, string lpKeyName, string lpDefault, StringBuilder lpReturnedString, int nSize, string lpFileName);
-        [DllImport("kernel32.dll", EntryPoint = "WritePrivateProfileString", CallingConvention = CallingConvention.StdCall)]
-            static extern int WritePrivateProfileString(string lpAppName, string lpKeyName, StringBuilder lpString, int nSize, string lpFileName);
-        [DllImport("kernel32.dll", EntryPoint = "WritePrivateProfileString", CallingConvention = CallingConvention.StdCall)]
-            static extern bool WritePrivateProfileString(string lpAppName, string lpKeyName, string lpString, string lpFileName);
+        // Win API Function Calls
         [DllImport("Kernel32.dll")]
             static extern bool Beep(Int32 dwFreq, Int32 dwDuration);
 
@@ -72,7 +66,6 @@ namespace dcld
         string DefaultProjectFileNameExtension = ".dcld";
         string DefaultProjectFileName = "MyCtrlLoop";
         
-        string CurrentProjectFileName = "";
         string NewProjectFilenameDummy = "";
         string ExternalFileOpenPath = "";
         string MPLABXProjectDirectory = "";
@@ -82,12 +75,13 @@ namespace dcld
         string resourcePath = Application.StartupPath;
 
         const string DEFAULT_INI_FILE = "dcld.ini";
-        const string ASS_GEN_FILE = "assembly.gen";
+        const string ASM_GEN_FILE = "assembly.gen";
         const string C_GEN_FILE = "c-code.gen";
 
-        string INI_FILE = DEFAULT_INI_FILE;
-        string AssemblyGeneratorFile = ASS_GEN_FILE;
-        string CCodeGeneratorFile = C_GEN_FILE;
+        clsINIFileHandler SettingsFile = new clsINIFileHandler();
+        clsINIFileHandler ProjectFile = new clsINIFileHandler();
+        clsINIFileHandler AsmGeneratorScript = new clsINIFileHandler();
+        clsINIFileHandler CCodeGeneratorScript = new clsINIFileHandler();
 
         // GUI controls groups
         TextBox[] txtPole = null, txtZero = null;
@@ -285,12 +279,12 @@ namespace dcld
             GroupFolding_grpAntiWindupHeight = grpAntiWindup.Height;
 
             // reload last Bode chart settings
-            DefaultXMin = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "x_min", DefaultXMin.ToString()));
-            DefaultXMax = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "x_max", DefaultXMax.ToString()));
-            DefaultY1Min = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "y1_min", DefaultY1Min.ToString()));
-            DefaultY1Max = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "y1_max", DefaultY1Max.ToString()));
-            DefaultY2Min = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "y2_min", DefaultY2Min.ToString()));
-            DefaultY2Max = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "y2_max", DefaultY2Max.ToString()));
+            DefaultXMin = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "x_min", DefaultXMin.ToString()));
+            DefaultXMax = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "x_max", DefaultXMax.ToString()));
+            DefaultY1Min = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "y1_min", DefaultY1Min.ToString()));
+            DefaultY1Max = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "y1_max", DefaultY1Max.ToString()));
+            DefaultY2Min = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "y2_min", DefaultY2Min.ToString()));
+            DefaultY2Max = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "y2_max", DefaultY2Max.ToString()));
 
             // reload data table status
             splitContainerCoefficients.SplitterDistance = (splitContainerCoefficients.Panel1.Height + splitContainerCoefficients.Panel2.Height) - Convert.ToInt32(ReadConfigString(INI_FILE, "data_table", "splitter_pos", "500"));
@@ -312,7 +306,7 @@ namespace dcld
             cmbLoopOptimizationLevel.SelectedIndex = 0; // Always select loop optimization level 0 (none) as default
             cmbTriggerPlacement.SelectedIndex = 0; // Always select 50% On-Time as default
 
-            ShowSDomainTF = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(INI_FILE, "bode_plot", "show_s_domain", "1")));
+            ShowSDomainTF = Convert.ToBoolean(Convert.ToInt32(SettingsFile.ReadKey("bode_plot", "show_s_domain", "1")));
             showSDomainTransferFunctionToolStripMenuItem.Checked = ShowSDomainTF;
 
             // Load dynamic control properties
