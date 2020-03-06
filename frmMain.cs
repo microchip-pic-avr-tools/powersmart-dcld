@@ -28,6 +28,9 @@ namespace dcld
         clsPoleZeroObject[] UserPoleSettings = new clsPoleZeroObject[MAX_FILTER_ORDER];
         clsPoleZeroObject[] UserZeroSettings = new clsPoleZeroObject[MAX_FILTER_ORDER];
 
+        clsFeedbackDeclaration feedback = new clsFeedbackDeclaration();
+        clsOutputDeclaration ctrl_output = new clsOutputDeclaration();
+
         // Value table formating
         Color WarningBackground = Color.FromArgb(255, 255, 120);
         Color AlertBackground = Color.FromArgb(255, 200, 200);

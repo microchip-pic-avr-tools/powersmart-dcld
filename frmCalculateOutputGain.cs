@@ -13,18 +13,35 @@ namespace dcld
 {
     public partial class frmCalculateOutputGain : Form
     {
-        public double _OutputGain = 1.000;
-        public double OutputGain
+        bool ParameterUpdate = false;
+        internal clsOutputDeclaration output = new clsOutputDeclaration();
+
+        internal double OutputGain
         {
-            get { return (_OutputGain); }
-            set { _OutputGain = value; return; }
+            get { return (output.Gain); }
         }
 
-        private double _PWMFrequency = 0.0;
-        public double PWMFrequency
+        internal double PWMFrequency
         {
-            get { return (_PWMFrequency); }
-            set { _PWMFrequency = value; return; }
+            get { return (output.PWMFrequency); }
+            set { output.PWMFrequency = value; return; }
+        }
+
+        internal double PWMClock
+        {
+            get { return (output.PWMClock); }
+            set { output.PWMClock = value; return; }
+        }
+
+        internal double PWMClockDivider
+        {
+            get { return (output.PWMClockDivider); }
+            set { output.PWMClockDivider = value; return; }
+        }
+
+        internal Int64 PWMCount
+        {
+            get { return (output.PWMCount); }
         }
 
         public frmCalculateOutputGain()
@@ -34,7 +51,6 @@ namespace dcld
 
         private void cmdOK_Click(object sender, EventArgs e)
         {
-            _OutputGain = Convert.ToDouble(lblOutputGain.Text);
             this.Close();
         }
 
@@ -45,115 +61,146 @@ namespace dcld
 
         private void frmCalculateOutputGain_Load(object sender, EventArgs e)
         {
-            cmbControlTarget.SelectedIndex = 0;
+            // Initialize controls
+            tabPWMMode_SelectedIndexChanged(this, e);
         }
 
-        private void cmbControlTarget_SelectedIndexChanged(object sender, EventArgs e)
+        private void tabPWMMode_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            switch (cmbControlTarget.SelectedIndex)
+            switch (tabPWMMode.SelectedIndex)
             {
                 case 0:
 
+                    output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_FIXED_FREQUENCY;
+
                     lblParam1.Text = "PWM Frequency:";
-                    txtParam1.Text = _PWMFrequency.ToString();
-                    lblUnit1.Text = "kHz";
+                    txtParam1.Text =output.PWMFrequency.ToString();
+                    NumberTextBox_ToString(txtParam1);
+                    lblUnit1.Text = "Hz";
 
-                    lblParam1.Visible = true;
+                    lblParam2.Text = "PWM Period:";
+                    txtParam2.Text = output.PWMPeriod.ToString();
+                    NumberTextBox_ToString(txtParam2);
+                    lblUnit2.Text = "sec";
+
+                    lblParam3.Text = "PWM Period Count:";
+                    txtParam3.Text = output.PWMCount.ToString(CultureInfo.CurrentCulture);
+                    lblUnit3.Text = "ticks";
+
+                    txtParam1.Enabled = true;
+                    txtParam2.Enabled = false;
+                    txtParam3.Enabled = false;
+                    txtParam4.Enabled = false;
+
                     txtParam1.Visible = true;
-                    lblUnit1.Visible = true;
-
-                    lblParam2.Text = "PWM Resolution:";
-                    txtParam2.Text = "0.250";
-                    lblUnit2.Text = "ns";
-
-                    lblParam2.Visible = true;
                     txtParam2.Visible = true;
-                    lblUnit2.Visible = true;
-
-
-                    lblParam3.Visible = false;
-                    txtParam3.Visible = false;
-                    lblUnit3.Visible = false;
+                    txtParam3.Visible = true;
+                    txtParam4.Visible = true;
 
                     break;
 
                 case 1:
 
+                    output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_PHASE_SHIFTED_PWM;
+
                     lblParam1.Text = "PWM Frequency:";
-                    txtParam1.Text = _PWMFrequency.ToString();
-                    lblUnit1.Text = "kHz";
+                    txtParam1.Text = output.PWMFrequency.ToString();
+                    NumberTextBox_ToString(txtParam1);
+                    lblUnit1.Text = "Hz";
 
-                    lblParam1.Visible = true;
+                    lblParam2.Text = "PWM Period:";
+                    txtParam2.Text = output.PWMPeriod.ToString();
+                    NumberTextBox_ToString(txtParam2);
+                    lblUnit2.Text = "sec";
+
+                    lblParam3.Text = "PWM Period Count:";
+                    txtParam3.Text = output.PWMCount.ToString(CultureInfo.CurrentCulture);
+                    lblUnit3.Text = "ticks";
+
+                    txtParam1.Enabled = true;
+                    txtParam2.Enabled = false;
+                    txtParam3.Enabled = false;
+                    txtParam4.Enabled = false;
+
                     txtParam1.Visible = true;
-                    lblUnit1.Visible = true;
-
-                    lblParam2.Text = "PWM Resolution:";
-                    txtParam2.Text = "0.250";
-                    lblUnit2.Text = "ns";
-
-                    lblParam2.Visible = true;
                     txtParam2.Visible = true;
-                    lblUnit2.Visible = true;
-
-
-                    lblParam3.Visible = false;
-                    txtParam3.Visible = false;
-                    lblUnit3.Visible = false;
+                    txtParam3.Visible = true;
+                    txtParam4.Visible = true;
 
                     break;
 
                 case 2:
 
-                    lblParam1.Text = "Minimum PWM Frequency:";
-                    txtParam1.Text = _PWMFrequency.ToString();
-                    lblUnit1.Text = "kHz";
+                    output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_VARIABLE_FREQUENCY;
 
-                    lblParam1.Visible = true;
+                    lblParam1.Text = "PWM Frequency:";
+                    txtParam1.Text = output.PWMFrequency.ToString();
+                    NumberTextBox_ToString(txtParam1);
+                    lblUnit1.Text = "Hz";
+
+                    lblParam2.Text = "PWM Period:";
+                    txtParam2.Text = output.PWMPeriod.ToString();
+                    NumberTextBox_ToString(txtParam2);
+                    lblUnit2.Text = "sec";
+
+                    lblParam3.Text = "PWM Period Count:";
+                    txtParam3.Text = output.PWMCount.ToString(CultureInfo.CurrentCulture);
+                    lblUnit3.Text = "ticks";
+
+                    txtParam1.Enabled = true;
+                    txtParam2.Enabled = false;
+                    txtParam3.Enabled = false;
+                    txtParam4.Enabled = false;
+
                     txtParam1.Visible = true;
-                    lblUnit1.Visible = true;
-
-                    lblParam2.Text = "PWM Resolution:";
-                    txtParam2.Text = "0.250";
-                    lblUnit2.Text = "ns";
-
-                    lblParam2.Visible = true;
                     txtParam2.Visible = true;
-                    lblUnit2.Visible = true;
-
-
-                    lblParam3.Visible = false;
-                    txtParam3.Visible = false;
-                    lblUnit3.Visible = false;
+                    txtParam3.Visible = true;
+                    txtParam4.Visible = true;
 
                     break;
 
                 case 3:
 
+                    output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_UNDEFINED;
+
                     lblParam1.Text = "Feedback Resolution:";
                     txtParam1.Text = "12";
                     lblUnit1.Text = "bit";
 
-                    lblParam1.Visible = true;
                     txtParam1.Visible = true;
-                    lblUnit1.Visible = true;
-
-                    lblParam2.Visible = false;
                     txtParam2.Visible = false;
-                    lblUnit2.Visible = false;
-
-
-                    lblParam3.Visible = false;
                     txtParam3.Visible = false;
-                    lblUnit3.Visible = false;
+                    txtParam4.Visible = true;
 
                     break;
             
             }
 
-            lblParam1.Left = (txtParam1.Left - lblParam1.Width - 24);
-            lblParam2.Left = (txtParam2.Left - lblParam2.Width - 24);
-            lblParam3.Left = (txtParam3.Left - lblParam3.Width - 24);
+            lblParam1.Left = (txtParam1.Left - lblParam1.Width - 4);
+            lblParam2.Left = (txtParam2.Left - lblParam2.Width - 4);
+            lblParam3.Left = (txtParam3.Left - lblParam3.Width - 4);
+            lblParam4.Left = (txtParam4.Left - lblParam4.Width - 4);
+
+            lblParam1.Enabled = txtParam1.Enabled;
+            lblParam2.Enabled = txtParam2.Enabled;
+            lblParam3.Enabled = txtParam3.Enabled;
+            lblParam4.Enabled = txtParam4.Enabled;
+
+            lblUnit1.Enabled = txtParam1.Enabled;
+            lblUnit2.Enabled = txtParam2.Enabled;
+            lblUnit3.Enabled = txtParam3.Enabled;
+            lblUnit4.Enabled = txtParam4.Enabled;
+
+            lblParam1.Visible = txtParam1.Visible;
+            lblParam2.Visible = txtParam2.Visible;
+            lblParam3.Visible = txtParam3.Visible;
+            lblParam4.Visible = txtParam4.Visible;
+
+            lblUnit1.Visible = txtParam1.Visible;
+            lblUnit2.Visible = txtParam2.Visible;
+            lblUnit3.Visible = txtParam3.Visible;
+            lblUnit4.Visible = txtParam4.Visible;
 
             CalculateOutputGain(sender, e);
 
@@ -163,42 +210,212 @@ namespace dcld
         {
 
             double ddum = 0.0;
+            System.Windows.Forms.TextBox tBox = new TextBox();
 
-            switch (cmbControlTarget.SelectedIndex)
+            if (ParameterUpdate) return;
+            ParameterUpdate = true;
+
+            // Capture calling control
+            if (sender.GetType().ToString() == "System.Windows.Forms.TextBox")
+            { tBox = (System.Windows.Forms.TextBox)sender; }
+
+            try
             {
-                case 0:
-                    ddum = (1.0 / (Convert.ToDouble(txtParam1.Text) * 1000)); // PWM Period in [sec]
-                    ddum = (ddum / (Convert.ToDouble(txtParam2.Text) * Convert.ToDouble(1e-9))); // PWM Period in [ticks]
-                    ddum = (ddum / Math.Pow(2.0, 16.0));
-                    break;
+                // Set parameters
+                output.PWMClock = NumberTextBox_ToDouble(txtSourceClock);
+                output.PWMClockDivider = Convert.ToInt32(NumberTextBox_ToDouble(txtClockDivider));
 
-                case 1:
-                    ddum = (1.0 / (Convert.ToDouble(txtParam1.Text) * 1000)); // PWM Period in [sec]
-                    ddum = ((ddum / (Convert.ToDouble(txtParam2.Text) * Convert.ToDouble(1e-9))) / 2.0); // PWM Period in [ticks]
-                    ddum = (ddum / Math.Pow(2.0, 16.0));
-                    break;
+                txtResolution.Text = output.PWMResolution.ToString(CultureInfo.CurrentCulture);
+                NumberTextBox_ToString(txtResolution);
+                txtMaximum.Text = (Math.Pow(2.0, output.PWMBitResolution)-1).ToString(CultureInfo.CurrentCulture);
+                //NumberTextBox_ToString(txtMaximum);
 
-                case 2:
-                    ddum = (1.0 / (Convert.ToDouble(txtParam1.Text) * 1000)); // PWM Period in [sec]
-                    ddum = (ddum / (Convert.ToDouble(txtParam2.Text) * Convert.ToDouble(1e-9))); // PWM Period in [ticks]
-                    ddum = (ddum / Math.Pow(2.0, 16.0));
-                    break;
+                switch (tabPWMMode.SelectedIndex)
+                {
+                    case 0:
+                        output.PWMFrequency = NumberTextBox_ToDouble(txtParam1);
+                        txtParam2.Text = output.PWMPeriod.ToString(CultureInfo.CurrentCulture);
+                        NumberTextBox_ToString(txtParam2);
 
-                case 3:
-                    ddum = Math.Pow(2.0, Convert.ToDouble(txtParam1.Text));
-                    ddum = (ddum / Math.Pow(2.0, 16.0));
-                    break;
-                
-                default:
-                    ddum = 1.000;
-                    break;
+                        lblOutputGain.Text = ddum.ToString("#0.000000", CultureInfo.CurrentCulture);
+
+                        break;
+
+                    case 1:
+                        output.PWMFrequency = NumberTextBox_ToDouble(txtParam1);
+                        txtParam2.Text = output.PWMPeriod.ToString(CultureInfo.CurrentCulture);
+                        NumberTextBox_ToString(txtParam2);
+                        break;
+
+                    case 2:
+                        txtParam1.Text = output.PWMFrequency.ToString(CultureInfo.CurrentCulture);
+                        NumberTextBox_ToString(txtParam1);
+                        txtParam2.Text = output.PWMPeriod.ToString(CultureInfo.CurrentCulture);
+                        NumberTextBox_ToString(txtParam2);
+                        break;
+
+                    default:
+                        output.PWMFrequency = NumberTextBox_ToDouble(txtParam1);
+                        break;
+
+                }
+                        
+
+                txtParam3.Text = output.PWMCount.ToString(CultureInfo.CurrentCulture);
+                txtParam4.Text = Math.Log(output.PWMCount, 2.0).ToString("#0.00#", CultureInfo.CurrentCulture);
+
+                // Format Text Box in standard color
+                tBox.BackColor = SystemColors.Window;
+                ddum = output.Gain;
+            }
+            catch
+            {
+                // Format Text Box in ERROR color
+                tBox.BackColor = Color.LightCoral;
+                ddum = 1.000;
 
             }
 
+            ParameterUpdate = false;
             lblOutputGain.Text = ddum.ToString("#0.000000", CultureInfo.CurrentCulture);
 
         }
 
         
+
+        private void NumberTextBox_KeyDownWithScaling(object sender, KeyEventArgs e)
+        {
+            string tval = "";
+            TextBox tBox;
+
+            if (
+                ((e.KeyValue == 84) && (e.Shift)) || ((e.KeyValue == 71) && (e.Shift)) || ((e.KeyValue == 77) && (e.Shift)) ||     // allow scaling using T=Tera, G=Giga, M=Mega, ...
+                ((e.KeyValue == 75) && (!e.Shift)) || ((e.KeyValue == 77) && (!e.Shift)) || ((e.KeyValue == 85) && (!e.Shift)) ||   // ... k=Kilo, m=Milli, u=Micro, ...
+                ((e.KeyValue == 78) && (!e.Shift)) || ((e.KeyValue == 80) && (!e.Shift)) || ((e.KeyValue == 70) && (!e.Shift))      // ... n=Nano, p=Piko, freq=Femto
+               )
+            {
+                try
+                {
+                    if (sender.GetType().ToString() == "System.Windows.Forms.TextBox")
+                    {
+                        tBox = (TextBox)sender;
+                        tval = tBox.Text.Trim();
+
+                        if ((e.KeyValue == 84) && (e.Shift)) tval = tval + " T";   // Tera
+                        else if ((e.KeyValue == 71) && (e.Shift)) tval = tval + " G";   // Giga
+                        else if ((e.KeyValue == 77) && (e.Shift)) tval = tval + " M";   // Mega
+                        else if ((e.KeyValue == 75) && (!e.Shift)) tval = tval + " k";   // Kilo
+                        else if ((e.KeyValue == 77) && (!e.Shift)) tval = tval + " m";   // Milli
+                        else if ((e.KeyValue == 85) && (!e.Shift)) tval = tval + " u";   // Mikro
+                        else if ((e.KeyValue == 78) && (!e.Shift)) tval = tval + " n";   // Nano
+                        else if ((e.KeyValue == 80) && (!e.Shift)) tval = tval + " p";   // Piko
+                        else if ((e.KeyValue == 70) && (!e.Shift)) tval = tval + " f";   // Femto
+                        {
+                            //tBox.Text = tval;
+                        }
+                    }
+                }
+                catch { /* do nothing */ }
+
+                //e.SuppressKeyPress = true;
+            }
+            else if (
+                ((48 <= e.KeyValue) && (e.KeyValue <= 57)) ||    // Numbers from 0-9 on keyboard
+                ((96 <= e.KeyValue) && (e.KeyValue <= 105)) ||   // Number from 0-9 on NumPad
+                (e.KeyValue == 110) || (e.KeyValue == 188) || (e.KeyValue == 190) ||                      // Comma and Period
+                (e.KeyValue == 8) || (e.KeyValue == 46) || ((37 <= e.KeyValue) && (e.KeyValue <= 40)) ||  // DEL, Backspace, Left-Right-Up-Down Arrows
+                (e.KeyValue == 35) || (e.KeyValue == 36) || (e.KeyValue == 45)    // POS1, END, INS
+                )
+            {
+                // u=85
+                return;
+            }
+            else
+            {
+                e.SuppressKeyPress = true;
+                return;
+            }
+
+        }
+
+        private double NumberTextBox_ToDouble(TextBox tBoxToValidate)
+        {
+            double dval = 0.0, dblres = 0.0;
+            string tval = "";
+            System.Windows.Forms.TextBox tBox;
+
+            if (tBoxToValidate.GetType().ToString() == "System.Windows.Forms.TextBox")
+            {
+                tBox = (System.Windows.Forms.TextBox)tBoxToValidate;
+                tval = tBox.Text.Trim();
+
+                if (tval.Contains("T")) { dval = (1e+12); tval = tval.Replace("G", "").Trim(); }   // Tera
+                else if (tval.Contains("G")) { dval = (1e+9); tval = tval.Replace("G", "").Trim(); }   // Giga
+                else if (tval.Contains("M")) { dval = (1e+6); tval = tval.Replace("M", "").Trim(); }   // Mega
+                else if (tval.Contains("k")) { dval = (1e+3); tval = tval.Replace("k", "").Trim(); }   // Kilo
+                else if (tval.Contains("m")) { dval = (1e-3); tval = tval.Replace("m", "").Trim(); }   // Milli
+                else if (tval.Contains("u")) { dval = (1e-6); tval = tval.Replace("u", "").Trim(); }   // Mikro
+                else if (tval.Contains("n")) { dval = (1e-9); tval = tval.Replace("n", "").Trim(); }   // Nano
+                else if (tval.Contains("p")) { dval = (1e-12); tval = tval.Replace("p", "").Trim(); }   // Piko
+                else if (tval.Contains("f")) { dval = (1e-15); tval = tval.Replace("f", "").Trim(); }   // Femto
+                else { dval = (1e+0); }
+
+                try { dblres = Convert.ToDouble(tval) * dval; }
+                catch
+                { dblres = 1.0; }
+
+            }
+
+            return (dblres);
+        }
+
+        private string NumberTextBox_ToString(TextBox tBoxToValidate)
+        {
+            System.Windows.Forms.TextBox tBox;
+            string strres = "";
+            double ddum = 0.0;
+
+            if (tBoxToValidate.GetType().ToString() == "System.Windows.Forms.TextBox")
+            {
+                tBox = (System.Windows.Forms.TextBox)tBoxToValidate;
+
+                try
+                {
+                    ddum = Convert.ToDouble(tBox.Text);
+
+                    if (ddum < (1e-12)) strres = (ddum / (1e-15)).ToString("#0.0##f", CultureInfo.CurrentCulture);
+                    else if (ddum < (1e-9)) strres = (ddum / (1e-12)).ToString("#0.0##p", CultureInfo.CurrentCulture);
+                    else if (ddum < (1e-6)) strres = (ddum / (1e-9)).ToString("#0.0##n", CultureInfo.CurrentCulture);
+                    else if (ddum < (1e-3)) strres = (ddum / (1e-6)).ToString("#0.0##u", CultureInfo.CurrentCulture);
+                    else if (ddum < (1e-0)) strres = (ddum / (1e-3)).ToString("#0.0##m", CultureInfo.CurrentCulture);
+                    else if (ddum > (1e+3)) strres = (ddum / (1e+3)).ToString("#0.0##k", CultureInfo.CurrentCulture);
+                    else if (ddum > (1e+6)) strres = (ddum / (1e+6)).ToString("#0.0##M", CultureInfo.CurrentCulture);
+                    else if (ddum > (1e+9)) strres = (ddum / (1e+9)).ToString("#0.0##G", CultureInfo.CurrentCulture);
+                    else if (ddum > (1e+12)) strres = (ddum / (1e+12)).ToString("#0.0##T", CultureInfo.CurrentCulture);
+                    else strres = ddum.ToString("#0.0##", CultureInfo.CurrentCulture);
+
+                    tBox.Text = strres.Trim();
+                }
+                catch
+                { }
+            }
+
+            return (strres.Trim());
+        }
+
+        private void NumberTextBox_Enter(object sender, EventArgs e)
+        {
+            System.Windows.Forms.TextBox tBox;
+
+            if (sender.GetType().ToString() == "System.Windows.Forms.TextBox")
+            {
+                tBox = (System.Windows.Forms.TextBox)sender;
+                tBox.Select(0, (tBox.Text.Length));
+            }
+
+            return;
+        }
+        
     }
+
 }
