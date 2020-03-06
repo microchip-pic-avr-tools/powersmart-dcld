@@ -202,6 +202,7 @@
             this.txtOutputGain = new System.Windows.Forms.TextBox();
             this.lblOutputGain = new System.Windows.Forms.Label();
             this.grpInputDataSpecifications = new System.Windows.Forms.GroupBox();
+            this.cmdGetInputGain = new System.Windows.Forms.Button();
             this.chkFeedbackRectification = new System.Windows.Forms.CheckBox();
             this.chkBiDirectionalFeedback = new System.Windows.Forms.CheckBox();
             this.chkNormalizeInputGain = new System.Windows.Forms.CheckBox();
@@ -373,7 +374,7 @@
             this.lblNumberOfInstructionCyclesReadLabel = new System.Windows.Forms.Label();
             this.lblDataReadDelayLabel = new System.Windows.Forms.Label();
             this.lblDataReadDelay = new System.Windows.Forms.Label();
-            this.cmbLoopOptimizationLevel = new System.Windows.Forms.ComboBox();
+            this.cmbLoopTriggerOption = new System.Windows.Forms.ComboBox();
             this.lblExecutionPeriodUnit = new System.Windows.Forms.Label();
             this.lblLoopOptimizationLevel = new System.Windows.Forms.Label();
             this.lblExecutionPeriodLabel = new System.Windows.Forms.Label();
@@ -1554,10 +1555,11 @@
             // 
             // cmdGetOutputGain
             // 
+            this.cmdGetOutputGain.Enabled = false;
             this.cmdGetOutputGain.Image = global::dcld.Properties.Resources.calculate;
-            this.cmdGetOutputGain.Location = new System.Drawing.Point(371, 22);
+            this.cmdGetOutputGain.Location = new System.Drawing.Point(379, 25);
             this.cmdGetOutputGain.Name = "cmdGetOutputGain";
-            this.cmdGetOutputGain.Size = new System.Drawing.Size(32, 29);
+            this.cmdGetOutputGain.Size = new System.Drawing.Size(24, 24);
             this.cmdGetOutputGain.TabIndex = 45;
             this.cmdGetOutputGain.UseVisualStyleBackColor = true;
             this.cmdGetOutputGain.Click += new System.EventHandler(this.cmdGetOutputGain_Click);
@@ -1566,8 +1568,7 @@
             // 
             this.chkNormalizeOutputGain.AutoSize = true;
             this.chkNormalizeOutputGain.BackColor = System.Drawing.SystemColors.Window;
-            this.chkNormalizeOutputGain.Checked = true;
-            this.chkNormalizeOutputGain.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkNormalizeOutputGain.Enabled = false;
             this.chkNormalizeOutputGain.Location = new System.Drawing.Point(10, 0);
             this.chkNormalizeOutputGain.Name = "chkNormalizeOutputGain";
             this.chkNormalizeOutputGain.Size = new System.Drawing.Size(152, 19);
@@ -1578,10 +1579,11 @@
             // 
             // txtOutputGain
             // 
+            this.txtOutputGain.Enabled = false;
             this.txtOutputGain.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtOutputGain.Location = new System.Drawing.Point(233, 26);
             this.txtOutputGain.Name = "txtOutputGain";
-            this.txtOutputGain.Size = new System.Drawing.Size(132, 22);
+            this.txtOutputGain.Size = new System.Drawing.Size(144, 22);
             this.txtOutputGain.TabIndex = 29;
             this.txtOutputGain.Text = "1.000";
             this.txtOutputGain.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -1593,6 +1595,7 @@
             // lblOutputGain
             // 
             this.lblOutputGain.AutoSize = true;
+            this.lblOutputGain.Enabled = false;
             this.lblOutputGain.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblOutputGain.Location = new System.Drawing.Point(150, 29);
             this.lblOutputGain.Name = "lblOutputGain";
@@ -1603,6 +1606,7 @@
             // 
             // grpInputDataSpecifications
             // 
+            this.grpInputDataSpecifications.Controls.Add(this.cmdGetInputGain);
             this.grpInputDataSpecifications.Controls.Add(this.chkFeedbackRectification);
             this.grpInputDataSpecifications.Controls.Add(this.chkBiDirectionalFeedback);
             this.grpInputDataSpecifications.Controls.Add(this.chkNormalizeInputGain);
@@ -1617,6 +1621,16 @@
             this.grpInputDataSpecifications.Size = new System.Drawing.Size(422, 161);
             this.grpInputDataSpecifications.TabIndex = 43;
             this.grpInputDataSpecifications.TabStop = false;
+            // 
+            // cmdGetInputGain
+            // 
+            this.cmdGetInputGain.Image = global::dcld.Properties.Resources.calculate;
+            this.cmdGetInputGain.Location = new System.Drawing.Point(379, 49);
+            this.cmdGetInputGain.Name = "cmdGetInputGain";
+            this.cmdGetInputGain.Size = new System.Drawing.Size(24, 24);
+            this.cmdGetInputGain.TabIndex = 49;
+            this.cmdGetInputGain.UseVisualStyleBackColor = true;
+            this.cmdGetInputGain.Click += new System.EventHandler(this.cmdGetInputGain_Click);
             // 
             // chkFeedbackRectification
             // 
@@ -2138,14 +2152,13 @@
             // chkStoreReloadAccLevel1
             // 
             this.chkStoreReloadAccLevel1.AutoSize = true;
-            this.chkStoreReloadAccLevel1.Checked = true;
-            this.chkStoreReloadAccLevel1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkStoreReloadAccLevel1.Enabled = false;
             this.chkStoreReloadAccLevel1.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkStoreReloadAccLevel1.Location = new System.Drawing.Point(30, 25);
             this.chkStoreReloadAccLevel1.Name = "chkStoreReloadAccLevel1";
-            this.chkStoreReloadAccLevel1.Size = new System.Drawing.Size(245, 19);
+            this.chkStoreReloadAccLevel1.Size = new System.Drawing.Size(207, 19);
             this.chkStoreReloadAccLevel1.TabIndex = 1;
-            this.chkStoreReloadAccLevel1.Text = "Store/Reload Accumulator (Level 1 only)";
+            this.chkStoreReloadAccLevel1.Text = "Store/Reload Result Accumulator";
             this.chkStoreReloadAccLevel1.UseVisualStyleBackColor = true;
             this.chkStoreReloadAccLevel1.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
@@ -2950,7 +2963,6 @@
             this.lstCoefficientsHistory.HideSelection = false;
             this.lstCoefficientsHistory.LabelWrap = false;
             this.lstCoefficientsHistory.Location = new System.Drawing.Point(3, 3);
-            this.lstCoefficientsHistory.MultiSelect = false;
             this.lstCoefficientsHistory.Name = "lstCoefficientsHistory";
             this.lstCoefficientsHistory.Size = new System.Drawing.Size(922, 320);
             this.lstCoefficientsHistory.TabIndex = 0;
@@ -3512,7 +3524,7 @@
             this.pnlTimingSettings.Controls.Add(this.lblNumberOfInstructionCyclesReadLabel);
             this.pnlTimingSettings.Controls.Add(this.lblDataReadDelayLabel);
             this.pnlTimingSettings.Controls.Add(this.lblDataReadDelay);
-            this.pnlTimingSettings.Controls.Add(this.cmbLoopOptimizationLevel);
+            this.pnlTimingSettings.Controls.Add(this.cmbLoopTriggerOption);
             this.pnlTimingSettings.Controls.Add(this.lblExecutionPeriodUnit);
             this.pnlTimingSettings.Controls.Add(this.lblLoopOptimizationLevel);
             this.pnlTimingSettings.Controls.Add(this.lblExecutionPeriodLabel);
@@ -3774,19 +3786,19 @@
             this.lblDataReadDelay.Text = "0";
             this.lblDataReadDelay.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // cmbLoopOptimizationLevel
+            // cmbLoopTriggerOption
             // 
-            this.cmbLoopOptimizationLevel.Enabled = false;
-            this.cmbLoopOptimizationLevel.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbLoopOptimizationLevel.FormattingEnabled = true;
-            this.cmbLoopOptimizationLevel.Items.AddRange(new object[] {
-            "0 - PWM Interrupt Trigger (Minimum CPU Load)",
-            "1 - ADC Interrupt Trigger (Early Response Time)"});
-            this.cmbLoopOptimizationLevel.Location = new System.Drawing.Point(192, 18);
-            this.cmbLoopOptimizationLevel.Name = "cmbLoopOptimizationLevel";
-            this.cmbLoopOptimizationLevel.Size = new System.Drawing.Size(642, 23);
-            this.cmbLoopOptimizationLevel.TabIndex = 1;
-            this.cmbLoopOptimizationLevel.SelectedIndexChanged += new System.EventHandler(this.cmbLoopOptimizationLevel_SelectedIndexChanged);
+            this.cmbLoopTriggerOption.Enabled = false;
+            this.cmbLoopTriggerOption.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbLoopTriggerOption.FormattingEnabled = true;
+            this.cmbLoopTriggerOption.Items.AddRange(new object[] {
+            "0 - PWM Interrupt Trigger",
+            "1 - ADC Interrupt Trigger"});
+            this.cmbLoopTriggerOption.Location = new System.Drawing.Point(192, 18);
+            this.cmbLoopTriggerOption.Name = "cmbLoopTriggerOption";
+            this.cmbLoopTriggerOption.Size = new System.Drawing.Size(642, 23);
+            this.cmbLoopTriggerOption.TabIndex = 1;
+            this.cmbLoopTriggerOption.SelectedIndexChanged += new System.EventHandler(this.cmbLoopTriggerOption_SelectedIndexChanged);
             // 
             // lblExecutionPeriodUnit
             // 
@@ -4736,7 +4748,7 @@
             // 
             this.txtOutput.BackColor = System.Drawing.SystemColors.Info;
             this.txtOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtOutput.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtOutput.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtOutput.Location = new System.Drawing.Point(3, 3);
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
@@ -5169,7 +5181,7 @@
         private System.Windows.Forms.CheckBox chkAddDataProviderErrorInput;
         private System.Windows.Forms.CheckBox chkAddDataProviderControlOutput;
         private System.Windows.Forms.CheckBox chkAddDataProviderControlInput;
-        private System.Windows.Forms.ComboBox cmbLoopOptimizationLevel;
+        private System.Windows.Forms.ComboBox cmbLoopTriggerOption;
         private System.Windows.Forms.Label lblLoopOptimizationLevel;
         private System.Windows.Forms.TabPage tabPageTiming;
         private System.Windows.Forms.SplitContainer splitContainerTiming;
@@ -5479,6 +5491,7 @@
         private System.Windows.Forms.Button cmdGetOutputGain;
         private System.Windows.Forms.TextBox txtOutputGain;
         private System.Windows.Forms.TextBox txtPWMFrequency;
+        private System.Windows.Forms.Button cmdGetInputGain;
     }
 }
 
