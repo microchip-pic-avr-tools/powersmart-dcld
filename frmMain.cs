@@ -1393,67 +1393,6 @@ namespace dcld
             return v;
         }
 
-        private string ReadConfigString(string fname, string section, string name, string defstr)
-        {
-            int rc;
-            StringBuilder sb = new StringBuilder(65536);
-            rc = GetPrivateProfileString(section, name, defstr, sb, 65535, fname);
-            if (rc > 0)
-                return sb.ToString();
-            else
-                return defstr;
-        }
-
-        private bool WriteConfigString(string fname, string section, string name, string str)
-        {
-            bool rc;
-            rc = WritePrivateProfileString(section, name, str, fname);
-
-            return rc;
-        }
-
-        private bool DeleteConfigString(string fname, string section, string name)
-        {
-            bool rc;
-            rc = WritePrivateProfileString(section, name, null, fname);
-
-            return rc;
-        }
-
-        /* ***************************************************************************************** 
-         * Extracts the path of the directory in which the DCLD project is been stored
-         * ***************************************************************************************** */
-        private string GetCurrentProjectFilePath(object sender, EventArgs e)
-        {
-            string str_dum = "";
-            string[] str_arr;
-            string[] dum_sep = new string[1];
-
-            if (CurrentProjectFileName.Trim().Length > 0)
-            { 
-                dum_sep[0] = ("\\");
-                str_arr = CurrentProjectFileName.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
-                str_dum = CurrentProjectFileName.Substring(0, CurrentProjectFileName.Length - str_arr[str_arr.Length - 1].Length);
-            }
-
-            return (str_dum.Trim());
-        }
-
-        /* ***************************************************************************************** 
-         * Extracts the path of the directory with filename of the DCLD project file
-         * ***************************************************************************************** */
-        private string GetCurrentProjectFileName(object sender, EventArgs e)
-        {
-            string str_dum = "";
-            string[] str_arr;
-            string[] dum_sep = new string[1];
-
-            dum_sep[0] = ("\\");
-            str_arr = CurrentProjectFileName.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
-            str_dum = str_arr[Convert.ToInt32(str_arr.GetUpperBound(0))];
-
-            return (str_dum.Trim());
-        }
 
         /* ***************************************************************************************** 
          * Builds the absolute path of the MPLAB X project directory the current DCLD project
