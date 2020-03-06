@@ -506,23 +506,21 @@ namespace dcld
             DefaultY2Max = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "y2_max", DefaultY2Max.ToString()));
 
             // reload data table status
-            splitContainerCoefficients.SplitterDistance = (splitContainerCoefficients.Panel1.Height + splitContainerCoefficients.Panel2.Height) - Convert.ToInt32(ReadConfigString(INI_FILE, "data_table", "splitter_pos", "500"));
-            showCoeffficientDataTableToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(INI_FILE, "data_table", "visible", "1")));
+            showCoeffficientDataTableToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToInt32(SettingsFile.ReadKey("data_table", "visible", "1")));
             showCoeffficientDataTableToolStripMenuItem_CheckedChanged(sender, e);
 
             // reload body generation and timing analysis window status
-            splitContainerContents.SplitterDistance = Convert.ToInt32(ReadConfigString(INI_FILE, "code_generator", "settings_splitter_pos", "375"));
+            // (none)
 
             // reload compensator settings status
-            splitContainerTiming.SplitterDistance = (splitContainerTiming.Panel1.Height + splitContainerTiming.Panel2.Height) - Convert.ToInt32(ReadConfigString(INI_FILE, "code_generator", "timing_splitter_pos", "248"));
-            showSourceCodeTimingToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(INI_FILE, "code_generator", "timing_visible", "1")));
+            showSourceCodeTimingToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(SettingsFile.ReadKey("code_generator", "timing_visible", "1")));
             showSourceCodeTimingToolStripMenuItem_CheckedChanged(sender, e);
 
             // Set default options
             cmbQFormat.SelectedIndex = 1;   // Always select Q15 format as default
             cmbQScalingMethod.SelectedIndex = 0;   // Always select single bit-shift scaling as default
             cmbCompType.SelectedIndex = 2;  // Always select 3P3Z controller as default
-            cmbLoopOptimizationLevel.SelectedIndex = 0; // Always select loop optimization level 0 (none) as default
+            cmbLoopTriggerOption.SelectedIndex = 0; // Always select loop trigger option (ADC-Triggered) as default
             cmbTriggerPlacement.SelectedIndex = 0; // Always select 50% On-Time as default
 
             ShowSDomainTF = Convert.ToBoolean(Convert.ToInt32(SettingsFile.ReadKey("bode_plot", "show_s_domain", "1")));
@@ -566,28 +564,24 @@ namespace dcld
                     }
                 }
                 this.Show();
+
+                // Restore last user settings
+                this.WindowState = (FormWindowState)Convert.ToInt32(SettingsFile.ReadKey("main_window", "winstate", "0"));
+                if (WindowState == System.Windows.Forms.FormWindowState.Normal)
+                {
+                    this.Width = Convert.ToInt32(SettingsFile.ReadKey("main_window", "width", "1000"));
+                    this.Height = Convert.ToInt32(SettingsFile.ReadKey("main_window", "height", "1000"));
+                }
+                
+                splitContainerCoefficients.SplitterDistance = (splitContainerCoefficients.Panel1.Height + splitContainerCoefficients.Panel2.Height) - Convert.ToInt32(SettingsFile.ReadKey("data_table", "splitter_pos", "500"));
+                splitContainerContents.SplitterDistance = Convert.ToInt32(SettingsFile.ReadKey("code_generator", "settings_splitter_pos", "375"));
+                splitContainerTiming.SplitterDistance = (splitContainerTiming.Panel1.Height + splitContainerTiming.Panel2.Height) - Convert.ToInt32(SettingsFile.ReadKey("code_generator", "timing_splitter_pos", "248"));
+
+                DebugInfoPrintLine(">Loading Application completed");
+
                 Application.DoEvents();
                 this.Refresh();
                 Application.DoEvents();
-
-                // if external file is loaded, read configuration here
-                if (ExternalFileOpenEvent)
-                {
-
-                    if (System.IO.File.Exists(ExternalFileOpenPath))
-                    {
-                        this.txtOutput.Text = txtOutput.Text + "External file open call by: " + ExternalFileOpenPath + "\r\n";
-                        OpenFile(ExternalFileOpenPath);
-                        UpdateTransferFunction(sender, e);
-                        GenerateCode(sender, e);
-                    }
-                    else
-                    {
-                        this.txtOutput.Text = txtOutput.Text + "Cannot open external file: " + ExternalFileOpenPath + "\r\n";
-                    }
-                    ExternalFileOpenPath = "";
-                    ExternalFileOpenEvent = false;
-                }
 
 
             }
@@ -595,7 +589,7 @@ namespace dcld
             {
                 MessageBox.Show(
                     this, 
-                    "Critical error (0x" + ex.HResult.ToString("X") + ") occured while initializing app body generator." + "\r\n" +
+                    "Critical error (0x" + ex.HResult.ToString("X") + ") occured while initializing application." + "\r\n" +
                     "Error Message: " + ex.Message + "\r\n" + 
                     "Check output window for details.", 
                     "Critical Error",
@@ -1250,6 +1244,10 @@ namespace dcld
 
             try
             {
+                if (chartBode == null) return (false);
+                if (chartBode.Series == null) return (false);
+                if (chartBode.Series.Count == 0) return (false);
+
                 // Load data into data series
                 chartBode.Series[0].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagGain_z);
                 chartBode.Series[1].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagPhase_z);
@@ -1595,10 +1593,10 @@ namespace dcld
             DialogResult dlgResult = 0;
 
             // You can cancel the Form from closing.
-            if ((ProjectFileChanged) && (CurrentProjectFileName.Length > 7))
+            if ((ProjectFileChanged) && (ProjectFile.Directory.Length > 7))
             {
 
-                str_dum = GetCurrentProjectFileName(sender, e);
+                str_dum = ProjectFile.FileName;
 
                 dlgResult = MessageBox.Show("File '" + str_dum + "' has been changed.\r\nDo you wish to save these changes?", Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 switch (dlgResult)
@@ -1627,7 +1625,7 @@ namespace dcld
         private bool SaveFile(object sender, EventArgs e)
         {
             SaveFileDialog sfdlg = new SaveFileDialog();
-            string str_path = "", str_dum = "";
+            string str_dum = "";
             string[] str_arr;
             string[] dum_sep = new string[1];
             int i = 0;
@@ -1639,15 +1637,15 @@ namespace dcld
             Application.DoEvents();
 
             // Save parameter file
-            if ((CurrentProjectFileName.Trim().Length == 0) || (sender == saveAsToolStripMenuItem) || (CurrentProjectFileName == NewProjectFilenameDummy))
+            if ((ProjectFile.FileName.Trim().Length == 0) || (sender == saveAsToolStripMenuItem) || (ProjectFile.FileName == NewProjectFilenameDummy))
             {
                 // Show "Save As..." Dialog
                 sfdlg.FileName = NewProjectFilenameDummy;
                 sfdlg.Filter = "Microchip Digital Control Loop Designer files (*.dcld)|*.dcld|All files (*.*)|*.*";
                 sfdlg.FilterIndex = 1;
 
-                if (CurrentProjectFileName.Trim().Length > 7)
-                { sfdlg.InitialDirectory = GetCurrentProjectFilePath(sender, e); }
+                if (ProjectFile.FileName.Trim().Length > 7)
+                { sfdlg.InitialDirectory = ProjectFile.Directory; }
                 else if (MPLABXProjectDirectory.Trim().Length > 7)
                 { sfdlg.InitialDirectory = MPLABXProjectDirectory; }
 
@@ -1658,8 +1656,7 @@ namespace dcld
                         if (sfdlg.CheckPathExists)
                         {
                             // Capture filename & path
-                            str_path = sfdlg.FileName.Trim();
-                            CurrentProjectFileName = str_path;
+                            ProjectFile.SetFilename(sfdlg.FileName.Trim());
 
                             // Display recent project file in window title bar
                             dum_sep[0] = (_dsp);
