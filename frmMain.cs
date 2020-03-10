@@ -4516,50 +4516,6 @@ namespace dcld
             return;
         }
 
-        private void ToolTip_Show(object sender, EventArgs e, string tool_tip_text)
-        {
-            int _width = 0, _height = 0;
-            PictureBox TTpic;
-
-            lblToolTipHelp.Text = tool_tip_text;
-            lblToolTipHelp.AutoSize = true;
-            _width = lblToolTipHelp.Width;
-            _height = lblToolTipHelp.Height;
-            lblToolTipHelp.AutoSize = false;
-            lblToolTipHelp.Width = _width;
-            lblToolTipHelp.Height = _height;
-
-            if (sender.GetType().ToString() == "System.Windows.Forms.PictureBox") 
-            {
-                TTpic = (PictureBox)sender;
-                lblToolTipHelp.Left = TTpic.Left + (TTpic.Width / 2);
-                lblToolTipHelp.Top = TTpic.Top + (TTpic.Height / 2);
-            }
-
-            lblToolTipHelp.Visible=true;
-            timToolHelp.Enabled = true;
-
-            return;
-        }
-
-        private void timToolHelp_Tick(object sender, EventArgs e)
-        {
-            lblToolTipHelp.Visible = false;
-            timToolHelp.Enabled = false;
-        }
-
-        private void picInfoTimingPWMFrequency_MouseHover(object sender, EventArgs e)
-        {
-            ToolTip_Show(sender, e, 
-                "Note:\r\n" +
-                "Switching frequency can be different from sampling frequency. \r\n" + 
-                "CPU load estimation is based on sampling frequency. \r\n" +
-                "The sampling frequency can be adjusted in the Controller view.\r\n"
-            );
-
-            return;
-        }
-
         private void IncludePathCheckBox_CheckedChanged(object sender, EventArgs e)
         {
 
@@ -4661,59 +4617,7 @@ namespace dcld
 
         private void AddHistorySettings(object sender, EventArgs e)
         {
-            int i = 0;
-            ListViewItem itm = new ListViewItem();
-            string id = "", key = "", user = "", label = "", settings = "";
-            Int32 save_item = 0;
 
-            if (!File.Exists(ProjectFile.FileName)) return;
-
-            // Add time stamp
-            save_item = (Convert.ToInt32(ProjectFile.ReadKey("generator_history", "count", "0")) + 1);
-
-            id = save_item.ToString();
-            key = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Datecode identifies the item
-            label = "(Autosafe)";
-            user = Environment.UserName.ToString();
-            settings =
-                cmbCompType.SelectedIndex.ToString() + "; " +
-                cmbQScalingMethod.SelectedIndex.ToString() + "; " +
-                txtInputDataResolution.Text + "; " +
-                txtInputGain.Text + "; " +
-                Convert.ToInt32(chkNormalizeInputGain.Checked).ToString() + "; " +
-                Convert.ToInt32(chkBiDirectionalFeedback.Checked).ToString() + "; " +
-                Convert.ToInt32(chkFeedbackRectification.Checked).ToString() + "; " +
-                txtSamplingFrequency.Text + "; " +
-                txtFP0.Text + "; " +
-                txtFP1.Text + "; " +
-                txtFP2.Text + "; " +
-                txtFP3.Text + "; " +
-                txtFP4.Text + "; " +
-                txtFP5.Text + "; " +
-                txtFZ1.Text + "; " +
-                txtFZ2.Text + "; " +
-                txtFZ3.Text + "; " +
-                txtFZ4.Text + "; " +
-                txtFZ5.Text + "; " +
-                txtOutputGain.Text + "; " +
-                Convert.ToInt32(chkNormalizeOutputGain.Checked).ToString();
-
-
-            itm = lstCoefficientsHistory.Items.Add(save_item.ToString());
-            itm.SubItems.Add(key);
-            itm.SubItems.Add(user);
-            itm.SubItems.Add(label);
-            itm.SubItems.Add(settings);
-
-            for (i = 0; i < lstCoefficientsHistory.Items.Count; i++)
-            { lstCoefficientsHistory.Items[i].BackColor = SystemColors.Window; }
-            itm.BackColor = SystemColors.ActiveCaption;
-
-            ProjectFile.WriteKey("generator_history", "count", id);
-            ProjectFile.WriteKey("generator_history", id.Trim(), key.Trim() + "||" + user.Trim() + "||" + label.Trim() + "||" + settings.Trim());
-            ProjectFile.WriteKey("generator_history", "active_item", id);
-
-            return;
         }
 
         private void RenameHistorySettings(object sender, EventArgs e)
@@ -5125,6 +5029,7 @@ namespace dcld
         private void chkNormalizeOutputGain_CheckedChanged(object sender, EventArgs e)
         {
             chkNormalizeOutputGain.Checked = false;
+            grpOutputDataNormalization.Enabled = chkNormalizeOutputGain.Checked;
             txtOutputGain.Enabled = chkNormalizeOutputGain.Checked;
             lblOutputGain.Enabled = chkNormalizeOutputGain.Checked;
             cmdGetOutputGain.Enabled = chkNormalizeOutputGain.Checked;
@@ -5155,6 +5060,87 @@ namespace dcld
                 feedback = frm.feedback;
             }
 
+        }
+
+        private void ToolTip_Show(object sender, EventArgs e, string tool_tip_text)
+        {
+            // guarding condition...
+            if (sender.GetType().ToString() != "System.Windows.Forms.PictureBox")
+                return;
+
+            PictureBox TTpic = (PictureBox)sender;
+            frmToolTip TTip = new frmToolTip();
+
+            TTip.BackColor = SystemColors.Info;
+            TTip.ToolTipText = tool_tip_text;
+            TTip.StartPosition = FormStartPosition.Manual;
+            TTip.WinPos = TTpic.PointToScreen(Point.Empty); ;
+            TTip.Show(this);
+
+            return;
+
+        }
+
+        private void picInfoTimingPWMFrequency_MouseHover(object sender, EventArgs e)
+        {
+            ToolTip_Show(sender, e,
+                "Note:\r\n" +
+                "Switching frequency can be different from sampling frequency. \r\n" +
+                "CPU load estimation is based on sampling frequency. \r\n" +
+                "The sampling frequency can be adjusted in the Controller view.\r\n"
+            );
+
+            return;
+        }
+
+        private void picInfoAlternateInputSource_MouseHover(object sender, EventArgs e)
+        {
+            string msg = "This option is locked when option\r\n'Adaptive Gain Control' is enabled.";
+
+            ToolTip_Show(sender, e, msg);
+        }
+
+        private void picInfoDSPConfig_MouseHover(object sender, EventArgs e)
+        {
+            string msg = "Executing control loops require a specific DSP core configuration," + "\r\n" +
+                         "which has to be set once in per project. " + "\r\n" + 
+                         "\r\n" +
+                         "Enable this option if the DSP core is also used by other software " + "\r\n" +
+                         "instances with a different configuration." + "\r\n" +
+                         "\r\n" +
+                         "If the DSP is only used for control loop executions, it's recommended" + "\r\n" +
+                         "to configure the DSP in a separated routine during decive initialization" + "\r\n" +
+                         "and disable this option"; 
+
+            ToolTip_Show(sender, e, msg);
+        }
+
+        private void picInfoCascadeFunctionCall_MouseHover(object sender, EventArgs e)
+        {
+            string msg = "By enabling this function, you can specify a function pointer" + "\r\n" +
+                         "to an additional function which should be executed right after" + "\r\n" +
+                         "the execution of this loop has been completed." + "\r\n" + 
+                         "\r\n" +
+                         "Please refer to the user guide for more details.";
+
+            ToolTip_Show(sender, e, msg);
+        }
+
+        private void chkEnableAdaptiveGainControl_CheckedChanged(object sender, EventArgs e)
+        {
+            radAGCUserModulation.Enabled = chkEnableAdaptiveGainControl.Checked;
+            radAGCSourceVsAltSource.Enabled = false; // chkEnableAdaptiveGainControl.Checked;
+            radAGCAltSourceVsSource.Enabled = false; // chkEnableAdaptiveGainControl.Checked;
+        }
+
+        private void picInfoAGC_MouseHover(object sender, EventArgs e)
+        {
+            string msg = "This function adds a modulation factor to the control loop code" + "\r\n" + 
+                         "allowing runtime tuning of the loop gain." + "\r\n" +
+                         "\r\n" +
+                         "Please refer to the user guide for more details.";
+
+            ToolTip_Show(sender, e, msg);
         }
 
 

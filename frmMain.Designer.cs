@@ -203,6 +203,12 @@
             this.lblOutputGain = new System.Windows.Forms.Label();
             this.grpInputDataSpecifications = new System.Windows.Forms.GroupBox();
             this.cmdGetInputGain = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.picInfoAGC = new System.Windows.Forms.PictureBox();
+            this.radAGCAltSourceVsSource = new System.Windows.Forms.RadioButton();
+            this.radAGCSourceVsAltSource = new System.Windows.Forms.RadioButton();
+            this.radAGCUserModulation = new System.Windows.Forms.RadioButton();
+            this.chkEnableAdaptiveGainControl = new System.Windows.Forms.CheckBox();
             this.chkFeedbackRectification = new System.Windows.Forms.CheckBox();
             this.chkBiDirectionalFeedback = new System.Windows.Forms.CheckBox();
             this.chkNormalizeInputGain = new System.Windows.Forms.CheckBox();
@@ -233,10 +239,13 @@
             this.chkAddDataProviderErrorInput = new System.Windows.Forms.CheckBox();
             this.chkAddDataProviderControlOutput = new System.Windows.Forms.CheckBox();
             this.grpCodeFeatureDataIO = new System.Windows.Forms.GroupBox();
+            this.picInfoAlternateInputSource = new System.Windows.Forms.PictureBox();
             this.chkAddAlternateTarget = new System.Windows.Forms.CheckBox();
             this.chkAddAlternateSource = new System.Windows.Forms.CheckBox();
             this.chkAutomatedDataInterface = new System.Windows.Forms.CheckBox();
             this.grpCodeFeatureOptions = new System.Windows.Forms.GroupBox();
+            this.picInfoCascadeFunctionCall = new System.Windows.Forms.PictureBox();
+            this.picInfoDSPConfig = new System.Windows.Forms.PictureBox();
             this.chkCodeFeatureOptions = new System.Windows.Forms.CheckBox();
             this.chkAddCascadedFunctionCall = new System.Windows.Forms.CheckBox();
             this.chkAddADCTriggerBPlacement = new System.Windows.Forms.CheckBox();
@@ -483,7 +492,6 @@
             this.txtMPLABXProjectDir = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripLabelMPLABXDirectory = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButtonMPLABXPathWarning = new System.Windows.Forms.ToolStripButton();
-            this.timToolHelp = new System.Windows.Forms.Timer(this.components);
             this.mnuMain.SuspendLayout();
             this.stbMain.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -498,13 +506,18 @@
             this.grpPolesZeros.SuspendLayout();
             this.grpOutputDataNormalization.SuspendLayout();
             this.grpInputDataSpecifications.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).BeginInit();
             this.grpControllerSelection.SuspendLayout();
             this.tabSourceCodeConfig.SuspendLayout();
             this.pnlCodeGeneratorOptions.SuspendLayout();
             this.grpAntiWindup.SuspendLayout();
             this.grpDataProviderSources.SuspendLayout();
             this.grpCodeFeatureDataIO.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAlternateInputSource)).BeginInit();
             this.grpCodeFeatureOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoCascadeFunctionCall)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoDSPConfig)).BeginInit();
             this.grpContextSaving.SuspendLayout();
             this.grpFunctionLabel.SuspendLayout();
             this.tabAnalysis.SuspendLayout();
@@ -1113,7 +1126,7 @@
             this.grpPolesZeros.Controls.Add(this.lblFP0Unit);
             this.grpPolesZeros.Controls.Add(this.txtFP2);
             this.grpPolesZeros.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpPolesZeros.Location = new System.Drawing.Point(0, 360);
+            this.grpPolesZeros.Location = new System.Drawing.Point(0, 428);
             this.grpPolesZeros.Name = "grpPolesZeros";
             this.grpPolesZeros.Size = new System.Drawing.Size(422, 262);
             this.grpPolesZeros.TabIndex = 45;
@@ -1547,7 +1560,8 @@
             this.grpOutputDataNormalization.Controls.Add(this.txtOutputGain);
             this.grpOutputDataNormalization.Controls.Add(this.lblOutputGain);
             this.grpOutputDataNormalization.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpOutputDataNormalization.Location = new System.Drawing.Point(0, 287);
+            this.grpOutputDataNormalization.Enabled = false;
+            this.grpOutputDataNormalization.Location = new System.Drawing.Point(0, 355);
             this.grpOutputDataNormalization.Name = "grpOutputDataNormalization";
             this.grpOutputDataNormalization.Size = new System.Drawing.Size(422, 73);
             this.grpOutputDataNormalization.TabIndex = 44;
@@ -1607,6 +1621,7 @@
             // grpInputDataSpecifications
             // 
             this.grpInputDataSpecifications.Controls.Add(this.cmdGetInputGain);
+            this.grpInputDataSpecifications.Controls.Add(this.groupBox1);
             this.grpInputDataSpecifications.Controls.Add(this.chkFeedbackRectification);
             this.grpInputDataSpecifications.Controls.Add(this.chkBiDirectionalFeedback);
             this.grpInputDataSpecifications.Controls.Add(this.chkNormalizeInputGain);
@@ -1618,7 +1633,7 @@
             this.grpInputDataSpecifications.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpInputDataSpecifications.Location = new System.Drawing.Point(0, 126);
             this.grpInputDataSpecifications.Name = "grpInputDataSpecifications";
-            this.grpInputDataSpecifications.Size = new System.Drawing.Size(422, 161);
+            this.grpInputDataSpecifications.Size = new System.Drawing.Size(422, 229);
             this.grpInputDataSpecifications.TabIndex = 43;
             this.grpInputDataSpecifications.TabStop = false;
             // 
@@ -1631,6 +1646,78 @@
             this.cmdGetInputGain.TabIndex = 49;
             this.cmdGetInputGain.UseVisualStyleBackColor = true;
             this.cmdGetInputGain.Click += new System.EventHandler(this.cmdGetInputGain_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.picInfoAGC);
+            this.groupBox1.Controls.Add(this.radAGCAltSourceVsSource);
+            this.groupBox1.Controls.Add(this.radAGCSourceVsAltSource);
+            this.groupBox1.Controls.Add(this.radAGCUserModulation);
+            this.groupBox1.Controls.Add(this.chkEnableAdaptiveGainControl);
+            this.groupBox1.Location = new System.Drawing.Point(10, 124);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(403, 101);
+            this.groupBox1.TabIndex = 46;
+            this.groupBox1.TabStop = false;
+            // 
+            // picInfoAGC
+            // 
+            this.picInfoAGC.Image = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.Image")));
+            this.picInfoAGC.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.InitialImage")));
+            this.picInfoAGC.Location = new System.Drawing.Point(202, 1);
+            this.picInfoAGC.Name = "picInfoAGC";
+            this.picInfoAGC.Size = new System.Drawing.Size(16, 16);
+            this.picInfoAGC.TabIndex = 72;
+            this.picInfoAGC.TabStop = false;
+            this.picInfoAGC.MouseHover += new System.EventHandler(this.picInfoAGC_MouseHover);
+            // 
+            // radAGCAltSourceVsSource
+            // 
+            this.radAGCAltSourceVsSource.AutoSize = true;
+            this.radAGCAltSourceVsSource.Enabled = false;
+            this.radAGCAltSourceVsSource.Location = new System.Drawing.Point(36, 69);
+            this.radAGCAltSourceVsSource.Name = "radAGCAltSourceVsSource";
+            this.radAGCAltSourceVsSource.Size = new System.Drawing.Size(320, 19);
+            this.radAGCAltSourceVsSource.TabIndex = 47;
+            this.radAGCAltSourceVsSource.Text = "Runtime Modulation using [Alternate Source]/{Source]";
+            this.radAGCAltSourceVsSource.UseVisualStyleBackColor = true;
+            // 
+            // radAGCSourceVsAltSource
+            // 
+            this.radAGCSourceVsAltSource.AutoSize = true;
+            this.radAGCSourceVsAltSource.Enabled = false;
+            this.radAGCSourceVsAltSource.Location = new System.Drawing.Point(36, 47);
+            this.radAGCSourceVsAltSource.Name = "radAGCSourceVsAltSource";
+            this.radAGCSourceVsAltSource.Size = new System.Drawing.Size(320, 19);
+            this.radAGCSourceVsAltSource.TabIndex = 46;
+            this.radAGCSourceVsAltSource.TabStop = true;
+            this.radAGCSourceVsAltSource.Text = "Runtime Modulation using [Source]/{Alternate Source]";
+            this.radAGCSourceVsAltSource.UseVisualStyleBackColor = true;
+            // 
+            // radAGCUserModulation
+            // 
+            this.radAGCUserModulation.AutoSize = true;
+            this.radAGCUserModulation.Checked = true;
+            this.radAGCUserModulation.Enabled = false;
+            this.radAGCUserModulation.Location = new System.Drawing.Point(36, 25);
+            this.radAGCUserModulation.Name = "radAGCUserModulation";
+            this.radAGCUserModulation.Size = new System.Drawing.Size(199, 19);
+            this.radAGCUserModulation.TabIndex = 45;
+            this.radAGCUserModulation.TabStop = true;
+            this.radAGCUserModulation.Text = "User Defined Modulation Factor";
+            this.radAGCUserModulation.UseVisualStyleBackColor = true;
+            // 
+            // chkEnableAdaptiveGainControl
+            // 
+            this.chkEnableAdaptiveGainControl.AutoSize = true;
+            this.chkEnableAdaptiveGainControl.BackColor = System.Drawing.SystemColors.Window;
+            this.chkEnableAdaptiveGainControl.Location = new System.Drawing.Point(10, 0);
+            this.chkEnableAdaptiveGainControl.Name = "chkEnableAdaptiveGainControl";
+            this.chkEnableAdaptiveGainControl.Size = new System.Drawing.Size(188, 19);
+            this.chkEnableAdaptiveGainControl.TabIndex = 44;
+            this.chkEnableAdaptiveGainControl.Text = "Enable Loop &Gain Modulation";
+            this.chkEnableAdaptiveGainControl.UseVisualStyleBackColor = false;
+            this.chkEnableAdaptiveGainControl.CheckedChanged += new System.EventHandler(this.chkEnableAdaptiveGainControl_CheckedChanged);
             // 
             // chkFeedbackRectification
             // 
@@ -1647,7 +1734,7 @@
             // chkBiDirectionalFeedback
             // 
             this.chkBiDirectionalFeedback.AutoSize = true;
-            this.chkBiDirectionalFeedback.Location = new System.Drawing.Point(46, 99);
+            this.chkBiDirectionalFeedback.Location = new System.Drawing.Point(46, 89);
             this.chkBiDirectionalFeedback.Name = "chkBiDirectionalFeedback";
             this.chkBiDirectionalFeedback.Size = new System.Drawing.Size(331, 19);
             this.chkBiDirectionalFeedback.TabIndex = 47;
@@ -2020,6 +2107,7 @@
             // 
             // grpCodeFeatureDataIO
             // 
+            this.grpCodeFeatureDataIO.Controls.Add(this.picInfoAlternateInputSource);
             this.grpCodeFeatureDataIO.Controls.Add(this.chkAddAlternateTarget);
             this.grpCodeFeatureDataIO.Controls.Add(this.chkAddAlternateSource);
             this.grpCodeFeatureDataIO.Controls.Add(this.chkAutomatedDataInterface);
@@ -2029,6 +2117,18 @@
             this.grpCodeFeatureDataIO.Size = new System.Drawing.Size(405, 85);
             this.grpCodeFeatureDataIO.TabIndex = 4;
             this.grpCodeFeatureDataIO.TabStop = false;
+            // 
+            // picInfoAlternateInputSource
+            // 
+            this.picInfoAlternateInputSource.Image = ((System.Drawing.Image)(resources.GetObject("picInfoAlternateInputSource.Image")));
+            this.picInfoAlternateInputSource.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoAlternateInputSource.InitialImage")));
+            this.picInfoAlternateInputSource.Location = new System.Drawing.Point(223, 25);
+            this.picInfoAlternateInputSource.Name = "picInfoAlternateInputSource";
+            this.picInfoAlternateInputSource.Size = new System.Drawing.Size(16, 16);
+            this.picInfoAlternateInputSource.TabIndex = 70;
+            this.picInfoAlternateInputSource.TabStop = false;
+            this.picInfoAlternateInputSource.Click += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            this.picInfoAlternateInputSource.MouseHover += new System.EventHandler(this.picInfoAlternateInputSource_MouseHover);
             // 
             // chkAddAlternateTarget
             // 
@@ -2069,6 +2169,8 @@
             // 
             // grpCodeFeatureOptions
             // 
+            this.grpCodeFeatureOptions.Controls.Add(this.picInfoCascadeFunctionCall);
+            this.grpCodeFeatureOptions.Controls.Add(this.picInfoDSPConfig);
             this.grpCodeFeatureOptions.Controls.Add(this.chkCodeFeatureOptions);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddCascadedFunctionCall);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddADCTriggerBPlacement);
@@ -2084,6 +2186,28 @@
             this.grpCodeFeatureOptions.Size = new System.Drawing.Size(405, 237);
             this.grpCodeFeatureOptions.TabIndex = 3;
             this.grpCodeFeatureOptions.TabStop = false;
+            // 
+            // picInfoCascadeFunctionCall
+            // 
+            this.picInfoCascadeFunctionCall.Image = ((System.Drawing.Image)(resources.GetObject("picInfoCascadeFunctionCall.Image")));
+            this.picInfoCascadeFunctionCall.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoCascadeFunctionCall.InitialImage")));
+            this.picInfoCascadeFunctionCall.Location = new System.Drawing.Point(223, 203);
+            this.picInfoCascadeFunctionCall.Name = "picInfoCascadeFunctionCall";
+            this.picInfoCascadeFunctionCall.Size = new System.Drawing.Size(16, 16);
+            this.picInfoCascadeFunctionCall.TabIndex = 72;
+            this.picInfoCascadeFunctionCall.TabStop = false;
+            this.picInfoCascadeFunctionCall.MouseHover += new System.EventHandler(this.picInfoCascadeFunctionCall_MouseHover);
+            // 
+            // picInfoDSPConfig
+            // 
+            this.picInfoDSPConfig.Image = ((System.Drawing.Image)(resources.GetObject("picInfoDSPConfig.Image")));
+            this.picInfoDSPConfig.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoDSPConfig.InitialImage")));
+            this.picInfoDSPConfig.Location = new System.Drawing.Point(223, 50);
+            this.picInfoDSPConfig.Name = "picInfoDSPConfig";
+            this.picInfoDSPConfig.Size = new System.Drawing.Size(16, 16);
+            this.picInfoDSPConfig.TabIndex = 71;
+            this.picInfoDSPConfig.TabStop = false;
+            this.picInfoDSPConfig.MouseHover += new System.EventHandler(this.picInfoDSPConfig_MouseHover);
             // 
             // chkCodeFeatureOptions
             // 
@@ -3064,10 +3188,10 @@
             // tabPageTiming
             // 
             this.tabPageTiming.Controls.Add(this.splitContainerTiming);
-            this.tabPageTiming.Location = new System.Drawing.Point(4, 24);
+            this.tabPageTiming.Location = new System.Drawing.Point(4, 22);
             this.tabPageTiming.Name = "tabPageTiming";
             this.tabPageTiming.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTiming.Size = new System.Drawing.Size(944, 747);
+            this.tabPageTiming.Size = new System.Drawing.Size(944, 749);
             this.tabPageTiming.TabIndex = 4;
             this.tabPageTiming.Text = "Time Domain";
             this.tabPageTiming.UseVisualStyleBackColor = true;
@@ -3091,8 +3215,8 @@
             this.splitContainerTiming.Panel2.AutoScroll = true;
             this.splitContainerTiming.Panel2.Controls.Add(this.grpExecutionTime);
             this.splitContainerTiming.Panel2MinSize = 248;
-            this.splitContainerTiming.Size = new System.Drawing.Size(938, 741);
-            this.splitContainerTiming.SplitterDistance = 483;
+            this.splitContainerTiming.Size = new System.Drawing.Size(938, 743);
+            this.splitContainerTiming.SplitterDistance = 485;
             this.splitContainerTiming.TabIndex = 0;
             // 
             // pnlTimingChart
@@ -3107,7 +3231,7 @@
             this.pnlTimingChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlTimingChart.Location = new System.Drawing.Point(0, 0);
             this.pnlTimingChart.Name = "pnlTimingChart";
-            this.pnlTimingChart.Size = new System.Drawing.Size(936, 481);
+            this.pnlTimingChart.Size = new System.Drawing.Size(936, 483);
             this.pnlTimingChart.TabIndex = 0;
             // 
             // pnlCPULoadRatio
@@ -3116,7 +3240,7 @@
             this.pnlCPULoadRatio.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlCPULoadRatio.Controls.Add(this.label2);
             this.pnlCPULoadRatio.Controls.Add(this.lblCPULoadRatio);
-            this.pnlCPULoadRatio.Location = new System.Drawing.Point(825, 322);
+            this.pnlCPULoadRatio.Location = new System.Drawing.Point(825, 324);
             this.pnlCPULoadRatio.Name = "pnlCPULoadRatio";
             this.pnlCPULoadRatio.Size = new System.Drawing.Size(71, 114);
             this.pnlCPULoadRatio.TabIndex = 56;
@@ -3153,7 +3277,7 @@
             this.tsbCodeGenUpdateWarningTiming.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel2,
             this.toolStripLabel3});
-            this.tsbCodeGenUpdateWarningTiming.Location = new System.Drawing.Point(0, 456);
+            this.tsbCodeGenUpdateWarningTiming.Location = new System.Drawing.Point(0, 458);
             this.tsbCodeGenUpdateWarningTiming.Name = "tsbCodeGenUpdateWarningTiming";
             this.tsbCodeGenUpdateWarningTiming.Size = new System.Drawing.Size(936, 25);
             this.tsbCodeGenUpdateWarningTiming.TabIndex = 54;
@@ -3335,7 +3459,7 @@
             this.chartTiming.Series.Add(series5);
             this.chartTiming.Series.Add(series6);
             this.chartTiming.Series.Add(series7);
-            this.chartTiming.Size = new System.Drawing.Size(936, 456);
+            this.chartTiming.Size = new System.Drawing.Size(936, 458);
             this.chartTiming.TabIndex = 2;
             this.chartTiming.Text = "Control Timing";
             this.chartTiming.CursorPositionChanged += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.CursorEventArgs>(this.chartTiming_CursorPositionChanged);
@@ -3548,13 +3672,12 @@
             // 
             this.lblToolTipHelp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.lblToolTipHelp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblToolTipHelp.Location = new System.Drawing.Point(394, 62);
+            this.lblToolTipHelp.Location = new System.Drawing.Point(343, 4);
             this.lblToolTipHelp.Name = "lblToolTipHelp";
             this.lblToolTipHelp.Size = new System.Drawing.Size(320, 45);
             this.lblToolTipHelp.TabIndex = 70;
             this.lblToolTipHelp.Text = "Info Label";
             this.lblToolTipHelp.Visible = false;
-            this.lblToolTipHelp.MouseLeave += new System.EventHandler(this.timToolHelp_Tick);
             // 
             // picInfoTimingPWMFrequency
             // 
@@ -4968,11 +5091,6 @@
             this.toolStripButtonMPLABXPathWarning.Text = "MPLAB X Project Directory Warning";
             this.toolStripButtonMPLABXPathWarning.Visible = false;
             // 
-            // timToolHelp
-            // 
-            this.timToolHelp.Interval = 4000;
-            this.timToolHelp.Tick += new System.EventHandler(this.timToolHelp_Tick);
-            // 
             // frmMain
             // 
             this.AllowDrop = true;
@@ -5016,6 +5134,9 @@
             this.grpOutputDataNormalization.PerformLayout();
             this.grpInputDataSpecifications.ResumeLayout(false);
             this.grpInputDataSpecifications.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).EndInit();
             this.grpControllerSelection.ResumeLayout(false);
             this.grpControllerSelection.PerformLayout();
             this.tabSourceCodeConfig.ResumeLayout(false);
@@ -5026,8 +5147,11 @@
             this.grpDataProviderSources.PerformLayout();
             this.grpCodeFeatureDataIO.ResumeLayout(false);
             this.grpCodeFeatureDataIO.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAlternateInputSource)).EndInit();
             this.grpCodeFeatureOptions.ResumeLayout(false);
             this.grpCodeFeatureOptions.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoCascadeFunctionCall)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoDSPConfig)).EndInit();
             this.grpContextSaving.ResumeLayout(false);
             this.grpContextSaving.PerformLayout();
             this.grpFunctionLabel.ResumeLayout(false);
@@ -5283,21 +5407,6 @@
         private System.Windows.Forms.TabPage tabController;
         private System.Windows.Forms.TabPage tabSourceCodeConfig;
         private System.Windows.Forms.GroupBox grpFunctionLabel;
-        private System.Windows.Forms.ToolStrip toolStripTiming;
-        private System.Windows.Forms.ToolStripLabel tslAbsolutePositionLabel;
-        private System.Windows.Forms.ToolStripTextBox txtTimingAbsolutePosition;
-        private System.Windows.Forms.ToolStripLabel tslAbsolutePositionUnit;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripLabel tslRelativePosToTrigger;
-        private System.Windows.Forms.ToolStripTextBox txtTimingRelativePosToTrigger;
-        private System.Windows.Forms.ToolStripLabel tslRelativePosToTriggerUnit;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.ToolStripLabel tslRelativePosToFallingEdge;
-        private System.Windows.Forms.ToolStripTextBox txtTimingRelativePosToFallingEdge;
-        private System.Windows.Forms.ToolStripLabel tslRelativePosToFallingEdgeUnit;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-        private System.Windows.Forms.ToolStripLabel tslTriggerPlacement;
-        private System.Windows.Forms.ToolStripComboBox cmbTriggerPlacement;
         private System.Windows.Forms.ToolStrip toolStripBode;
         private System.Windows.Forms.ToolStripTextBox txtBodeCursorFrequency;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
@@ -5306,14 +5415,12 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
         private System.Windows.Forms.ToolStripLabel tslBodeFrequencyLabel;
         private System.Windows.Forms.ToolStripLabel tslBodeMagnitudeLabel;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
         private System.Windows.Forms.ToolStripLabel tslBodePhaseLabel;
         private System.Windows.Forms.ToolStripLabel tslBodeFrequencyUnit;
         private System.Windows.Forms.ToolStripLabel BodeMagnitudeUnit;
         private System.Windows.Forms.ToolStripLabel tslBodePhaseUnit;
         private System.Windows.Forms.ToolStripButton chkBodeCursor;
-        private System.Windows.Forms.ToolStripButton chkTimingCursor;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripLabel tslPhaseErrosionLabel;
         private System.Windows.Forms.ToolStripTextBox txtBodePhaseErrosion;
@@ -5430,7 +5537,6 @@
         private System.Windows.Forms.CheckBox chkAntiWindupSoftDesaturationFlag;
         private System.Windows.Forms.PictureBox picInfoTimingPWMFrequency;
         private System.Windows.Forms.Label lblToolTipHelp;
-        private System.Windows.Forms.Timer timToolHelp;
         private System.Windows.Forms.CheckBox chkCSourceIncludePath;
         private System.Windows.Forms.CheckBox chkCHeaderIncludePath;
         private System.Windows.Forms.CheckBox chkCLibIncludePath;
@@ -5492,6 +5598,32 @@
         private System.Windows.Forms.TextBox txtOutputGain;
         private System.Windows.Forms.TextBox txtPWMFrequency;
         private System.Windows.Forms.Button cmdGetInputGain;
+        private System.Windows.Forms.PictureBox picInfoAlternateInputSource;
+        private System.Windows.Forms.ToolStrip toolStripTiming;
+        private System.Windows.Forms.ToolStripButton chkTimingCursor;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+        private System.Windows.Forms.ToolStripLabel tslAbsolutePositionLabel;
+        private System.Windows.Forms.ToolStripTextBox txtTimingAbsolutePosition;
+        private System.Windows.Forms.ToolStripLabel tslAbsolutePositionUnit;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripLabel tslRelativePosToTrigger;
+        private System.Windows.Forms.ToolStripTextBox txtTimingRelativePosToTrigger;
+        private System.Windows.Forms.ToolStripLabel tslRelativePosToTriggerUnit;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripLabel tslRelativePosToFallingEdge;
+        private System.Windows.Forms.ToolStripTextBox txtTimingRelativePosToFallingEdge;
+        private System.Windows.Forms.ToolStripLabel tslRelativePosToFallingEdgeUnit;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripLabel tslTriggerPlacement;
+        private System.Windows.Forms.ToolStripComboBox cmbTriggerPlacement;
+        private System.Windows.Forms.PictureBox picInfoDSPConfig;
+        private System.Windows.Forms.PictureBox picInfoCascadeFunctionCall;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox chkEnableAdaptiveGainControl;
+        private System.Windows.Forms.RadioButton radAGCUserModulation;
+        private System.Windows.Forms.RadioButton radAGCAltSourceVsSource;
+        private System.Windows.Forms.RadioButton radAGCSourceVsAltSource;
+        private System.Windows.Forms.PictureBox picInfoAGC;
     }
 }
 

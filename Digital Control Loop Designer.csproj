@@ -163,6 +163,12 @@
     <Compile Include="clsNPNZ.cs" />
     <Compile Include="AssemblyGenerator.cs" />
     <Compile Include="CCodeGenerator.cs" />
+    <Compile Include="frmToolTip.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmToolTip.Designer.cs">
+      <DependentUpon>frmToolTip.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmCalculateInputGain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -220,6 +226,9 @@
     <Content Include="Resources\ActiproSoftware.INIFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="frmToolTip.resx">
+      <DependentUpon>frmToolTip.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmCalculateInputGain.resx">
       <DependentUpon>frmCalculateInputGain.cs</DependentUpon>
     </EmbeddedResource>
