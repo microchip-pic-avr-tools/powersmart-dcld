@@ -31,6 +31,8 @@ namespace dcld
         clsFeedbackDeclaration feedback = new clsFeedbackDeclaration();
         clsOutputDeclaration ctrl_output = new clsOutputDeclaration();
 
+        clsMPLABXHandler MPLABXProject = new clsMPLABXHandler();
+
         // Value table formating
         Color WarningBackground = Color.FromArgb(255, 255, 120);
         Color AlertBackground = Color.FromArgb(255, 200, 200);
@@ -71,7 +73,7 @@ namespace dcld
         
         string NewProjectFilenameDummy = "";
         string ExternalFileOpenPath = "";
-        string MPLABXProjectDirectory = "";
+//        string MPLABXProjectDirectory = "";
         string UserGuideFileName = "";
 
         string rootPath = Application.StartupPath;
@@ -1649,8 +1651,8 @@ namespace dcld
 
                 if (ProjectFile.FileName.Trim().Length > 7)
                 { sfdlg.InitialDirectory = ProjectFile.Directory; }
-                else if (MPLABXProjectDirectory.Trim().Length > 7)
-                { sfdlg.InitialDirectory = MPLABXProjectDirectory; }
+                else if (MPLABXProject.ProjectDirectory.Trim().Length > 7)
+                { sfdlg.InitialDirectory = MPLABXProject.ProjectDirectory; }
 
                 if (sfdlg.ShowDialog() == DialogResult.OK)
                 {
@@ -1668,9 +1670,9 @@ namespace dcld
                             this.Text = Application.ProductName + " v" + Application.ProductVersion + " - [" + str_dum + "]";
 
                             // Rescan and adopt code generator file path declarations
-                            if (MPLABXProjectDirectory.Trim().Length == 0)
-                            { MPLABXProjectDirectory = ProjectFile.Directory; }
-                            SetMPLABXProjectDirectory(MPLABXProjectDirectory);
+                            if (MPLABXProject.ProjectDirectory.Trim().Length == 0)
+                            { MPLABXProject.ProjectDirectory = ProjectFile.Directory; }
+                            SetMPLABXProjectDirectory(MPLABXProject.ProjectDirectory);
 
                         }
                     }
@@ -2079,18 +2081,18 @@ namespace dcld
                 this.txtMPLABXProjectDir.Text = ProjectFile.ReadKey("CodeGenerationPaths", "MPLABX_ProjectDirectory", "");
                 if (txtMPLABXProjectDir.Text.Trim().Length > 0)
                 {
-                    MPLABXProjectDirectory = GetMPLABXProjectPath((object)txtMPLABXProjectDir, (EventArgs)null);
-                    txtMPLABXProjectDir.ToolTipText = MPLABXProjectDirectory;
+                    MPLABXProject.ProjectDirectory = GetMPLABXProjectPath((object)txtMPLABXProjectDir, (EventArgs)null);
+                    txtMPLABXProjectDir.ToolTipText = MPLABXProject.ProjectDirectory;
                 }
 
                 // write debugging info to output window
                 DebugInfoPrintLine(">Code Generator File Paths:");
                 DebugInfoPrintLine(">    - DCLD Project Directory:         " + ProjectFile.Directory);
-                DebugInfoPrintLine(">    - MPLAB X Project Directory:      " + MPLABXProjectDirectory);
-                DebugInfoPrintLine(">    - ASM Source File Directory:      " + GetAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProjectDirectory));
-                DebugInfoPrintLine(">    - C Source File Directory:        " + GetAbsoluteFilePath(txtCSourcePath.Text, MPLABXProjectDirectory));
-                DebugInfoPrintLine(">    - C Header File Directory:        " + GetAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProjectDirectory));
-                DebugInfoPrintLine(">    - Library Header File Directory:  " + GetAbsoluteFilePath(txtCLibPath.Text, MPLABXProjectDirectory));
+                DebugInfoPrintLine(">    - MPLAB X Project Directory:      " + MPLABXProject.ProjectDirectory);
+                DebugInfoPrintLine(">    - ASM Source File Directory:      " + GetAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.ProjectDirectory));
+                DebugInfoPrintLine(">    - C Source File Directory:        " + GetAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.ProjectDirectory));
+                DebugInfoPrintLine(">    - C Header File Directory:        " + GetAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.ProjectDirectory));
+                DebugInfoPrintLine(">    - Library Header File Directory:  " + GetAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.ProjectDirectory));
 
                 // Set Flags
                 ProjectFileLoadActive = false;
@@ -2586,7 +2588,7 @@ namespace dcld
 
                 if (str_path.Contains("." + _dsp))  // path contains relative path items
                 {
-                    str_path = ConvertFilePathUnix2Win(GetAbsoluteFilePath(str_path, MPLABXProjectDirectory));
+                    str_path = ConvertFilePathUnix2Win(GetAbsoluteFilePath(str_path, MPLABXProject.ProjectDirectory));
                 }
                 
                 else if ((str_path.Length < 3) && (str_path.Substring(0, 2) != "." + _dsp) && (str_path.Substring(0, 3) != ".." + _dsp))
@@ -3334,28 +3336,28 @@ namespace dcld
             switch (sender_name) 
             { 
                 case "cmdASMSourcePath":
-                    sfdlg.InitialDirectory = ConvertFilePathUnix2Win(GetAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProjectDirectory));
+                    sfdlg.InitialDirectory = ConvertFilePathUnix2Win(GetAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.ProjectDirectory));
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text + "_asm";
                     sfdlg.DefaultExt = ".s";
                     sfdlg.FilterIndex = 1;
                     break;
 
                 case "cmdCHeaderPath":
-                    sfdlg.InitialDirectory = ConvertFilePathUnix2Win(GetAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProjectDirectory));
+                    sfdlg.InitialDirectory = ConvertFilePathUnix2Win(GetAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.ProjectDirectory));
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text;
                     sfdlg.DefaultExt = ".h";
                     sfdlg.FilterIndex = 2;
                     break;
 
                 case "cmdCLibPath":
-                    sfdlg.InitialDirectory = ConvertFilePathUnix2Win(GetAbsoluteFilePath(txtCLibPath.Text, MPLABXProjectDirectory));
+                    sfdlg.InitialDirectory = ConvertFilePathUnix2Win(GetAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.ProjectDirectory));
                     sfdlg.FileName = "npnz16b.h";
                     sfdlg.DefaultExt = ".h";
                     sfdlg.FilterIndex = 2;
                     break;
 
                 case "cmdCSourcePath":
-                    sfdlg.InitialDirectory = ConvertFilePathUnix2Win(GetAbsoluteFilePath(txtCSourcePath.Text, MPLABXProjectDirectory));
+                    sfdlg.InitialDirectory = ConvertFilePathUnix2Win(GetAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.ProjectDirectory));
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text;
                     sfdlg.DefaultExt = ".c";
                     sfdlg.FilterIndex = 3;
@@ -3383,19 +3385,19 @@ namespace dcld
                         {
                                 
                             case "cmdASMSourcePath":
-                                txtASMSourcePath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(str_path, MPLABXProjectDirectory));
+                                txtASMSourcePath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(str_path, MPLABXProject.ProjectDirectory));
                                 break;
 
                             case "cmdCHeaderPath":
-                                txtCHeaderPath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(str_path, MPLABXProjectDirectory));
+                                txtCHeaderPath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(str_path, MPLABXProject.ProjectDirectory));
                                 break;
 
                             case "cmdCLibPath":
-                                txtCLibPath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(str_path, MPLABXProjectDirectory));
+                                txtCLibPath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(str_path, MPLABXProject.ProjectDirectory));
                                 break;
 
                             case "cmdCSourcePath":
-                                txtCSourcePath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(str_path, MPLABXProjectDirectory));
+                                txtCSourcePath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(str_path, MPLABXProject.ProjectDirectory));
                                 break;
 
                             default:
@@ -3559,10 +3561,10 @@ namespace dcld
             str_dum = PathDeclaration.Trim(); // Copy parameter
 
             // Check for include files reference path
-            if (MPLABXProjectDirectory.Trim() == "")
+            if (MPLABXProject.ProjectDirectory.Trim() == "")
                 ref_dum = rootPath;
             else
-                ref_dum = MPLABXProjectDirectory.Trim();
+                ref_dum = MPLABXProject.ProjectDirectory.Trim();
 
             // Get relative path with regards to reference path of MPLAB X include path
             str_dum = GetRelativeFilePath(str_dum, ref_dum);
@@ -4436,7 +4438,7 @@ namespace dcld
                     // If user types in a directory, update MPLAB X Project Directory value
                     if (str_dum.Length == 0)
                     {
-                        MPLABXProjectDirectory = "";                        // Clear MPLAB X project directory declaration
+                        MPLABXProject.ProjectDirectory = "";                // Clear MPLAB X project directory declaration
                         toolStripButtonMPLABXPathWarning.Visible = false;   // Hide warning icon
                     }
                     if (System.IO.Directory.Exists(str_dum))
@@ -4867,12 +4869,12 @@ namespace dcld
             if ((str_path.Length > 3) && (str_path.Substring(str_path.Length - _dsp.Length, _dsp.Length) != _dsp)) str_path += _dsp;
 
             // Set MPLAB X Project Directory Path Reference (always absolute)
-            MPLABXProjectDirectory = str_path;
-            txtMPLABXProjectDir.ToolTipText = MPLABXProjectDirectory;
+            MPLABXProject.ProjectDirectory = str_path;
+            txtMPLABXProjectDir.ToolTipText = MPLABXProject.ProjectDirectory;
 
             // Buffer file paths as absolute paths
-            if (MPLABXProjectDirectory.Length > 0)
-            { ref_path = MPLABXProjectDirectory; }
+            if (MPLABXProject.ProjectDirectory.Length > 0)
+            { ref_path = MPLABXProject.ProjectDirectory; }
             else
             { ref_path = ProjectFile.Directory; }
 
@@ -4882,10 +4884,10 @@ namespace dcld
             c_lib_buf = GetAbsoluteFilePath(txtCLibPath.Text, ref_path);
 
             // Make file locations relative
-            txtASMSourcePath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(asm_source_buf, MPLABXProjectDirectory));
-            txtCSourcePath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(c_cource_buf, MPLABXProjectDirectory));
-            txtCHeaderPath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(c_head_buf, MPLABXProjectDirectory));
-            txtCLibPath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(c_lib_buf, MPLABXProjectDirectory));
+            txtASMSourcePath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(asm_source_buf, MPLABXProject.ProjectDirectory));
+            txtCSourcePath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(c_cource_buf, MPLABXProject.ProjectDirectory));
+            txtCHeaderPath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(c_head_buf, MPLABXProject.ProjectDirectory));
+            txtCLibPath.Text = ConvertFilePathUnix2Win(GetRelativeFilePath(c_lib_buf, MPLABXProject.ProjectDirectory));
 
             // Determine relative path of MPLAB X Project Directory Path and show it in directory test box
 
@@ -4911,8 +4913,8 @@ namespace dcld
             bool IsMPLABXProject = false;
 
             // Determine target directory of folder dialog
-            if (MPLABXProjectDirectory.Trim().Length > 0)   // MPLAB X project location is available
-            { str_path = MPLABXProjectDirectory.Trim(); }
+            if (MPLABXProject.ProjectDirectory.Trim().Length > 0)   // MPLAB X project location is available
+            { str_path = MPLABXProject.ProjectDirectory.Trim(); }
             else 
             {
                 if (ProjectFile.FileName.Trim().Length == 0) // DCLD project location is not available
