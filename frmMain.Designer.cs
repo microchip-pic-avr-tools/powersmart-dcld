@@ -492,6 +492,7 @@
             this.txtMPLABXProjectDir = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripLabelMPLABXDirectory = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButtonMPLABXPathWarning = new System.Windows.Forms.ToolStripButton();
+            this.stbMainProgressTime = new System.Windows.Forms.ToolStripStatusLabel();
             this.mnuMain.SuspendLayout();
             this.stbMain.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -923,6 +924,7 @@
             this.stbMainStatusLabel,
             this.stbProgressBarLabel,
             this.stbProgressBar,
+            this.stbMainProgressTime,
             this.toolStripTableOptions});
             this.stbMain.Location = new System.Drawing.Point(0, 833);
             this.stbMain.Name = "stbMain";
@@ -937,7 +939,7 @@
             this.stbMainStatusLabel.Image = ((System.Drawing.Image)(resources.GetObject("stbMainStatusLabel.Image")));
             this.stbMainStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.stbMainStatusLabel.Name = "stbMainStatusLabel";
-            this.stbMainStatusLabel.Size = new System.Drawing.Size(1206, 17);
+            this.stbMainStatusLabel.Size = new System.Drawing.Size(1041, 17);
             this.stbMainStatusLabel.Spring = true;
             this.stbMainStatusLabel.Text = "Status";
             this.stbMainStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -5091,6 +5093,12 @@
             this.toolStripButtonMPLABXPathWarning.Text = "MPLAB X Project Directory Warning";
             this.toolStripButtonMPLABXPathWarning.Visible = false;
             // 
+            // stbMainProgressTime
+            // 
+            this.stbMainProgressTime.Name = "stbMainProgressTime";
+            this.stbMainProgressTime.Size = new System.Drawing.Size(32, 17);
+            this.stbMainProgressTime.Text = "0 ms";
+            // 
             // frmMain
             // 
             this.AllowDrop = true;
@@ -5624,6 +5632,7 @@
         private System.Windows.Forms.RadioButton radAGCAltSourceVsSource;
         private System.Windows.Forms.RadioButton radAGCSourceVsAltSource;
         private System.Windows.Forms.PictureBox picInfoAGC;
+        private System.Windows.Forms.ToolStripStatusLabel stbMainProgressTime;
     }
 }
 

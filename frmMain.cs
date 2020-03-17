@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Numerics;
 
+using System.Diagnostics;
 
 namespace dcld
 {
@@ -769,6 +770,8 @@ namespace dcld
             bool valid_data_entry = false;
             string str_buf = "";
 
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             try
             {
             
@@ -1134,6 +1137,10 @@ namespace dcld
             
             
             // Reset control flags
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds.ToString(CultureInfo.CurrentCulture);
+            stbMainProgressTime.Text = "Refresh Period: " + elapsedMs + " ms";
+
             FilterTypeChanged = false;
             ScalingChanged = false;
             UpdateComplete = true;
