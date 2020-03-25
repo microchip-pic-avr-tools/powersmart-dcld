@@ -29,6 +29,10 @@ namespace dcld
             string[] dum_sep = new string[1];
             bool IsFile = false;
 
+            // Skip if any of the paths is insufficient
+            if ((RelativeFilePath.Trim().Length == 0) || (ReferencePath.Trim().Length == 0))
+                return("");
+
             System.IO.FileInfo _fi_src = new System.IO.FileInfo(RelativeFilePath.Trim());
             System.IO.FileInfo _fi_ref = new System.IO.FileInfo(ReferencePath.Trim());
 
@@ -105,13 +109,17 @@ namespace dcld
 
         internal string ToRelativeFilePath(string AbsoluteFilePath, string ReferencePath)
         {
-            int i = 0, up_steps = 0, fork = 0;
+            int i = 0, fork = 0;
             bool IsFile = false;
             string str_path = "";
             string source_path = "", reference_path = "";
             string[] str_arr_anchor_path;
             string[] str_arr_absolute_path;
             string[] dum_sep = new string[1];
+
+            // Skip if any of the paths is insufficient
+            if ((AbsoluteFilePath.Trim().Length == 0) || (ReferencePath.Trim().Length == 0))
+                return ("");
 
             System.IO.FileInfo _fi_src = new System.IO.FileInfo(AbsoluteFilePath.Trim());
             System.IO.FileInfo _fi_ref = new System.IO.FileInfo(ReferencePath.Trim());
@@ -156,19 +164,29 @@ namespace dcld
 
 
                 // Build relative path
-                for (i = 0; i < str_arr_anchor_path.Length; i++)
+                int array_limit = 0;
+
+                if (str_arr_anchor_path.Length <= str_arr_absolute_path.Length)
+                    array_limit = str_arr_anchor_path.Length;
+                else
+                    array_limit = str_arr_absolute_path.Length;
+
+                for (i = 0; i < array_limit; i++)
                 {
-                    if (i == str_arr_absolute_path.Length)
-                        break;
+                    // Check where paths separate..
                     if (str_arr_absolute_path[i] != str_arr_anchor_path[i])
-                        up_steps++;
+                    {
+                        fork = i;   // save forking point
+                        break;      // Leave loop
+                    }
                 }
-                fork = (str_arr_anchor_path.Length - up_steps);
-                for (i = fork; i < str_arr_anchor_path.Length; i++)
-                {
+                if (fork == 0)
+                    fork = array_limit;
+
+                for (i = (fork); i < str_arr_anchor_path.Length; i++)
                     str_path += ".." + _adsp;
-                }
-                for (i = fork; i < str_arr_absolute_path.Length; i++)
+
+                for (i = (fork); i < str_arr_absolute_path.Length; i++)
                 {
                     // If path points to a file, remove the last backslash
                     if ((i == (str_arr_absolute_path.Length - 1)) && IsFile)
