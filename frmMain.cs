@@ -181,6 +181,18 @@ namespace dcld
 
             try 
             {
+
+                // Determine App Product Version Key
+                string str_dum = "";
+                string[] dum_sep = new string[1];
+                dum_sep[0] = ".";
+                string[] str_arr = Application.ProductVersion.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries); ;
+
+                str_dum = Convert.ToInt32(str_arr[0]).ToString("#0") +
+                          Convert.ToInt32(str_arr[1]).ToString("#0") +
+                          Convert.ToInt32(str_arr[2]).ToString("#00");
+                dcldGlobals.APP_VERSION_KEY = Convert.ToInt32(str_dum);
+                
                 // Initialize debug output
                 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 DebugInfoPrintLine(
@@ -188,7 +200,7 @@ namespace dcld
                     ">Application start up..." + "\r\n" +
                     "\r\n" +
                     "Product Name:                    " + Application.ProductName.ToString() + "\r\n" +
-                    "Application Version:             " + Application.ProductVersion.ToString() + "\r\n" +
+                    "Application Version:             " + Application.ProductVersion.ToString() + " (" + dcldGlobals.APP_VERSION_KEY.ToString() + ")\r\n" +
                     "Company Name:                    " + Application.CompanyName.ToString() + "\r\n" +
                     "\r\n" +
                     "Operating System:\r\n" +
@@ -1527,6 +1539,7 @@ namespace dcld
                 ProjectFile.WriteKey("GUI", "SaveDate", Convert.ToString(System.DateTime.Now));
                 ProjectFile.WriteKey("GUI", "Name", Application.ProductName);
                 ProjectFile.WriteKey("GUI", "Version", Application.ProductVersion);
+                ProjectFile.WriteKey("GUI", "VersionKey", dcldGlobals.APP_VERSION_KEY.ToString());
                 ProjectFile.WriteKey("GUI", "AGS Version", AsmGeneratorScript.ReadKey("generic", "Version", "N/A"));
 
                 // Status Bar Progress Indication
