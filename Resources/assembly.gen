@@ -2,11 +2,11 @@
 Name=Assembly Generator Script
 Description=this script defines DSP assembly code generation templates used to generate user-tailored SMPS control loops using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=1.3.3
-Date=03/04/2020
+Version=1.3.11
+Date=03/25/2020
 
 [history]
-count=10
+count=14
 0=04/03/19;1.1.1;Added input offset compensation applied to input source
 1=10/18/19;1.2.0;Changed existing input offset compensation to full bi-directional feedback implementation
 2=10/19/19;1.2.1;Added code option for feedback signal rectification
@@ -15,8 +15,12 @@ count=10
 5=11/08/19;1.2.4;Added 'Changed data provider items from local copies in cNPNZ16b_t data structure to poinbter to external data buffers
 6=01/10/19;1.3.0;Added support for cascaded functions. This allows a controller to call another controller or user-defined function extension code module
 7=01/13/2020;1.3.1;Reordered cascaded function call to execute full cascade even if controller is disabled.
-8=03/02/2020;1.3.2;Added comments to source code sections
-9=03/04/2020;1.3.3;Fixed bug in single bit-shift coefficient scaler data structure
+8=03/02/2020;1.3.2;Added comments to assembly building blocks
+9=03/04/2020;1.3.3;Fixed bug in single bit-shift scaler data structure declaration
+10=03/04/2020;1.3.4;Fixed bug with corrupted character in floating point scaling data structure
+11=03/24/2020;1.3.5;Added Adaptive Gain Modulation factors to cNPNZ_t data structure
+12=03/24/2020;1.3.8;Renamed data structure prefix NPMZ16_ to NPNZ16_
+13=03/25/2020;1.3.9;Added Adaptive Gain Modulation to single.bit shifted, dual bit shifted and output factor scaling modes
 
 [filter_block_scaling_modes]
 count=6
@@ -50,7 +54,7 @@ FORMULA=IMPRODUCT(%PoleAtOrigin%, %LeadLagBlock%)
 [add_data_structure_sbsft]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
 cycles=0
-lines=30
+lines=35
 comment0=status word at address-offset
 comment1=pointer to source memory address
 comment2=pointer to alternate source memory address
@@ -81,6 +85,11 @@ comment26=pointer to external data buffer of most recent control error
 comment27=pointer to external data buffer of most recent control output
 comment28=pointer to external, cascaded function which will be called from controller
 comment29=16-bit wide function parameter or pointer to a parameter data structure of cascaded function
+comment30=generic 16-bit wide parameter #1 for advanced control options
+comment31=generic 16-bit wide parameter #2 for advanced control options
+comment32=generic 16-bit wide parameter #3 for advanced control options
+comment33=generic 16-bit wide parameter #4 for advanced control options
+comment34=generic 16-bit wide parameter #5 for advanced control options
 code0=.equ offStatus,                 0
 code1=.equ offSourceRegister,         2
 code2=.equ offAltSourceRegister,      4
@@ -111,6 +120,11 @@ code26=.equ offPtrControlError,        52
 code27=.equ offPtrControlOutput,       54
 code28=.equ offPtrCascadedFunction,    56 
 code29=.equ offPtrCascadedFunParam,    58
+code30=.equ offSourceNormShift,        60
+code31=.equ offAltSourceNormShift,     62
+code32=.equ offGainModFactor,          64
+code33=.equ offGainModScaler,          66
+code34=.equ offGainModulationNorm,     68
 
 
 [blockset_sbsft_0]
@@ -298,7 +312,7 @@ count=85
 [add_data_structure_scscl]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
 cycles=0
-lines=30
+lines=35
 comment0=status word at address-offset = 0
 comment1=pointer to source memory address
 comment2=pointer to alternate source memory address
@@ -329,6 +343,11 @@ comment26=pointer to external data buffer of most recent control error
 comment27=pointer to external data buffer of most recent control output
 comment28=pointer to external, cascaded function which will be called from controller
 comment29=16-bit wide function parameter or pointer to a parameter data structure of cascaded function
+comment30=generic 16-bit wide parameter #1 for advanced control options
+comment31=generic 16-bit wide parameter #2 for advanced control options
+comment32=generic 16-bit wide parameter #3 for advanced control options
+comment33=generic 16-bit wide parameter #4 for advanced control options
+comment34=generic 16-bit wide parameter #5 for advanced control options
 code0=.equ offStatus,                 0
 code1=.equ offSourceRegister,         2
 code2=.equ offAltSourceRegister,      4
@@ -359,6 +378,11 @@ code26=.equ offPtrControlError,        52
 code27=.equ offPtrControlOutput,       54
 code28=.equ offPtrCascadedFunction,    56 
 code29=.equ offPtrCascadedFunParam,    58
+code30=.equ offSourceNormShift,        60
+code31=.equ offAltSourceNormShift,     62
+code32=.equ offGainModFactor,          64
+code33=.equ offGainModScaler,          66
+code34=.equ offGainModulationNorm,     68
 
 
 [blockset_scscl_0]
@@ -455,7 +479,7 @@ count=83
 [add_data_structure_dbsft]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
 cycles=0
-lines=30
+lines=35
 comment0=status word at address-offset = 0
 comment1=pointer to source memory address
 comment2=pointer to alternate source memory address
@@ -486,6 +510,11 @@ comment26=pointer to external data buffer of most recent control error
 comment27=pointer to external data buffer of most recent control output
 comment28=pointer to external, cascaded function which will be called from controller
 comment29=16-bit wide function parameter or pointer to a parameter data structure of cascaded function
+comment30=generic 16-bit wide parameter #1 for advanced control options
+comment31=generic 16-bit wide parameter #2 for advanced control options
+comment32=generic 16-bit wide parameter #3 for advanced control options
+comment33=generic 16-bit wide parameter #4 for advanced control options
+comment34=generic 16-bit wide parameter #5 for advanced control options
 code0=.equ offStatus,                 0
 code1=.equ offSourceRegister,         2
 code2=.equ offAltSourceRegister,      4
@@ -516,6 +545,11 @@ code26=.equ offPtrControlError,        52
 code27=.equ offPtrControlOutput,       54
 code28=.equ offPtrCascadedFunction,    56 
 code29=.equ offPtrCascadedFunParam,    58
+code30=.equ offSourceNormShift,        60
+code31=.equ offAltSourceNormShift,     62
+code32=.equ offGainModFactor,          64
+code33=.equ offGainModScaler,          66
+code34=.equ offGainModulationNorm,     68
 
 
 [blockset_dbsft_0]
@@ -523,7 +557,7 @@ code29=.equ offPtrCascadedFunParam,    58
 ;linear execution of compensation filter
 wreg_usage=4,6,8,10,13
 accu_usage=ab
-count=83
+count=88
 0=disclaimer
 1=lists
 2=section_header
@@ -562,57 +596,62 @@ count=83
 35=comp_mac_start_accb_clear_prefetch
 36=comp_mac_loop_b_term_accb
 37=comp_mac_end_accb
-38=comp_backward_norm_accb
-39=comp_add_accb_to_acca
-40=comp_mac_store_acca
-41=anti_windup
-42=anti_windup_max
-43=anti_windup_min
-44=comp_writeback
-45=shadow_copy_control_output
-46=adc_trigger_a_placement
-47=adc_trigger_b_placement
-48=load_control_history_array_ptr
-49=comp_control_history_update
-50=comp_control_add_most_recent_to_history
-51=update_status_bitfield
-52=context_restore
-53=context_restore_mac_registers
-54=context_restore_accumulator_a
-55=context_restore_accumulator_b
-56=context_restore_core_config
-57=context_restore_core_status
-58=enable_disable_end
-59=enable_disable_end_dummy_read
-60=enable_disable_end_dummy_read_end
-61=cascaded_function_call
-62=context_restore
-63=context_restore_shadow
-64=context_restore_status_word_wreg
-65=return
-66=reset_function_head
-67=clear_control_history_start
-68=clear_control_history_loop
-69=clear_control_history_end
-70=clear_error_history_start
-71=clear_error_history_loop
-72=clear_error_history_end
-73=return
-74=charge_function_head
-75=charge_error_history_start
-76=charge_error_history_loop
-77=charge_error_history_end
-78=charge_control_history_start
-79=charge_control_history_loop
-80=charge_control_history_end
-81=return
-82=end
+38=agc_factor_multiply_start
+39=agc_factor_multiply_enable_start
+40=agc_factor_multiply_get_factor_call
+41=agc_factor_multiply_scaled
+42=agc_factor_multiply_enable_end
+43=comp_backward_norm_accb
+44=comp_add_accb_to_acca
+45=comp_mac_store_acca
+46=anti_windup
+47=anti_windup_max
+48=anti_windup_min
+49=comp_writeback
+50=shadow_copy_control_output
+51=adc_trigger_a_placement
+52=adc_trigger_b_placement
+53=load_control_history_array_ptr
+54=comp_control_history_update
+55=comp_control_add_most_recent_to_history
+56=update_status_bitfield
+57=context_restore
+58=context_restore_mac_registers
+59=context_restore_accumulator_a
+60=context_restore_accumulator_b
+61=context_restore_core_config
+62=context_restore_core_status
+63=enable_disable_end
+64=enable_disable_end_dummy_read
+65=enable_disable_end_dummy_read_end
+66=cascaded_function_call
+67=context_restore
+68=context_restore_shadow
+69=context_restore_status_word_wreg
+70=return
+71=reset_function_head
+72=clear_control_history_start
+73=clear_control_history_loop
+74=clear_control_history_end
+75=clear_error_history_start
+76=clear_error_history_loop
+77=clear_error_history_end
+78=return
+79=charge_function_head
+80=charge_error_history_start
+81=charge_error_history_loop
+82=charge_error_history_end
+83=charge_control_history_start
+84=charge_control_history_loop
+85=charge_control_history_end
+86=return
+87=end
 
 
 [add_data_structure_fscl]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
 cycles=0
-lines=30
+lines=35
 comment0=status word at address-offset = 0
 comment1=pointer to source memory address
 comment2=pointer to alternate source memory address
@@ -643,6 +682,11 @@ comment26=pointer to external data buffer of most recent control error
 comment27=pointer to external data buffer of most recent control output
 comment28=pointer to external, cascaded function which will be called from controller
 comment29=16-bit wide function parameter or pointer to a parameter data structure of cascaded function
+comment30=generic 16-bit wide parameter #1 for advanced control options
+comment31=generic 16-bit wide parameter #2 for advanced control options
+comment32=generic 16-bit wide parameter #3 for advanced control options
+comment33=generic 16-bit wide parameter #4 for advanced control options
+comment34=generic 16-bit wide parameter #5 for advanced control options
 code0=.equ offStatus,                 0
 code1=.equ offSourceRegister,         2
 code2=.equ offAltSourceRegister,      4
@@ -673,6 +717,11 @@ code26=.equ offPtrControlError,        52
 code27=.equ offPtrControlOutput,       54
 code28=.equ offPtrCascadedFunction,    56 
 code29=.equ offPtrCascadedFunParam,    58
+code30=.equ offSourceNormShift,        60
+code31=.equ offAltSourceNormShift,     62
+code32=.equ offGainModFactor,          64
+code33=.equ offGainModScaler,          66
+code34=.equ offGainModulationNorm,     68
 
 
 [blockset_fscl_0]
@@ -799,19 +848,21 @@ code0=.section .text
 [add_global_flags]
 head_comment=%SEPARATOR%; Define status flags bit positions
 cycles=0
-lines=6
+lines=7
 comment0=bit position of the ENABLE control bit
 comment1=bit position of the INVERT_INPUT control bit
 comment2=bit position of the SWAP_SOURCE control bit
 comment3=bit position of the SWAP_TARGET control bit
-comment4=bit position of the UPPER_SATURATION_FLAG status bit
-comment5=bit position of the LOWER_SATURATION_FLAG status bit
-code0=.equ NPMZ16_STATUS_ENABLE,       15
-code1=.equ NPMZ16_STATUS_INVERT_INPUT, 14
-code2=.equ NPMZ16_STATUS_SWAP_SOURCE,  13
-code3=.equ NPMZ16_STATUS_SWAP_TARGET,  12
-code4=.equ NPMZ16_STATUS_USAT,         1
-code5=.equ NPMZ16_STATUS_LSAT,         0
+comment4=bit position of the AGM_ENABLE control bit
+comment5=bit position of the UPPER_SATURATION_FLAG status bit
+comment6=bit position of the LOWER_SATURATION_FLAG status bit
+code0=.equ NPNZ16_STATUS_ENABLE,       15
+code1=.equ NPNZ16_STATUS_INVERT_INPUT, 14
+code2=.equ NPNZ16_STATUS_SWAP_SOURCE,  13
+code3=.equ NPNZ16_STATUS_SWAP_TARGET,  12
+code4=.equ NPNZ16_STATUS_AGM_ENABLE,   11
+code5=.equ NPNZ16_STATUS_USAT,         1
+code6=.equ NPNZ16_STATUS_LSAT,         0
 
 [exec_function_head]
 head_comment=%SEPARATOR%; Global function declaration\n; This function calls the z-domain controller processing the latest data point input%SEPARATOR%
@@ -1069,14 +1120,14 @@ comment0=restore CPU status registers
 code0=pop SR
 
 [enable_disable_start]
-declaration=.equ NPMZ16_STATUS_ENABLE, 15
+declaration=.equ NPNZ16_STATUS_ENABLE, 15
 data_structure=.equ	offStatus, 0
 head_comment=%SEPARATOR%; Check status word for Enable/Disable flag and bypass computation, if disabled
 cycles=4
 lines=3
 comment0=%EMPTY%
 code0=mov [w0 + #offStatus], w12
-code1=btss w12, #NPMZ16_STATUS_ENABLE
+code1=btss w12, #NPNZ16_STATUS_ENABLE
 code2=bra %PREFIXU%_BYPASS_LOOP
 
 [enable_disable_end_dummy_read]
@@ -1185,14 +1236,14 @@ head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=set upper limit saturation flag bit
-code0=bset w12, #NPMZ16_STATUS_USAT
+code0=bset w12, #NPNZ16_STATUS_USAT
 
 [anti_windup_max_clear_status_flag]
 head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=clear upper limit saturation flag bit
-code0=bclr w12, #NPMZ16_STATUS_USAT
+code0=bclr w12, #NPNZ16_STATUS_USAT
 
 [anti_windup_max_override]
 head_comment=%EMPTY%
@@ -1254,14 +1305,14 @@ head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=set lower limit saturation flag bit
-code0=bset w12, #NPMZ16_STATUS_LSAT
+code0=bset w12, #NPNZ16_STATUS_LSAT
 
 [anti_windup_min_clear_status_flag]
 head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=clear lower limit saturation flag bit
-code0=bclr w12, #NPMZ16_STATUS_LSAT
+code0=bclr w12, #NPNZ16_STATUS_LSAT
 
 [anti_windup_min_override]
 head_comment=%EMPTY%
@@ -1297,7 +1348,7 @@ comment1=test SWAP_SOURCE status bit in status word and skip following instructi
 comment2=load pointer to primary input source register
 comment3=move value from primary or alternate input source into working register
 code0=mov [w0 + #offSourceRegister], w2
-code1=btsc w12, #NPMZ16_STATUS_SWAP_SOURCE
+code1=btsc w12, #NPNZ16_STATUS_SWAP_SOURCE
 code2=mov [w0 + #offAltSourceRegister], w2
 code3=mov [w2], w1
 
@@ -1316,7 +1367,7 @@ cycles=2
 lines=2
 comment0=Test control bit if value should be inverted
 comment1=invert value
-code0=btsc w12, #NPMZ16_STATUS_INVERT_INPUT
+code0=btsc w12, #NPNZ16_STATUS_INVERT_INPUT
 code1=neg w1, w1
 
 [shadow_copy_control_input]
@@ -1795,7 +1846,7 @@ comment1=if SWAP TARGET option is enabled, execute next instruction
 comment2=move pointer to alternate target to working register
 comment3=move control output into target address
 code0=mov [w0 + #offTargetRegister], w8
-code1=btsc w12, #NPMZ16_STATUS_SWAP_TARGET
+code1=btsc w12, #NPNZ16_STATUS_SWAP_TARGET
 code2=mov [w0 + #offAltTargetRegister], w8
 code3=mov w4, [w8]
 
@@ -1941,6 +1992,96 @@ code0=mov [w8 - #%ADDR*3%], w5
 code1=mpy w4*w6, a
 code2=sftac a, w5
 code3=add b
+
+[agc_factor_multiply_start]
+head_comment=%SEPARATOR%; Adaptive Loop Gain Modulation
+cycles=0
+lines=0
+
+[agc_factor_multiply_enable_start]
+head_comment=%EMPTY%
+cycles=3
+lines=2
+comment0=check status bit if Adaptive Gain Control is enabled
+comment1=branch to end of AGC calculation if not
+code0=btss w12, #NPMZ16_STATUS_AGM_ENABLE
+code1=bra %PREFIXU%_BYPASS_AGM
+
+[agc_factor_multiply_enable_end]
+head_comment=%EMPTY%
+cycles=0
+lines=1
+comment0=branch target for AGC enable-/disable-switch
+code0=%PREFIXU%_BYPASS_AGM:
+
+[agc_factor_multiply_get_factor_call]
+head_comment=%EMPTY%
+cycles=2
+lines=1
+comment0=call function determining most recent modulation factor
+code0=call %PREFIXG%_GetGainFactor
+
+[agc_factor_multiply_scaled]
+head_comment=%EMPTY%
+cycles=5
+lines=5
+comment0=load AGC modulation factor into working register
+comment1=load AGC modulation factor scaler into working register
+comment2=store result of accumulator B in working register
+comment3=multiply accumulator B result with AGC modulation factor
+comment4=shift result by AGC scaler
+code0=mov [w0 + #offGainModFactor], w4  
+code1=mov [w0 + #offGainModScaler], w2
+code2=sac.r b, w6
+code3=mpy w4*w6, b
+code4=sftac b, w2
+
+[agc_factor_get_factor]
+head_comment=%SEPARATOR%; Global function declaration %PREFIXG%_GetGainFactor\n; This function calculates a the gain modulation factor \n; by deviding Alternate Source by Source%SEPARATOR%
+cycles=9
+lines=21
+comment0=%EMPTY%
+comment1=%EMPTY%
+comment2=load pointer to most recent input voltage register
+comment3=load value into w1
+comment4=load most recent input voltage normalization scaler
+comment5=normalize input voltage value
+comment6=load pointer to most recent output voltage register
+comment7=load value into w2
+comment8=load most recent output voltage normalization scaler
+comment9=normalize output voltage value
+comment10=calculate most recent VL, place result in w6
+comment11=load pointer to nominal VL
+comment12=Save working register WREG0 (holds data structure start address)
+comment13=clear divider target register #0
+comment14=clear divider target register #1
+comment15=repeat divide instructions n-times
+comment16=divide nominal VL by instantaneous VL
+comment17=normalize result to Q15 number
+comment18=move result outo f WREG0
+comment19=restore WREG0 to get access to data structure back
+comment20=move gain factor result back into data structure
+code0=.global %PREFIXG%_GetGainFactor
+code1=%PREFIXG%_GetGainFactor:\n
+code2=mov [w0 + #offAltSourceRegister], w1
+code3=mov [w1], w1 
+code4=mov [w0 + offAltSourceNormShift], w3
+code5=sl  w1, w3, w1
+code6=mov [w0 + #offSourceRegister], w2
+code7=mov [w2], w2
+code8=mov [w0 + offSourceNormShift], w3
+code9=sl  w2, w2, w2
+code10=sub w1, w2, w6
+code11=mov [w0 + #offGainModulationNorm], w4
+code12=push w0
+code13=clr  w0
+code14=clr  w1
+code15=repeat %P33C%[#5]%P33E%[#17]%P33F%[#17]
+code16=divf w4, w6 ; divide VL_nom/VL
+code17=sl w0, #1, w0
+code18=mov w0, w2
+code19=pop w0
+code20=mov w2, [w0 + #offGainModFactor]
 
 
 ___________________________________________________

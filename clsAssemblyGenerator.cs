@@ -191,6 +191,27 @@ namespace dcld
             set { _FeedbackRectification = value; return; }
         }
 
+        private bool _AdaptiveGainModulationEnable = false;
+        internal bool AdaptiveGainModulationEnable        // B-Coefficients can be trimmed by a simple factor during runtime to adjust the loop gain
+        {
+            get { return _AdaptiveGainModulationEnable; }
+            set { _AdaptiveGainModulationEnable = value; return; }
+        }
+
+        private bool _AdaptiveGainModulationAddFunctionCall = false;
+        internal bool AdaptiveGainModulationAddFunctionCall // If enabled, it adds a function call to user function loading/calculating the most recent modulation factor
+        {
+            get { return _AdaptiveGainModulationAddFunctionCall; }
+            set { _AdaptiveGainModulationAddFunctionCall = value; return; }
+        }
+
+        private bool _AdaptiveGainModulationAddEnableSwitch = false;
+        internal bool AdaptiveGainModulationAddEnableSwitch // adds an enabled/disable control bit to the status word to turn on/off AGC
+        {
+            get { return _AdaptiveGainModulationAddEnableSwitch; }
+            set { _AdaptiveGainModulationAddEnableSwitch = value; return; }
+        }
+
 
         private bool _CreateCopyOfMostRecentControlInput = true;
         internal bool CreateCopyOfMostRecentControlInput
@@ -559,6 +580,26 @@ namespace dcld
 
                         case "comp_norm_error":
                             if (_AddErrorInputNormalization) str_dum = BuildCodeBlock(command);
+                            break;
+
+                        case "agc_factor_multiply_start":
+                            if (_AdaptiveGainModulationEnable) str_dum = BuildCodeBlock(command);
+                            break;
+
+                        case "agc_factor_multiply_enable_start":
+                            if (_AdaptiveGainModulationAddEnableSwitch) str_dum = BuildCodeBlock(command);
+                            break;
+
+                        case "agc_factor_multiply_enable_end":
+                            if (_AdaptiveGainModulationAddEnableSwitch) str_dum = BuildCodeBlock(command);
+                            break;
+
+                        case "agc_factor_multiply_get_factor_call":
+                            if (_AdaptiveGainModulationAddFunctionCall) str_dum = BuildCodeBlock(command);
+                            break;
+
+                        case "agc_factor_multiply_scaled":
+                            if (_AdaptiveGainModulationEnable) str_dum = BuildCodeBlock(command);
                             break;
 
                         case "anti_windup":

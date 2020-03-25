@@ -15,6 +15,13 @@ namespace dcld
             set { _GenScript = value; return; }
         }
 
+        private clsINIFileHandler _dcldProjectFile = new clsINIFileHandler();
+        internal clsINIFileHandler dcldProjectFile
+        {
+            get { return (_dcldProjectFile); }
+            set { _dcldProjectFile = value; return; }
+        }
+
         private bool _AddCHeaderIncludePath = false;
         internal bool AddCHeaderIncludePath
         {
@@ -135,8 +142,9 @@ namespace dcld
                 sDum = sDum.Replace("%SPACE%", " ");
                 sDum = sDum.Replace("%APP_PRODUCT_NAME%", Application.ProductName);
                 sDum = sDum.Replace("%APP_PRODUCT_VERSION%", Application.ProductVersion.ToString());
+                sDum = sDum.Replace("%APP_PRODUCT_VERSION_KEY%", dcldGlobals.APP_VERSION_KEY.ToString());
                 sDum = sDum.Replace("%CGS_VERSION%", _CGS_Version);
-                sDum = sDum.Replace("%CSG_VERSION_DATE%", _CGS_VersionDate);
+                sDum = sDum.Replace("%CGS_VERSION_DATE%", _CGS_VersionDate);
                 sDum = sDum.Replace("%COMP_TYPE_NAME%", _CompTypeName);
                 sDum = sDum.Replace("%SAMPLING_FREQUENCY%", compFilter.SamplingFrequency.ToString());
                 sDum = sDum.Replace("%Q_FORMAT%", compFilter.QFormat.ToString());
