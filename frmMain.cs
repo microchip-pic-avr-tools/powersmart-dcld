@@ -1534,6 +1534,11 @@ namespace dcld
                 ProjectFile.WriteKey("ControlSetup", "OutputGain", txtOutputGain.Text);
                 ProjectFile.WriteKey("ControlSetup", "OutputGainNormalization", Math.Abs(Convert.ToInt32(chkNormalizeOutputGain.Checked)).ToString());
 
+                ProjectFile.WriteKey("ControlSetup", "EnableAGC", Math.Abs(Convert.ToInt32(chkEnableAdaptiveGainControl.Checked)).ToString());
+                ProjectFile.WriteKey("ControlSetup", "AddAGCEnableSwitch", Math.Abs(Convert.ToInt32(chkAGCAddEnable.Checked)).ToString());
+                ProjectFile.WriteKey("ControlSetup", "AddAGCGetModFunCall", Math.Abs(Convert.ToInt32(chkAGCAddGetModFactorFunCall.Checked)).ToString());
+
+
                 for (i = 0; i < txtPole.Length; i++)
                 { 
                     ProjectFile.WriteKey("ControlSetup", "FrequencyP" + i.ToString(), txtPole[i].Text);
@@ -1720,6 +1725,11 @@ namespace dcld
                 chkFeedbackRectification.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "FeedbackRectification", "0")));
                 txtOutputGain.Text = ProjectFile.ReadKey("ControlSetup", "OutputGain", "1.000");
                 chkNormalizeOutputGain.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "OutputGainNormalization", "1")));
+
+                chkEnableAdaptiveGainControl.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "EnableAGC", "0")));
+                chkAGCAddEnable.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "AddAGCEnableSwitch", "0")));
+                chkAGCAddGetModFactorFunCall.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "AddAGCGetModFunCall", "0")));
+
 
                 for (i = 0; i < txtPole.Length; i++)
                 {
@@ -3464,6 +3474,11 @@ namespace dcld
             else
                 AssGen.FeedbackRectification = false;
 
+            // Set Adaptive Gain Control options
+            AssGen.AdaptiveGainModulationEnable = (chkEnableAdaptiveGainControl.Checked && chkEnableAdaptiveGainControl.Enabled);
+            AssGen.AdaptiveGainModulationAddEnableSwitch = (chkAGCAddEnable.Checked && chkAGCAddEnable.Enabled);
+            AssGen.AdaptiveGainModulationAddFunctionCall = (chkAGCAddGetModFactorFunCall.Checked && chkAGCAddGetModFactorFunCall.Enabled);
+
             // set dynamic execution options
             AssGen.SaveRestoreContext = this.chkContextSaving.Checked;
             AssGen.SaveRestoreShadowRegisters = ((this.chkSaveRestoreShadowRegisters.Checked) && (this.chkContextSaving.Checked));
@@ -3946,6 +3961,15 @@ namespace dcld
         {
             UpdateTransferFunction(sender, e);
             chkSaveRestoreAccumulators_CheckedChanged(sender, e);
+
+            chkEnableAdaptiveGainControl.Enabled = (cmbQScalingMethod.SelectedIndex == 2);
+
+            //chkEnableAdaptiveGainControl.Enabled = ((cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT) ||
+            //                                        (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_SINGLE_BIT_SHIFT) ||
+            //                                        (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_OUTPUT_SCALING_FACTOR)
+            //                                        );
+            chkAGCAddEnable.Enabled = (chkEnableAdaptiveGainControl.Enabled && chkEnableAdaptiveGainControl.Checked);
+            chkAGCAddGetModFactorFunCall.Enabled = (chkEnableAdaptiveGainControl.Enabled && chkEnableAdaptiveGainControl.Checked);
             return;
         }
 
@@ -4796,9 +4820,9 @@ namespace dcld
 
         private void chkEnableAdaptiveGainControl_CheckedChanged(object sender, EventArgs e)
         {
-            radAGCUserModulation.Enabled = chkEnableAdaptiveGainControl.Checked;
-            radAGCSourceVsAltSource.Enabled = false; // chkEnableAdaptiveGainControl.Checked;
-            radAGCAltSourceVsSource.Enabled = false; // chkEnableAdaptiveGainControl.Checked;
+            chkAGCAddGetModFactorFunCall.Enabled = chkEnableAdaptiveGainControl.Checked;
+            chkAGCAddEnable.Enabled = chkEnableAdaptiveGainControl.Checked;
+            CodeGeneratorOptions_CheckedChanged(sender, e);
         }
 
         private void picInfoAGC_MouseHover(object sender, EventArgs e)
