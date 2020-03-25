@@ -1505,6 +1505,7 @@ namespace dcld
                 ProjectFile.WriteKey("GUI", "Version", Application.ProductVersion);
                 ProjectFile.WriteKey("GUI", "VersionKey", dcldGlobals.APP_VERSION_KEY.ToString());
                 ProjectFile.WriteKey("GUI", "AGS Version", AsmGeneratorScript.ReadKey("generic", "Version", "N/A"));
+                ProjectFile.WriteKey("GUI", "CGS Version", CCodeGeneratorScript.ReadKey("generic", "Version", "N/A"));
 
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 20;
