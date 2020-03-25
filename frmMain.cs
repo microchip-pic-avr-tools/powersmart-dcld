@@ -57,6 +57,8 @@ namespace dcld
         int preLagElements = -1, preScalingMode = -1, preQFormat = -1;
         string DefaultFilePrefix = "";
         string DefaultVariablePrefix = "";
+        string _targetDevice = ""; // dsPIC-Product Number as string, e.g. dsPIC33CK256MP506
+        string _targetDeviceType = ""; // Reduced type indication, e.g. dsPIC33C
 
         // GUI status flags
         bool ExternalFileOpenEvent = false;
@@ -4930,6 +4932,11 @@ namespace dcld
                 // Update controller names
                 txtControllerNamePrefix.Text = frm.dcldVariablePrefix;
                 txtControllerNameLabel.Text = frm.dcldControllerNameLabel;
+
+                // capture selected target device
+                _targetDevice = MPLABXProject.MPLABXConfiguration[MPLABXProject.ActiveConfiguration].TargetDevice;
+                if (_targetDevice.Length >= 5) _targetDeviceType = _targetDevice.Substring(0, 5);
+                ProjectFile.WriteKey("ControlSetup", "TargetDevice", _targetDevice);
 
                 // If both objects have been set, update path information
                 if ((ProjectFile != null) && (MPLABXProject != null))
