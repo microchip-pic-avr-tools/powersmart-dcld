@@ -1497,7 +1497,7 @@ namespace dcld
                 
                 // File Info
                 if (Convert.ToString(ProjectFile.ReadKey("GUI", "CreateDate", "")) == "")
-                    ProjectFile.WriteKey("GUI", "CreateDate", Convert.ToString(System.DateTime.Now));
+                    ProjectFile.WriteKey("GUI", "CreateDate", System.DateTime.Now.ToString());
 
                 // GUI Version
                 ProjectFile.WriteKey("GUI", "SaveDate", Convert.ToString(System.DateTime.Now));
@@ -1682,8 +1682,9 @@ namespace dcld
 
         private bool OpenFile(string Filename)
         {
+            bool project_conflicts = false;
             int i = 0, int_dum = 0;
-            string str_dum = "", str_file = "";
+            string str_dum = ""; //, str_file = "";
 
             stbProgressBarLabel.Text = "Load Configuration:";
             stbProgressBarLabel.Visible = true;
@@ -4438,7 +4439,8 @@ namespace dcld
 
         private void AddHistorySettings(object sender, EventArgs e)
         {
-
+            
+            return;
         }
 
         private void RenameHistorySettings(object sender, EventArgs e)
