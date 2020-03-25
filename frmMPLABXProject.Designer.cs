@@ -264,6 +264,7 @@
             this.txtActiveTargetDevice.Size = new System.Drawing.Size(186, 23);
             this.txtActiveTargetDevice.TabIndex = 7;
             this.txtActiveTargetDevice.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtActiveTargetDevice.TextChanged += new System.EventHandler(this.txtActiveTargetDevice_TextChanged);
             // 
             // lblCommonIncludeDir
             // 
@@ -453,9 +454,9 @@
             this.chkShowatStartup.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkShowatStartup.Location = new System.Drawing.Point(24, 605);
             this.chkShowatStartup.Name = "chkShowatStartup";
-            this.chkShowatStartup.Size = new System.Drawing.Size(364, 19);
+            this.chkShowatStartup.Size = new System.Drawing.Size(361, 19);
             this.chkShowatStartup.TabIndex = 3;
-            this.chkShowatStartup.Text = "Show this window  at startup when no configuration is loaded";
+            this.chkShowatStartup.Text = "Show this window at startup when no configuration is loaded";
             this.chkShowatStartup.UseVisualStyleBackColor = true;
             // 
             // picConfigSuccess
