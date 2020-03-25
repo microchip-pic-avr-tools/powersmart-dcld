@@ -880,36 +880,14 @@ namespace dcld
                 // In case another compensator or scaling method has been selected, update data table format
                 if (FilterTypeChanged || ScalingChanged)
                 { 
+                    // update file prefix if automatied prefix is used (user labels won't get overwritten
+                    if ((txtControllerNamePrefix.Text == DefaultFilePrefix) || (txtControllerNamePrefix.Text.Trim() == string.Empty))
+                        txtControllerNamePrefix.Text = "c" + LagElements + "p" + LagElements + "z";
+
                     // update default name prefixes for body generation
-                    DefaultFilePrefix = "c" + LagElements + "p" + LagElements + "z" + (Q_format+1).ToString();
+                    DefaultFilePrefix = "c" + LagElements + "p" + LagElements + "z";
                     DefaultVariablePrefix = "c" + LagElements + "P" + LagElements + "Z";
 
-                    switch ((clsCompensatorNPNZ.dcldScalingMethod)Convert.ToInt32(cmbQScalingMethod.Text.Substring(0, 1)))
-                    {
-                        case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_SINGLE_BIT_SHIFT:
-                            DefaultFilePrefix = DefaultFilePrefix + "sbsft";
-                            break;
-
-                        case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_OUTPUT_SCALING_FACTOR:
-                            DefaultFilePrefix = DefaultFilePrefix + "cscl";
-                            break;
-
-                        case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT:
-                            DefaultFilePrefix = DefaultFilePrefix + "dbsft";
-                            break;
-
-                        case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT:
-                            DefaultFilePrefix = DefaultFilePrefix + "fscl";
-                            break;
-                    }
-
-                    // update file prefix
-                    if (!chkUserControllerNameLabel.Checked)
-                    {
-                        txtControllerNamePrefix.Text = DefaultFilePrefix;
-                    }
-
-                    
                     // Destroy and rebuild the coefficient output table
                     BuildOutputTable(sender, e);
 
@@ -1593,8 +1571,6 @@ namespace dcld
                 // Code Generator Tab
                 ProjectFile.WriteKey("AssemblyGenerator", "UserPrefix1", txtControllerNamePrefix.Text);
                 ProjectFile.WriteKey("AssemblyGenerator", "UserPrefix2", txtControllerNameLabel.Text);
-                ProjectFile.WriteKey("AssemblyGenerator", "UseUserPrefix", Convert.ToUInt16(chkUserControllerNameLabel.Checked).ToString());
-                ProjectFile.WriteKey("AssemblyGenerator", "UseUserPrefixVar", Convert.ToUInt16(chkUserVariableNamePrefix.Checked).ToString());
 
                 ProjectFile.WriteKey("AssemblyGenerator", "ContextSaving", Convert.ToUInt16(this.chkContextSaving.Checked).ToString());
                 ProjectFile.WriteKey("AssemblyGenerator", "ContextSavingShadowRegisters", Convert.ToUInt16(this.chkSaveRestoreShadowRegisters.Checked).ToString());
@@ -1783,8 +1759,6 @@ namespace dcld
                 // Code Generator Tab
                 txtControllerNamePrefix.Text = ProjectFile.ReadKey("AssemblyGenerator", "UserPrefix1", "");
                 txtControllerNameLabel.Text = ProjectFile.ReadKey("AssemblyGenerator", "UserPrefix2", "");
-                chkUserControllerNameLabel.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "UseUserPrefix", "1")));
-                chkUserVariableNamePrefix.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "UseUserPrefixVar", "1")));
 
                 stbProgressBar.Value = 30;
                 Application.DoEvents();
@@ -3330,8 +3304,7 @@ namespace dcld
             cGen.FileNamePattern = txtControllerNamePrefix.Text.Trim() + txtControllerNameLabel.Text.Trim();
             cGen.PreShift = (int)(Convert.ToUInt32(cmbQFormat.Text.Substring(1, (int)cmbQFormat.Text.Length - 1)) - Convert.ToUInt32(txtInputDataResolution.Text));
 
-            if ((chkUserVariableNamePrefix.Checked) && (chkUserVariableNamePrefix.Enabled))
-            //            { cGen.PreFix = cGen.FileNamePattern + "_"; }
+            if (txtControllerNamePrefix.Text.Trim().Length > 0)
             { cGen.PreFix = txtControllerNamePrefix.Text.Trim() + "_"; }
             else { cGen.PreFix = DefaultVariablePrefix + "_"; }
 
@@ -3815,17 +3788,6 @@ namespace dcld
             }
 
             return;
-        }
-
-        private void chkUserControllerNameLabel_CheckedChanged(object sender, EventArgs e)
-        {
-            txtControllerNamePrefix.Enabled = chkUserControllerNameLabel.Checked;
-            chkUserVariableNamePrefix.Enabled = chkUserControllerNameLabel.Checked;
-            if (!chkUserControllerNameLabel.Checked) { txtControllerNamePrefix.Text = DefaultFilePrefix; }
-            GenerateCode(sender, e);
-
-            return;
-
         }
 
         private void txtControllerNamePrefix_TextChanged(object sender, EventArgs e)
