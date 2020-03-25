@@ -97,6 +97,7 @@ namespace dcld
             // Load code generator controller name label
             txtControllerNameLabel.Text = _dcld_controller_name_label;
 
+            // Load MPLAB X configurations
             _project_loading = false;
             LoadActiveProjectConfig(sender, e);
 
@@ -109,8 +110,6 @@ namespace dcld
         {
             int _c = _mplabx_project.ActiveConfiguration;
             int _i = 0;
-            string [] dum_sep = new string [1];
-            string[] str_arr;
 
             if (_project_loading) return;
             if (_mplabx_project.MPLABXConfiguration == null) return;
@@ -137,6 +136,9 @@ namespace dcld
             if (cmbIncludeDirectories.Items.Count == 0)
                 cmbIncludeDirectories.Items.Add(_mplabx_project.MPLABXProjectDirectory);
             cmbIncludeDirectories.SelectedIndex = 0;
+
+
+            return;
         }
 
 
@@ -178,7 +180,6 @@ namespace dcld
 
                         if (_mplabx_project.SetMPLABXProject(str_path))
                         {
-
                             LoadMPLABXProjectFile(sender, e); 
                             ans = System.Windows.Forms.DialogResult.OK;
                         }
@@ -414,6 +415,11 @@ namespace dcld
         {
             if (cmbIncludeDirectories.Text.Trim().Length > 0)
                 _mplabx_project.MPLABXIncludeDirectory = cmbIncludeDirectories.Text;
+        }
+
+        private void txtActiveTargetDevice_TextChanged(object sender, EventArgs e)
+        {
+            
         }
 
     }
