@@ -4439,7 +4439,57 @@ namespace dcld
 
         private void AddHistorySettings(object sender, EventArgs e)
         {
-            
+            int i = 0;
+            ListViewItem itm = new ListViewItem();
+            string id = "", key = "", user = "", label = "", settings = "";
+            Int32 save_item = 0;
+
+            if (ProjectFile == null) return;
+            if (!File.Exists(ProjectFile.FileName)) return;
+
+            // Add time stamp
+            save_item = (Convert.ToInt32(ProjectFile.ReadKey("generator_history", "count", "0")) + 1);
+
+            id = save_item.ToString();
+            key = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Datecode identifies the item
+            label = "(Autosafe)";
+            user = Environment.UserName.ToString();
+            settings =
+                cmbCompType.SelectedIndex.ToString() + "; " +
+                cmbQScalingMethod.SelectedIndex.ToString() + "; " +
+                txtInputDataResolution.Text + "; " +
+                txtInputGain.Text + "; " +
+                Convert.ToInt32(chkNormalizeInputGain.Checked).ToString() + "; " +
+                Convert.ToInt32(chkBiDirectionalFeedback.Checked).ToString() + "; " +
+                Convert.ToInt32(chkFeedbackRectification.Checked).ToString() + "; " +
+                txtSamplingFrequency.Text + "; " +
+                txtFP0.Text + "; " +
+                txtFP1.Text + "; " +
+                txtFP2.Text + "; " +
+                txtFP3.Text + "; " +
+                txtFP4.Text + "; " +
+                txtFP5.Text + "; " +
+                txtFZ1.Text + "; " +
+                txtFZ2.Text + "; " +
+                txtFZ3.Text + "; " +
+                txtFZ4.Text + "; " +
+                txtFZ5.Text;
+
+
+            itm = lstCoefficientsHistory.Items.Add(save_item.ToString());
+            itm.SubItems.Add(key);
+            itm.SubItems.Add(user);
+            itm.SubItems.Add(label);
+            itm.SubItems.Add(settings);
+
+            for (i = 0; i < lstCoefficientsHistory.Items.Count; i++)
+            { lstCoefficientsHistory.Items[i].BackColor = SystemColors.Window; }
+            itm.BackColor = SystemColors.ActiveCaption;
+
+            ProjectFile.WriteKey("generator_history", "count", id);
+            ProjectFile.WriteKey("generator_history", id.Trim(), key.Trim() + "||" + user.Trim() + "||" + label.Trim() + "||" + settings.Trim());
+            ProjectFile.WriteKey("generator_history", "active_item", id);
+
             return;
         }
 
