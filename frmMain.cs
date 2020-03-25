@@ -554,10 +554,10 @@ namespace dcld
 
             // Initialize generator file paths...
             this.txtMPLABXProjectDir.Text = "";
-            this.txtASMSourcePath.Text = rootPath;
-            this.txtCSourcePath.Text = rootPath;
-            this.txtCHeaderPath.Text = rootPath;
-            this.txtCLibPath.Text = rootPath;
+            this.txtASMSourcePath.Text = ""; // rootPath;
+            this.txtCSourcePath.Text = ""; // rootPath;
+            this.txtCHeaderPath.Text = ""; // rootPath;
+            this.txtCLibPath.Text = ""; // rootPath;
 
 
             // Refresh GUI
@@ -647,6 +647,13 @@ namespace dcld
                 ExternalFileOpenEvent = false;
             }
 
+            // Check if Configuraiton window should be shown by default
+            showMPLABXconfigWindowAtStartup = Convert.ToBoolean(Convert.ToInt32(SettingsFile.ReadKey("config_window", "show", "1")));
+
+            // I no MPLAB project has been specified, open project configuraition
+            if (MPLABXProject.MPLABXProjectDirectory == string.Empty)
+                if (showMPLABXconfigWindowAtStartup)
+                    OpenProjectConfigWindow();
 
 
             return;
@@ -1367,30 +1374,9 @@ namespace dcld
 
 
         /* ***************************************************************************************** 
-         * Builds the absolute path of the MPLAB X project directory the current DCLD project
-         * is associated with.
+         * When the application or a file is closed or a new file is opened while project changes
+         * are still pending, throw a message box asking if the project should be saved.
          * ***************************************************************************************** */
-        private string GetMPLABXProjectPath(object sender, EventArgs e)
-        {
-            string str_dum = "";
-
-            // Read directory path from text box
-            str_dum = txtMPLABXProjectDir.Text.Trim();
-
-            if (str_dum.Length > 1) // Path declaration present
-            { // => Make and return absolute path
-                if ((str_dum.Substring(0, 1+_dsp.Length) == "." + _dsp) || 
-                    (str_dum.Substring(0, 1 + _adsp.Length) == "." + _adsp) || 
-                    (str_dum.Substring(0, 2) == ".."))   // Path is relative
-                    str_dum = ConvertFilePath.ToAbsoluteFilePath(str_dum, ProjectFile.Directory);
-            }
-
-            str_dum = ConvertFilePath.Unix2Win(str_dum);
-            return (str_dum.Trim());
-        }
-
-
-
         private bool AskForFileSave(object sender, EventArgs e)
         {
             bool b_res = true;
@@ -1484,7 +1470,7 @@ namespace dcld
                             // Rescan and adopt code generator file path declarations
                             if (MPLABXProject.MPLABXProjectDirectory.Trim().Length == 0)
                             {
-                                MPLABXProject.SetMPLABXProjectDirectory("", ProjectFile.Directory);
+                                MPLABXProject.SetMPLABXProject("");
                                 UpdateFilePaths();
 
                                 txtMPLABXProjectDir.ToolTipText = MPLABXProject.MPLABXProjectDirectory;
@@ -1652,7 +1638,7 @@ namespace dcld
                 ProjectFile.WriteKey("CodeGenerationPaths", "ExportCHeader", Convert.ToUInt32(libraryCHeaderExportToolStripMenuItem.Checked).ToString());
                 ProjectFile.WriteKey("CodeGenerationPaths", "ExportCLib", Convert.ToUInt32(genericControlLibraryHeaderExportToolStripMenuItem.Checked).ToString());
                 ProjectFile.WriteKey("CodeGenerationPaths", "EnableOneClickExport", Convert.ToUInt32(generateCodeBeforeExportToolStripMenuItem.Checked).ToString());
-                ProjectFile.WriteKey("CodeGenerationPaths", "MPLABX_ProjectDirectory", txtMPLABXProjectDir.Text);
+                ProjectFile.WriteKey("CodeGenerationPaths", "MPLABX_ProjectDirectory", ConvertFilePath.ToRelativeFilePath(MPLABXProject.MPLABXProjectDirectory, ProjectFile.Directory));
                 ProjectFile.WriteKey("CodeGenerationPaths", "ASMSourcePath", ConvertFilePath.Unix2Win(txtASMSourcePath.Text));
                 ProjectFile.WriteKey("CodeGenerationPaths", "CSourcePath", ConvertFilePath.Unix2Win(txtCSourcePath.Text));
                 ProjectFile.WriteKey("CodeGenerationPaths", "CHeaderPath", ConvertFilePath.Unix2Win(txtCHeaderPath.Text));
@@ -1846,12 +1832,10 @@ namespace dcld
                 Application.DoEvents();
 
                 // Source code pages
-                str_dum = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                str_file = lblFinalNamePrefixOutput.Text;
-                this.txtASMSourcePath.Text = ProjectFile.ReadKey("CodeGenerationPaths", "ASMSourcePath", str_dum + _dsp + str_file + "_asm.s");
-                this.txtCSourcePath.Text = ProjectFile.ReadKey("CodeGenerationPaths", "CSourcePath", str_dum + _dsp + str_file + ".c");
-                this.txtCHeaderPath.Text = ProjectFile.ReadKey("CodeGenerationPaths", "CHeaderPath", str_dum + _dsp + str_file + ".h");
-                this.txtCLibPath.Text = ProjectFile.ReadKey("CodeGenerationPaths", "CLibPath", _dsp + "npnz16b.h");
+                this.txtASMSourcePath.Text = ProjectFile.ReadKey("CodeGenerationPaths", "ASMSourcePath", ""); //str_dum + _dsp + str_file + "_asm.s");
+                this.txtCSourcePath.Text = ProjectFile.ReadKey("CodeGenerationPaths", "CSourcePath", ""); //str_dum + _dsp + str_file + ".c");
+                this.txtCHeaderPath.Text = ProjectFile.ReadKey("CodeGenerationPaths", "CHeaderPath", ""); //str_dum + _dsp + str_file + ".h");
+                this.txtCLibPath.Text = ProjectFile.ReadKey("CodeGenerationPaths", "CLibPath", ""); //_dsp + "npnz16b.h");
 
                 stbProgressBar.Value = 70;
                 Application.DoEvents();
@@ -1895,11 +1879,34 @@ namespace dcld
                 this.Text = Application.ProductName + " v" + Application.ProductVersion + " - [" + ProjectFile.FileName + "]";
 
                 // Construct absolute MPLAB X project directory path
-                this.txtMPLABXProjectDir.Text = ProjectFile.ReadKey("CodeGenerationPaths", "MPLABX_ProjectDirectory", "");
-                if (txtMPLABXProjectDir.Text.Trim().Length > 0)
+                str_dum = ProjectFile.ReadKey("CodeGenerationPaths", "MPLABX_ProjectDirectory", "");
+                str_dum = ConvertFilePath.ToAbsoluteFilePath(str_dum, ProjectFile.Directory);
+
+                if ((str_dum.Trim().Length > 3) && (System.IO.Directory.Exists(str_dum)))
                 {
-                    MPLABXProject.MPLABXProjectDirectory = GetMPLABXProjectPath((object)txtMPLABXProjectDir, (EventArgs)null);
-                    txtMPLABXProjectDir.ToolTipText = MPLABXProject.MPLABXProjectDirectory;
+                    if (MPLABXProject.SetMPLABXProject(str_dum))
+                    {
+                        txtMPLABXProjectDir.Text = MPLABXProject.MPLABXProjectDirectory;
+                        txtMPLABXProjectDir.ToolTipText = MPLABXProject.MPLABXProjectDirectory;
+                    }
+                    else
+                    {
+                        project_conflicts = true;
+                    }
+                }
+                else
+                {
+                    project_conflicts = true;
+                }
+
+                // Check for project loading errors
+                if (project_conflicts) { 
+                MessageBox.Show(
+                    "The location of the assiciated MPLAB x project is not valid anymore. " +
+                    "Please review the project configuration to make sure the associated  " +
+                    "MPLAB X project does exist and is accessible.",
+                    "Project Loading Warning",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
 
                 // write debugging info to output window
@@ -1921,7 +1928,10 @@ namespace dcld
                 Application.DoEvents();
                 stbProgressBar.Visible = false;
                 stbProgressBarLabel.Visible = false;
-                
+
+                if (project_conflicts)
+                    OpenProjectConfigWindow();
+
                 return (true);
 
             }
@@ -1950,31 +1960,30 @@ namespace dcld
 
         private void UpdateFilePaths()
         {
-            string str_path = "";
             string asm_source_buf = "", c_cource_buf = "", c_head_buf = "", c_lib_buf = "";
 
-            asm_source_buf = ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXProjectDirectory);
-            c_cource_buf = ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXProjectDirectory);
-            c_head_buf = ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXProjectDirectory);
-            c_lib_buf = ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXProjectDirectory);
+            asm_source_buf = ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute);
+            c_cource_buf = ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute);
+            c_head_buf = ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute);
+            c_lib_buf = ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute);
 
             // Make file locations relative
-            txtASMSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(asm_source_buf, MPLABXProject.MPLABXProjectDirectory));
-            txtCSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_cource_buf, MPLABXProject.MPLABXProjectDirectory));
-            txtCHeaderPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_head_buf, MPLABXProject.MPLABXProjectDirectory));
-            txtCLibPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_lib_buf, MPLABXProject.MPLABXProjectDirectory));
+            txtASMSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(asm_source_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
+            txtCSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_cource_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
+            txtCHeaderPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_head_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
+            txtCLibPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_lib_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
 
-            // Determine relative path of MPLAB X Project Directory Path and show it in directory test box
 
-            // Set MPLAB X Project Directory Update Flag
-            MPLABXProjectDirUpdate = true;
+            //asm_source_buf = ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXProjectDirectory);
+            //c_cource_buf = ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXProjectDirectory);
+            //c_head_buf = ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXProjectDirectory);
+            //c_lib_buf = ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXProjectDirectory);
 
-            // Update MPLAB X Project Directory TextBox                                                                                              
-            if (System.IO.Directory.Exists(str_path.Trim()))
-                txtMPLABXProjectDir.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(str_path.Trim(), ProjectFile.Directory));
-
-            // Clear MPLAB X Project Directory Update Flag
-            MPLABXProjectDirUpdate = false;
+            //// Make file locations relative
+            //txtASMSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(asm_source_buf, MPLABXProject.MPLABXProjectDirectory));
+            //txtCSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_cource_buf, MPLABXProject.MPLABXProjectDirectory));
+            //txtCHeaderPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_head_buf, MPLABXProject.MPLABXProjectDirectory));
+            //txtCLibPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_lib_buf, MPLABXProject.MPLABXProjectDirectory));
 
             return;
 
@@ -2373,33 +2382,21 @@ namespace dcld
 
             // Export is only allowed if the project file has been saved by the user, to prevent that files end up in Nirvana...
             if (!File.Exists(ProjectFile.FileName))
-            { 
+            {
                 result = MessageBox.Show(this,
-                        "The recent configuration has not been saved yet. \r\n" +
+                        "The recent configuration has not been copleted yet. \r\n" +
                         "\r\n" + 
                         "Features such as relative path declaration in source files and the user setting " +
-                        "hitory log, will not be supported until this configuration has been saved. It is" +
-                        "highly recommended to safe the file before you continue.\r\n" +
-                        "\r\n" + 
-                        "- Click 'Yes' to save the configuration right now.\r\n" +
-                        "- Click 'No' to export the generated source code files \r\n" +
-                        "- Click 'Cancel' to return to the application\r\n" +
+                        "hitory log, will not be supported until this configuration has been saved. \r\n"+
+                        "\r\n" +
+                        "Please complete the configuraiton of the most recent project on the following " +
+                        "window  before you continue.\r\n" +
                         "\r\n",
-                        "Warning", 
-                        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                        "Project Configuration Warning", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-                switch (result)
-                {
-                    case System.Windows.Forms.DialogResult.Yes:
-                        SaveFile(sender, e);
-                        return;
-
-                    case System.Windows.Forms.DialogResult.No:
-                        break;
-
-                    case System.Windows.Forms.DialogResult.Cancel:
-                        return;
-                }
+                OpenProjectConfigWindow();
+                return;
 
             }
 
@@ -2437,7 +2434,7 @@ namespace dcld
 
                 if (str_path.Contains("." + _dsp))  // path contains relative path items
                 {
-                    str_path = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(str_path, MPLABXProject.MPLABXProjectDirectory));
+                    str_path = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(str_path, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                 }
                 
                 else if ((str_path.Length < 3) && (str_path.Substring(0, 2) != "." + _dsp) && (str_path.Substring(0, 3) != ".." + _dsp))
@@ -3186,28 +3183,28 @@ namespace dcld
             switch (sender_name) 
             { 
                 case "cmdASMSourcePath":
-                    sfdlg.InitialDirectory = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXProjectDirectory));
+                    sfdlg.InitialDirectory = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text + "_asm";
                     sfdlg.DefaultExt = ".s";
                     sfdlg.FilterIndex = 1;
                     break;
 
                 case "cmdCHeaderPath":
-                    sfdlg.InitialDirectory = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXProjectDirectory));
+                    sfdlg.InitialDirectory = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text;
                     sfdlg.DefaultExt = ".h";
                     sfdlg.FilterIndex = 2;
                     break;
 
                 case "cmdCLibPath":
-                    sfdlg.InitialDirectory = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXProjectDirectory));
+                    sfdlg.InitialDirectory = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                     sfdlg.FileName = "npnz16b.h";
                     sfdlg.DefaultExt = ".h";
                     sfdlg.FilterIndex = 2;
                     break;
 
                 case "cmdCSourcePath":
-                    sfdlg.InitialDirectory = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXProjectDirectory));
+                    sfdlg.InitialDirectory = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text;
                     sfdlg.DefaultExt = ".c";
                     sfdlg.FilterIndex = 3;
@@ -3235,19 +3232,19 @@ namespace dcld
                         {
                                 
                             case "cmdASMSourcePath":
-                                txtASMSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(str_path, MPLABXProject.MPLABXProjectDirectory));
+                                txtASMSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(str_path, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                                 break;
 
                             case "cmdCHeaderPath":
-                                txtCHeaderPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(str_path, MPLABXProject.MPLABXProjectDirectory));
+                                txtCHeaderPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(str_path, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                                 break;
 
                             case "cmdCLibPath":
-                                txtCLibPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(str_path, MPLABXProject.MPLABXProjectDirectory));
+                                txtCLibPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(str_path, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                                 break;
 
                             case "cmdCSourcePath":
-                                txtCSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(str_path, MPLABXProject.MPLABXProjectDirectory));
+                                txtCSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(str_path, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                                 break;
 
                             default:
@@ -3327,6 +3324,8 @@ namespace dcld
 
             // Set common C-Code Generator Settings
             clsCCodeGenerator cGen = new clsCCodeGenerator();
+
+            cGen.dcldProjectFile = ProjectFile;
 
             cGen.FileNamePattern = txtControllerNamePrefix.Text.Trim() + txtControllerNameLabel.Text.Trim();
             cGen.PreShift = (int)(Convert.ToUInt32(cmbQFormat.Text.Substring(1, (int)cmbQFormat.Text.Length - 1)) - Convert.ToUInt32(txtInputDataResolution.Text));
@@ -3408,13 +3407,28 @@ namespace dcld
             string str_dum = "";
             string ref_dum = "";
 
-            str_dum = PathDeclaration.Trim(); // Copy parameter
+            // Trim parameter
+            PathDeclaration = PathDeclaration.Trim();
 
-            // Check for include files reference path
-            if (MPLABXProject.MPLABXProjectDirectory.Trim() == "")
-                ref_dum = rootPath;
+            // If nothing has been specified yet, return empty string
+            if (PathDeclaration == string.Empty)
+                return (""); // Return Empty Path
             else
+                str_dum = PathDeclaration; // Copy path declaration
+
+
+            // Check for include paths
+            // All files are reference to the common include directory declared in MPLAB X
+            // If nothing has been declared by the user, the MPLAB X project cirectory
+            // is set (location of MAKEFILE)
+
+            if ((MPLABXProject.MPLABXIncludeDirectory.Trim() == string.Empty) &&
+                (MPLABXProject.MPLABXProjectDirectory.Trim() != string.Empty))
                 ref_dum = MPLABXProject.MPLABXProjectDirectory.Trim();
+            else if (MPLABXProject.MPLABXIncludeDirectory.Trim() != string.Empty)
+                ref_dum = MPLABXProject.MPLABXIncludeDirectory.Trim();
+            else
+                ref_dum = str_dum;
 
             // Get relative path with regards to reference path of MPLAB X include path
             str_dum = ConvertFilePath.ToRelativeFilePath(str_dum, ref_dum);
@@ -4271,46 +4285,11 @@ namespace dcld
 
         private void SourcePathTextBox_TextChanged(object sender, EventArgs e)
         {
-            string txtName = "", str_dum = "";
+            string txtName = "";
 
-            if (sender.GetType().ToString() == "System.Windows.Forms.ToolStripTextBox")
-            { 
-                // Set control type
-                ToolStripTextBox txt = (ToolStripTextBox)sender;
-                txtName = txt.Name;
-
-                // If a new MPLAB X Project path has been declared
-                if (txtName == txtMPLABXProjectDir.Name)
-                {
-                    // Capture absolute path of MPLAB X project declaration
-                    str_dum = ConvertFilePath.ToAbsoluteFilePath(txt.Text, ProjectFile.Directory).Trim();
-
-                    // If user types in a directory, update MPLAB X Project Directory value
-                    if (str_dum.Length == 0)
-                    {
-                        MPLABXProject.MPLABXProjectDirectory = "";                // Clear MPLAB X project directory declaration
-                        toolStripButtonMPLABXPathWarning.Visible = false;   // Hide warning icon
-                    }
-                    if (System.IO.Directory.Exists(str_dum))
-                    {
-                        if (!MPLABXProjectDirUpdate)      // If path is valid, set path as new MPLAB X project pdirectory
-                        {
-                            MPLABXProject.SetMPLABXProjectDirectory(str_dum, ProjectFile.Directory);
-                            UpdateFilePaths();
-                        }
-
-                        toolStripButtonMPLABXPathWarning.Visible = false;   // Hide warning icon
-                        
-                    }
-                    else
-                    {  // Show warning icon
-                        toolStripButtonMPLABXPathWarning.Visible = true;
-                    }
-                }
-            }
-            // If a new source or header file pathhas been declared
-            else if (sender.GetType().ToString() == "System.Windows.Forms.TextBox")
-            { 
+            // If a new source or header file path has been declared
+            if (sender.GetType().ToString() == "System.Windows.Forms.TextBox")
+            {
                 TextBox txt = (TextBox)sender;
                 txtName = txt.Name;
 
@@ -4712,90 +4691,6 @@ namespace dcld
         }
 
 
-        private void toolStripButtonBrowse_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog fbdlg = new FolderBrowserDialog();
-            System.Windows.Forms.DialogResult ans = new System.Windows.Forms.DialogResult();
-            string str_path = "";
-            bool IsMPLABXProject = false;
-
-            // Determine target directory of folder dialog
-            if (MPLABXProject.MPLABXProjectDirectory.Trim().Length > 0)   // MPLAB X project location is available
-            { str_path = MPLABXProject.MPLABXProjectDirectory.Trim(); }
-            else 
-            {
-                if (ProjectFile.FileName.Trim().Length == 0) // DCLD project location is not available
-                { str_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); }
-                else
-                { str_path = ProjectFile.Directory; }  // DCLD project location is available
-            }
-
-            // Set target directory of folder dialog
-            fbdlg.SelectedPath = str_path;
-
-            while ((ans == System.Windows.Forms.DialogResult.None) || (ans == System.Windows.Forms.DialogResult.Retry))
-            {
-                // Show Folder Browse Dialog
-                if (fbdlg.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        // Read selected directory path
-                        str_path = fbdlg.SelectedPath;
-
-                        // If MPLAB X project path is valid...
-                        IsMPLABXProject = (str_path.Substring(str_path.Length - 2).ToUpper() == ".X");
-                        if (!IsMPLABXProject)
-                            IsMPLABXProject = System.IO.File.Exists(str_path + _dsp + "nbproject" + _dsp + "configurations.xml");
-
-                        if (IsMPLABXProject)
-                        {
-                            MPLABXProject.SetMPLABXProjectDirectory(str_path, ProjectFile.Directory);
-                            UpdateFilePaths();
-
-                            ans = System.Windows.Forms.DialogResult.OK;
-                        }
-                        else
-                        {
-
-                            ans = MessageBox.Show(
-                                        "Selected directory \r\n\r\n'" + str_path + "' is not a valid MPLAB X® project directory.\r\n\r\n" +
-                                        "Please select a valid directory (e.g. my_project.X)",
-                                        Application.ProductName,
-                                        MessageBoxButtons.RetryCancel,
-                                        MessageBoxIcon.Exclamation,
-                                        MessageBoxDefaultButton.Button1
-                                        );
-                        }
-
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(
-                            "Error (0x" + ex.HResult.ToString("X") + "): Could not identify path or selected directory is not available.\r\n" +
-                            "Original error: " + ex.Message,
-                            Application.ProductName,
-                            MessageBoxButtons.RetryCancel,
-                            MessageBoxIcon.Exclamation,
-                            MessageBoxDefaultButton.Button1
-                            );
-
-                    }
-                }
-                else
-                { 
-                    ans = System.Windows.Forms.DialogResult.Cancel;
-                    break;
-                }
-            }
-
-            // Restore output window
-            fbdlg.Dispose();
-
-            return;
-
-        }
-
         private void userGuideToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (System.IO.File.Exists(UserGuideFileName))
@@ -4949,11 +4844,101 @@ namespace dcld
             string msg = "This function adds a modulation factor to the control loop code" + "\r\n" + 
                          "allowing runtime tuning of the loop gain." + "\r\n" +
                          "\r\n" +
+                         "This option is only available for fast number scaling modes.\r\n" +
                          "Please refer to the user guide for more details.";
 
             ToolTip_Show(sender, e, msg);
         }
 
+        private void OpenProjectConfigWindow()
+        {
+            // Create a new instance of the form class
+            frmMPLABXProject frm = new frmMPLABXProject();
+
+            // Show the settings form
+            frm.MPLABXProject = MPLABXProject;
+
+            // Set DCLD default filename in case no DCLD configuraiton is available
+            frm.dcldDefaultFilename = DefaultProjectFileName;
+
+            // Check if project file available
+            if (ProjectFile.Directory != string.Empty)
+                frm.dcldProject = ProjectFile;
+
+            // Load Filename and Variable Prefix
+            if (txtControllerNamePrefix.Text.Trim().Length > 0)
+            { frm.dcldVariablePrefix = txtControllerNamePrefix.Text.Trim(); }
+            else { frm.dcldVariablePrefix = DefaultVariablePrefix; }
+
+            // Load Controller Name Label 
+            if (txtControllerNameLabel.Text.Trim().Length > 0)
+            { frm.dcldControllerNameLabel = txtControllerNameLabel.Text.Trim(); }
+            else { frm.dcldControllerNameLabel = ""; }
+
+            // 
+            frm.ShowWinAtStartup = showMPLABXconfigWindowAtStartup;
+
+            if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                MPLABXProject = frm.MPLABXProject;
+
+                // If no DCLD Project File has been defined yet...
+                if (frm.dcldProject != null)
+                    ProjectFile.SetFilename(frm.dcldProject.FileName);
+                else if (frm.dcldDefaultFilename != string.Empty)
+                    ProjectFile.Create(frm.dcldDefaultFilename, "GUI", "CreateDate", DateTime.Now.ToString());
+
+                // Update controller names
+                txtControllerNamePrefix.Text = frm.dcldVariablePrefix;
+                txtControllerNameLabel.Text = frm.dcldControllerNameLabel;
+
+                // If both objects have been set, update path information
+                if ((ProjectFile != null) && (MPLABXProject != null))
+                {
+                    txtMPLABXProjectDir.Text = MPLABXProject.MPLABXProjectDirectory;
+
+                    if (txtASMSourcePath.Text.Trim() == string.Empty)
+                        txtASMSourcePath.Text = ConvertFilePath.ToRelativeFilePath(MPLABXProject.MPLABXIncludeDirectoryAbsolute, MPLABXProject.MPLABXProjectDirectory);
+
+                    if (txtCSourcePath.Text.Trim() == string.Empty)
+                        txtCSourcePath.Text = ConvertFilePath.ToRelativeFilePath(MPLABXProject.MPLABXIncludeDirectoryAbsolute, MPLABXProject.MPLABXProjectDirectory);
+
+                    if (txtCHeaderPath.Text.Trim() == string.Empty)
+                        txtCHeaderPath.Text = ConvertFilePath.ToRelativeFilePath(MPLABXProject.MPLABXIncludeDirectoryAbsolute, MPLABXProject.MPLABXProjectDirectory);
+
+                    if (txtCLibPath.Text.Trim() == string.Empty)
+                        txtCLibPath.Text = ConvertFilePath.ToRelativeFilePath(MPLABXProject.MPLABXIncludeDirectoryAbsolute, MPLABXProject.MPLABXProjectDirectory);
+                    
+                    SaveFile(this, EventArgs.Empty);
+
+                }
+
+            }
+
+            // Save if Window should be shown next time
+            showMPLABXconfigWindowAtStartup = frm.ShowWinAtStartup;
+            SettingsFile.WriteKey("config_window", "show", Convert.ToInt32(showMPLABXconfigWindowAtStartup).ToString());
+
+
+        }
+
+        private void picInfoErrNorm_MouseHover(object sender, EventArgs e)
+        {
+            string msg = "Error Normalization is required when data is read \r\n" +
+                         "in integer format from the source (e.g. ADC converter)\r\n" +
+                         "If the source is providing data in Q15 number format \r\n" +
+                         "this option can be disabled.";
+
+            ToolTip_Show(sender, e, msg);
+
+        }
+
+        private void toolStripButtonConfig_Click(object sender, EventArgs e)
+        {
+            OpenProjectConfigWindow();
+        }
+
 
     }
+
 }
