@@ -595,8 +595,10 @@
             // 
             // frmCalculateInputGain
             // 
+            this.AcceptButton = this.cmdOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.cmdCancel;
             this.ClientSize = new System.Drawing.Size(551, 530);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.grpVoltageDividerCalculation);
@@ -609,6 +611,7 @@
             this.Name = "frmCalculateInputGain";
             this.Text = "Input Gain";
             this.Load += new System.EventHandler(this.frmCalculateInputGain_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmCalculateInputGain_KeyDown);
             this.tabFeedback.ResumeLayout(false);
             this.tabVD.ResumeLayout(false);
             this.grpVoltageDividerCircuit.ResumeLayout(false);

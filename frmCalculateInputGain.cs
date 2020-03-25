@@ -39,6 +39,7 @@ namespace dcld
         {
             txtInputResolution.Text = feedback.ADCResolution.ToString(CultureInfo.CurrentCulture);
             tabFeedback_SelectedIndexChanged(sender, e);
+            this.KeyPreview = true;
         }
 
         private void tabFeedback_SelectedIndexChanged(object sender, EventArgs e)
@@ -477,6 +478,13 @@ namespace dcld
                 tBox.Select(0, (tBox.Text.Length));
             }
 
+            return;
+        }
+
+        private void frmCalculateInputGain_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Escape)
+                this.Close();
             return;
         }
 

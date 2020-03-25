@@ -531,8 +531,10 @@
             // 
             // frmCalculateOutputGain
             // 
+            this.AcceptButton = this.cmdOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.cmdCancel;
             this.ClientSize = new System.Drawing.Size(551, 530);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.grpVoltageDividerCalculation);
@@ -544,6 +546,7 @@
             this.Name = "frmCalculateOutputGain";
             this.Text = "Output Gain";
             this.Load += new System.EventHandler(this.frmCalculateOutputGain_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmCalculateOutputGain_KeyDown);
             this.tabPWMMode.ResumeLayout(false);
             this.tabFixedFrequency.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picFFreq)).EndInit();

@@ -63,6 +63,7 @@ namespace dcld
         {
             // Initialize controls
             tabPWMMode_SelectedIndexChanged(this, e);
+            this.KeyPreview = true;
         }
 
         private void tabPWMMode_SelectedIndexChanged(object sender, EventArgs e)
@@ -413,6 +414,13 @@ namespace dcld
                 tBox.Select(0, (tBox.Text.Length));
             }
 
+            return;
+        }
+
+        private void frmCalculateOutputGain_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Escape)
+                this.Close();
             return;
         }
         
