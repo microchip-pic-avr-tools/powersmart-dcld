@@ -19,6 +19,7 @@ using System.Diagnostics;
 
 namespace dcld
 {
+
     [System.Runtime.InteropServices.GuidAttribute("3952432A-6B37-4A47-8A68-A42D879C5A0D")]
     public partial class frmMain : Form
     {
@@ -33,7 +34,6 @@ namespace dcld
         clsOutputDeclaration ctrl_output = new clsOutputDeclaration();
 
         clsMPLABXHandler MPLABXProject = new clsMPLABXHandler();
-
         clsFilePathHandler ConvertFilePath = new clsFilePathHandler();
 
         // Value table formating
@@ -68,15 +68,14 @@ namespace dcld
         bool ProjectFileLoadActive = false;
         bool ProjectFileChanged = false;
         bool ShowSDomainTF = true;
-        bool MPLABXProjectDirUpdate = false;
+
+        bool showMPLABXconfigWindowAtStartup = true;
 
         // Project files
         string DefaultProjectFileNameExtension = ".dcld";
         string DefaultProjectFileName = "MyCtrlLoop";
-        
         string NewProjectFilenameDummy = "";
         string ExternalFileOpenPath = "";
-//        string MPLABXProjectDirectory = "";
         string UserGuideFileName = "";
 
         string rootPath = Application.StartupPath;
@@ -377,8 +376,8 @@ namespace dcld
 
                 
                 // Create Default DCLD Project File 
-                NewProjectFilenameDummy = DefaultProjectFileName + DefaultProjectFileNameExtension;
                 f_res = ProjectFile.Clear();
+                NewProjectFilenameDummy = DefaultProjectFileName + DefaultProjectFileNameExtension;
 
                 // Set USER GUIDE/HELP FILE
                 UserGuideFileName = SettingsFile.ReadKey("common", "UserGuideFileName", "");
@@ -1201,8 +1200,6 @@ namespace dcld
                 chartBode.ChartAreas["GainPhase"].AxisY2.MinorGrid.LineDashStyle = ChartDashStyle.Dot;
                 chartBode.ChartAreas["GainPhase"].AxisY2.MinorGrid.LineWidth = 1;
 
-
-            
             }
 
             if (ForceAnnotations)
@@ -1388,25 +1385,29 @@ namespace dcld
             string str_dum = "";
             DialogResult dlgResult = 0;
 
-            // You can cancel the Form from closing.
+            // If there are still unsaved project changes pending and the most recent project file is valid
             if ((ProjectFileChanged) && (ProjectFile.Directory.Length > 7))
             {
-
+                // capture project file 
                 str_dum = ProjectFile.FileName;
 
+                // ask if the pending changes should be saved
                 dlgResult = MessageBox.Show("File '" + str_dum + "' has been changed.\r\nDo you wish to save these changes?", Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 switch (dlgResult)
                 {
+                    // User agreed to save the changes
                     case System.Windows.Forms.DialogResult.Yes:
                         SaveFile(sender, e);
                         if (ProjectFileChanged) b_res = false;
                         else b_res = true;
                         break;
 
+                    // User approved to discard the changes
                     case System.Windows.Forms.DialogResult.No:
                         b_res = true;
                         break;
 
+                    // User clicked 'Cancel' to go back to application
                     default:
                         b_res = false;
                         break;
@@ -1418,6 +1419,9 @@ namespace dcld
 
         }
 
+        /* ***************************************************************************************** 
+         * Save the most recent settings to project file
+         * ***************************************************************************************** */
         private bool SaveFile(object sender, EventArgs e)
         {
             SaveFileDialog sfdlg = new SaveFileDialog();
@@ -1426,6 +1430,7 @@ namespace dcld
             string[] dum_sep = new string[1];
             int i = 0;
 
+            // Prepare the status bar progress bar
             stbMainStatusLabel.Text = "Saving File:";
             stbMainStatusLabel.Visible = true;
             stbProgressBar.Visible = true;
@@ -1440,18 +1445,22 @@ namespace dcld
                 sfdlg.Filter = "Microchip Digital Control Loop Designer files (*.dcld)|*.dcld|All files (*.*)|*.*";
                 sfdlg.FilterIndex = 1;
 
+                // If project file is valid
                 if (ProjectFile.FileName.Trim().Length > 7)
                 { sfdlg.InitialDirectory = ProjectFile.Directory; }
                 else if (MPLABXProject.MPLABXProjectDirectory.Trim().Length > 7)
                 { sfdlg.InitialDirectory = MPLABXProject.MPLABXProjectDirectory; }
 
+                // Showing the 'save file' dialog 
                 if (sfdlg.ShowDialog() == DialogResult.OK)
                 {
+                    // if user clicked OK...
                     try
                     {
+                        // When the selected path is valid
                         if (sfdlg.CheckPathExists)
                         {
-                            // Capture filename & path
+                            // Capture user-defined filename & path
                             ProjectFile.SetFilename(sfdlg.FileName.Trim());
 
                             // Display recent project file in window title bar
@@ -1867,7 +1876,6 @@ namespace dcld
 
                 // Load user history
                 LoadHistorySettingsList(ProjectFile.FileName);
-
                 ForceCoefficientsUpdate(this, EventArgs.Empty);
 
                 // First load recent project name into title bar
@@ -2657,6 +2665,7 @@ namespace dcld
            SettingsFile.WriteKey("code_generator", "settings_splitter_pos", splitContainerContents.SplitterDistance.ToString());
            SettingsFile.WriteKey("code_generator", "timing_visible", Convert.ToUInt16(showSourceCodeTimingToolStripMenuItem.Checked).ToString());
            SettingsFile.WriteKey("code_generator", "timing_splitter_pos", splitContainerTiming.Panel2.Height.ToString());
+            
 
         }
 
@@ -3409,7 +3418,7 @@ namespace dcld
 
             // Return corrected include path
             return (str_dum);
-
+            
         }
 
         private StringBuilder GenerateAssembly(object sender, EventArgs e)
