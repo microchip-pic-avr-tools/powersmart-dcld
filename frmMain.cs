@@ -3545,7 +3545,7 @@ namespace dcld
             int i = 0;
             double pwm_freq = 0.0, pwm_per = 0.0, pwm_dc = 0.0;
             double adc_latency = 0.0, adc_trig = 0.0;
-            double cpu_clk = 0.0, cpu_load = 0.0, control_start_delay = 0.0, control_latency = 0.0, control_read = 0.0, control_write = 0.0;
+            double cpu_clk = 0.0, cpu_load = 0.0, control_start_delay = 0.0, control_latency = 0.0, control_read = 0.0, control_write = 0.0, user_trigger_delay = 0.0;
             double execution_time = 0.0, read_delay = 0.0, response_delay = 0.0;
             double pwm_fragment_start = 0.0, pwm_fragment_end = 0.0;
             int pwm_cycles = 0;
@@ -3566,32 +3566,26 @@ namespace dcld
                     control_read = 1e+3 * Convert.ToDouble(lblNumberOfInstructionCyclesRead.Text) * (1.0 / cpu_clk);
                     control_write = 1e+3 * Convert.ToDouble(lblNumberOfInstructionCyclesResponse.Text) * (1.0 / cpu_clk);
 
-                    if (this.txtISRLatency.Text.Length > 0) 
-                    { control_start_delay = Convert.ToDouble(this.txtISRLatency.Text); }
-                    else { return; }
                 }
                 else { return; }
 
-                // Update timing chart parameters
-                if (txtADCLatency.TextLength > 0)
-                {
+
+                // Set user, control and ADC delays
+                if (this.txtISRLatency.Text.Length > 0) 
+                    control_start_delay = Convert.ToDouble(this.txtISRLatency.Text);
+                if (txtPWMDutyCycle.TextLength > 0)
+                    pwm_dc = (Convert.ToDouble(txtPWMDutyCycle.Text) / 100.0);
+                if (this.txtADCLatency.Text.Length > 0)
                     adc_latency = Convert.ToDouble(txtADCLatency.Text);
-                }
-                else { return; }
-
-                if (txtPWMFrequency.TextLength > 0) 
+                if (this.txtPWMFrequency.TextLength > 0)
                 {
                     pwm_freq = Convert.ToDouble(txtPWMFrequency.Text);
                     if (pwm_freq == 0.0) return;
                     pwm_per = (1e+6 / pwm_freq);
                 }
-                else{ return; }
+                if (this.txtUserTriggerDelay.Text.Length > 0)
+                    user_trigger_delay = Convert.ToDouble(this.txtUserTriggerDelay.Text);
 
-                if (txtPWMDutyCycle.TextLength > 0) 
-                {
-                    pwm_dc = (Convert.ToDouble(txtPWMDutyCycle.Text) / 100.0);
-                }
-                else{ return; }
 
                 if ((control_latency < 0) || (float.IsInfinity((float)control_latency)))
                 { return; }
@@ -3624,6 +3618,10 @@ namespace dcld
                             case 4:     // Set trigger at falling edge
                                 adc_trig = (pwm_per * pwm_dc); //(default)
                                 break;
+                            default:
+                                adc_trig = chartTiming.Annotations[0].X;
+                                user_trigger_delay = 0;
+                                break;
                         }
                         
                         
@@ -3631,8 +3629,10 @@ namespace dcld
                     else{ adc_trig = (pwm_per * pwm_dc) / 2.0; } // set to default
                 }
 
+                // Incorporate user-defined trigger delay
+                adc_trig += user_trigger_delay;
+
                 // Update timing chart 
-            
                 // Build PWM Singal
             
                 // determine number of PWM cycles which need to be displayed

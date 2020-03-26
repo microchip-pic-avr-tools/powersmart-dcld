@@ -358,7 +358,13 @@
             this.cmbTriggerPlacement = new System.Windows.Forms.ToolStripComboBox();
             this.grpExecutionTime = new System.Windows.Forms.GroupBox();
             this.pnlTimingSettings = new System.Windows.Forms.Panel();
-            this.lblToolTipHelp = new System.Windows.Forms.Label();
+            this.picInfoCycleStats = new System.Windows.Forms.PictureBox();
+            this.picInfoUserTriggerDelay = new System.Windows.Forms.PictureBox();
+            this.picInfoADCLatency = new System.Windows.Forms.PictureBox();
+            this.picInfoISRLatency = new System.Windows.Forms.PictureBox();
+            this.lbltxtUserTriggerDelay = new System.Windows.Forms.Label();
+            this.lbltxtUserTriggerDelayUnit = new System.Windows.Forms.Label();
+            this.txtUserTriggerDelay = new System.Windows.Forms.TextBox();
             this.picInfoTimingPWMFrequency = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lblCPULoad = new System.Windows.Forms.Label();
@@ -543,6 +549,10 @@
             this.toolStripTiming.SuspendLayout();
             this.grpExecutionTime.SuspendLayout();
             this.pnlTimingSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoCycleStats)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoUserTriggerDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoADCLatency)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoISRLatency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoTimingPWMFrequency)).BeginInit();
             this.tabPageBlockDiagram.SuspendLayout();
             this.grpFilterProcessing.SuspendLayout();
