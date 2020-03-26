@@ -1905,7 +1905,7 @@
             this.tabSourceCodeConfig.Location = new System.Drawing.Point(4, 29);
             this.tabSourceCodeConfig.Name = "tabSourceCodeConfig";
             this.tabSourceCodeConfig.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 738);
+            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 716);
             this.tabSourceCodeConfig.TabIndex = 1;
             this.tabSourceCodeConfig.Text = "Source Code Configuration";
             this.tabSourceCodeConfig.UseVisualStyleBackColor = true;
@@ -1924,7 +1924,7 @@
             this.pnlCodeGeneratorOptions.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlCodeGeneratorOptions.Location = new System.Drawing.Point(3, 3);
             this.pnlCodeGeneratorOptions.Name = "pnlCodeGeneratorOptions";
-            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 732);
+            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 710);
             this.pnlCodeGeneratorOptions.TabIndex = 19;
             // 
             // grpAntiWindup
@@ -3151,10 +3151,10 @@
             // tabPageTiming
             // 
             this.tabPageTiming.Controls.Add(this.splitContainerTiming);
-            this.tabPageTiming.Location = new System.Drawing.Point(4, 33);
+            this.tabPageTiming.Location = new System.Drawing.Point(4, 29);
             this.tabPageTiming.Name = "tabPageTiming";
             this.tabPageTiming.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTiming.Size = new System.Drawing.Size(958, 712);
+            this.tabPageTiming.Size = new System.Drawing.Size(958, 716);
             this.tabPageTiming.TabIndex = 4;
             this.tabPageTiming.Text = "Time Domain";
             this.tabPageTiming.UseVisualStyleBackColor = true;
@@ -3178,8 +3178,8 @@
             this.splitContainerTiming.Panel2.AutoScroll = true;
             this.splitContainerTiming.Panel2.Controls.Add(this.grpExecutionTime);
             this.splitContainerTiming.Panel2MinSize = 248;
-            this.splitContainerTiming.Size = new System.Drawing.Size(952, 706);
-            this.splitContainerTiming.SplitterDistance = 448;
+            this.splitContainerTiming.Size = new System.Drawing.Size(952, 710);
+            this.splitContainerTiming.SplitterDistance = 452;
             this.splitContainerTiming.TabIndex = 0;
             // 
             // pnlTimingChart
@@ -3194,7 +3194,7 @@
             this.pnlTimingChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlTimingChart.Location = new System.Drawing.Point(0, 0);
             this.pnlTimingChart.Name = "pnlTimingChart";
-            this.pnlTimingChart.Size = new System.Drawing.Size(950, 446);
+            this.pnlTimingChart.Size = new System.Drawing.Size(950, 450);
             this.pnlTimingChart.TabIndex = 0;
             // 
             // pnlCPULoadRatio
@@ -3203,7 +3203,7 @@
             this.pnlCPULoadRatio.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlCPULoadRatio.Controls.Add(this.label2);
             this.pnlCPULoadRatio.Controls.Add(this.lblCPULoadRatio);
-            this.pnlCPULoadRatio.Location = new System.Drawing.Point(839, 289);
+            this.pnlCPULoadRatio.Location = new System.Drawing.Point(839, 293);
             this.pnlCPULoadRatio.Name = "pnlCPULoadRatio";
             this.pnlCPULoadRatio.Size = new System.Drawing.Size(71, 114);
             this.pnlCPULoadRatio.TabIndex = 56;
@@ -3240,7 +3240,7 @@
             this.tsbCodeGenUpdateWarningTiming.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel2,
             this.toolStripLabel3});
-            this.tsbCodeGenUpdateWarningTiming.Location = new System.Drawing.Point(0, 418);
+            this.tsbCodeGenUpdateWarningTiming.Location = new System.Drawing.Point(0, 422);
             this.tsbCodeGenUpdateWarningTiming.Name = "tsbCodeGenUpdateWarningTiming";
             this.tsbCodeGenUpdateWarningTiming.Size = new System.Drawing.Size(950, 28);
             this.tsbCodeGenUpdateWarningTiming.TabIndex = 54;
@@ -3422,7 +3422,7 @@
             this.chartTiming.Series.Add(series5);
             this.chartTiming.Series.Add(series6);
             this.chartTiming.Series.Add(series7);
-            this.chartTiming.Size = new System.Drawing.Size(950, 410);
+            this.chartTiming.Size = new System.Drawing.Size(950, 414);
             this.chartTiming.TabIndex = 2;
             this.chartTiming.Text = "Control Timing";
             this.chartTiming.CursorPositionChanged += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.CursorEventArgs>(this.chartTiming_CursorPositionChanged);
@@ -4116,7 +4116,7 @@
             this.tabPageBlockDiagram.Location = new System.Drawing.Point(4, 29);
             this.tabPageBlockDiagram.Name = "tabPageBlockDiagram";
             this.tabPageBlockDiagram.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBlockDiagram.Size = new System.Drawing.Size(958, 738);
+            this.tabPageBlockDiagram.Size = new System.Drawing.Size(958, 716);
             this.tabPageBlockDiagram.TabIndex = 6;
             this.tabPageBlockDiagram.Text = "Block Diagram";
             this.tabPageBlockDiagram.UseVisualStyleBackColor = true;
@@ -4408,7 +4408,7 @@
             this.tabPageCodeOutput.Location = new System.Drawing.Point(4, 29);
             this.tabPageCodeOutput.Name = "tabPageCodeOutput";
             this.tabPageCodeOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCodeOutput.Size = new System.Drawing.Size(958, 738);
+            this.tabPageCodeOutput.Size = new System.Drawing.Size(958, 716);
             this.tabPageCodeOutput.TabIndex = 0;
             this.tabPageCodeOutput.Text = "Source Code Output";
             this.tabPageCodeOutput.UseVisualStyleBackColor = true;
@@ -4424,7 +4424,7 @@
             this.tabSourceCode.Location = new System.Drawing.Point(3, 3);
             this.tabSourceCode.Name = "tabSourceCode";
             this.tabSourceCode.SelectedIndex = 0;
-            this.tabSourceCode.Size = new System.Drawing.Size(952, 732);
+            this.tabSourceCode.Size = new System.Drawing.Size(952, 710);
             this.tabSourceCode.TabIndex = 1;
             // 
             // tabPageAssembly
@@ -4435,7 +4435,7 @@
             this.tabPageAssembly.Location = new System.Drawing.Point(4, 33);
             this.tabPageAssembly.Name = "tabPageAssembly";
             this.tabPageAssembly.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAssembly.Size = new System.Drawing.Size(944, 695);
+            this.tabPageAssembly.Size = new System.Drawing.Size(944, 673);
             this.tabPageAssembly.TabIndex = 0;
             this.tabPageAssembly.Text = "Assembly";
             this.tabPageAssembly.UseVisualStyleBackColor = true;
@@ -4485,7 +4485,7 @@
             visualStudio2005SyntaxEditorRenderer1.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorAssembly.Renderer = visualStudio2005SyntaxEditorRenderer1;
             this.txtSyntaxEditorAssembly.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorAssembly.Size = new System.Drawing.Size(938, 620);
+            this.txtSyntaxEditorAssembly.Size = new System.Drawing.Size(938, 598);
             this.txtSyntaxEditorAssembly.TabIndex = 0;
             // 
             // panelASMSource
@@ -4551,7 +4551,7 @@
             this.tabPageCSource.Location = new System.Drawing.Point(4, 29);
             this.tabPageCSource.Name = "tabPageCSource";
             this.tabPageCSource.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCSource.Size = new System.Drawing.Size(944, 706);
+            this.tabPageCSource.Size = new System.Drawing.Size(944, 699);
             this.tabPageCSource.TabIndex = 2;
             this.tabPageCSource.Text = "C-Source";
             this.tabPageCSource.UseVisualStyleBackColor = true;
@@ -4601,7 +4601,7 @@
             visualStudio2005SyntaxEditorRenderer2.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCSource.Renderer = visualStudio2005SyntaxEditorRenderer2;
             this.txtSyntaxEditorCSource.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(938, 631);
+            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(938, 624);
             this.txtSyntaxEditorCSource.TabIndex = 5;
             // 
             // panelCSourcePath
@@ -4667,7 +4667,7 @@
             this.tabPageCHeader.Location = new System.Drawing.Point(4, 29);
             this.tabPageCHeader.Name = "tabPageCHeader";
             this.tabPageCHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCHeader.Size = new System.Drawing.Size(944, 706);
+            this.tabPageCHeader.Size = new System.Drawing.Size(944, 699);
             this.tabPageCHeader.TabIndex = 3;
             this.tabPageCHeader.Text = "C-Header";
             this.tabPageCHeader.UseVisualStyleBackColor = true;
@@ -4717,7 +4717,7 @@
             visualStudio2005SyntaxEditorRenderer3.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCHeader.Renderer = visualStudio2005SyntaxEditorRenderer3;
             this.txtSyntaxEditorCHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(938, 631);
+            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(938, 624);
             this.txtSyntaxEditorCHeader.TabIndex = 5;
             // 
             // panelCHeaderPath
@@ -4783,7 +4783,7 @@
             this.tabPageLibraryHeader.Location = new System.Drawing.Point(4, 29);
             this.tabPageLibraryHeader.Name = "tabPageLibraryHeader";
             this.tabPageLibraryHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLibraryHeader.Size = new System.Drawing.Size(944, 706);
+            this.tabPageLibraryHeader.Size = new System.Drawing.Size(944, 699);
             this.tabPageLibraryHeader.TabIndex = 6;
             this.tabPageLibraryHeader.Text = "Library Header";
             this.tabPageLibraryHeader.UseVisualStyleBackColor = true;
@@ -4833,7 +4833,7 @@
             visualStudio2005SyntaxEditorRenderer4.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCLibHeader.Renderer = visualStudio2005SyntaxEditorRenderer4;
             this.txtSyntaxEditorCLibHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(938, 631);
+            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(938, 624);
             this.txtSyntaxEditorCLibHeader.TabIndex = 6;
             // 
             // panelCLibPath
@@ -4896,7 +4896,7 @@
             this.tabPageInfo.Location = new System.Drawing.Point(4, 29);
             this.tabPageInfo.Name = "tabPageInfo";
             this.tabPageInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInfo.Size = new System.Drawing.Size(944, 706);
+            this.tabPageInfo.Size = new System.Drawing.Size(944, 699);
             this.tabPageInfo.TabIndex = 5;
             this.tabPageInfo.Text = "Info";
             this.tabPageInfo.UseVisualStyleBackColor = true;
@@ -4910,7 +4910,7 @@
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtOutput.Size = new System.Drawing.Size(938, 700);
+            this.txtOutput.Size = new System.Drawing.Size(938, 693);
             this.txtOutput.TabIndex = 0;
             this.txtOutput.WordWrap = false;
             // 

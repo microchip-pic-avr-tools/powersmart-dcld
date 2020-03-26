@@ -34,8 +34,8 @@
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <AutorunEnabled>true</AutorunEnabled>
     <DisallowUrlActivation>true</DisallowUrlActivation>
-    <ApplicationRevision>90</ApplicationRevision>
-    <ApplicationVersion>0.9.3.90</ApplicationVersion>
+    <ApplicationRevision>94</ApplicationRevision>
+    <ApplicationVersion>0.9.4.94</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <ExcludeDeploymentUrl>true</ExcludeDeploymentUrl>
