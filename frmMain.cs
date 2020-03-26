@@ -4828,67 +4828,11 @@ namespace dcld
 
         }
 
-        private void picInfoTimingPWMFrequency_MouseHover(object sender, EventArgs e)
-        {
-            ToolTip_Show(sender, e,
-                "Note:\r\n" +
-                "Switching frequency can be different from sampling frequency. \r\n" +
-                "CPU load estimation is based on sampling frequency. \r\n" +
-                "The sampling frequency can be adjusted in the Controller view.\r\n"
-            );
-
-            return;
-        }
-
-        private void picInfoAlternateInputSource_MouseHover(object sender, EventArgs e)
-        {
-            string msg = "This option is locked when option\r\n'Adaptive Gain Control' is enabled.";
-
-            ToolTip_Show(sender, e, msg);
-        }
-
-        private void picInfoDSPConfig_MouseHover(object sender, EventArgs e)
-        {
-            string msg = "Executing control loops require a specific DSP core configuration," + "\r\n" +
-                         "which has to be set once in per project. " + "\r\n" + 
-                         "\r\n" +
-                         "Enable this option if the DSP core is also used by other software " + "\r\n" +
-                         "instances with a different configuration." + "\r\n" +
-                         "\r\n" +
-                         "If the DSP is only used for control loop executions, it's recommended" + "\r\n" +
-                         "to configure the DSP in a separated routine during decive initialization" + "\r\n" +
-                         "and disable this option"; 
-
-            ToolTip_Show(sender, e, msg);
-        }
-
-        private void picInfoCascadeFunctionCall_MouseHover(object sender, EventArgs e)
-        {
-            string msg = "By enabling this function, you can specify a function pointer" + "\r\n" +
-                         "to an additional function which should be executed right after" + "\r\n" +
-                         "the execution of this loop has been completed." + "\r\n" + 
-                         "\r\n" +
-                         "Please refer to the user guide for more details.";
-
-            ToolTip_Show(sender, e, msg);
-        }
-
         private void chkEnableAdaptiveGainControl_CheckedChanged(object sender, EventArgs e)
         {
             chkAGCAddGetModFactorFunCall.Enabled = chkEnableAdaptiveGainControl.Checked;
             chkAGCAddEnable.Enabled = chkEnableAdaptiveGainControl.Checked;
             CodeGeneratorOptions_CheckedChanged(sender, e);
-        }
-
-        private void picInfoAGC_MouseHover(object sender, EventArgs e)
-        {
-            string msg = "This function adds a modulation factor to the control loop code" + "\r\n" + 
-                         "allowing runtime tuning of the loop gain." + "\r\n" +
-                         "\r\n" +
-                         "This option is only available for fast number scaling modes.\r\n" +
-                         "Please refer to the user guide for more details.";
-
-            ToolTip_Show(sender, e, msg);
         }
 
         private void OpenProjectConfigWindow()
@@ -4968,20 +4912,103 @@ namespace dcld
 
         }
 
-        private void picInfoErrNorm_MouseHover(object sender, EventArgs e)
-        {
-            string msg = "Error Normalization is required when data is read \r\n" +
-                         "in integer format from the source (e.g. ADC converter)\r\n" +
-                         "If the source is providing data in Q15 number format \r\n" +
-                         "this option can be disabled.";
-
-            ToolTip_Show(sender, e, msg);
-
-        }
-
         private void toolStripButtonConfig_Click(object sender, EventArgs e)
         {
             OpenProjectConfigWindow();
+        }
+
+        private void picInfo_MouseHover(object sender, EventArgs e)
+        {
+            PictureBox pic = new PictureBox();
+            string msg = "";
+
+            // If function was call from other control than a picture box, exit here
+            if (sender.GetType().ToString() != "System.Windows.Forms.PictureBox")
+                return;
+
+            pic = (PictureBox)sender;
+
+            if (pic.Name == picInfoADCLatency.Name)
+                msg = "ADC Latency is the time delay between the trigger event, and the time the result is " +
+                      "loaded into the respective ADC result buffer register (ADCBUFx). This time depends on " +
+                      "the settings for sampling and conversion time as well as the ADC resolution. \r\n" +
+                      "\r\n" +
+                      "Please refer to the device data sheet for more details.";
+
+            else if (pic.Name == picInfoAGC.Name)
+                msg = "This function adds a modulation factor to the control loop code allowing runtime tuning " +
+                      "of the loop gain. \r\n" +
+                      "\r\n" +
+                      "This option is only available for fast number scaling modes.\r\n" +
+                      "Please refer to the user guide for more details.";
+
+            else if (pic.Name == picInfoAlternateInputSource.Name)
+                msg = "The NPNZ controller xupport up to two input ports. For common feedback loops only one port " +
+                      "is required. The second 'Alternate Source' port is provided to support enhanced functoins where " +
+                      "control inputs need to be swapped during runtime (e.g. bi-directional control loops). \r\n" +
+                      "Alternatively, a second input port is required for control modes where the controller result " +
+                      "has further dependencies. (e.g. Adaptive Gain Modulation) \r\n" +
+                      "\r\n" +
+                      "Please note:\r\n" +
+                      "This option is locked when option\r\n'Adaptive Gain Control' is enabled.";
+
+            else if (pic.Name == picInfoCascadeFunctionCall.Name)
+                msg = "By enabling this function, you can specify a function pointer" + "\r\n" +
+                      "to an additional function which should be executed right after" + "\r\n" +
+                      "the execution of this loop has been completed." + "\r\n" +
+                      "\r\n" +
+                      "Please refer to the user guide for more details.";
+
+            else if (pic.Name == picInfoCycleStats.Name)
+                msg = "The number of cycles and related timings shown in this statistics is provided by the code generator " +
+                      "and the number of cycles counted across the code options selected. However, these numbers are not " +
+                      "considering conditional code excution such as branches and are referring to the maximum number of cycles. \r\n" +
+                      "\r\n" +
+                      "Hence, the total number of cycles shown may therefore differ from the real number of executions " +
+                      "and this statics should be used for estimations only.";
+
+            else if (pic.Name == picInfoDSPConfig.Name)
+                msg = "Executing control loops require a specific DSP core configuration," + "\r\n" +
+                      "which has to be set once in per project. " + "\r\n" +
+                      "\r\n" +
+                      "Enable this option if the DSP core is also used by other software " + "\r\n" +
+                      "instances with a different configuration." + "\r\n" +
+                      "\r\n" +
+                      "If the DSP is only used for control loop executions, it's recommended" + "\r\n" +
+                      "to configure the DSP in a separated routine during decive initialization" + "\r\n" +
+                      "and disable this option";
+
+            else if (pic.Name == picInfoErrNorm.Name)
+                msg = "Error Normalization is required when data is read \r\n" +
+                      "in integer format from the source (e.g. ADC converter)\r\n" +
+                      "If the source is providing data in Q15 number format \r\n" +
+                      "this option can be disabled.";
+
+            else if (pic.Name == picInfoISRLatency.Name)
+                msg = "The Interrupt Latency is the delay between an interrupt event being triggered and the " +
+                      "time were the first instruction of the Interrupt Service Routine (ISR) is executed. " +
+                      "This delay depends on the device clock, device architecture but also on compiler settings " +
+                      "such as utilization of Alternate Working Registers (AltWREG / CTXTx) as well as interrupt " +
+                      "priorities." + "\r\n" +
+                      "\r\n" +
+                      "Please refer to the user guide for more details.";
+
+            else if (pic.Name == picInfoTimingPWMFrequency.Name)
+                msg = "The switching frequency settingis only used to create the above waveform (blue) and does not " +
+                      "influence sampling frequency and thus also does not influence CPU load estimation.";
+
+            else if (pic.Name == picInfoUserTriggerDelay.Name)
+                msg = "Most designs need to specify a defined ADC trigger delay to compensate for the propagation delay of " +
+                      "internally generated PWM signals and the delayed point in time where switches will be turned on/off " +
+                      "and/or feedback signal delays. \r\n" +
+                      "\r\n" +
+                      "This setting is highly hardware dependent and would have to be determined for each design individually";
+
+            else
+                msg = "(help message missing)";
+
+            // Show ToolTip Window
+            ToolTip_Show(sender, e, msg);
         }
 
 
