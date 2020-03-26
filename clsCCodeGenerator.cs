@@ -116,16 +116,20 @@ namespace dcld
 
             switch (compFilter.ScalingMethod)
             { 
-                case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT:
+                //case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT:
+                //    _str_coeff_datatype = "int32_t";
+                //    _str_hist_datatype = "fractional";
+                //    _str_struct_label = "cNPNZ3216b_t";
+                //    break;
+                default:
                     _str_coeff_datatype = "int32_t";
                     _str_hist_datatype = "fractional";
-                    _str_struct_label = "cNPNZ3216b_t";
-                    break;
-                default:
-                    _str_coeff_datatype = "fractional";
                     _str_struct_label = "cNPNZ16b_t";
-                    _str_hist_datatype = "fractional";
                     break;
+                    //_str_coeff_datatype = "fractional";
+                    //_str_struct_label = "cNPNZ16b_t";
+                    //_str_hist_datatype = "fractional";
+                    //break;
             }
 
             sDum = text_line.Trim();
@@ -234,6 +238,7 @@ namespace dcld
 
         internal StringBuilder BuildSource(clsCompensatorNPNZ compFilter)
         {
+            string _coeff_fill = "";
             string text_line = "", block_name = "";
             UInt32 functions = 0;
             UInt32 text_elements = 0, i = 0, k = 0, m = 0;
@@ -241,6 +246,18 @@ namespace dcld
 
             try
             {
+                // The coefficient format is unified to a 32-bit wide number. In normal Q15 bit-shift scaling modes
+                // the high-word is set = zero while the low-word holds the Q15 coefficient.
+                // In Fast Floating Point, the high-word holds the Q15 coefficient while the low-word holds the scaler.
+                switch (compFilter.ScalingMethod)
+                {
+                    case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT:
+                        _coeff_fill = "";
+                        break;
+                    default:
+                        _coeff_fill = "0000";
+                        break;
+                }
 
                 block_name = "comp_source_head";
                 text_elements = Convert.ToUInt32(_GenScript.ReadKey(block_name, "count", "0"));
@@ -276,7 +293,7 @@ namespace dcld
                             text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                             text_line = ReplaceConfigStringTokens(text_line, compFilter);
                             text_line = text_line.Replace("%INDEX%", k.ToString());
-                            text_line = text_line.Replace("%LOOP_A_COEFFICIENTS_LIST%", "0x" + compFilter.CoeffA[k].Hex.ToString() + ",");
+                            text_line = text_line.Replace("%LOOP_A_COEFFICIENTS_LIST%", "0x" + _coeff_fill + compFilter.CoeffA[k].Hex.ToString() + ",");
                             strBuffer.Append(text_line);
                         }
 
@@ -284,7 +301,7 @@ namespace dcld
                         text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                         text_line = ReplaceConfigStringTokens(text_line, compFilter);
                         text_line = text_line.Replace("%INDEX%", k.ToString());
-                        text_line = text_line.Replace("%LOOP_A_COEFFICIENTS_LIST%", "0x" + compFilter.CoeffA[k].Hex.ToString() + " ");
+                        text_line = text_line.Replace("%LOOP_A_COEFFICIENTS_LIST%", "0x" + _coeff_fill + compFilter.CoeffA[k].Hex.ToString() + " ");
                         strBuffer.Append(text_line);
                     }
                     else if (text_line.Contains("%LOOP_B_COEFFICIENTS_LIST%"))
@@ -294,7 +311,7 @@ namespace dcld
                             text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                             text_line = ReplaceConfigStringTokens(text_line, compFilter);
                             text_line = text_line.Replace("%INDEX%", k.ToString());
-                            text_line = text_line.Replace("%LOOP_B_COEFFICIENTS_LIST%", "0x" + compFilter.CoeffB[k].Hex.ToString() + ",");
+                            text_line = text_line.Replace("%LOOP_B_COEFFICIENTS_LIST%", "0x" + _coeff_fill + compFilter.CoeffB[k].Hex.ToString() + ",");
                             strBuffer.Append(text_line);
                         }
 
@@ -302,7 +319,7 @@ namespace dcld
                         text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                         text_line = ReplaceConfigStringTokens(text_line, compFilter);
                         text_line = text_line.Replace("%INDEX%", k.ToString());
-                        text_line = text_line.Replace("%LOOP_B_COEFFICIENTS_LIST%", "0x" + compFilter.CoeffB[k].Hex.ToString() + " ");
+                        text_line = text_line.Replace("%LOOP_B_COEFFICIENTS_LIST%", "0x" + _coeff_fill + compFilter.CoeffB[k].Hex.ToString() + " ");
                         strBuffer.Append(text_line);
                     
                     }

@@ -1,12 +1,12 @@
 [generic]
 Name=Assembly Generator Script
-Description=this script defines DSP assembly code generation templates used to generate user-tailored SMPS control loops using the DCLD SDK
+Description=This script defines DSP assembly code generation templates used to generate user-tailored SMPS control loops using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=1.3.11
-Date=03/25/2020
+Version=2.0.0
+Date=03/26/2020
 
 [history]
-count=14
+count=15
 0=04/03/19;1.1.1;Added input offset compensation applied to input source
 1=10/18/19;1.2.0;Changed existing input offset compensation to full bi-directional feedback implementation
 2=10/19/19;1.2.1;Added code option for feedback signal rectification
@@ -21,6 +21,7 @@ count=14
 11=03/24/2020;1.3.5;Added Adaptive Gain Modulation factors to cNPNZ_t data structure
 12=03/24/2020;1.3.8;Renamed data structure prefix NPMZ16_ to NPNZ16_
 13=03/25/2020;1.3.9;Added Adaptive Gain Modulation to single.bit shifted, dual bit shifted and output factor scaling modes
+14=03/26/2020;2.0.0;Introduction of unified 32-bit wide coefficient number format
 
 [filter_block_scaling_modes]
 count=6
@@ -38,12 +39,19 @@ dbsft=Dual Bitshift-Scaling Mode
 fscl=Fast Floating Point Coefficient Scaling Mode
 ffloat=Fast Floating Point Mode
 
-[filter_block_array_addressing]
+[filter_block_array_addressing_coeff]
+addr_offset_sbft=4
+addr_offset_scscl=4
+addr_offset_dbsft=4
+addr_offset_fscl=4
+addr_offset_ffloat=4
+
+[filter_block_array_addressing_data]
 addr_offset_sbft=2
 addr_offset_scscl=2
 addr_offset_dbsft=2
 addr_offset_fscl=2
-addr_offset_ffloat=4
+addr_offset_ffloat=2
 
 [MSExcelExport]
 PoleAtOrigin=IMDIV(wp0 ,COMPLEX(0,[<SHEET.CELL.RADIANDS>]))
@@ -1422,8 +1430,8 @@ cycles=2
 lines=2
 comment0=move entry (n-%INDEX%) into buffer 
 comment1=move buffered value one tick down the delay line
-code0=mov [w10 + #%INDEX*ADDR-ADDR%], w6
-code1=mov w6, [w10 + #%INDEX*ADDR%]
+code0=mov [w10 + #%INDEX*ADDR_DATA-ADDR_DATA%], w6
+code1=mov w6, [w10 + #%INDEX*ADDR_DATA%]
 
 [comp_error_history_update_reverse]
 filter_order_loop=b
@@ -1431,8 +1439,8 @@ head_comment=%SEPARATOR%; Update error history in reverse order (move error one 
 cycles=2
 lines=2
 comment0=move entry (n-%FO-INDEX%) one tick down the delay line
-code0=mov [w10 + #%FO*ADDR% - #%INDEX*ADDR+ADDR%], w6
-code1=mov w6, [w10 + #%FO*ADDR% - #%INDEX*ADDR%]
+code0=mov [w10 + #%FO*ADDR_DATA% - #%INDEX*ADDR_DATA+ADDR_DATA%], w6
+code1=mov w6, [w10 + #%FO*ADDR_DATA% - #%INDEX*ADDR_DATA%]
 
 [comp_error_add_most_recent_to_mac]
 head_comment=%EMPTY%
@@ -1453,7 +1461,7 @@ head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=add most recent error input to history array
-code0=mov w1, [w10 + #%FO*ADDR% - %FO*ADDR%]
+code0=mov w1, [w10 + #%FO*ADDR_DATA% - %FO*ADDR_DATA%]
 
 [comp_control_history_update]
 address_loop=a
@@ -1461,8 +1469,8 @@ head_comment=%SEPARATOR%; Update control output history
 cycles=2
 lines=2
 comment0=move entry (n-%INDEX%) one tick down the delay line
-code0=mov [w10 + #%INDEX*ADDR-ADDR%], w6
-code1=mov w6, [w10 + #%INDEX*ADDR%]
+code0=mov [w10 + #%INDEX*ADDR_DATA-ADDR_DATA%], w6
+code1=mov w6, [w10 + #%INDEX*ADDR_DATA%]
 
 [comp_control_history_update_reverse]
 filter_order_loop=a
@@ -1470,8 +1478,8 @@ head_comment=%SEPARATOR%; Update control history in reverse order (move error on
 cycles=2
 lines=2
 comment0=move entry (n-%FO-INDEX%) one tick down the delay line
-code0=mov [w10 + #%FO*ADDR% - #%INDEX*ADDR+ADDR%], w6
-code1=mov w6, [w10 + #%FO*ADDR% - #%INDEX*ADDR%]
+code0=mov [w10 + #%FO*ADDR_DATA% - #%INDEX*ADDR_DATA+ADDR_DATA%], w6
+code1=mov w6, [w10 + #%FO*ADDR_DATA% - #%INDEX*ADDR_DATA%]
 
 [comp_control_add_most_recent_to_history]
 head_comment=%EMPTY%
@@ -1485,7 +1493,7 @@ head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=add most recent control output to history
-code0=mov w4, [w10 - %FO*ADDR%]
+code0=mov w4, [w10 - %FO*ADDR_DATA%]
 
 [comp_control_add_most_recent_to_history_indirect]
 head_comment=%EMPTY%
@@ -1507,7 +1515,7 @@ cycles=2
 lines=2
 comment0=load pointer to end of A coefficients array
 code0=mov [w0 + #offBCoefficients], w8
-code1=add w8, #%FO*ADDR%, w8
+code1=add w8, #%FO*ADDR_COEF%, w8
 
 [load_b_coeff_array_ptr]
 head_comment=%SEPARATOR%; Setup pointers to B-Term data arrays
@@ -1522,7 +1530,7 @@ cycles=2
 lines=2
 comment0=load pointer to end of B coefficients array
 code0=mov [w0 + #offBCoefficients], w8
-code1=add w8, #%FO*ADDR%, w8
+code1=add w8, #%FO*ADDR_COEF%, w8
 
 [load_b0_coeff_to_wreg]
 head_comment=%EMPTY%
@@ -1544,7 +1552,7 @@ cycles=2
 lines=2
 comment0=load pointer address into wreg
 code0=mov [w0 + #offErrorHistory], w10
-code1=add w10, #%FO*ADDR%, w10
+code1=add w10, #%FO*ADDR_DATA%, w10
 
 [load_error_history_before_update_array_ptr]
 head_comment=%SEPARATOR%; Setup pointer to second element of error history array
@@ -1552,7 +1560,7 @@ cycles=2
 lines=2
 comment0=load pointer address into wreg
 code0=mov [w0 + #offErrorHistory], w10
-code1=add w10, #%ADDR%, w10
+code1=add w10, #%ADDR_DATA%, w10
 
 [load_error_history_before_update_array_ptr_reverse]
 head_comment=%SEPARATOR%; Setup pointer to penultimate element of error history array
@@ -1560,7 +1568,7 @@ cycles=2
 lines=2
 comment0=load pointer address into wreg
 code0=mov [w0 + #offErrorHistory], w10
-code1=add w10, #%FO*ADDR-ADDR%, w10
+code1=add w10, #%FO*ADDR_DATA-ADDR_DATA%, w10
 
 [load_control_history_array_ptr]
 head_comment=%SEPARATOR%; Load pointer to first element of control history array
@@ -1575,7 +1583,7 @@ cycles=2
 lines=2
 comment0=load pointer address into wreg
 code0=mov [w0 + #offControlHistory], w10
-code1=add w10, #%FO*ADDR%, w10
+code1=add w10, #%FO*ADDR_DATA%, w10
 
 [load_control_history_before_update_array_ptr]
 head_comment=%SEPARATOR%; Load pointer to second element of control history array
@@ -1583,14 +1591,14 @@ cycles=2
 lines=2
 comment0=load pointer address into wreg
 code0=mov [w0 + #offControlHistory], w10
-code1=add w10, #%ADDR%, w10
+code1=add w10, #%ADDR_DATA%, w10
 
 [load_control_history_array_before_update_ptr_reverse]
 head_comment=%SEPARATOR%; Load pointer to penultimate element of control history array (reverse addressing)
 cycles=2
 lines=2
 comment0=load pointer address into wreg
-code0=mov [w0 + #offControlHistory + %FO*ADDR-ADDR%], w10
+code0=mov [w0 + #offControlHistory + %FO*ADDR_DATA-ADDR_DATA%], w10
 
 [comp_mac_start_acca_clear_no_prefetch]
 head_comment=%SEPARATOR%; Compute compensation filter term
@@ -1604,28 +1612,28 @@ head_comment=%SEPARATOR%; Compute compensation filter term
 cycles=1
 lines=1
 comment0=clear accumulator A and prefetch first operands
-code0=clr a, [w8]+=%ADDR%, w4, [w10]+=%ADDR%, w6
+code0=clr a, [w8]+=%ADDR_COEF%, w4, [w10]+=%ADDR_DATA%, w6
 
 [comp_mac_start_acca_reverse_clear]
 head_comment=%SEPARATOR%; Compute compensation filter term
 cycles=1
 lines=1
 comment0=clear accumulator A and prefetch last operands
-code0=clr a, [w8]-=%ADDR%, w4, [w10 + #%FO*ADDR%]-=%ADDR%, w6
+code0=clr a, [w8]-=%ADDR_COEF%, w4, [w10 + #%FO*ADDR_DATA%]-=%ADDR_DATA%, w6
 
 [comp_mac_start_acca_resume]
 head_comment=%SEPARATOR%; Compute compensation filter term
 cycles=1
 lines=1
 comment0=leave contents accumulator A untouched and prefetch first operands
-code0=movsac a, [w8]+=%ADDR%, w4, [w10]+=%ADDR%, w6
+code0=movsac a, [w8]+=%ADDR_COEF%, w4, [w10]+=%ADDR_DATA%, w6
 
 [comp_mac_start_acca_reverse_resume]
 head_comment=%SEPARATOR%; Compute compensation filter term
 cycles=1
 lines=1
 comment0=leave contents accumulator A untouched and prefetch last operands
-code0=movsac a, [w8]-=%ADDR%, w4, [w10]-=%ADDR%, w6
+code0=movsac a, [w8]-=%ADDR_COEF%, w4, [w10]-=%ADDR_DATA%, w6
 
 [comp_mac_start_accb_clear_no_prefetch]
 head_comment=%SEPARATOR%; Compute B-Term of the compensation filter
@@ -1639,28 +1647,28 @@ head_comment=%SEPARATOR%; Compute B-Term of the compensation filter
 cycles=1
 lines=1
 comment0=clear accumulator B and prefetch first operands
-code0=clr b, [w8]+=%ADDR%, w4, [w10]+=%ADDR%, w6
+code0=clr b, [w8]+=%ADDR_COEF%, w4, [w10]+=%ADDR_DATA%, w6
 
 [comp_mac_start_accb_reverse_clear]
 head_comment=%SEPARATOR%; Compute B-Term of the compensation filter
 cycles=1
 lines=1
 comment0=clear accumulator B and prefetch last operands
-code0=clr b, [w8]-=%ADDR%, w4, [w10 + #%FO*ADDR%]-=%ADDR%, w6
+code0=clr b, [w8]-=%ADDR_COEF%, w4, [w10 + #%FO*ADDR_DATA%]-=%ADDR_DATA%, w6
 
 [comp_mac_start_accb_resume]
 head_comment=%SEPARATOR%; Compute B-Term of the compensation filter
 cycles=1
 lines=1
 comment0=leave contents of accumulator B untouched and prefetch first operands
-code0=movsac b, [w8]+=%ADDR%, w4, [w10]+=%ADDR%, w6
+code0=movsac b, [w8]+=%ADDR_COEF%, w4, [w10]+=%ADDR_DATA%, w6
 
 [comp_mac_start_accb_reverse_resume]
 head_comment=%SEPARATOR%; Compute B-Term of the compensation filter
 cycles=1
 lines=1
 comment0=leave contents of accumulator B untouched and prefetch last operands
-code0=movsac b, [w8]-=%ADDR%, w4, [w10]-=%ADDR%, w6
+code0=movsac b, [w8]-=%ADDR_COEF%, w4, [w10]-=%ADDR_DATA%, w6
 
 [comp_mac_loop_a_term_acca]
 filter_order_loop=a
@@ -1668,7 +1676,7 @@ head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=multiply control output (n-%INDEX%) from the delay line with coefficient A%INDEX%
-code0=mac w4*w6, a, [w8]+=%ADDR%, w4, [w10]+=%ADDR%, w6
+code0=mac w4*w6, a, [w8]+=%ADDR_COEF%, w4, [w10]+=%ADDR_DATA%, w6
 
 [comp_mac_loop_a_term_reverse_acca]
 filter_order_loop=a
@@ -1676,7 +1684,7 @@ head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=multiply control output (n-%FO-INDEX%) from the delay line with coefficient A%FO-INDEX%
-code0=mac w4*w6, a, [w8]-=%ADDR%, w4, [w10]-=%ADDR%, w6
+code0=mac w4*w6, a, [w8]-=%ADDR_COEF%, w4, [w10]-=%ADDR_DATA%, w6
 
 [comp_mac_loop_a_term_accb]
 filter_order_loop=a
@@ -1684,7 +1692,7 @@ head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=multiply control output (n-%INDEX%) from the delay line with coefficient A%INDEX%
-code0=mac w4*w6, b, [w8]+=%ADDR%, w4, [w10]+=%ADDR%, w6
+code0=mac w4*w6, b, [w8]+=%ADDR_COEF%, w4, [w10]+=%ADDR_DATA%, w6
 
 [comp_mac_loop_a_term_reverse_accb]
 filter_order_loop=a
@@ -1692,7 +1700,7 @@ head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=multiply control output (n-%FO-INDEX%) from the delay line with coefficient A%FO-INDEX%
-code0=mac w4*w6, b, [w8]-=%ADDR%, w4, [w10]-=%ADDR%, w6
+code0=mac w4*w6, b, [w8]-=%ADDR_COEF%, w4, [w10]-=%ADDR_DATA%, w6
 
 [comp_mac_loop_b_term_acca]
 filter_order_loop=b
@@ -1700,7 +1708,7 @@ head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=multiply & accumulate error input (n-%INDEX%) from the delay line with coefficient B%INDEX% and prefetch next operands
-code0=mac w4*w6, a, [w8]+=%ADDR%, w4, [w10]+=%ADDR%, w6
+code0=mac w4*w6, a, [w8]+=%ADDR_COEF%, w4, [w10]+=%ADDR_DATA%, w6
 
 [comp_mac_loop_b_term_reverse_acca]
 filter_order_loop=b
@@ -1708,7 +1716,7 @@ head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=multiply & accumulate error input (n-%FO-INDEX%) from the delay line with coefficient B%FO-INDEX% and prefetch next operands
-code0=mac w4*w6, a, [w8]-=%ADDR%, w4, [w10]-=%ADDR%, w6
+code0=mac w4*w6, a, [w8]-=%ADDR_COEF%, w4, [w10]-=%ADDR_DATA%, w6
 
 [comp_mac_loop_b_term_accb]
 filter_order_loop=b
@@ -1716,7 +1724,7 @@ head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=multiply & accumulate error input (n-%INDEX%) from the delay line with coefficient B%INDEX% and prefetch next operands
-code0=mac w4*w6, b, [w8]+=%ADDR%, w4, [w10]+=%ADDR%, w6
+code0=mac w4*w6, b, [w8]+=%ADDR_COEF%, w4, [w10]+=%ADDR_DATA%, w6
 
 [comp_mac_loop_b_term_reverse_accb]
 filter_order_loop=b
@@ -1724,7 +1732,7 @@ head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=multiply & accumulate error input (n-%FO-INDEX%) from the delay line with coefficient B%FO-INDEX% and prefetch next operands
-code0=mac w4*w6, b, [w8]-=%ADDR%, w4, [w10]-=%ADDR%, w6
+code0=mac w4*w6, b, [w8]-=%ADDR_COEF%, w4, [w10]-=%ADDR_DATA%, w6
 
 [comp_mac_end_acca]
 head_comment=%EMPTY%
@@ -1929,8 +1937,8 @@ head_comment=%SEPARATOR%; Compute compensation filter term
 cycles=2
 lines=2
 comment0=clear both accumulators and prefetch first operands
-code0=clr b, [w8]+=%ADDR%, w5
-code1=clr a, [w8]+=%ADDR*2%, w4, [w10]+=%ADDR%, w6
+code0=clr b, [w8]+=%ADDR_DATA%, w5
+code1=clr a, [w8]+=%ADDR_COEF%, w4, [w10]+=%ADDR_DATA%, w6
 
 [fscl_comp_mac_start_resume]
 head_comment=%SEPARATOR%; Compute compensation filter term
@@ -1938,8 +1946,8 @@ cycles=2
 lines=2
 comment0=leave contents of accumulator B unchanged
 comment1=clear accumulator A and prefetch first operands
-code0=movsac b, [w8]+=%ADDR%, w5
-code1=clr a, [w8]+=%ADDR*2%, w4, [w10]+=%ADDR%, w6
+code0=movsac b, [w8]+=%ADDR_DATA%, w5
+code1=clr a, [w8]+=%ADDR_COEF%, w4, [w10]+=%ADDR_DATA%, w6
 
 [fscl_comp_mac_first]
 head_comment=%EMPTY%
@@ -1948,7 +1956,7 @@ lines=4
 comment0=multiply control output (n-%INDEX%) from the delay line with coefficient X%INDEX%
 comment1=shift accumulator to post-scale floating number
 comment2=adding accumulator b to a
-code0=mpy w4*w6, a, [w8]+=%ADDR*2%, w4, [w10]+=%ADDR%, w6
+code0=mpy w4*w6, a, [w8]+=%ADDR_COEF%, w4, [w10]+=%ADDR_DATA%, w6
 code1=sftac a, w5
 code2=add b
 
@@ -1961,8 +1969,8 @@ comment0=load scaler into wreg
 comment1=multiply control output (n-%INDEX%) from the delay line with coefficient X%INDEX%
 comment2=shift accumulator to post-scale floating number
 comment3=adding accumulator b to a
-code0=mov [w8 - #%ADDR*3%], w5
-code1=mpy w4*w6, a, [w8]+=%ADDR*2%, w4, [w10]+=%ADDR%, w6
+code0=mov [w8 - #%ADDR_DATA*3%], w5
+code1=mpy w4*w6, a, [w8]+=%ADDR_COEF%, w4, [w10]+=%ADDR_DATA%, w6
 code2=sftac a, w5
 code3=add b
 
@@ -1975,8 +1983,8 @@ comment0=load scaler into wreg
 comment1=multiply control output (n-%INDEX%) from the delay line with coefficient X%INDEX%
 comment2=shift accumulator to post-scale floating number
 comment3=adding accumulator b to a
-code0=mov [w8 - #%ADDR*3%], w5
-code1=mpy w4*w6, a, [w8]+=%ADDR*2%, w4, [w10]+=%ADDR%, w6
+code0=mov [w8 - #%ADDR_DATA*3%], w5
+code1=mpy w4*w6, a, [w8]+=%ADDR_COEF%, w4, [w10]+=%ADDR_DATA%, w6
 code2=sftac a, w5
 code3=add b
 
@@ -1988,7 +1996,7 @@ comment0=load scaler into wreg
 comment1=multiply & accumulate last control output with coefficient of the delay line (no more prefetch)
 comment2=shift accumulator to post-scale floating number
 comment3=adding accumulator b to a
-code0=mov [w8 - #%ADDR*3%], w5
+code0=mov [w8 - #%ADDR_DATA*3%], w5
 code1=mpy w4*w6, a
 code2=sftac a, w5
 code3=add b

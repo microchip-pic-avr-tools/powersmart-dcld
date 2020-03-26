@@ -329,10 +329,16 @@ namespace dcld
             get { return (_CycleCountToWriteback); }
         }
 
-        private int _NumberSizeInByte = 2;
-        internal int NumberSizeInByte
+        private int _NumberSizeInByteCoeff = 4;
+        internal int NumberSizeInByte_Coefficients
         {
-            get { return (_NumberSizeInByte); }
+            get { return (_NumberSizeInByteCoeff); }
+        }
+
+        private int _NumberSizeInByteData = 2;
+        internal int NumberSizeInByte_Data
+        {
+            get { return (_NumberSizeInByteData); }
         }
 
         private string _AccumulatorUsage = "ab";
@@ -388,7 +394,8 @@ namespace dcld
         private string BuildCodeBody()
         {
             int block_count = 0, i = 0;
-            int addr_offset = 0;
+            int _addr_offset_coeff = 0;
+            int _addr_offset_data = 0;
             bool bool_dummy = false;
             string str_dum = "", command = "";
             StringBuilder body = new StringBuilder();
@@ -404,10 +411,13 @@ namespace dcld
                 if (block_count == 0) return ("; (no code template available)");
 
                 AccumulatorUsage = _GenScript.ReadKey("blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "accu_usage", "ab");
-                WREGUsage = _GenScript.ReadKey("blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "wreg_usage", "4,5,8,10");
+                WREGUsage = _GenScript.ReadKey("blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "wreg_usage", "4,6,8,10");
 
-                addr_offset = Convert.ToInt16(_GenScript.ReadKey("filter_block_array_addressing", "addr_offset_" + _Postfix, "2"));
-                _NumberSizeInByte = addr_offset;
+                _addr_offset_coeff = Convert.ToInt16(_GenScript.ReadKey("filter_block_array_addressing_coeff", "addr_offset_" + _Postfix, "4"));
+                _addr_offset_data = Convert.ToInt16(_GenScript.ReadKey("filter_block_array_addressing_data", "addr_offset_" + _Postfix, "2"));
+
+                _NumberSizeInByteData = _addr_offset_data;
+                _NumberSizeInByteCoeff = _addr_offset_coeff;
 
                 _CycleCountToWriteback = 0;
                 _CycleCountTotal = 0;
@@ -699,7 +709,7 @@ namespace dcld
                 return (body.ToString());
             
             }
-            catch { return ("(error while executing code body generation)"); }
+            catch { return ("(error while executing code body generation of command '" + command + "')"); }
         }
 
         private string BuildCodeBlock(string block_name)
@@ -835,56 +845,99 @@ namespace dcld
             fo_ptr = _FilterOrder;
 
             code_block.Replace("%FO%", fo_ptr.ToString());   // Replace address offsets within the captured string
-            code_block.Replace("%FO*ADDR%", (fo_ptr * _NumberSizeInByte).ToString());   // Replace address offsets within the captured string
-            code_block.Replace("%FO*ADDR-ADDR%", ((fo_ptr * _NumberSizeInByte) - _NumberSizeInByte).ToString());   // Replace address offsets within the captured string
-            code_block.Replace("%FO+ADDR%", (fo_ptr * _NumberSizeInByte).ToString());   // Replace address offsets within the captured string
-            code_block.Replace("%FO-ADDR%", (fo_ptr * _NumberSizeInByte + 2).ToString());   // Replace address offsets within the captured string
-            code_block.Replace("%ADDR%", _NumberSizeInByte.ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO*ADDR_DATA%", (fo_ptr * _NumberSizeInByteData).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO*ADDR_DATA-ADDR_DATA%", ((fo_ptr * _NumberSizeInByteData) - _NumberSizeInByteData).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO+ADDR_DATA%", (fo_ptr * _NumberSizeInByteData).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO-ADDR_DATA%", (fo_ptr * _NumberSizeInByteData + 2).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%ADDR_DATA%", _NumberSizeInByteData.ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO*ADDR_COEF%", (fo_ptr * _NumberSizeInByteCoeff).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO*ADDR_COEF-ADDR_COEF%", ((fo_ptr * _NumberSizeInByteCoeff) - _NumberSizeInByteCoeff).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO+ADDR_COEF%", (fo_ptr * _NumberSizeInByteCoeff).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO-ADDR_COEF%", (fo_ptr * _NumberSizeInByteCoeff + 2).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%ADDR_COEF%", _NumberSizeInByteCoeff.ToString());   // Replace address offsets within the captured string
 
 
             str_dum=code_block.ToString();
-            if (str_dum.Contains("%ADDR"))
+            if (str_dum.Contains("%ADDR_DATA"))
             {
                 // extract flag
                 while ((str_dum.Length > 0) && (loops++ < 32))
-                { 
-                    str_dum = str_dum.Substring(str_dum.IndexOf("%ADDR") + 5);
+                {
+                    str_dum = str_dum.Substring(str_dum.IndexOf("%ADDR_DATA") + ("%ADDR_DATA").Length);
 
                     str_flag = str_dum.TrimStart();
                     str_flag = str_flag.Substring(0, str_flag.IndexOf("%"));
                     num_dum = Convert.ToInt32(str_flag.Substring(1, str_flag.Length - 1));
-                    str_flag = "%ADDR" + str_flag + "%";
+                    str_flag = "%ADDR_DATA" + str_flag + "%";
 
                     switch(str_dum.Substring(0,1))
                     {
-                        case "*": 
-                            str_replace = (_NumberSizeInByte * num_dum).ToString();
+                        case "*":
+                            str_replace = (_NumberSizeInByteData * num_dum).ToString();
                             break;
-                        case "/": 
-                            str_replace = (_NumberSizeInByte * num_dum).ToString();
+                        case "/":
+                            str_replace = (_NumberSizeInByteData / num_dum).ToString();
                             break;
-                        case "+": 
-                            str_replace = (_NumberSizeInByte * num_dum).ToString();
+                        case "+":
+                            str_replace = (_NumberSizeInByteData + num_dum).ToString();
                             break;
-                        case "-": 
-                            str_replace = (_NumberSizeInByte * num_dum).ToString();
+                        case "-":
+                            str_replace = (_NumberSizeInByteData - num_dum).ToString();
                             break;
                     }
 
                     code_block.Replace(str_flag, str_replace);   // Replace address offsets within the captured string
 
-                    if (!str_dum.Contains("%ADDR")) { break; }
+                    if (!str_dum.Contains("%ADDR_DATA")) { break; }
                     else { str_dum = str_dum.Substring(str_dum.IndexOf("%") + 1); }
                 }
 
             }
+            
+            if (str_dum.Contains("%ADDR_COEF"))
+            {
+                // extract flag
+                while ((str_dum.Length > 0) && (loops++ < 32))
+                {
+                    str_dum = str_dum.Substring(str_dum.IndexOf("%ADDR_COEF") + ("%ADDR_COEF").Length);
 
+                    str_flag = str_dum.TrimStart();
+                    str_flag = str_flag.Substring(0, str_flag.IndexOf("%"));
+                    num_dum = Convert.ToInt32(str_flag.Substring(1, str_flag.Length - 1));
+                    str_flag = "%ADDR_COEF" + str_flag + "%";
+
+                    switch (str_dum.Substring(0, 1))
+                    {
+                        case "*":
+                            str_replace = (_NumberSizeInByteCoeff * num_dum).ToString();
+                            break;
+                        case "/":
+                            str_replace = (_NumberSizeInByteCoeff / num_dum).ToString();
+                            break;
+                        case "+":
+                            str_replace = (_NumberSizeInByteCoeff + num_dum).ToString();
+                            break;
+                        case "-":
+                            str_replace = (_NumberSizeInByteCoeff - num_dum).ToString();
+                            break;
+                    }
+
+                    code_block.Replace(str_flag, str_replace);   // Replace address offsets within the captured string
+
+                    if (!str_dum.Contains("%ADDR_COEFF")) { break; }
+                    else { str_dum = str_dum.Substring(str_dum.IndexOf("%") + 1); }
+                }
+
+            }
             // if code is not generated in loop (standard instruction only)
             if (loop_index >= 0)
             {
-                code_block.Replace("%INDEX*ADDR-ADDR%", (loop_index * _NumberSizeInByte - _NumberSizeInByte).ToString());
-                code_block.Replace("%INDEX*ADDR+ADDR%", (loop_index * _NumberSizeInByte + _NumberSizeInByte).ToString());
-                code_block.Replace("%INDEX*ADDR%", (loop_index * _NumberSizeInByte).ToString());
+                code_block.Replace("%INDEX*ADDR_DATA-ADDR_DATA%", (loop_index * _NumberSizeInByteData - _NumberSizeInByteData).ToString());
+                code_block.Replace("%INDEX*ADDR_DATA+ADDR_DATA%", (loop_index * _NumberSizeInByteData + _NumberSizeInByteData).ToString());
+                code_block.Replace("%INDEX*ADDR_DATA%", (loop_index * _NumberSizeInByteData).ToString());
+                code_block.Replace("%INDEX*ADDR_COEF-ADDR_COEF%", (loop_index * _NumberSizeInByteCoeff - _NumberSizeInByteCoeff).ToString());
+                code_block.Replace("%INDEX*ADDR_COEF+ADDR_COEF%", (loop_index * _NumberSizeInByteCoeff + _NumberSizeInByteCoeff).ToString());
+                code_block.Replace("%INDEX*ADDR_COEF%", (loop_index * _NumberSizeInByteCoeff).ToString());
                 code_block.Replace("%FO-INDEX%", (_FilterOrder - loop_index).ToString());
                 code_block.Replace("%INDEX%", loop_index.ToString());   // Replace indices within the captured string (usually in comments)
             }
