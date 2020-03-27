@@ -386,6 +386,14 @@ namespace dcld
             str_dum = str_dum.Replace("%SEPARATOR%", "\r\n;------------------------------------------------------------------------------\r\n");
             str_dum = str_dum.Replace("%EMPTY%", "");
 
+            str_dum = str_dum.Replace("%PREFIX%", _Prefix.ToLower().Trim());
+            str_dum = str_dum.Replace("%PREFIXG%", "_" + _Prefix.Trim());
+            str_dum = str_dum.Replace("%PREFIXU%", _Prefix.ToUpper().Trim());
+            str_dum = str_dum.Replace("%PREFIXL%", _Prefix.ToLower().Trim());
+            str_dum = str_dum.Replace("%POSTFIX%", _Postfix.ToLower().Trim());
+            str_dum = str_dum.Replace("%POSTFIXG%", _Postfix.Trim());
+            str_dum = str_dum.Replace("%POSTFIXU%", _Postfix.ToUpper().Trim());
+            str_dum = str_dum.Replace("%POSTFIXL%", _Postfix.ToLower().Trim());
 
             return (str_dum);
         }
