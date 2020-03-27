@@ -3854,11 +3854,16 @@ namespace dcld
         {
             int i = 0;
             CheckBox check;
+            bool ACCBIsValid = false;
+
+            ACCBIsValid = (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT) ||
+                          (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT);
 
             for (i=0; i<grpContextSaving.Controls.Count; i++)
             {
                 check = (CheckBox)grpContextSaving.Controls[i];
-                if (check.Name != chkContextSaving.Name) check.Enabled = chkContextSaving.Checked; 
+                if (check.Name == chkSaveRestoreAccumulatorB.Name) check.Enabled = (chkContextSaving.Checked & ACCBIsValid);
+                else if (check.Name != chkContextSaving.Name) check.Enabled = chkContextSaving.Checked; 
             }
 
             CodeGeneratorOptions_CheckedChanged(sender, e);
