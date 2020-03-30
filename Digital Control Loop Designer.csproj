@@ -207,7 +207,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\VFreq.png" />
-    <None Include="Resources\PSFT1.png" />
+    <None Include="Resources\PSFT.png" />
     <None Include="Resources\CS.png" />
     <None Include="Resources\CT.png" />
     <None Include="Resources\VD.png" />
@@ -219,11 +219,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\DS.png" />
-    <None Include="Resources\FFreq1.png" />
+    <None Include="Resources\FFreq.png" />
     <Content Include="Resources\icon_generate_export.ico" />
     <None Include="Resources\icon_help.ico" />
     <None Include="Resources\icon_legend.ico" />
-    <None Include="Resources\icon_rotate4.ico" />
     <None Include="Resources\icon_table.ico" />
     <None Include="Resources\icon_time_table.ico" />
     <Content Include="Resources\ActiproSoftware.dsPICAssembly.xml">
