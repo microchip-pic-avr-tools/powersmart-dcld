@@ -206,6 +206,9 @@
     <Content Include="Resources\181026e_dcld_beta_user_guide.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\readme.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\VFreq.png" />
     <None Include="Resources\PSFT.png" />
     <None Include="Resources\CS.png" />
