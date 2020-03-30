@@ -7,15 +7,14 @@ namespace dcld
     public class clsAssemblyGenerator
     {
 
-        // Settings file handling
-        [DllImport("kernel32.dll", EntryPoint = "GetPrivateProfileString", CallingConvention = CallingConvention.StdCall)]
-        static extern int GetPrivateProfileString(string lpAppName, string lpKeyName, string lpDefault, StringBuilder lpReturnedString, int nSize, string lpFileName);
-        [DllImport("kernel32.dll", EntryPoint = "WritePrivateProfileString", CallingConvention = CallingConvention.StdCall)]
-        static extern int WritePrivateProfileString(string lpAppName, string lpKeyName, StringBuilder lpString, int nSize, string lpFileName);
-        [DllImport("kernel32.dll", EntryPoint = "WritePrivateProfileString", CallingConvention = CallingConvention.StdCall)]
-        static extern bool WritePrivateProfileString(string lpAppName, string lpKeyName, string lpString, string lpFileName);
-
         // Class Properties
+
+        private clsINIFileHandler _GenScript = new clsINIFileHandler();
+        internal clsINIFileHandler GeneratorScript
+        {
+            get { return (_GenScript); }
+            set { _GenScript = value; return; }
+        }
 
         private bool _SaveRestoreContext = true;
         internal bool SaveRestoreContext
@@ -192,6 +191,27 @@ namespace dcld
             set { _FeedbackRectification = value; return; }
         }
 
+        private bool _AdaptiveGainModulationEnable = false;
+        internal bool AdaptiveGainModulationEnable        // B-Coefficients can be trimmed by a simple factor during runtime to adjust the loop gain
+        {
+            get { return _AdaptiveGainModulationEnable; }
+            set { _AdaptiveGainModulationEnable = value; return; }
+        }
+
+        private bool _AdaptiveGainModulationAddFunctionCall = false;
+        internal bool AdaptiveGainModulationAddFunctionCall // If enabled, it adds a function call to user function loading/calculating the most recent modulation factor
+        {
+            get { return _AdaptiveGainModulationAddFunctionCall; }
+            set { _AdaptiveGainModulationAddFunctionCall = value; return; }
+        }
+
+        private bool _AdaptiveGainModulationAddEnableSwitch = false;
+        internal bool AdaptiveGainModulationAddEnableSwitch // adds an enabled/disable control bit to the status word to turn on/off AGC
+        {
+            get { return _AdaptiveGainModulationAddEnableSwitch; }
+            set { _AdaptiveGainModulationAddEnableSwitch = value; return; }
+        }
+
 
         private bool _CreateCopyOfMostRecentControlInput = true;
         internal bool CreateCopyOfMostRecentControlInput
@@ -251,13 +271,6 @@ namespace dcld
             get { return (_Postfix); }
         }
 
-        private string _TemplateFile = "";
-        internal string TemplateFile
-        {
-            get { return (_TemplateFile); }
-            set { _TemplateFile = value; return; }
-        }
-
         private int _DeviceType = 0;
         internal int DeviceType
         {
@@ -275,9 +288,9 @@ namespace dcld
 
                 _ScalingMethod = value;
 
-                str_dum = ReadConfigString(_TemplateFile, "filter_block_scaling_modes", _ScalingMethod.ToString(), "");
+                str_dum = _GenScript.ReadKey("filter_block_scaling_modes", _ScalingMethod.ToString(), "");
                 if (str_dum.Trim().Length > 0)
-                { _ScalingMethodDescription = ReadConfigString(_TemplateFile, "filter_block_scaling_modes_descritpion", str_dum, ""); }
+                { _ScalingMethodDescription = _GenScript.ReadKey("filter_block_scaling_modes_descritpion", str_dum, ""); }
                 else 
                 { _ScalingMethodDescription = ""; }
                 
@@ -316,10 +329,16 @@ namespace dcld
             get { return (_CycleCountToWriteback); }
         }
 
-        private int _NumberSizeInByte = 2;
-        internal int NumberSizeInByte
+        private int _NumberSizeInByteCoeff = 4;
+        internal int NumberSizeInByte_Coefficients
         {
-            get { return (_NumberSizeInByte); }
+            get { return (_NumberSizeInByteCoeff); }
+        }
+
+        private int _NumberSizeInByteData = 2;
+        internal int NumberSizeInByte_Data
+        {
+            get { return (_NumberSizeInByteData); }
         }
 
         private string _AccumulatorUsage = "ab";
@@ -345,39 +364,6 @@ namespace dcld
 
         //----------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------
-        private string ReadConfigString(string fname, string section, string name, string defstr)
-        {
-            string sDum = "";
-            int rc;
-            StringBuilder sb = new StringBuilder(65536);
-            rc = GetPrivateProfileString(section, name, defstr, sb, 65535, fname);
-            if (rc > 0) { sDum = sb.ToString(); }
-            else { sDum = defstr; }
-
-            sDum = sDum.Replace("\\n", "\r\n");
-            if (_Prefix.Length > 0) 
-            {
-                sDum = sDum.Replace("%PREFIX%", _Prefix.ToLower().Trim());
-                sDum = sDum.Replace("%PREFIXG%", "_" + _Prefix.Trim());
-                sDum = sDum.Replace("%PREFIXU%", _Prefix.ToUpper().Trim());
-                sDum = sDum.Replace("%PREFIXL%", _Prefix.ToLower().Trim());
-                sDum = sDum.Replace("%SEPARATOR%", "\r\n;------------------------------------------------------------------------------\r\n");
-                sDum = sDum.Replace("%EMPTY%", "");
-            }
-            else { sDum = sDum.Replace("%PREFIX%", ""); }
-
-            return (sDum);
-        }
-
-        private bool WriteConfigString(string fname, string section, string name, string str)
-        {
-            bool rc;
-            rc = WritePrivateProfileString(section, name, str, fname);
-
-            return rc;
-        }
-        //----------------------------------------------------------------------------------------------
-        //----------------------------------------------------------------------------------------------
         public string BuildCode()
         {
             StringBuilder code = new StringBuilder();
@@ -387,10 +373,37 @@ namespace dcld
             return (code.ToString());
         }
 
+        //----------------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------------
+        private string ReplaceTokens(string user_string)
+        {
+            string str_dum = "";
+
+            // Copy parameter
+            str_dum = user_string.Trim();
+
+            // Comment Blocks
+            str_dum = str_dum.Replace("%SEPARATOR%", "\r\n;------------------------------------------------------------------------------\r\n");
+            str_dum = str_dum.Replace("%EMPTY%", "");
+
+            str_dum = str_dum.Replace("%PREFIX%", _Prefix.ToLower().Trim());
+            str_dum = str_dum.Replace("%PREFIXG%", "_" + _Prefix.Trim());
+            str_dum = str_dum.Replace("%PREFIXU%", _Prefix.ToUpper().Trim());
+            str_dum = str_dum.Replace("%PREFIXL%", _Prefix.ToLower().Trim());
+            str_dum = str_dum.Replace("%POSTFIX%", _Postfix.ToLower().Trim());
+            str_dum = str_dum.Replace("%POSTFIXG%", _Postfix.Trim());
+            str_dum = str_dum.Replace("%POSTFIXU%", _Postfix.ToUpper().Trim());
+            str_dum = str_dum.Replace("%POSTFIXL%", _Postfix.ToLower().Trim());
+
+            return (str_dum);
+        }
+
+
         private string BuildCodeBody()
         {
             int block_count = 0, i = 0;
-            int addr_offset = 0;
+            int _addr_offset_coeff = 0;
+            int _addr_offset_data = 0;
             bool bool_dummy = false;
             string str_dum = "", command = "";
             StringBuilder body = new StringBuilder();
@@ -399,17 +412,20 @@ namespace dcld
             try 
             {
 
-                _Postfix = ReadConfigString(_TemplateFile, "filter_block_scaling_modes", _ScalingMethod.ToString(), "");
+                _Postfix = _GenScript.ReadKey("filter_block_scaling_modes", _ScalingMethod.ToString(), "");
                 if (_Postfix.Length == 0) return ("; (no code template available)");
 
-                block_count = Convert.ToInt32(ReadConfigString(_TemplateFile, "blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "count", "0"));
+                block_count = Convert.ToInt32(_GenScript.ReadKey("blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "count", "0"));
                 if (block_count == 0) return ("; (no code template available)");
 
-                AccumulatorUsage = ReadConfigString(_TemplateFile, "blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "accu_usage", "ab");
-                WREGUsage = ReadConfigString(_TemplateFile, "blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "wreg_usage", "4,5,8,10");
+                AccumulatorUsage = _GenScript.ReadKey("blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "accu_usage", "ab");
+                WREGUsage = _GenScript.ReadKey("blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "wreg_usage", "4,6,8,10");
 
-                addr_offset = Convert.ToInt16(ReadConfigString(_TemplateFile, "filter_block_array_addressing", "addr_offset_" + _Postfix, "2"));
-                _NumberSizeInByte = addr_offset;
+                _addr_offset_coeff = Convert.ToInt16(_GenScript.ReadKey("filter_block_array_addressing_coeff", "addr_offset_" + _Postfix, "4"));
+                _addr_offset_data = Convert.ToInt16(_GenScript.ReadKey("filter_block_array_addressing_data", "addr_offset_" + _Postfix, "2"));
+
+                _NumberSizeInByteData = _addr_offset_data;
+                _NumberSizeInByteCoeff = _addr_offset_coeff;
 
                 _CycleCountToWriteback = 0;
                 _CycleCountTotal = 0;
@@ -420,8 +436,8 @@ namespace dcld
                     //body.Append("\r\n;execute block #" + i.ToString() + "\t" + ReadConfigString(_TemplateFile, "blockset_" + _Postfix + "_" + _CodeOptimizationLevel, i.ToString(), "(not found)") + "\r\n");
 
                     str_dum = "";
-                    command = ReadConfigString(_TemplateFile, "blockset_" + _Postfix + "_" + _CodeOptimizationLevel, i.ToString(), "(not found)");
-
+                    command = ReplaceTokens(_GenScript.ReadKey("blockset_" + _Postfix + "_" + _CodeOptimizationLevel, i.ToString(), "(not found)"));
+                    
                     switch (command.ToLower().Trim())
                     {
                         case "(not found)":
@@ -584,6 +600,26 @@ namespace dcld
                             if (_AddErrorInputNormalization) str_dum = BuildCodeBlock(command);
                             break;
 
+                        case "agc_factor_multiply_start":
+                            if (_AdaptiveGainModulationEnable) str_dum = BuildCodeBlock(command);
+                            break;
+
+                        case "agc_factor_multiply_enable_start":
+                            if (_AdaptiveGainModulationAddEnableSwitch) str_dum = BuildCodeBlock(command);
+                            break;
+
+                        case "agc_factor_multiply_enable_end":
+                            if (_AdaptiveGainModulationAddEnableSwitch) str_dum = BuildCodeBlock(command);
+                            break;
+
+                        case "agc_factor_multiply_get_factor_call":
+                            if (_AdaptiveGainModulationAddFunctionCall) str_dum = BuildCodeBlock(command);
+                            break;
+
+                        case "agc_factor_multiply_scaled":
+                            if (_AdaptiveGainModulationEnable) str_dum = BuildCodeBlock(command);
+                            break;
+
                         case "anti_windup":
                             if (_AddAntiWindup) str_dum = BuildCodeBlock(command);
                             break;
@@ -681,7 +717,7 @@ namespace dcld
                 return (body.ToString());
             
             }
-            catch { return ("(error while executing code body generation)"); }
+            catch { return ("(error while executing code body generation of command '" + command + "')"); }
         }
 
         private string BuildCodeBlock(string block_name)
@@ -693,12 +729,12 @@ namespace dcld
             StringBuilder code_block = new StringBuilder();
 
             // read and insert head comment of this code block
-            hcomm = ReadConfigString(_TemplateFile, block_name, "head_comment", "");
+            hcomm = ReplaceTokens(_GenScript.ReadKey(block_name, "head_comment", ""));
             if(hcomm.Length > 0) hcomm = hcomm + "\r\n";
 
             // get line count and execution cycles
-            line_cnt = Convert.ToInt32(ReadConfigString(_TemplateFile, block_name, "lines", "0"));
-            cycles = Convert.ToInt32(ReadConfigString(_TemplateFile, block_name, "cycles", "0"));
+            line_cnt = Convert.ToInt32(_GenScript.ReadKey(block_name, "lines", "0"));
+            cycles = Convert.ToInt32(_GenScript.ReadKey(block_name, "cycles", "0"));
 
             // Insert code lines with comments
 
@@ -706,7 +742,7 @@ namespace dcld
 
 
             // if code block needs to be generated in loops...
-            if (ReadConfigString(_TemplateFile, block_name, "filter_order_loop", "0").ToLower().Trim() == "as")
+            if (_GenScript.ReadKey(block_name, "filter_order_loop", "0").ToLower().Trim() == "as")
             {   // Loop Instruction on filter order
 
                 for (i = 1; i < _FilterOrder-1; i++)
@@ -716,7 +752,7 @@ namespace dcld
                     cycle_count += cycles;                          // keep counting instruction cycles
                 }
             }
-            else if (ReadConfigString(_TemplateFile, block_name, "filter_order_loop", "0").ToLower().Trim() == "bs")
+            else if (_GenScript.ReadKey(block_name, "filter_order_loop", "0").ToLower().Trim() == "bs")
             {   // Loop Instruction on filter order
 
                 for (i = 0; i < _FilterOrder-1; i++)
@@ -726,7 +762,7 @@ namespace dcld
                     cycle_count += cycles;                          // keep counting instruction cycles 
                 }
             }
-            else if (ReadConfigString(_TemplateFile, block_name, "filter_order_loop", "0").ToLower().Trim() == "a")
+            else if (_GenScript.ReadKey(block_name, "filter_order_loop", "0").ToLower().Trim() == "a")
             {   // Loop Instruction on filter order
 
                 for (i = 1; i < _FilterOrder; i++)
@@ -736,7 +772,7 @@ namespace dcld
                     cycle_count += cycles;                          // keep counting instruction cycles
                 }
             }
-            else if (ReadConfigString(_TemplateFile, block_name, "filter_order_loop", "0").ToLower().Trim() == "b")
+            else if (_GenScript.ReadKey(block_name, "filter_order_loop", "0").ToLower().Trim() == "b")
             {   // Loop Instruction on filter order
 
                 for (i = 0; i < _FilterOrder; i++)
@@ -746,7 +782,7 @@ namespace dcld
                     cycle_count += cycles;                          // keep counting instruction cycles 
                 }
             }
-            else if (ReadConfigString(_TemplateFile, block_name, "address_loop", "0").ToLower().Trim() == "a")
+            else if (_GenScript.ReadKey(block_name, "address_loop", "0").ToLower().Trim() == "a")
             {   // Loop Instruction on filter order
 
                 for (i = (_FilterOrder - 1); i > 0; i--)
@@ -756,7 +792,7 @@ namespace dcld
                     cycle_count += cycles;                          // keep counting instruction cycles
                 }
             }
-            else if (ReadConfigString(_TemplateFile, block_name, "address_loop", "0").ToLower().Trim() == "b")
+            else if (_GenScript.ReadKey(block_name, "address_loop", "0").ToLower().Trim() == "b")
             {   // Loop Instruction on filter order
 
                 for (i = _FilterOrder; i > 0; i--)
@@ -785,6 +821,8 @@ namespace dcld
             return (code_block.ToString());
         }
 
+
+
         private string BuildCodeBlockLine(string block_name, int line_index, int loop_index = -1)
         {
             int fo_ptr = 0, num_dum = 0, loops = 0;
@@ -794,12 +832,12 @@ namespace dcld
             StringBuilder code_block = new StringBuilder();
 
             // Read code line and skip if it cannot be found (empty lines pass through)
-            code_line.Append(ReadConfigString(_TemplateFile, block_name, "code" + line_index.ToString(), ""));
+            code_line.Append(ReplaceTokens(_GenScript.ReadKey(block_name, "code" + line_index.ToString(), "")));
             if (code_line.ToString().ToLower().Trim() == "(not found)")
             { return ("\r\n\t#error: label '" + block_name + "' " + "code" + line_index.ToString() + " unknown"); }
 
             // Read comment line
-            comm_line.Append(ReadConfigString(_TemplateFile, block_name, "comment" + line_index.ToString(), ""));
+            comm_line.Append(ReplaceTokens(_GenScript.ReadKey(block_name, "comment" + line_index.ToString(), "")));
             comm_line.Replace("%LINE%", line_index.ToString());
 
             // Merge code line and comment into block line
@@ -815,58 +853,116 @@ namespace dcld
             fo_ptr = _FilterOrder;
 
             code_block.Replace("%FO%", fo_ptr.ToString());   // Replace address offsets within the captured string
-            code_block.Replace("%FO*ADDR%", (fo_ptr * _NumberSizeInByte).ToString());   // Replace address offsets within the captured string
-            code_block.Replace("%FO*ADDR-ADDR%", ((fo_ptr * _NumberSizeInByte) - _NumberSizeInByte).ToString());   // Replace address offsets within the captured string
-            code_block.Replace("%FO+ADDR%", (fo_ptr * _NumberSizeInByte).ToString());   // Replace address offsets within the captured string
-            code_block.Replace("%FO-ADDR%", (fo_ptr * _NumberSizeInByte + 2).ToString());   // Replace address offsets within the captured string
-            code_block.Replace("%ADDR%", _NumberSizeInByte.ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO*ADDR_DATA%", (fo_ptr * _NumberSizeInByteData).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO*ADDR_DATA-ADDR_DATA%", ((fo_ptr * _NumberSizeInByteData) - _NumberSizeInByteData).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO+ADDR_DATA%", (fo_ptr * _NumberSizeInByteData).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO-ADDR_DATA%", (fo_ptr * _NumberSizeInByteData + 2).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%ADDR_DATA%", _NumberSizeInByteData.ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO*ADDR_COEF%", (fo_ptr * _NumberSizeInByteCoeff).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO*ADDR_COEF-ADDR_COEF%", ((fo_ptr * _NumberSizeInByteCoeff) - _NumberSizeInByteCoeff).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO+ADDR_COEF%", (fo_ptr * _NumberSizeInByteCoeff).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%FO-ADDR_COEF%", (fo_ptr * _NumberSizeInByteCoeff + 2).ToString());   // Replace address offsets within the captured string
+            code_block.Replace("%ADDR_COEF%", _NumberSizeInByteCoeff.ToString());   // Replace address offsets within the captured string
+
 
             str_dum=code_block.ToString();
-            if (str_dum.Contains("%ADDR"))
+            if (str_dum.Contains("%ADDR_DATA"))
             {
                 // extract flag
                 while ((str_dum.Length > 0) && (loops++ < 32))
-                { 
-                    str_dum = str_dum.Substring(str_dum.IndexOf("%ADDR") + 5);
+                {
+                    str_dum = str_dum.Substring(str_dum.IndexOf("%ADDR_DATA") + ("%ADDR_DATA").Length);
 
                     str_flag = str_dum.TrimStart();
                     str_flag = str_flag.Substring(0, str_flag.IndexOf("%"));
                     num_dum = Convert.ToInt32(str_flag.Substring(1, str_flag.Length - 1));
-                    str_flag = "%ADDR" + str_flag + "%";
+                    str_flag = "%ADDR_DATA" + str_flag + "%";
 
                     switch(str_dum.Substring(0,1))
                     {
-                        case "*": 
-                            str_replace = (_NumberSizeInByte * num_dum).ToString();
+                        case "*":
+                            str_replace = (_NumberSizeInByteData * num_dum).ToString();
                             break;
-                        case "/": 
-                            str_replace = (_NumberSizeInByte * num_dum).ToString();
+                        case "/":
+                            str_replace = (_NumberSizeInByteData / num_dum).ToString();
                             break;
-                        case "+": 
-                            str_replace = (_NumberSizeInByte * num_dum).ToString();
+                        case "+":
+                            str_replace = (_NumberSizeInByteData + num_dum).ToString();
                             break;
-                        case "-": 
-                            str_replace = (_NumberSizeInByte * num_dum).ToString();
+                        case "-":
+                            str_replace = (_NumberSizeInByteData - num_dum).ToString();
                             break;
                     }
 
                     code_block.Replace(str_flag, str_replace);   // Replace address offsets within the captured string
 
-                    if (!str_dum.Contains("%ADDR")) { break; }
+                    if (!str_dum.Contains("%ADDR_DATA")) { break; }
                     else { str_dum = str_dum.Substring(str_dum.IndexOf("%") + 1); }
                 }
 
             }
+            
+            if (str_dum.Contains("%ADDR_COEF"))
+            {
+                // extract flag
+                while ((str_dum.Length > 0) && (loops++ < 32))
+                {
+                    str_dum = str_dum.Substring(str_dum.IndexOf("%ADDR_COEF") + ("%ADDR_COEF").Length);
 
+                    str_flag = str_dum.TrimStart();
+                    str_flag = str_flag.Substring(0, str_flag.IndexOf("%"));
+                    num_dum = Convert.ToInt32(str_flag.Substring(1, str_flag.Length - 1));
+                    str_flag = "%ADDR_COEF" + str_flag + "%";
+
+                    switch (str_dum.Substring(0, 1))
+                    {
+                        case "*":
+                            str_replace = (_NumberSizeInByteCoeff * num_dum).ToString();
+                            break;
+                        case "/":
+                            str_replace = (_NumberSizeInByteCoeff / num_dum).ToString();
+                            break;
+                        case "+":
+                            str_replace = (_NumberSizeInByteCoeff + num_dum).ToString();
+                            break;
+                        case "-":
+                            str_replace = (_NumberSizeInByteCoeff - num_dum).ToString();
+                            break;
+                    }
+
+                    code_block.Replace(str_flag, str_replace);   // Replace address offsets within the captured string
+
+                    if (!str_dum.Contains("%ADDR_COEFF")) { break; }
+                    else { str_dum = str_dum.Substring(str_dum.IndexOf("%") + 1); }
+                }
+
+            }
             // if code is not generated in loop (standard instruction only)
             if (loop_index >= 0)
             {
-                code_block.Replace("%INDEX*ADDR-ADDR%", (loop_index * _NumberSizeInByte - _NumberSizeInByte).ToString());
-                code_block.Replace("%INDEX*ADDR+ADDR%", (loop_index * _NumberSizeInByte + _NumberSizeInByte).ToString());
-                code_block.Replace("%INDEX*ADDR%", (loop_index * _NumberSizeInByte).ToString());
+                code_block.Replace("%INDEX*ADDR_DATA-ADDR_DATA%", (loop_index * _NumberSizeInByteData - _NumberSizeInByteData).ToString());
+                code_block.Replace("%INDEX*ADDR_DATA+ADDR_DATA%", (loop_index * _NumberSizeInByteData + _NumberSizeInByteData).ToString());
+                code_block.Replace("%INDEX*ADDR_DATA%", (loop_index * _NumberSizeInByteData).ToString());
+                code_block.Replace("%INDEX*ADDR_COEF-ADDR_COEF%", (loop_index * _NumberSizeInByteCoeff - _NumberSizeInByteCoeff).ToString());
+                code_block.Replace("%INDEX*ADDR_COEF+ADDR_COEF%", (loop_index * _NumberSizeInByteCoeff + _NumberSizeInByteCoeff).ToString());
+                code_block.Replace("%INDEX*ADDR_COEF%", (loop_index * _NumberSizeInByteCoeff).ToString());
                 code_block.Replace("%FO-INDEX%", (_FilterOrder - loop_index).ToString());
                 code_block.Replace("%INDEX%", loop_index.ToString());   // Replace indices within the captured string (usually in comments)
             }
+
+            if (_Prefix.Length > 0)
+            {
+                code_block.Replace("%PREFIX%", _Prefix.ToLower().Trim());
+                code_block.Replace("%PREFIXG%", "_" + _Prefix.Trim());
+                code_block.Replace("%PREFIXU%", _Prefix.ToUpper().Trim());
+                code_block.Replace("%PREFIXL%", _Prefix.ToLower().Trim());
+                code_block.Replace("%POSTFIX%", _Postfix.ToLower().Trim());
+                code_block.Replace("%POSTFIXG%", _Postfix.Trim());
+                code_block.Replace("%POSTFIXU%", _Postfix.ToUpper().Trim());
+                code_block.Replace("%POSTFIXL%", _Postfix.ToLower().Trim());
+            }
+            else { code_block.Replace("%PREFIX%", ""); }
+
 
             return (code_block.ToString());
         }

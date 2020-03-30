@@ -213,7 +213,6 @@ namespace dcld
             set { _InputGainNormalization = value; UpdateCoefficients(); return; }
         }
 
-
         private bool _IsBidirectional = false;
         internal bool IsBidirectional        // Specifies if input value has a static offset which will be subtracted from the input signal
         {
@@ -228,10 +227,32 @@ namespace dcld
             set { _FeedbackRecitification = value; return; }
         }
 
+        private double _OutputGain = 1.000;
+        internal double OutputGain        // Scaling factor of the output data (affects all coefficients)
+        {
+            get { return _OutputGain; }
+            set { _OutputGain = value; UpdateCoefficients(); return; }
+        }
+
+        private bool _OutputGainNormalization = false;
+        internal bool OutputGainNormalization
+        {
+            get { return _OutputGainNormalization; }
+            set { _OutputGainNormalization = value; UpdateCoefficients(); return; }
+        }
+
+        private void DebugInfoAppend(string debug_msg)
+        {
+            _debugInfo.Append(debug_msg);
+            if (_debugInfo.Length > 2)
+                if (_debugInfo.ToString().Substring(0, 2) == "\r\n")
+                    _debugInfo.Replace("\r\n", "", 0, 1);
+        }
+
         private StringBuilder _debugInfo = new StringBuilder();
         internal StringBuilder DebugInfo
         {
-            get { return _debugInfo; }
+            get { return (_debugInfo);  }
         }
 
         internal clsPoleZeroObject[] Pole;
@@ -331,6 +352,7 @@ namespace dcld
                 "Filter Order = " + _FilterOrder.ToString() + "\r\n" +
                 "SamplingInterval = " + _Ts.ToString() + "\r\n" +
                 "Input Gain = " + _InputGain.ToString() + "\r\n" +
+                "Output Gain = " + _OutputGain.ToString() + "\r\n" +
                 "Zero-Pole (Hz/rad)= " + Pole[0].Frequency.ToString() + "/" + Pole[0].Radians.ToString() + "\r\n" +
                 "Omega P0 = " + _wp0s.ToString() + "\r\n" +
                 "");
@@ -450,9 +472,18 @@ namespace dcld
 
                 }
 
+                // Perform output gain scaling
+                if (_OutputGainNormalization) 
+                { 
+                    for (i = 1; i < CoeffA.Length; i++)
+                    { CoeffA[i].Float64 *= _OutputGain; }
+                    for (i = 0; i < CoeffB.Length; i++)
+                    { CoeffB[i].Float64 *= _OutputGain; }
+                }
+
                 // generate debug info on coefficient calculation
                 if (_FilterOrder > 1)
-                { 
+                {
                     for (i = 1; i < _FilterOrder; i++)
                     { _debugInfo.Append("Pole[" + i.ToString() + "]     (float64) = " + Pole[i].Frequency.ToString() + "/" + Pole[i].Radians.ToString() + "\r\n"); }
                     for (i = 1; i < _FilterOrder; i++)
@@ -760,9 +791,9 @@ namespace dcld
 
             _AutoUpdate = true;
             _debugInfo.Clear();
-            _debugInfo.Append("\r\nnPnZ Generation Debug Info:\r\n");
+            _debugInfo.Append("nPnZ Generation Debug Info:\r\n");
             fres = UpdateCoefficients();
-            _debugInfo.Append("\r\nnPnZ debug info complete\r\n");
+            _debugInfo.Append("nPnZ debug info complete\r\n");
             _AutoUpdate = bdum;
 
             return;

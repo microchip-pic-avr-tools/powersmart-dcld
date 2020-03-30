@@ -148,13 +148,12 @@
             this.stbMainStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.stbProgressBarLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.stbProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.stbMainProgressTime = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripTableOptions = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripMaxPFErrWarningLabel = new System.Windows.Forms.ToolStripMenuItem();
             this.taboptMaxFPErrorWarning = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripMaxPFErrLabel = new System.Windows.Forms.ToolStripMenuItem();
             this.taboptMaxFPError = new System.Windows.Forms.ToolStripTextBox();
-            this.tabMain = new System.Windows.Forms.TabControl();
-            this.tabComp = new System.Windows.Forms.TabPage();
             this.splitContainerContents = new System.Windows.Forms.SplitContainer();
             this.tabConfig = new System.Windows.Forms.TabControl();
             this.tabController = new System.Windows.Forms.TabPage();
@@ -196,7 +195,18 @@
             this.lblFZ2 = new System.Windows.Forms.Label();
             this.lblFP0Unit = new System.Windows.Forms.Label();
             this.txtFP2 = new System.Windows.Forms.TextBox();
+            this.grpOutputDataNormalization = new System.Windows.Forms.GroupBox();
+            this.cmdGetOutputGain = new System.Windows.Forms.Button();
+            this.chkNormalizeOutputGain = new System.Windows.Forms.CheckBox();
+            this.txtOutputGain = new System.Windows.Forms.TextBox();
+            this.lblOutputGain = new System.Windows.Forms.Label();
             this.grpInputDataSpecifications = new System.Windows.Forms.GroupBox();
+            this.cmdGetInputGain = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkAGCAddGetModFactorFunCall = new System.Windows.Forms.CheckBox();
+            this.chkAGCAddEnable = new System.Windows.Forms.CheckBox();
+            this.picInfoAGC = new System.Windows.Forms.PictureBox();
+            this.chkEnableAdaptiveGainControl = new System.Windows.Forms.CheckBox();
             this.chkFeedbackRectification = new System.Windows.Forms.CheckBox();
             this.chkBiDirectionalFeedback = new System.Windows.Forms.CheckBox();
             this.chkNormalizeInputGain = new System.Windows.Forms.CheckBox();
@@ -227,10 +237,14 @@
             this.chkAddDataProviderErrorInput = new System.Windows.Forms.CheckBox();
             this.chkAddDataProviderControlOutput = new System.Windows.Forms.CheckBox();
             this.grpCodeFeatureDataIO = new System.Windows.Forms.GroupBox();
+            this.picInfoAlternateInputSource = new System.Windows.Forms.PictureBox();
             this.chkAddAlternateTarget = new System.Windows.Forms.CheckBox();
             this.chkAddAlternateSource = new System.Windows.Forms.CheckBox();
             this.chkAutomatedDataInterface = new System.Windows.Forms.CheckBox();
             this.grpCodeFeatureOptions = new System.Windows.Forms.GroupBox();
+            this.picInfoErrNorm = new System.Windows.Forms.PictureBox();
+            this.picInfoCascadeFunctionCall = new System.Windows.Forms.PictureBox();
+            this.picInfoDSPConfig = new System.Windows.Forms.PictureBox();
             this.chkCodeFeatureOptions = new System.Windows.Forms.CheckBox();
             this.chkAddCascadedFunctionCall = new System.Windows.Forms.CheckBox();
             this.chkAddADCTriggerBPlacement = new System.Windows.Forms.CheckBox();
@@ -250,10 +264,8 @@
             this.chkSaveRestoreShadowRegisters = new System.Windows.Forms.CheckBox();
             this.chkContextSaving = new System.Windows.Forms.CheckBox();
             this.grpFunctionLabel = new System.Windows.Forms.GroupBox();
-            this.chkUserVariableNamePrefix = new System.Windows.Forms.CheckBox();
             this.lblControllerNamePrefix = new System.Windows.Forms.Label();
             this.txtControllerNamePrefix = new System.Windows.Forms.TextBox();
-            this.chkUserControllerNameLabel = new System.Windows.Forms.CheckBox();
             this.txtControllerNameLabel = new System.Windows.Forms.TextBox();
             this.lblFinalNamePrefixOutput = new System.Windows.Forms.Label();
             this.lblFinalNamePrefix = new System.Windows.Forms.Label();
@@ -346,7 +358,13 @@
             this.cmbTriggerPlacement = new System.Windows.Forms.ToolStripComboBox();
             this.grpExecutionTime = new System.Windows.Forms.GroupBox();
             this.pnlTimingSettings = new System.Windows.Forms.Panel();
-            this.lblToolTipHelp = new System.Windows.Forms.Label();
+            this.picInfoCycleStats = new System.Windows.Forms.PictureBox();
+            this.picInfoUserTriggerDelay = new System.Windows.Forms.PictureBox();
+            this.picInfoADCLatency = new System.Windows.Forms.PictureBox();
+            this.picInfoISRLatency = new System.Windows.Forms.PictureBox();
+            this.lbltxtUserTriggerDelay = new System.Windows.Forms.Label();
+            this.lbltxtUserTriggerDelayUnit = new System.Windows.Forms.Label();
+            this.txtUserTriggerDelay = new System.Windows.Forms.TextBox();
             this.picInfoTimingPWMFrequency = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lblCPULoad = new System.Windows.Forms.Label();
@@ -368,7 +386,7 @@
             this.lblNumberOfInstructionCyclesReadLabel = new System.Windows.Forms.Label();
             this.lblDataReadDelayLabel = new System.Windows.Forms.Label();
             this.lblDataReadDelay = new System.Windows.Forms.Label();
-            this.cmbLoopOptimizationLevel = new System.Windows.Forms.ComboBox();
+            this.cmbLoopTriggerOption = new System.Windows.Forms.ComboBox();
             this.lblExecutionPeriodUnit = new System.Windows.Forms.Label();
             this.lblLoopOptimizationLevel = new System.Windows.Forms.Label();
             this.lblExecutionPeriodLabel = new System.Windows.Forms.Label();
@@ -455,6 +473,9 @@
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.timRefresh = new System.Windows.Forms.Timer(this.components);
             this.tsbMain = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonConfig = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator30 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator29 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonOpen = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
@@ -473,15 +494,11 @@
             this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator27 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonBrowse = new System.Windows.Forms.ToolStripButton();
             this.txtMPLABXProjectDir = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripLabelMPLABXDirectory = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButtonMPLABXPathWarning = new System.Windows.Forms.ToolStripButton();
-            this.timToolHelp = new System.Windows.Forms.Timer(this.components);
             this.mnuMain.SuspendLayout();
             this.stbMain.SuspendLayout();
-            this.tabMain.SuspendLayout();
-            this.tabComp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerContents)).BeginInit();
             this.splitContainerContents.Panel1.SuspendLayout();
             this.splitContainerContents.Panel2.SuspendLayout();
@@ -490,14 +507,21 @@
             this.tabController.SuspendLayout();
             this.pnlCompensator.SuspendLayout();
             this.grpPolesZeros.SuspendLayout();
+            this.grpOutputDataNormalization.SuspendLayout();
             this.grpInputDataSpecifications.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).BeginInit();
             this.grpControllerSelection.SuspendLayout();
             this.tabSourceCodeConfig.SuspendLayout();
             this.pnlCodeGeneratorOptions.SuspendLayout();
             this.grpAntiWindup.SuspendLayout();
             this.grpDataProviderSources.SuspendLayout();
             this.grpCodeFeatureDataIO.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAlternateInputSource)).BeginInit();
             this.grpCodeFeatureOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoErrNorm)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoCascadeFunctionCall)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoDSPConfig)).BeginInit();
             this.grpContextSaving.SuspendLayout();
             this.grpFunctionLabel.SuspendLayout();
             this.tabAnalysis.SuspendLayout();
@@ -525,6 +549,10 @@
             this.toolStripTiming.SuspendLayout();
             this.grpExecutionTime.SuspendLayout();
             this.pnlTimingSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoCycleStats)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoUserTriggerDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoADCLatency)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoISRLatency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoTimingPWMFrequency)).BeginInit();
             this.tabPageBlockDiagram.SuspendLayout();
             this.grpFilterProcessing.SuspendLayout();
@@ -903,6 +931,7 @@
             this.stbMainStatusLabel,
             this.stbProgressBarLabel,
             this.stbProgressBar,
+            this.stbMainProgressTime,
             this.toolStripTableOptions});
             this.stbMain.Location = new System.Drawing.Point(0, 833);
             this.stbMain.Name = "stbMain";
@@ -917,7 +946,7 @@
             this.stbMainStatusLabel.Image = ((System.Drawing.Image)(resources.GetObject("stbMainStatusLabel.Image")));
             this.stbMainStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.stbMainStatusLabel.Name = "stbMainStatusLabel";
-            this.stbMainStatusLabel.Size = new System.Drawing.Size(1206, 17);
+            this.stbMainStatusLabel.Size = new System.Drawing.Size(1174, 17);
             this.stbMainStatusLabel.Spring = true;
             this.stbMainStatusLabel.Text = "Status";
             this.stbMainStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -931,8 +960,14 @@
             // stbProgressBar
             // 
             this.stbProgressBar.Name = "stbProgressBar";
-            this.stbProgressBar.Size = new System.Drawing.Size(100, 16);
+            this.stbProgressBar.Size = new System.Drawing.Size(100, 22);
             this.stbProgressBar.Visible = false;
+            // 
+            // stbMainProgressTime
+            // 
+            this.stbMainProgressTime.Name = "stbMainProgressTime";
+            this.stbMainProgressTime.Size = new System.Drawing.Size(32, 17);
+            this.stbMainProgressTime.Text = "0 ms";
             // 
             // toolStripTableOptions
             // 
@@ -987,33 +1022,11 @@
             this.taboptMaxFPError.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.taboptMaxFPError.Enter += new System.EventHandler(this.UpdateTransferFunction);
             // 
-            // tabMain
-            // 
-            this.tabMain.Controls.Add(this.tabComp);
-            this.tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabMain.Location = new System.Drawing.Point(0, 24);
-            this.tabMain.Name = "tabMain";
-            this.tabMain.SelectedIndex = 0;
-            this.tabMain.Size = new System.Drawing.Size(1408, 809);
-            this.tabMain.TabIndex = 16;
-            this.tabMain.SelectedIndexChanged += new System.EventHandler(this.chartTimingSetAnnotationLabelPositions);
-            // 
-            // tabComp
-            // 
-            this.tabComp.Controls.Add(this.splitContainerContents);
-            this.tabComp.Location = new System.Drawing.Point(4, 24);
-            this.tabComp.Name = "tabComp";
-            this.tabComp.Padding = new System.Windows.Forms.Padding(3);
-            this.tabComp.Size = new System.Drawing.Size(1400, 781);
-            this.tabComp.TabIndex = 2;
-            this.tabComp.Text = "Compensator";
-            this.tabComp.UseVisualStyleBackColor = true;
-            // 
             // splitContainerContents
             // 
             this.splitContainerContents.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerContents.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainerContents.Location = new System.Drawing.Point(3, 3);
+            this.splitContainerContents.Location = new System.Drawing.Point(0, 62);
             this.splitContainerContents.Name = "splitContainerContents";
             // 
             // splitContainerContents.Panel1
@@ -1025,7 +1038,7 @@
             // splitContainerContents.Panel2
             // 
             this.splitContainerContents.Panel2.Controls.Add(this.tabAnalysis);
-            this.splitContainerContents.Size = new System.Drawing.Size(1394, 775);
+            this.splitContainerContents.Size = new System.Drawing.Size(1408, 771);
             this.splitContainerContents.SplitterDistance = 436;
             this.splitContainerContents.SplitterWidth = 6;
             this.splitContainerContents.TabIndex = 2;
@@ -1038,7 +1051,7 @@
             this.tabConfig.Location = new System.Drawing.Point(0, 0);
             this.tabConfig.Name = "tabConfig";
             this.tabConfig.SelectedIndex = 0;
-            this.tabConfig.Size = new System.Drawing.Size(436, 775);
+            this.tabConfig.Size = new System.Drawing.Size(436, 771);
             this.tabConfig.TabIndex = 0;
             // 
             // tabController
@@ -1047,7 +1060,7 @@
             this.tabController.Location = new System.Drawing.Point(4, 24);
             this.tabController.Name = "tabController";
             this.tabController.Padding = new System.Windows.Forms.Padding(3);
-            this.tabController.Size = new System.Drawing.Size(428, 747);
+            this.tabController.Size = new System.Drawing.Size(428, 743);
             this.tabController.TabIndex = 0;
             this.tabController.Text = "Controller";
             this.tabController.UseVisualStyleBackColor = true;
@@ -1057,13 +1070,14 @@
             this.pnlCompensator.AutoScroll = true;
             this.pnlCompensator.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pnlCompensator.Controls.Add(this.grpPolesZeros);
+            this.pnlCompensator.Controls.Add(this.grpOutputDataNormalization);
             this.pnlCompensator.Controls.Add(this.grpInputDataSpecifications);
             this.pnlCompensator.Controls.Add(this.grpControllerSelection);
             this.pnlCompensator.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlCompensator.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlCompensator.Location = new System.Drawing.Point(3, 3);
             this.pnlCompensator.Name = "pnlCompensator";
-            this.pnlCompensator.Size = new System.Drawing.Size(422, 741);
+            this.pnlCompensator.Size = new System.Drawing.Size(422, 737);
             this.pnlCompensator.TabIndex = 18;
             // 
             // grpPolesZeros
@@ -1105,10 +1119,10 @@
             this.grpPolesZeros.Controls.Add(this.lblFP0Unit);
             this.grpPolesZeros.Controls.Add(this.txtFP2);
             this.grpPolesZeros.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpPolesZeros.Location = new System.Drawing.Point(0, 323);
+            this.grpPolesZeros.Location = new System.Drawing.Point(0, 422);
             this.grpPolesZeros.Name = "grpPolesZeros";
             this.grpPolesZeros.Size = new System.Drawing.Size(422, 262);
-            this.grpPolesZeros.TabIndex = 44;
+            this.grpPolesZeros.TabIndex = 4;
             this.grpPolesZeros.TabStop = false;
             this.grpPolesZeros.Text = "Compensation Settings";
             // 
@@ -1118,7 +1132,7 @@
             this.txtSamplingFrequency.Location = new System.Drawing.Point(284, 22);
             this.txtSamplingFrequency.Name = "txtSamplingFrequency";
             this.txtSamplingFrequency.Size = new System.Drawing.Size(93, 22);
-            this.txtSamplingFrequency.TabIndex = 5;
+            this.txtSamplingFrequency.TabIndex = 1;
             this.txtSamplingFrequency.Text = "250000";
             this.txtSamplingFrequency.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtSamplingFrequency.WordWrap = false;
@@ -1172,7 +1186,7 @@
             this.txtFZ4.Location = new System.Drawing.Point(284, 191);
             this.txtFZ4.Name = "txtFZ4";
             this.txtFZ4.Size = new System.Drawing.Size(93, 22);
-            this.txtFZ4.TabIndex = 15;
+            this.txtFZ4.TabIndex = 12;
             this.txtFZ4.Text = "50000";
             this.txtFZ4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFZ4.WordWrap = false;
@@ -1228,7 +1242,7 @@
             this.lblSamplingFrequency.Location = new System.Drawing.Point(158, 26);
             this.lblSamplingFrequency.Name = "lblSamplingFrequency";
             this.lblSamplingFrequency.Size = new System.Drawing.Size(120, 15);
-            this.lblSamplingFrequency.TabIndex = 3;
+            this.lblSamplingFrequency.TabIndex = 0;
             this.lblSamplingFrequency.Text = "Sampling Frequency:";
             this.lblSamplingFrequency.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -1238,7 +1252,7 @@
             this.txtFP4.Location = new System.Drawing.Point(72, 191);
             this.txtFP4.Name = "txtFP4";
             this.txtFP4.Size = new System.Drawing.Size(93, 22);
-            this.txtFP4.TabIndex = 10;
+            this.txtFP4.TabIndex = 7;
             this.txtFP4.Text = "125000";
             this.txtFP4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFP4.WordWrap = false;
@@ -1252,7 +1266,7 @@
             this.txtFP0.Location = new System.Drawing.Point(284, 50);
             this.txtFP0.Name = "txtFP0";
             this.txtFP0.Size = new System.Drawing.Size(93, 22);
-            this.txtFP0.TabIndex = 6;
+            this.txtFP0.TabIndex = 3;
             this.txtFP0.Text = "650";
             this.txtFP0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFP0.WordWrap = false;
@@ -1277,7 +1291,7 @@
             this.txtFZ5.Location = new System.Drawing.Point(284, 221);
             this.txtFZ5.Name = "txtFZ5";
             this.txtFZ5.Size = new System.Drawing.Size(93, 22);
-            this.txtFZ5.TabIndex = 16;
+            this.txtFZ5.TabIndex = 13;
             this.txtFZ5.Text = "50000";
             this.txtFZ5.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFZ5.WordWrap = false;
@@ -1312,7 +1326,7 @@
             this.txtFZ3.Location = new System.Drawing.Point(284, 161);
             this.txtFZ3.Name = "txtFZ3";
             this.txtFZ3.Size = new System.Drawing.Size(93, 22);
-            this.txtFZ3.TabIndex = 14;
+            this.txtFZ3.TabIndex = 11;
             this.txtFZ3.Text = "40000";
             this.txtFZ3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFZ3.WordWrap = false;
@@ -1348,7 +1362,7 @@
             this.lblFP0.Location = new System.Drawing.Point(57, 53);
             this.lblFP0.Name = "lblFP0";
             this.lblFP0.Size = new System.Drawing.Size(221, 15);
-            this.lblFP0.TabIndex = 1;
+            this.lblFP0.TabIndex = 2;
             this.lblFP0.Text = "Cross-over Frequency of Pole At Origin:";
             this.lblFP0.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -1369,7 +1383,7 @@
             this.txtFP1.Location = new System.Drawing.Point(72, 101);
             this.txtFP1.Name = "txtFP1";
             this.txtFP1.Size = new System.Drawing.Size(93, 22);
-            this.txtFP1.TabIndex = 7;
+            this.txtFP1.TabIndex = 4;
             this.txtFP1.Text = "30000";
             this.txtFP1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFP1.WordWrap = false;
@@ -1393,7 +1407,7 @@
             this.txtFP5.Location = new System.Drawing.Point(72, 221);
             this.txtFP5.Name = "txtFP5";
             this.txtFP5.Size = new System.Drawing.Size(93, 22);
-            this.txtFP5.TabIndex = 11;
+            this.txtFP5.TabIndex = 8;
             this.txtFP5.Text = "125000";
             this.txtFP5.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFP5.WordWrap = false;
@@ -1407,7 +1421,7 @@
             this.txtFP3.Location = new System.Drawing.Point(72, 161);
             this.txtFP3.Name = "txtFP3";
             this.txtFP3.Size = new System.Drawing.Size(93, 22);
-            this.txtFP3.TabIndex = 9;
+            this.txtFP3.TabIndex = 6;
             this.txtFP3.Text = "125000";
             this.txtFP3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFP3.WordWrap = false;
@@ -1442,7 +1456,7 @@
             this.txtFZ1.Location = new System.Drawing.Point(284, 101);
             this.txtFZ1.Name = "txtFZ1";
             this.txtFZ1.Size = new System.Drawing.Size(93, 22);
-            this.txtFZ1.TabIndex = 12;
+            this.txtFZ1.TabIndex = 9;
             this.txtFZ1.Text = "3000";
             this.txtFZ1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFZ1.WordWrap = false;
@@ -1478,7 +1492,7 @@
             this.txtFZ2.Location = new System.Drawing.Point(284, 131);
             this.txtFZ2.Name = "txtFZ2";
             this.txtFZ2.Size = new System.Drawing.Size(93, 22);
-            this.txtFZ2.TabIndex = 13;
+            this.txtFZ2.TabIndex = 10;
             this.txtFZ2.Text = "6000";
             this.txtFZ2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFZ2.WordWrap = false;
@@ -1524,7 +1538,7 @@
             this.txtFP2.Location = new System.Drawing.Point(72, 131);
             this.txtFP2.Name = "txtFP2";
             this.txtFP2.Size = new System.Drawing.Size(93, 22);
-            this.txtFP2.TabIndex = 8;
+            this.txtFP2.TabIndex = 5;
             this.txtFP2.Text = "125000";
             this.txtFP2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFP2.WordWrap = false;
@@ -1532,8 +1546,76 @@
             this.txtFP2.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtFP2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
+            // grpOutputDataNormalization
+            // 
+            this.grpOutputDataNormalization.Controls.Add(this.cmdGetOutputGain);
+            this.grpOutputDataNormalization.Controls.Add(this.chkNormalizeOutputGain);
+            this.grpOutputDataNormalization.Controls.Add(this.txtOutputGain);
+            this.grpOutputDataNormalization.Controls.Add(this.lblOutputGain);
+            this.grpOutputDataNormalization.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpOutputDataNormalization.Enabled = false;
+            this.grpOutputDataNormalization.Location = new System.Drawing.Point(0, 349);
+            this.grpOutputDataNormalization.Name = "grpOutputDataNormalization";
+            this.grpOutputDataNormalization.Size = new System.Drawing.Size(422, 73);
+            this.grpOutputDataNormalization.TabIndex = 3;
+            this.grpOutputDataNormalization.TabStop = false;
+            this.grpOutputDataNormalization.Visible = false;
+            // 
+            // cmdGetOutputGain
+            // 
+            this.cmdGetOutputGain.Enabled = false;
+            this.cmdGetOutputGain.Image = global::dcld.Properties.Resources.calculate;
+            this.cmdGetOutputGain.Location = new System.Drawing.Point(379, 25);
+            this.cmdGetOutputGain.Name = "cmdGetOutputGain";
+            this.cmdGetOutputGain.Size = new System.Drawing.Size(24, 24);
+            this.cmdGetOutputGain.TabIndex = 3;
+            this.cmdGetOutputGain.UseVisualStyleBackColor = true;
+            this.cmdGetOutputGain.Click += new System.EventHandler(this.cmdGetOutputGain_Click);
+            // 
+            // chkNormalizeOutputGain
+            // 
+            this.chkNormalizeOutputGain.AutoSize = true;
+            this.chkNormalizeOutputGain.BackColor = System.Drawing.SystemColors.Window;
+            this.chkNormalizeOutputGain.Enabled = false;
+            this.chkNormalizeOutputGain.Location = new System.Drawing.Point(10, 0);
+            this.chkNormalizeOutputGain.Name = "chkNormalizeOutputGain";
+            this.chkNormalizeOutputGain.Size = new System.Drawing.Size(152, 19);
+            this.chkNormalizeOutputGain.TabIndex = 0;
+            this.chkNormalizeOutputGain.Text = "&Normalize Output Gain";
+            this.chkNormalizeOutputGain.UseVisualStyleBackColor = false;
+            this.chkNormalizeOutputGain.CheckedChanged += new System.EventHandler(this.chkNormalizeOutputGain_CheckedChanged);
+            // 
+            // txtOutputGain
+            // 
+            this.txtOutputGain.Enabled = false;
+            this.txtOutputGain.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtOutputGain.Location = new System.Drawing.Point(233, 26);
+            this.txtOutputGain.Name = "txtOutputGain";
+            this.txtOutputGain.Size = new System.Drawing.Size(144, 22);
+            this.txtOutputGain.TabIndex = 2;
+            this.txtOutputGain.Text = "1.000";
+            this.txtOutputGain.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtOutputGain.WordWrap = false;
+            this.txtOutputGain.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtOutputGain.Enter += new System.EventHandler(this.NumberTextBox_Enter);
+            this.txtOutputGain.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
+            // 
+            // lblOutputGain
+            // 
+            this.lblOutputGain.AutoSize = true;
+            this.lblOutputGain.Enabled = false;
+            this.lblOutputGain.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOutputGain.Location = new System.Drawing.Point(150, 29);
+            this.lblOutputGain.Name = "lblOutputGain";
+            this.lblOutputGain.Size = new System.Drawing.Size(77, 15);
+            this.lblOutputGain.TabIndex = 1;
+            this.lblOutputGain.Text = "Output Gain:";
+            this.lblOutputGain.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // grpInputDataSpecifications
             // 
+            this.grpInputDataSpecifications.Controls.Add(this.cmdGetInputGain);
+            this.grpInputDataSpecifications.Controls.Add(this.groupBox1);
             this.grpInputDataSpecifications.Controls.Add(this.chkFeedbackRectification);
             this.grpInputDataSpecifications.Controls.Add(this.chkBiDirectionalFeedback);
             this.grpInputDataSpecifications.Controls.Add(this.chkNormalizeInputGain);
@@ -1545,16 +1627,85 @@
             this.grpInputDataSpecifications.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpInputDataSpecifications.Location = new System.Drawing.Point(0, 126);
             this.grpInputDataSpecifications.Name = "grpInputDataSpecifications";
-            this.grpInputDataSpecifications.Size = new System.Drawing.Size(422, 197);
-            this.grpInputDataSpecifications.TabIndex = 43;
+            this.grpInputDataSpecifications.Size = new System.Drawing.Size(422, 223);
+            this.grpInputDataSpecifications.TabIndex = 2;
             this.grpInputDataSpecifications.TabStop = false;
-            this.grpInputDataSpecifications.Text = "Input Data Specifications";
+            // 
+            // cmdGetInputGain
+            // 
+            this.cmdGetInputGain.Image = global::dcld.Properties.Resources.calculate;
+            this.cmdGetInputGain.Location = new System.Drawing.Point(379, 49);
+            this.cmdGetInputGain.Name = "cmdGetInputGain";
+            this.cmdGetInputGain.Size = new System.Drawing.Size(24, 24);
+            this.cmdGetInputGain.TabIndex = 5;
+            this.cmdGetInputGain.UseVisualStyleBackColor = true;
+            this.cmdGetInputGain.Click += new System.EventHandler(this.cmdGetInputGain_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.chkAGCAddGetModFactorFunCall);
+            this.groupBox1.Controls.Add(this.chkAGCAddEnable);
+            this.groupBox1.Controls.Add(this.picInfoAGC);
+            this.groupBox1.Controls.Add(this.chkEnableAdaptiveGainControl);
+            this.groupBox1.Location = new System.Drawing.Point(10, 124);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(403, 79);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            // 
+            // chkAGCAddGetModFactorFunCall
+            // 
+            this.chkAGCAddGetModFactorFunCall.AutoSize = true;
+            this.chkAGCAddGetModFactorFunCall.Enabled = false;
+            this.chkAGCAddGetModFactorFunCall.Location = new System.Drawing.Point(36, 50);
+            this.chkAGCAddGetModFactorFunCall.Name = "chkAGCAddGetModFactorFunCall";
+            this.chkAGCAddGetModFactorFunCall.Size = new System.Drawing.Size(254, 19);
+            this.chkAGCAddGetModFactorFunCall.TabIndex = 10;
+            this.chkAGCAddGetModFactorFunCall.Text = "Add \'Get Modulation Factor\' Function Call";
+            this.chkAGCAddGetModFactorFunCall.UseVisualStyleBackColor = true;
+            this.chkAGCAddGetModFactorFunCall.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            // 
+            // chkAGCAddEnable
+            // 
+            this.chkAGCAddEnable.AutoSize = true;
+            this.chkAGCAddEnable.Enabled = false;
+            this.chkAGCAddEnable.Location = new System.Drawing.Point(36, 25);
+            this.chkAGCAddEnable.Name = "chkAGCAddEnable";
+            this.chkAGCAddEnable.Size = new System.Drawing.Size(178, 19);
+            this.chkAGCAddEnable.TabIndex = 9;
+            this.chkAGCAddEnable.Text = "Add Enable/Disable Control";
+            this.chkAGCAddEnable.UseVisualStyleBackColor = true;
+            this.chkAGCAddEnable.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            // 
+            // picInfoAGC
+            // 
+            this.picInfoAGC.Image = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.Image")));
+            this.picInfoAGC.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.InitialImage")));
+            this.picInfoAGC.Location = new System.Drawing.Point(202, 1);
+            this.picInfoAGC.Name = "picInfoAGC";
+            this.picInfoAGC.Size = new System.Drawing.Size(16, 16);
+            this.picInfoAGC.TabIndex = 72;
+            this.picInfoAGC.TabStop = false;
+            this.picInfoAGC.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
+            // 
+            // chkEnableAdaptiveGainControl
+            // 
+            this.chkEnableAdaptiveGainControl.AutoSize = true;
+            this.chkEnableAdaptiveGainControl.BackColor = System.Drawing.SystemColors.Window;
+            this.chkEnableAdaptiveGainControl.Enabled = false;
+            this.chkEnableAdaptiveGainControl.Location = new System.Drawing.Point(10, 0);
+            this.chkEnableAdaptiveGainControl.Name = "chkEnableAdaptiveGainControl";
+            this.chkEnableAdaptiveGainControl.Size = new System.Drawing.Size(188, 19);
+            this.chkEnableAdaptiveGainControl.TabIndex = 8;
+            this.chkEnableAdaptiveGainControl.Text = "Enable Loop &Gain Modulation";
+            this.chkEnableAdaptiveGainControl.UseVisualStyleBackColor = false;
+            this.chkEnableAdaptiveGainControl.CheckedChanged += new System.EventHandler(this.chkEnableAdaptiveGainControl_CheckedChanged);
             // 
             // chkFeedbackRectification
             // 
             this.chkFeedbackRectification.AutoSize = true;
             this.chkFeedbackRectification.Enabled = false;
-            this.chkFeedbackRectification.Location = new System.Drawing.Point(68, 150);
+            this.chkFeedbackRectification.Location = new System.Drawing.Point(66, 124);
             this.chkFeedbackRectification.Name = "chkFeedbackRectification";
             this.chkFeedbackRectification.Size = new System.Drawing.Size(214, 19);
             this.chkFeedbackRectification.TabIndex = 48;
@@ -1565,10 +1716,10 @@
             // chkBiDirectionalFeedback
             // 
             this.chkBiDirectionalFeedback.AutoSize = true;
-            this.chkBiDirectionalFeedback.Location = new System.Drawing.Point(48, 125);
+            this.chkBiDirectionalFeedback.Location = new System.Drawing.Point(46, 89);
             this.chkBiDirectionalFeedback.Name = "chkBiDirectionalFeedback";
             this.chkBiDirectionalFeedback.Size = new System.Drawing.Size(331, 19);
-            this.chkBiDirectionalFeedback.TabIndex = 47;
+            this.chkBiDirectionalFeedback.TabIndex = 6;
             this.chkBiDirectionalFeedback.Text = "Feedback Offset Compensation/&Bi-directional Feedback ";
             this.chkBiDirectionalFeedback.UseVisualStyleBackColor = true;
             this.chkBiDirectionalFeedback.CheckedChanged += new System.EventHandler(this.chkBiDirectionalFeedback_CheckedChanged);
@@ -1576,21 +1727,24 @@
             // chkNormalizeInputGain
             // 
             this.chkNormalizeInputGain.AutoSize = true;
-            this.chkNormalizeInputGain.Location = new System.Drawing.Point(48, 100);
+            this.chkNormalizeInputGain.BackColor = System.Drawing.SystemColors.Window;
+            this.chkNormalizeInputGain.Checked = true;
+            this.chkNormalizeInputGain.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkNormalizeInputGain.Location = new System.Drawing.Point(10, 0);
             this.chkNormalizeInputGain.Name = "chkNormalizeInputGain";
             this.chkNormalizeInputGain.Size = new System.Drawing.Size(143, 19);
-            this.chkNormalizeInputGain.TabIndex = 43;
+            this.chkNormalizeInputGain.TabIndex = 0;
             this.chkNormalizeInputGain.Text = "&Normalize Input Gain";
-            this.chkNormalizeInputGain.UseVisualStyleBackColor = true;
-            this.chkNormalizeInputGain.CheckedChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.chkNormalizeInputGain.UseVisualStyleBackColor = false;
+            this.chkNormalizeInputGain.CheckedChanged += new System.EventHandler(this.chkNormalizeInputGain_CheckedChanged);
             // 
             // txtInputDataResolution
             // 
             this.txtInputDataResolution.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtInputDataResolution.Location = new System.Drawing.Point(284, 22);
+            this.txtInputDataResolution.Location = new System.Drawing.Point(233, 22);
             this.txtInputDataResolution.Name = "txtInputDataResolution";
-            this.txtInputDataResolution.Size = new System.Drawing.Size(93, 22);
-            this.txtInputDataResolution.TabIndex = 3;
+            this.txtInputDataResolution.Size = new System.Drawing.Size(144, 22);
+            this.txtInputDataResolution.TabIndex = 2;
             this.txtInputDataResolution.Text = "12";
             this.txtInputDataResolution.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtInputDataResolution.WordWrap = false;
@@ -1601,11 +1755,11 @@
             // txtInputGain
             // 
             this.txtInputGain.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtInputGain.Location = new System.Drawing.Point(284, 50);
+            this.txtInputGain.Location = new System.Drawing.Point(233, 50);
             this.txtInputGain.Name = "txtInputGain";
-            this.txtInputGain.Size = new System.Drawing.Size(93, 22);
+            this.txtInputGain.Size = new System.Drawing.Size(144, 22);
             this.txtInputGain.TabIndex = 4;
-            this.txtInputGain.Text = "1.0";
+            this.txtInputGain.Text = "1.000";
             this.txtInputGain.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtInputGain.WordWrap = false;
             this.txtInputGain.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
@@ -1626,10 +1780,10 @@
             // 
             this.lblInputGain.AutoSize = true;
             this.lblInputGain.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInputGain.Location = new System.Drawing.Point(170, 53);
+            this.lblInputGain.Location = new System.Drawing.Point(122, 50);
             this.lblInputGain.Name = "lblInputGain";
             this.lblInputGain.Size = new System.Drawing.Size(105, 15);
-            this.lblInputGain.TabIndex = 28;
+            this.lblInputGain.TabIndex = 3;
             this.lblInputGain.Text = "Input Signal Gain:";
             this.lblInputGain.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -1637,10 +1791,10 @@
             // 
             this.lblInputResolution.AutoSize = true;
             this.lblInputResolution.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInputResolution.Location = new System.Drawing.Point(73, 25);
+            this.lblInputResolution.Location = new System.Drawing.Point(22, 25);
             this.lblInputResolution.Name = "lblInputResolution";
             this.lblInputResolution.Size = new System.Drawing.Size(205, 15);
-            this.lblInputResolution.TabIndex = 40;
+            this.lblInputResolution.TabIndex = 1;
             this.lblInputResolution.Text = "Total Input Data Length (Resolution):";
             this.lblInputResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -1656,7 +1810,7 @@
             this.grpControllerSelection.Location = new System.Drawing.Point(0, 0);
             this.grpControllerSelection.Name = "grpControllerSelection";
             this.grpControllerSelection.Size = new System.Drawing.Size(422, 126);
-            this.grpControllerSelection.TabIndex = 42;
+            this.grpControllerSelection.TabIndex = 1;
             this.grpControllerSelection.TabStop = false;
             this.grpControllerSelection.Text = "Controller Selection";
             // 
@@ -1674,7 +1828,7 @@
             this.cmbCompType.Location = new System.Drawing.Point(112, 22);
             this.cmbCompType.Name = "cmbCompType";
             this.cmbCompType.Size = new System.Drawing.Size(294, 23);
-            this.cmbCompType.TabIndex = 0;
+            this.cmbCompType.TabIndex = 1;
             this.cmbCompType.SelectedIndexChanged += new System.EventHandler(this.UpdateTransferFunction);
             this.cmbCompType.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DropDownList_LockingKeyDown);
             // 
@@ -1685,7 +1839,7 @@
             this.lblController.Location = new System.Drawing.Point(13, 25);
             this.lblController.Name = "lblController";
             this.lblController.Size = new System.Drawing.Size(93, 15);
-            this.lblController.TabIndex = 1;
+            this.lblController.TabIndex = 0;
             this.lblController.Text = "Controller Type:";
             this.lblController.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -1702,7 +1856,7 @@
             this.cmbQScalingMethod.Location = new System.Drawing.Point(112, 51);
             this.cmbQScalingMethod.Name = "cmbQScalingMethod";
             this.cmbQScalingMethod.Size = new System.Drawing.Size(294, 23);
-            this.cmbQScalingMethod.TabIndex = 1;
+            this.cmbQScalingMethod.TabIndex = 3;
             this.cmbQScalingMethod.SelectedIndexChanged += new System.EventHandler(this.cmbQScalingMethod_SelectedIndexChanged);
             this.cmbQScalingMethod.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DropDownList_LockingKeyDown);
             // 
@@ -1713,7 +1867,7 @@
             this.lblQScalingMethod.Location = new System.Drawing.Point(22, 54);
             this.lblQScalingMethod.Name = "lblQScalingMethod";
             this.lblQScalingMethod.Size = new System.Drawing.Size(84, 15);
-            this.lblQScalingMethod.TabIndex = 29;
+            this.lblQScalingMethod.TabIndex = 2;
             this.lblQScalingMethod.Text = "Scaling Mode:";
             this.lblQScalingMethod.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -1731,7 +1885,7 @@
             this.cmbQFormat.Location = new System.Drawing.Point(200, 80);
             this.cmbQFormat.Name = "cmbQFormat";
             this.cmbQFormat.Size = new System.Drawing.Size(206, 23);
-            this.cmbQFormat.TabIndex = 2;
+            this.cmbQFormat.TabIndex = 5;
             this.cmbQFormat.SelectedIndexChanged += new System.EventHandler(this.UpdateTransferFunction);
             this.cmbQFormat.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DropDownList_LockingKeyDown);
             // 
@@ -1742,7 +1896,7 @@
             this.lblQFormat.Location = new System.Drawing.Point(106, 83);
             this.lblQFormat.Name = "lblQFormat";
             this.lblQFormat.Size = new System.Drawing.Size(88, 15);
-            this.lblQFormat.TabIndex = 7;
+            this.lblQFormat.TabIndex = 4;
             this.lblQFormat.Text = "Number Space:";
             this.lblQFormat.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -1752,7 +1906,7 @@
             this.tabSourceCodeConfig.Location = new System.Drawing.Point(4, 22);
             this.tabSourceCodeConfig.Name = "tabSourceCodeConfig";
             this.tabSourceCodeConfig.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 749);
+            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 745);
             this.tabSourceCodeConfig.TabIndex = 1;
             this.tabSourceCodeConfig.Text = "Source Code Configuration";
             this.tabSourceCodeConfig.UseVisualStyleBackColor = true;
@@ -1771,7 +1925,7 @@
             this.pnlCodeGeneratorOptions.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlCodeGeneratorOptions.Location = new System.Drawing.Point(3, 3);
             this.pnlCodeGeneratorOptions.Name = "pnlCodeGeneratorOptions";
-            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 743);
+            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 739);
             this.pnlCodeGeneratorOptions.TabIndex = 19;
             // 
             // grpAntiWindup
@@ -1783,7 +1937,7 @@
             this.grpAntiWindup.Controls.Add(this.chkAntiWindupClampMax);
             this.grpAntiWindup.Controls.Add(this.chkAntiWindup);
             this.grpAntiWindup.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpAntiWindup.Location = new System.Drawing.Point(0, 790);
+            this.grpAntiWindup.Location = new System.Drawing.Point(0, 732);
             this.grpAntiWindup.Name = "grpAntiWindup";
             this.grpAntiWindup.Size = new System.Drawing.Size(405, 170);
             this.grpAntiWindup.TabIndex = 6;
@@ -1856,7 +2010,7 @@
             // chkAntiWindup
             // 
             this.chkAntiWindup.AutoSize = true;
-            this.chkAntiWindup.BackColor = System.Drawing.Color.White;
+            this.chkAntiWindup.BackColor = System.Drawing.SystemColors.Window;
             this.chkAntiWindup.Checked = true;
             this.chkAntiWindup.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAntiWindup.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1875,7 +2029,7 @@
             this.grpDataProviderSources.Controls.Add(this.chkAddDataProviderErrorInput);
             this.grpDataProviderSources.Controls.Add(this.chkAddDataProviderControlOutput);
             this.grpDataProviderSources.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpDataProviderSources.Location = new System.Drawing.Point(0, 682);
+            this.grpDataProviderSources.Location = new System.Drawing.Point(0, 624);
             this.grpDataProviderSources.Name = "grpDataProviderSources";
             this.grpDataProviderSources.Size = new System.Drawing.Size(405, 108);
             this.grpDataProviderSources.TabIndex = 5;
@@ -1884,7 +2038,7 @@
             // chkDataProviderSource
             // 
             this.chkDataProviderSource.AutoSize = true;
-            this.chkDataProviderSource.BackColor = System.Drawing.Color.White;
+            this.chkDataProviderSource.BackColor = System.Drawing.SystemColors.Window;
             this.chkDataProviderSource.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkDataProviderSource.Location = new System.Drawing.Point(10, 0);
             this.chkDataProviderSource.Name = "chkDataProviderSource";
@@ -1935,15 +2089,28 @@
             // 
             // grpCodeFeatureDataIO
             // 
+            this.grpCodeFeatureDataIO.Controls.Add(this.picInfoAlternateInputSource);
             this.grpCodeFeatureDataIO.Controls.Add(this.chkAddAlternateTarget);
             this.grpCodeFeatureDataIO.Controls.Add(this.chkAddAlternateSource);
             this.grpCodeFeatureDataIO.Controls.Add(this.chkAutomatedDataInterface);
             this.grpCodeFeatureDataIO.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpCodeFeatureDataIO.Location = new System.Drawing.Point(0, 597);
+            this.grpCodeFeatureDataIO.Location = new System.Drawing.Point(0, 539);
             this.grpCodeFeatureDataIO.Name = "grpCodeFeatureDataIO";
             this.grpCodeFeatureDataIO.Size = new System.Drawing.Size(405, 85);
             this.grpCodeFeatureDataIO.TabIndex = 4;
             this.grpCodeFeatureDataIO.TabStop = false;
+            // 
+            // picInfoAlternateInputSource
+            // 
+            this.picInfoAlternateInputSource.Image = ((System.Drawing.Image)(resources.GetObject("picInfoAlternateInputSource.Image")));
+            this.picInfoAlternateInputSource.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoAlternateInputSource.InitialImage")));
+            this.picInfoAlternateInputSource.Location = new System.Drawing.Point(223, 25);
+            this.picInfoAlternateInputSource.Name = "picInfoAlternateInputSource";
+            this.picInfoAlternateInputSource.Size = new System.Drawing.Size(16, 16);
+            this.picInfoAlternateInputSource.TabIndex = 70;
+            this.picInfoAlternateInputSource.TabStop = false;
+            this.picInfoAlternateInputSource.Click += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            this.picInfoAlternateInputSource.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
             // 
             // chkAddAlternateTarget
             // 
@@ -1972,7 +2139,7 @@
             // chkAutomatedDataInterface
             // 
             this.chkAutomatedDataInterface.AutoSize = true;
-            this.chkAutomatedDataInterface.BackColor = System.Drawing.Color.White;
+            this.chkAutomatedDataInterface.BackColor = System.Drawing.SystemColors.Window;
             this.chkAutomatedDataInterface.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkAutomatedDataInterface.Location = new System.Drawing.Point(10, 0);
             this.chkAutomatedDataInterface.Name = "chkAutomatedDataInterface";
@@ -1984,6 +2151,9 @@
             // 
             // grpCodeFeatureOptions
             // 
+            this.grpCodeFeatureOptions.Controls.Add(this.picInfoErrNorm);
+            this.grpCodeFeatureOptions.Controls.Add(this.picInfoCascadeFunctionCall);
+            this.grpCodeFeatureOptions.Controls.Add(this.picInfoDSPConfig);
             this.grpCodeFeatureOptions.Controls.Add(this.chkCodeFeatureOptions);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddCascadedFunctionCall);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddADCTriggerBPlacement);
@@ -1994,16 +2164,49 @@
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddEnableDisable);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddCoreConfig);
             this.grpCodeFeatureOptions.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpCodeFeatureOptions.Location = new System.Drawing.Point(0, 360);
+            this.grpCodeFeatureOptions.Location = new System.Drawing.Point(0, 302);
             this.grpCodeFeatureOptions.Name = "grpCodeFeatureOptions";
             this.grpCodeFeatureOptions.Size = new System.Drawing.Size(405, 237);
             this.grpCodeFeatureOptions.TabIndex = 3;
             this.grpCodeFeatureOptions.TabStop = false;
             // 
+            // picInfoErrNorm
+            // 
+            this.picInfoErrNorm.Image = ((System.Drawing.Image)(resources.GetObject("picInfoErrNorm.Image")));
+            this.picInfoErrNorm.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoErrNorm.InitialImage")));
+            this.picInfoErrNorm.Location = new System.Drawing.Point(223, 125);
+            this.picInfoErrNorm.Name = "picInfoErrNorm";
+            this.picInfoErrNorm.Size = new System.Drawing.Size(16, 16);
+            this.picInfoErrNorm.TabIndex = 73;
+            this.picInfoErrNorm.TabStop = false;
+            this.picInfoErrNorm.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
+            // 
+            // picInfoCascadeFunctionCall
+            // 
+            this.picInfoCascadeFunctionCall.Image = ((System.Drawing.Image)(resources.GetObject("picInfoCascadeFunctionCall.Image")));
+            this.picInfoCascadeFunctionCall.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoCascadeFunctionCall.InitialImage")));
+            this.picInfoCascadeFunctionCall.Location = new System.Drawing.Point(223, 203);
+            this.picInfoCascadeFunctionCall.Name = "picInfoCascadeFunctionCall";
+            this.picInfoCascadeFunctionCall.Size = new System.Drawing.Size(16, 16);
+            this.picInfoCascadeFunctionCall.TabIndex = 72;
+            this.picInfoCascadeFunctionCall.TabStop = false;
+            this.picInfoCascadeFunctionCall.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
+            // 
+            // picInfoDSPConfig
+            // 
+            this.picInfoDSPConfig.Image = ((System.Drawing.Image)(resources.GetObject("picInfoDSPConfig.Image")));
+            this.picInfoDSPConfig.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoDSPConfig.InitialImage")));
+            this.picInfoDSPConfig.Location = new System.Drawing.Point(223, 50);
+            this.picInfoDSPConfig.Name = "picInfoDSPConfig";
+            this.picInfoDSPConfig.Size = new System.Drawing.Size(16, 16);
+            this.picInfoDSPConfig.TabIndex = 71;
+            this.picInfoDSPConfig.TabStop = false;
+            this.picInfoDSPConfig.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
+            // 
             // chkCodeFeatureOptions
             // 
             this.chkCodeFeatureOptions.AutoSize = true;
-            this.chkCodeFeatureOptions.BackColor = System.Drawing.Color.White;
+            this.chkCodeFeatureOptions.BackColor = System.Drawing.SystemColors.Window;
             this.chkCodeFeatureOptions.Checked = true;
             this.chkCodeFeatureOptions.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkCodeFeatureOptions.Location = new System.Drawing.Point(10, 0);
@@ -2041,6 +2244,8 @@
             // chkAddDisableDummyRead
             // 
             this.chkAddDisableDummyRead.AutoSize = true;
+            this.chkAddDisableDummyRead.Checked = true;
+            this.chkAddDisableDummyRead.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkAddDisableDummyRead.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkAddDisableDummyRead.Location = new System.Drawing.Point(56, 100);
             this.chkAddDisableDummyRead.Name = "chkAddDisableDummyRead";
@@ -2067,14 +2272,13 @@
             // chkStoreReloadAccLevel1
             // 
             this.chkStoreReloadAccLevel1.AutoSize = true;
-            this.chkStoreReloadAccLevel1.Checked = true;
-            this.chkStoreReloadAccLevel1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkStoreReloadAccLevel1.Enabled = false;
             this.chkStoreReloadAccLevel1.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkStoreReloadAccLevel1.Location = new System.Drawing.Point(30, 25);
             this.chkStoreReloadAccLevel1.Name = "chkStoreReloadAccLevel1";
-            this.chkStoreReloadAccLevel1.Size = new System.Drawing.Size(245, 19);
+            this.chkStoreReloadAccLevel1.Size = new System.Drawing.Size(207, 19);
             this.chkStoreReloadAccLevel1.TabIndex = 1;
-            this.chkStoreReloadAccLevel1.Text = "Store/Reload Accumulator (Level 1 only)";
+            this.chkStoreReloadAccLevel1.Text = "Store/Reload Result Accumulator";
             this.chkStoreReloadAccLevel1.UseVisualStyleBackColor = true;
             this.chkStoreReloadAccLevel1.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
@@ -2131,7 +2335,7 @@
             this.grpContextSaving.Controls.Add(this.chkSaveRestoreShadowRegisters);
             this.grpContextSaving.Controls.Add(this.chkContextSaving);
             this.grpContextSaving.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpContextSaving.Location = new System.Drawing.Point(0, 148);
+            this.grpContextSaving.Location = new System.Drawing.Point(0, 90);
             this.grpContextSaving.Name = "grpContextSaving";
             this.grpContextSaving.Size = new System.Drawing.Size(405, 212);
             this.grpContextSaving.TabIndex = 2;
@@ -2238,7 +2442,7 @@
             // chkContextSaving
             // 
             this.chkContextSaving.AutoSize = true;
-            this.chkContextSaving.BackColor = System.Drawing.Color.White;
+            this.chkContextSaving.BackColor = System.Drawing.SystemColors.Window;
             this.chkContextSaving.Checked = true;
             this.chkContextSaving.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkContextSaving.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -2253,36 +2457,18 @@
             // 
             // grpFunctionLabel
             // 
-            this.grpFunctionLabel.Controls.Add(this.chkUserVariableNamePrefix);
             this.grpFunctionLabel.Controls.Add(this.lblControllerNamePrefix);
             this.grpFunctionLabel.Controls.Add(this.txtControllerNamePrefix);
-            this.grpFunctionLabel.Controls.Add(this.chkUserControllerNameLabel);
             this.grpFunctionLabel.Controls.Add(this.txtControllerNameLabel);
             this.grpFunctionLabel.Controls.Add(this.lblFinalNamePrefixOutput);
             this.grpFunctionLabel.Controls.Add(this.lblFinalNamePrefix);
             this.grpFunctionLabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpFunctionLabel.Location = new System.Drawing.Point(0, 0);
             this.grpFunctionLabel.Name = "grpFunctionLabel";
-            this.grpFunctionLabel.Size = new System.Drawing.Size(405, 148);
+            this.grpFunctionLabel.Size = new System.Drawing.Size(405, 90);
             this.grpFunctionLabel.TabIndex = 1;
             this.grpFunctionLabel.TabStop = false;
             this.grpFunctionLabel.Text = "File && Function &Label";
-            // 
-            // chkUserVariableNamePrefix
-            // 
-            this.chkUserVariableNamePrefix.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.chkUserVariableNamePrefix.AutoSize = true;
-            this.chkUserVariableNamePrefix.Checked = true;
-            this.chkUserVariableNamePrefix.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkUserVariableNamePrefix.Enabled = false;
-            this.chkUserVariableNamePrefix.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkUserVariableNamePrefix.Location = new System.Drawing.Point(68, 111);
-            this.chkUserVariableNamePrefix.Name = "chkUserVariableNamePrefix";
-            this.chkUserVariableNamePrefix.Size = new System.Drawing.Size(240, 19);
-            this.chkUserVariableNamePrefix.TabIndex = 31;
-            this.chkUserVariableNamePrefix.Text = "&Overwrite Default Variable Name Prefix";
-            this.chkUserVariableNamePrefix.UseVisualStyleBackColor = true;
-            this.chkUserVariableNamePrefix.CheckedChanged += new System.EventHandler(this.chkUserControllerNameLabel_CheckedChanged);
             // 
             // lblControllerNamePrefix
             // 
@@ -2298,7 +2484,6 @@
             // txtControllerNamePrefix
             // 
             this.txtControllerNamePrefix.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtControllerNamePrefix.Enabled = false;
             this.txtControllerNamePrefix.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtControllerNamePrefix.Location = new System.Drawing.Point(136, 23);
             this.txtControllerNamePrefix.MaxLength = 255;
@@ -2306,19 +2491,6 @@
             this.txtControllerNamePrefix.Size = new System.Drawing.Size(97, 23);
             this.txtControllerNamePrefix.TabIndex = 1;
             this.txtControllerNamePrefix.TextChanged += new System.EventHandler(this.txtControllerNamePrefix_TextChanged);
-            // 
-            // chkUserControllerNameLabel
-            // 
-            this.chkUserControllerNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.chkUserControllerNameLabel.AutoSize = true;
-            this.chkUserControllerNameLabel.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkUserControllerNameLabel.Location = new System.Drawing.Point(68, 86);
-            this.chkUserControllerNameLabel.Name = "chkUserControllerNameLabel";
-            this.chkUserControllerNameLabel.Size = new System.Drawing.Size(248, 19);
-            this.chkUserControllerNameLabel.TabIndex = 3;
-            this.chkUserControllerNameLabel.Text = "&Overwrite Default Controller Name Label";
-            this.chkUserControllerNameLabel.UseVisualStyleBackColor = true;
-            this.chkUserControllerNameLabel.CheckedChanged += new System.EventHandler(this.chkUserControllerNameLabel_CheckedChanged);
             // 
             // txtControllerNameLabel
             // 
@@ -2366,7 +2538,7 @@
             this.tabAnalysis.Location = new System.Drawing.Point(0, 0);
             this.tabAnalysis.Name = "tabAnalysis";
             this.tabAnalysis.SelectedIndex = 0;
-            this.tabAnalysis.Size = new System.Drawing.Size(952, 775);
+            this.tabAnalysis.Size = new System.Drawing.Size(966, 771);
             this.tabAnalysis.TabIndex = 1;
             // 
             // tabPageBode
@@ -2375,7 +2547,7 @@
             this.tabPageBode.Location = new System.Drawing.Point(4, 24);
             this.tabPageBode.Name = "tabPageBode";
             this.tabPageBode.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBode.Size = new System.Drawing.Size(944, 747);
+            this.tabPageBode.Size = new System.Drawing.Size(958, 743);
             this.tabPageBode.TabIndex = 5;
             this.tabPageBode.Text = "Frequency Domain";
             this.tabPageBode.UseVisualStyleBackColor = true;
@@ -2400,8 +2572,8 @@
             // 
             this.splitContainerCoefficients.Panel2.Controls.Add(this.tabCoefficients);
             this.splitContainerCoefficients.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainerCoefficients.Size = new System.Drawing.Size(938, 741);
-            this.splitContainerCoefficients.SplitterDistance = 383;
+            this.splitContainerCoefficients.Size = new System.Drawing.Size(952, 737);
+            this.splitContainerCoefficients.SplitterDistance = 379;
             this.splitContainerCoefficients.TabIndex = 19;
             // 
             // chartBode
@@ -2516,7 +2688,7 @@
             this.chartBode.Series.Add(series2);
             this.chartBode.Series.Add(series3);
             this.chartBode.Series.Add(series4);
-            this.chartBode.Size = new System.Drawing.Size(936, 356);
+            this.chartBode.Size = new System.Drawing.Size(950, 352);
             this.chartBode.TabIndex = 4;
             this.chartBode.Text = "Compensation Transfer Function";
             this.chartBode.AnnotationPositionChanging += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.AnnotationPositionChangingEventArgs>(this.chartBode_AnnotationPositionChanging);
@@ -2550,7 +2722,7 @@
             this.cmbResetBodeChart});
             this.toolStripBode.Location = new System.Drawing.Point(0, 0);
             this.toolStripBode.Name = "toolStripBode";
-            this.toolStripBode.Size = new System.Drawing.Size(936, 25);
+            this.toolStripBode.Size = new System.Drawing.Size(950, 25);
             this.toolStripBode.TabIndex = 5;
             this.toolStripBode.Text = "toolStrip1";
             // 
@@ -2726,7 +2898,7 @@
             this.tabCoefficients.Location = new System.Drawing.Point(0, 0);
             this.tabCoefficients.Name = "tabCoefficients";
             this.tabCoefficients.SelectedIndex = 0;
-            this.tabCoefficients.Size = new System.Drawing.Size(936, 352);
+            this.tabCoefficients.Size = new System.Drawing.Size(950, 352);
             this.tabCoefficients.TabIndex = 19;
             // 
             // tabCoefficientTable
@@ -2735,7 +2907,7 @@
             this.tabCoefficientTable.Location = new System.Drawing.Point(4, 24);
             this.tabCoefficientTable.Name = "tabCoefficientTable";
             this.tabCoefficientTable.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCoefficientTable.Size = new System.Drawing.Size(928, 324);
+            this.tabCoefficientTable.Size = new System.Drawing.Size(942, 324);
             this.tabCoefficientTable.TabIndex = 0;
             this.tabCoefficientTable.Text = "Number Analysis";
             this.tabCoefficientTable.UseVisualStyleBackColor = true;
@@ -2792,7 +2964,7 @@
             this.lvCoefficients.Location = new System.Drawing.Point(3, 3);
             this.lvCoefficients.MultiSelect = false;
             this.lvCoefficients.Name = "lvCoefficients";
-            this.lvCoefficients.Size = new System.Drawing.Size(922, 318);
+            this.lvCoefficients.Size = new System.Drawing.Size(936, 318);
             this.lvCoefficients.TabIndex = 17;
             this.lvCoefficients.UseCompatibleStateImageBehavior = false;
             this.lvCoefficients.View = System.Windows.Forms.View.Details;
@@ -2860,7 +3032,7 @@
             this.tabCoefficientsHistory.Location = new System.Drawing.Point(4, 22);
             this.tabCoefficientsHistory.Name = "tabCoefficientsHistory";
             this.tabCoefficientsHistory.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCoefficientsHistory.Size = new System.Drawing.Size(928, 326);
+            this.tabCoefficientsHistory.Size = new System.Drawing.Size(942, 326);
             this.tabCoefficientsHistory.TabIndex = 1;
             this.tabCoefficientsHistory.Text = "Settings History";
             this.tabCoefficientsHistory.UseVisualStyleBackColor = true;
@@ -2879,9 +3051,8 @@
             this.lstCoefficientsHistory.HideSelection = false;
             this.lstCoefficientsHistory.LabelWrap = false;
             this.lstCoefficientsHistory.Location = new System.Drawing.Point(3, 3);
-            this.lstCoefficientsHistory.MultiSelect = false;
             this.lstCoefficientsHistory.Name = "lstCoefficientsHistory";
-            this.lstCoefficientsHistory.Size = new System.Drawing.Size(922, 320);
+            this.lstCoefficientsHistory.Size = new System.Drawing.Size(936, 320);
             this.lstCoefficientsHistory.TabIndex = 0;
             this.lstCoefficientsHistory.UseCompatibleStateImageBehavior = false;
             this.lstCoefficientsHistory.View = System.Windows.Forms.View.Details;
@@ -2984,7 +3155,7 @@
             this.tabPageTiming.Location = new System.Drawing.Point(4, 22);
             this.tabPageTiming.Name = "tabPageTiming";
             this.tabPageTiming.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTiming.Size = new System.Drawing.Size(944, 749);
+            this.tabPageTiming.Size = new System.Drawing.Size(958, 745);
             this.tabPageTiming.TabIndex = 4;
             this.tabPageTiming.Text = "Time Domain";
             this.tabPageTiming.UseVisualStyleBackColor = true;
@@ -3008,8 +3179,8 @@
             this.splitContainerTiming.Panel2.AutoScroll = true;
             this.splitContainerTiming.Panel2.Controls.Add(this.grpExecutionTime);
             this.splitContainerTiming.Panel2MinSize = 248;
-            this.splitContainerTiming.Size = new System.Drawing.Size(938, 743);
-            this.splitContainerTiming.SplitterDistance = 485;
+            this.splitContainerTiming.Size = new System.Drawing.Size(952, 739);
+            this.splitContainerTiming.SplitterDistance = 481;
             this.splitContainerTiming.TabIndex = 0;
             // 
             // pnlTimingChart
@@ -3024,7 +3195,7 @@
             this.pnlTimingChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlTimingChart.Location = new System.Drawing.Point(0, 0);
             this.pnlTimingChart.Name = "pnlTimingChart";
-            this.pnlTimingChart.Size = new System.Drawing.Size(936, 483);
+            this.pnlTimingChart.Size = new System.Drawing.Size(950, 479);
             this.pnlTimingChart.TabIndex = 0;
             // 
             // pnlCPULoadRatio
@@ -3033,7 +3204,7 @@
             this.pnlCPULoadRatio.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlCPULoadRatio.Controls.Add(this.label2);
             this.pnlCPULoadRatio.Controls.Add(this.lblCPULoadRatio);
-            this.pnlCPULoadRatio.Location = new System.Drawing.Point(825, 324);
+            this.pnlCPULoadRatio.Location = new System.Drawing.Point(839, 322);
             this.pnlCPULoadRatio.Name = "pnlCPULoadRatio";
             this.pnlCPULoadRatio.Size = new System.Drawing.Size(71, 114);
             this.pnlCPULoadRatio.TabIndex = 56;
@@ -3070,9 +3241,9 @@
             this.tsbCodeGenUpdateWarningTiming.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel2,
             this.toolStripLabel3});
-            this.tsbCodeGenUpdateWarningTiming.Location = new System.Drawing.Point(0, 458);
+            this.tsbCodeGenUpdateWarningTiming.Location = new System.Drawing.Point(0, 454);
             this.tsbCodeGenUpdateWarningTiming.Name = "tsbCodeGenUpdateWarningTiming";
-            this.tsbCodeGenUpdateWarningTiming.Size = new System.Drawing.Size(936, 25);
+            this.tsbCodeGenUpdateWarningTiming.Size = new System.Drawing.Size(950, 25);
             this.tsbCodeGenUpdateWarningTiming.TabIndex = 54;
             this.tsbCodeGenUpdateWarningTiming.Text = "toolStrip1";
             // 
@@ -3252,7 +3423,7 @@
             this.chartTiming.Series.Add(series5);
             this.chartTiming.Series.Add(series6);
             this.chartTiming.Series.Add(series7);
-            this.chartTiming.Size = new System.Drawing.Size(936, 458);
+            this.chartTiming.Size = new System.Drawing.Size(950, 454);
             this.chartTiming.TabIndex = 2;
             this.chartTiming.Text = "Control Timing";
             this.chartTiming.CursorPositionChanged += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.CursorEventArgs>(this.chartTiming_CursorPositionChanged);
@@ -3284,7 +3455,7 @@
             this.cmbTriggerPlacement});
             this.toolStripTiming.Location = new System.Drawing.Point(0, 0);
             this.toolStripTiming.Name = "toolStripTiming";
-            this.toolStripTiming.Size = new System.Drawing.Size(936, 25);
+            this.toolStripTiming.Size = new System.Drawing.Size(950, 25);
             this.toolStripTiming.TabIndex = 7;
             this.toolStripTiming.Text = "Trigger Placement";
             // 
@@ -3410,7 +3581,7 @@
             this.grpExecutionTime.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpExecutionTime.Location = new System.Drawing.Point(0, 0);
             this.grpExecutionTime.Name = "grpExecutionTime";
-            this.grpExecutionTime.Size = new System.Drawing.Size(936, 245);
+            this.grpExecutionTime.Size = new System.Drawing.Size(950, 245);
             this.grpExecutionTime.TabIndex = 8;
             this.grpExecutionTime.TabStop = false;
             this.grpExecutionTime.Text = "Execution Time";
@@ -3419,7 +3590,13 @@
             // 
             this.pnlTimingSettings.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.pnlTimingSettings.AutoScroll = true;
-            this.pnlTimingSettings.Controls.Add(this.lblToolTipHelp);
+            this.pnlTimingSettings.Controls.Add(this.picInfoCycleStats);
+            this.pnlTimingSettings.Controls.Add(this.picInfoUserTriggerDelay);
+            this.pnlTimingSettings.Controls.Add(this.picInfoADCLatency);
+            this.pnlTimingSettings.Controls.Add(this.picInfoISRLatency);
+            this.pnlTimingSettings.Controls.Add(this.lbltxtUserTriggerDelay);
+            this.pnlTimingSettings.Controls.Add(this.lbltxtUserTriggerDelayUnit);
+            this.pnlTimingSettings.Controls.Add(this.txtUserTriggerDelay);
             this.pnlTimingSettings.Controls.Add(this.picInfoTimingPWMFrequency);
             this.pnlTimingSettings.Controls.Add(this.label1);
             this.pnlTimingSettings.Controls.Add(this.lblCPULoad);
@@ -3441,7 +3618,7 @@
             this.pnlTimingSettings.Controls.Add(this.lblNumberOfInstructionCyclesReadLabel);
             this.pnlTimingSettings.Controls.Add(this.lblDataReadDelayLabel);
             this.pnlTimingSettings.Controls.Add(this.lblDataReadDelay);
-            this.pnlTimingSettings.Controls.Add(this.cmbLoopOptimizationLevel);
+            this.pnlTimingSettings.Controls.Add(this.cmbLoopTriggerOption);
             this.pnlTimingSettings.Controls.Add(this.lblExecutionPeriodUnit);
             this.pnlTimingSettings.Controls.Add(this.lblLoopOptimizationLevel);
             this.pnlTimingSettings.Controls.Add(this.lblExecutionPeriodLabel);
@@ -3456,33 +3633,97 @@
             this.pnlTimingSettings.Controls.Add(this.lblResponseDelayLabel);
             this.pnlTimingSettings.Controls.Add(this.lblResponseDelay);
             this.pnlTimingSettings.Controls.Add(this.txtCPUClock);
-            this.pnlTimingSettings.Location = new System.Drawing.Point(6, 15);
+            this.pnlTimingSettings.Location = new System.Drawing.Point(13, 15);
             this.pnlTimingSettings.Name = "pnlTimingSettings";
             this.pnlTimingSettings.Size = new System.Drawing.Size(924, 224);
             this.pnlTimingSettings.TabIndex = 49;
             // 
-            // lblToolTipHelp
+            // picInfoCycleStats
             // 
-            this.lblToolTipHelp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.lblToolTipHelp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblToolTipHelp.Location = new System.Drawing.Point(394, 62);
-            this.lblToolTipHelp.Name = "lblToolTipHelp";
-            this.lblToolTipHelp.Size = new System.Drawing.Size(320, 45);
-            this.lblToolTipHelp.TabIndex = 70;
-            this.lblToolTipHelp.Text = "Info Label";
-            this.lblToolTipHelp.Visible = false;
-            this.lblToolTipHelp.MouseLeave += new System.EventHandler(this.timToolHelp_Tick);
+            this.picInfoCycleStats.Image = ((System.Drawing.Image)(resources.GetObject("picInfoCycleStats.Image")));
+            this.picInfoCycleStats.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoCycleStats.InitialImage")));
+            this.picInfoCycleStats.Location = new System.Drawing.Point(846, 66);
+            this.picInfoCycleStats.Name = "picInfoCycleStats";
+            this.picInfoCycleStats.Size = new System.Drawing.Size(16, 16);
+            this.picInfoCycleStats.TabIndex = 76;
+            this.picInfoCycleStats.TabStop = false;
+            this.picInfoCycleStats.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
+            // 
+            // picInfoUserTriggerDelay
+            // 
+            this.picInfoUserTriggerDelay.Image = ((System.Drawing.Image)(resources.GetObject("picInfoUserTriggerDelay.Image")));
+            this.picInfoUserTriggerDelay.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoUserTriggerDelay.InitialImage")));
+            this.picInfoUserTriggerDelay.Location = new System.Drawing.Point(371, 186);
+            this.picInfoUserTriggerDelay.Name = "picInfoUserTriggerDelay";
+            this.picInfoUserTriggerDelay.Size = new System.Drawing.Size(16, 16);
+            this.picInfoUserTriggerDelay.TabIndex = 75;
+            this.picInfoUserTriggerDelay.TabStop = false;
+            this.picInfoUserTriggerDelay.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
+            // 
+            // picInfoADCLatency
+            // 
+            this.picInfoADCLatency.Image = ((System.Drawing.Image)(resources.GetObject("picInfoADCLatency.Image")));
+            this.picInfoADCLatency.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoADCLatency.InitialImage")));
+            this.picInfoADCLatency.Location = new System.Drawing.Point(371, 134);
+            this.picInfoADCLatency.Name = "picInfoADCLatency";
+            this.picInfoADCLatency.Size = new System.Drawing.Size(16, 16);
+            this.picInfoADCLatency.TabIndex = 74;
+            this.picInfoADCLatency.TabStop = false;
+            this.picInfoADCLatency.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
+            // 
+            // picInfoISRLatency
+            // 
+            this.picInfoISRLatency.Image = ((System.Drawing.Image)(resources.GetObject("picInfoISRLatency.Image")));
+            this.picInfoISRLatency.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoISRLatency.InitialImage")));
+            this.picInfoISRLatency.Location = new System.Drawing.Point(371, 162);
+            this.picInfoISRLatency.Name = "picInfoISRLatency";
+            this.picInfoISRLatency.Size = new System.Drawing.Size(16, 16);
+            this.picInfoISRLatency.TabIndex = 73;
+            this.picInfoISRLatency.TabStop = false;
+            this.picInfoISRLatency.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
+            // 
+            // lbltxtUserTriggerDelay
+            // 
+            this.lbltxtUserTriggerDelay.AutoSize = true;
+            this.lbltxtUserTriggerDelay.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbltxtUserTriggerDelay.Location = new System.Drawing.Point(138, 186);
+            this.lbltxtUserTriggerDelay.Name = "lbltxtUserTriggerDelay";
+            this.lbltxtUserTriggerDelay.Size = new System.Drawing.Size(109, 15);
+            this.lbltxtUserTriggerDelay.TabIndex = 72;
+            this.lbltxtUserTriggerDelay.Text = "User Trigger Delay:";
+            this.lbltxtUserTriggerDelay.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lbltxtUserTriggerDelayUnit
+            // 
+            this.lbltxtUserTriggerDelayUnit.AutoSize = true;
+            this.lbltxtUserTriggerDelayUnit.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbltxtUserTriggerDelayUnit.Location = new System.Drawing.Point(333, 186);
+            this.lbltxtUserTriggerDelayUnit.Name = "lbltxtUserTriggerDelayUnit";
+            this.lbltxtUserTriggerDelayUnit.Size = new System.Drawing.Size(32, 15);
+            this.lbltxtUserTriggerDelayUnit.TabIndex = 71;
+            this.lbltxtUserTriggerDelayUnit.Text = "nsec";
+            // 
+            // txtUserTriggerDelay
+            // 
+            this.txtUserTriggerDelay.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtUserTriggerDelay.Location = new System.Drawing.Point(253, 183);
+            this.txtUserTriggerDelay.Name = "txtUserTriggerDelay";
+            this.txtUserTriggerDelay.Size = new System.Drawing.Size(72, 23);
+            this.txtUserTriggerDelay.TabIndex = 7;
+            this.txtUserTriggerDelay.Text = "100";
+            this.txtUserTriggerDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtUserTriggerDelay.TextChanged += new System.EventHandler(this.UpdateExecutionRuntime);
             // 
             // picInfoTimingPWMFrequency
             // 
             this.picInfoTimingPWMFrequency.Image = ((System.Drawing.Image)(resources.GetObject("picInfoTimingPWMFrequency.Image")));
             this.picInfoTimingPWMFrequency.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoTimingPWMFrequency.InitialImage")));
-            this.picInfoTimingPWMFrequency.Location = new System.Drawing.Point(372, 92);
+            this.picInfoTimingPWMFrequency.Location = new System.Drawing.Point(371, 82);
             this.picInfoTimingPWMFrequency.Name = "picInfoTimingPWMFrequency";
             this.picInfoTimingPWMFrequency.Size = new System.Drawing.Size(16, 16);
             this.picInfoTimingPWMFrequency.TabIndex = 69;
             this.picInfoTimingPWMFrequency.TabStop = false;
-            this.picInfoTimingPWMFrequency.MouseHover += new System.EventHandler(this.picInfoTimingPWMFrequency_MouseHover);
+            this.picInfoTimingPWMFrequency.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
             // 
             // label1
             // 
@@ -3519,7 +3760,7 @@
             // 
             this.lblISRLatency.AutoSize = true;
             this.lblISRLatency.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblISRLatency.Location = new System.Drawing.Point(112, 183);
+            this.lblISRLatency.Location = new System.Drawing.Point(105, 160);
             this.lblISRLatency.Name = "lblISRLatency";
             this.lblISRLatency.Size = new System.Drawing.Size(142, 15);
             this.lblISRLatency.TabIndex = 64;
@@ -3530,7 +3771,7 @@
             // 
             this.lblISRLatencyUnit.AutoSize = true;
             this.lblISRLatencyUnit.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblISRLatencyUnit.Location = new System.Drawing.Point(340, 183);
+            this.lblISRLatencyUnit.Location = new System.Drawing.Point(333, 160);
             this.lblISRLatencyUnit.Name = "lblISRLatencyUnit";
             this.lblISRLatencyUnit.Size = new System.Drawing.Size(32, 15);
             this.lblISRLatencyUnit.TabIndex = 65;
@@ -3539,7 +3780,7 @@
             // txtISRLatency
             // 
             this.txtISRLatency.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtISRLatency.Location = new System.Drawing.Point(260, 180);
+            this.txtISRLatency.Location = new System.Drawing.Point(253, 157);
             this.txtISRLatency.Name = "txtISRLatency";
             this.txtISRLatency.Size = new System.Drawing.Size(72, 23);
             this.txtISRLatency.TabIndex = 6;
@@ -3553,7 +3794,7 @@
             // 
             this.lblADCLatency.AutoSize = true;
             this.lblADCLatency.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblADCLatency.Location = new System.Drawing.Point(178, 153);
+            this.lblADCLatency.Location = new System.Drawing.Point(171, 134);
             this.lblADCLatency.Name = "lblADCLatency";
             this.lblADCLatency.Size = new System.Drawing.Size(76, 15);
             this.lblADCLatency.TabIndex = 61;
@@ -3564,7 +3805,7 @@
             // 
             this.lblADCLatencyUnit.AutoSize = true;
             this.lblADCLatencyUnit.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblADCLatencyUnit.Location = new System.Drawing.Point(340, 153);
+            this.lblADCLatencyUnit.Location = new System.Drawing.Point(331, 134);
             this.lblADCLatencyUnit.Name = "lblADCLatencyUnit";
             this.lblADCLatencyUnit.Size = new System.Drawing.Size(32, 15);
             this.lblADCLatencyUnit.TabIndex = 62;
@@ -3573,7 +3814,7 @@
             // txtADCLatency
             // 
             this.txtADCLatency.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtADCLatency.Location = new System.Drawing.Point(260, 150);
+            this.txtADCLatency.Location = new System.Drawing.Point(253, 131);
             this.txtADCLatency.Name = "txtADCLatency";
             this.txtADCLatency.Size = new System.Drawing.Size(72, 23);
             this.txtADCLatency.TabIndex = 5;
@@ -3587,7 +3828,7 @@
             // 
             this.lblPWMDutyCycle.AutoSize = true;
             this.lblPWMDutyCycle.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPWMDutyCycle.Location = new System.Drawing.Point(187, 122);
+            this.lblPWMDutyCycle.Location = new System.Drawing.Point(180, 108);
             this.lblPWMDutyCycle.Name = "lblPWMDutyCycle";
             this.lblPWMDutyCycle.Size = new System.Drawing.Size(67, 15);
             this.lblPWMDutyCycle.TabIndex = 58;
@@ -3598,7 +3839,7 @@
             // 
             this.lblPWMDutyCycleUnit.AutoSize = true;
             this.lblPWMDutyCycleUnit.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPWMDutyCycleUnit.Location = new System.Drawing.Point(340, 122);
+            this.lblPWMDutyCycleUnit.Location = new System.Drawing.Point(333, 108);
             this.lblPWMDutyCycleUnit.Name = "lblPWMDutyCycleUnit";
             this.lblPWMDutyCycleUnit.Size = new System.Drawing.Size(16, 15);
             this.lblPWMDutyCycleUnit.TabIndex = 59;
@@ -3607,7 +3848,7 @@
             // txtPWMDutyCycle
             // 
             this.txtPWMDutyCycle.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPWMDutyCycle.Location = new System.Drawing.Point(260, 119);
+            this.txtPWMDutyCycle.Location = new System.Drawing.Point(253, 105);
             this.txtPWMDutyCycle.Name = "txtPWMDutyCycle";
             this.txtPWMDutyCycle.Size = new System.Drawing.Size(72, 23);
             this.txtPWMDutyCycle.TabIndex = 4;
@@ -3621,7 +3862,7 @@
             // 
             this.lblPWMFrequency.AutoSize = true;
             this.lblPWMFrequency.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPWMFrequency.Location = new System.Drawing.Point(155, 92);
+            this.lblPWMFrequency.Location = new System.Drawing.Point(148, 82);
             this.lblPWMFrequency.Name = "lblPWMFrequency";
             this.lblPWMFrequency.Size = new System.Drawing.Size(99, 15);
             this.lblPWMFrequency.TabIndex = 55;
@@ -3632,7 +3873,7 @@
             // 
             this.lblPWMFrequencyUnit.AutoSize = true;
             this.lblPWMFrequencyUnit.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPWMFrequencyUnit.Location = new System.Drawing.Point(340, 92);
+            this.lblPWMFrequencyUnit.Location = new System.Drawing.Point(331, 82);
             this.lblPWMFrequencyUnit.Name = "lblPWMFrequencyUnit";
             this.lblPWMFrequencyUnit.Size = new System.Drawing.Size(26, 15);
             this.lblPWMFrequencyUnit.TabIndex = 56;
@@ -3641,7 +3882,7 @@
             // txtPWMFrequency
             // 
             this.txtPWMFrequency.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPWMFrequency.Location = new System.Drawing.Point(260, 89);
+            this.txtPWMFrequency.Location = new System.Drawing.Point(253, 79);
             this.txtPWMFrequency.Name = "txtPWMFrequency";
             this.txtPWMFrequency.Size = new System.Drawing.Size(72, 23);
             this.txtPWMFrequency.TabIndex = 3;
@@ -3703,19 +3944,19 @@
             this.lblDataReadDelay.Text = "0";
             this.lblDataReadDelay.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // cmbLoopOptimizationLevel
+            // cmbLoopTriggerOption
             // 
-            this.cmbLoopOptimizationLevel.Enabled = false;
-            this.cmbLoopOptimizationLevel.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbLoopOptimizationLevel.FormattingEnabled = true;
-            this.cmbLoopOptimizationLevel.Items.AddRange(new object[] {
-            "0 - PWM Interrupt Trigger (Minimum CPU Load)",
-            "1 - ADC Interrupt Trigger (Early Response Time)"});
-            this.cmbLoopOptimizationLevel.Location = new System.Drawing.Point(192, 18);
-            this.cmbLoopOptimizationLevel.Name = "cmbLoopOptimizationLevel";
-            this.cmbLoopOptimizationLevel.Size = new System.Drawing.Size(642, 23);
-            this.cmbLoopOptimizationLevel.TabIndex = 1;
-            this.cmbLoopOptimizationLevel.SelectedIndexChanged += new System.EventHandler(this.cmbLoopOptimizationLevel_SelectedIndexChanged);
+            this.cmbLoopTriggerOption.Enabled = false;
+            this.cmbLoopTriggerOption.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbLoopTriggerOption.FormattingEnabled = true;
+            this.cmbLoopTriggerOption.Items.AddRange(new object[] {
+            "0 - PWM Interrupt Trigger",
+            "1 - ADC Interrupt Trigger"});
+            this.cmbLoopTriggerOption.Location = new System.Drawing.Point(192, 18);
+            this.cmbLoopTriggerOption.Name = "cmbLoopTriggerOption";
+            this.cmbLoopTriggerOption.Size = new System.Drawing.Size(642, 23);
+            this.cmbLoopTriggerOption.TabIndex = 1;
+            this.cmbLoopTriggerOption.SelectedIndexChanged += new System.EventHandler(this.cmbLoopTriggerOption_SelectedIndexChanged);
             // 
             // lblExecutionPeriodUnit
             // 
@@ -3753,7 +3994,7 @@
             // 
             this.lblCPUClock.AutoSize = true;
             this.lblCPUClock.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCPUClock.Location = new System.Drawing.Point(189, 62);
+            this.lblCPUClock.Location = new System.Drawing.Point(182, 56);
             this.lblCPUClock.Name = "lblCPUClock";
             this.lblCPUClock.Size = new System.Drawing.Size(65, 15);
             this.lblCPUClock.TabIndex = 34;
@@ -3826,7 +4067,7 @@
             // 
             this.lblCPUClockUnit.AutoSize = true;
             this.lblCPUClockUnit.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCPUClockUnit.Location = new System.Drawing.Point(340, 62);
+            this.lblCPUClockUnit.Location = new System.Drawing.Point(331, 56);
             this.lblCPUClockUnit.Name = "lblCPUClockUnit";
             this.lblCPUClockUnit.Size = new System.Drawing.Size(31, 15);
             this.lblCPUClockUnit.TabIndex = 35;
@@ -3856,7 +4097,7 @@
             // txtCPUClock
             // 
             this.txtCPUClock.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCPUClock.Location = new System.Drawing.Point(260, 59);
+            this.txtCPUClock.Location = new System.Drawing.Point(253, 53);
             this.txtCPUClock.Name = "txtCPUClock";
             this.txtCPUClock.Size = new System.Drawing.Size(72, 23);
             this.txtCPUClock.TabIndex = 2;
@@ -3876,7 +4117,7 @@
             this.tabPageBlockDiagram.Location = new System.Drawing.Point(4, 22);
             this.tabPageBlockDiagram.Name = "tabPageBlockDiagram";
             this.tabPageBlockDiagram.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBlockDiagram.Size = new System.Drawing.Size(944, 749);
+            this.tabPageBlockDiagram.Size = new System.Drawing.Size(958, 745);
             this.tabPageBlockDiagram.TabIndex = 6;
             this.tabPageBlockDiagram.Text = "Block Diagram";
             this.tabPageBlockDiagram.UseVisualStyleBackColor = true;
@@ -3889,7 +4130,7 @@
             this.grpFilterProcessing.Location = new System.Drawing.Point(3, 905);
             this.grpFilterProcessing.MinimumSize = new System.Drawing.Size(0, 325);
             this.grpFilterProcessing.Name = "grpFilterProcessing";
-            this.grpFilterProcessing.Size = new System.Drawing.Size(921, 325);
+            this.grpFilterProcessing.Size = new System.Drawing.Size(935, 325);
             this.grpFilterProcessing.TabIndex = 5;
             this.grpFilterProcessing.TabStop = false;
             this.grpFilterProcessing.Text = "Processing Workflow";
@@ -3897,7 +4138,7 @@
             // lblWorkflowInfo
             // 
             this.lblWorkflowInfo.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblWorkflowInfo.Location = new System.Drawing.Point(566, 44);
+            this.lblWorkflowInfo.Location = new System.Drawing.Point(573, 44);
             this.lblWorkflowInfo.Name = "lblWorkflowInfo";
             this.lblWorkflowInfo.Size = new System.Drawing.Size(235, 85);
             this.lblWorkflowInfo.TabIndex = 8;
@@ -3908,7 +4149,7 @@
             // 
             this.picFlowChart.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.picFlowChart.Image = ((System.Drawing.Image)(resources.GetObject("picFlowChart.Image")));
-            this.picFlowChart.Location = new System.Drawing.Point(9, 22);
+            this.picFlowChart.Location = new System.Drawing.Point(16, 22);
             this.picFlowChart.Name = "picFlowChart";
             this.picFlowChart.Size = new System.Drawing.Size(903, 303);
             this.picFlowChart.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -3923,7 +4164,7 @@
             this.grpEquation.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpEquation.Location = new System.Drawing.Point(3, 759);
             this.grpEquation.Name = "grpEquation";
-            this.grpEquation.Size = new System.Drawing.Size(921, 146);
+            this.grpEquation.Size = new System.Drawing.Size(935, 146);
             this.grpEquation.TabIndex = 4;
             this.grpEquation.TabStop = false;
             this.grpEquation.Text = "Transfer Function Equations";
@@ -3932,7 +4173,7 @@
             // 
             this.lblFilterOrder.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblFilterOrder.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFilterOrder.Location = new System.Drawing.Point(467, 118);
+            this.lblFilterOrder.Location = new System.Drawing.Point(474, 118);
             this.lblFilterOrder.Name = "lblFilterOrder";
             this.lblFilterOrder.Size = new System.Drawing.Size(38, 15);
             this.lblFilterOrder.TabIndex = 18;
@@ -3942,7 +4183,7 @@
             // 
             this.picZTransform.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.picZTransform.Image = ((System.Drawing.Image)(resources.GetObject("picZTransform.Image")));
-            this.picZTransform.Location = new System.Drawing.Point(75, 22);
+            this.picZTransform.Location = new System.Drawing.Point(82, 22);
             this.picZTransform.Name = "picZTransform";
             this.picZTransform.Size = new System.Drawing.Size(766, 93);
             this.picZTransform.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -3954,7 +4195,7 @@
             this.lblFilterOrderLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblFilterOrderLabel.AutoSize = true;
             this.lblFilterOrderLabel.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFilterOrderLabel.Location = new System.Drawing.Point(416, 118);
+            this.lblFilterOrderLabel.Location = new System.Drawing.Point(423, 118);
             this.lblFilterOrderLabel.Name = "lblFilterOrderLabel";
             this.lblFilterOrderLabel.Size = new System.Drawing.Size(55, 15);
             this.lblFilterOrderLabel.TabIndex = 17;
@@ -3980,7 +4221,7 @@
             this.grpCompBlockDiagram.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpCompBlockDiagram.Location = new System.Drawing.Point(3, 406);
             this.grpCompBlockDiagram.Name = "grpCompBlockDiagram";
-            this.grpCompBlockDiagram.Size = new System.Drawing.Size(921, 353);
+            this.grpCompBlockDiagram.Size = new System.Drawing.Size(935, 353);
             this.grpCompBlockDiagram.TabIndex = 3;
             this.grpCompBlockDiagram.TabStop = false;
             this.grpCompBlockDiagram.Text = "Compensator Block Diagram";
@@ -3989,7 +4230,7 @@
             // 
             this.lblBDReferenceResolutionUnit.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblBDReferenceResolutionUnit.AutoSize = true;
-            this.lblBDReferenceResolutionUnit.Location = new System.Drawing.Point(206, 152);
+            this.lblBDReferenceResolutionUnit.Location = new System.Drawing.Point(213, 152);
             this.lblBDReferenceResolutionUnit.Name = "lblBDReferenceResolutionUnit";
             this.lblBDReferenceResolutionUnit.Size = new System.Drawing.Size(22, 15);
             this.lblBDReferenceResolutionUnit.TabIndex = 15;
@@ -3998,7 +4239,7 @@
             // lblBDReferenceResolution
             // 
             this.lblBDReferenceResolution.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblBDReferenceResolution.Location = new System.Drawing.Point(168, 152);
+            this.lblBDReferenceResolution.Location = new System.Drawing.Point(175, 152);
             this.lblBDReferenceResolution.Name = "lblBDReferenceResolution";
             this.lblBDReferenceResolution.Size = new System.Drawing.Size(38, 15);
             this.lblBDReferenceResolution.TabIndex = 14;
@@ -4009,7 +4250,7 @@
             // 
             this.lblBDReferenceResolutionLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblBDReferenceResolutionLabel.AutoSize = true;
-            this.lblBDReferenceResolutionLabel.Location = new System.Drawing.Point(108, 152);
+            this.lblBDReferenceResolutionLabel.Location = new System.Drawing.Point(115, 152);
             this.lblBDReferenceResolutionLabel.Name = "lblBDReferenceResolutionLabel";
             this.lblBDReferenceResolutionLabel.Size = new System.Drawing.Size(68, 15);
             this.lblBDReferenceResolutionLabel.TabIndex = 13;
@@ -4020,7 +4261,7 @@
             this.lblCompTypeDescr.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblCompTypeDescr.BackColor = System.Drawing.Color.LightGoldenrodYellow;
             this.lblCompTypeDescr.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCompTypeDescr.Location = new System.Drawing.Point(428, 140);
+            this.lblCompTypeDescr.Location = new System.Drawing.Point(435, 140);
             this.lblCompTypeDescr.Name = "lblCompTypeDescr";
             this.lblCompTypeDescr.Size = new System.Drawing.Size(110, 18);
             this.lblCompTypeDescr.TabIndex = 12;
@@ -4031,7 +4272,7 @@
             // 
             this.lblPostScaler.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblPostScaler.BackColor = System.Drawing.Color.LightGoldenrodYellow;
-            this.lblPostScaler.Location = new System.Drawing.Point(545, 206);
+            this.lblPostScaler.Location = new System.Drawing.Point(552, 206);
             this.lblPostScaler.Name = "lblPostScaler";
             this.lblPostScaler.Size = new System.Drawing.Size(38, 15);
             this.lblPostScaler.TabIndex = 11;
@@ -4042,7 +4283,7 @@
             // 
             this.lblPreScaler.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblPreScaler.BackColor = System.Drawing.Color.LightGoldenrodYellow;
-            this.lblPreScaler.Location = new System.Drawing.Point(347, 206);
+            this.lblPreScaler.Location = new System.Drawing.Point(354, 206);
             this.lblPreScaler.Name = "lblPreScaler";
             this.lblPreScaler.Size = new System.Drawing.Size(38, 15);
             this.lblPreScaler.TabIndex = 10;
@@ -4053,7 +4294,7 @@
             // 
             this.lblBDInputResolutionUnit.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblBDInputResolutionUnit.AutoSize = true;
-            this.lblBDInputResolutionUnit.Location = new System.Drawing.Point(205, 302);
+            this.lblBDInputResolutionUnit.Location = new System.Drawing.Point(212, 302);
             this.lblBDInputResolutionUnit.Name = "lblBDInputResolutionUnit";
             this.lblBDInputResolutionUnit.Size = new System.Drawing.Size(22, 15);
             this.lblBDInputResolutionUnit.TabIndex = 9;
@@ -4062,7 +4303,7 @@
             // lblBDInputResolution
             // 
             this.lblBDInputResolution.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblBDInputResolution.Location = new System.Drawing.Point(167, 302);
+            this.lblBDInputResolution.Location = new System.Drawing.Point(174, 302);
             this.lblBDInputResolution.Name = "lblBDInputResolution";
             this.lblBDInputResolution.Size = new System.Drawing.Size(38, 15);
             this.lblBDInputResolution.TabIndex = 8;
@@ -4073,7 +4314,7 @@
             // 
             this.lblBDInputResolutionLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblBDInputResolutionLabel.AutoSize = true;
-            this.lblBDInputResolutionLabel.Location = new System.Drawing.Point(108, 302);
+            this.lblBDInputResolutionLabel.Location = new System.Drawing.Point(115, 302);
             this.lblBDInputResolutionLabel.Name = "lblBDInputResolutionLabel";
             this.lblBDInputResolutionLabel.Size = new System.Drawing.Size(68, 15);
             this.lblBDInputResolutionLabel.TabIndex = 7;
@@ -4082,7 +4323,7 @@
             // lblBDInputGain
             // 
             this.lblBDInputGain.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblBDInputGain.Location = new System.Drawing.Point(189, 318);
+            this.lblBDInputGain.Location = new System.Drawing.Point(196, 318);
             this.lblBDInputGain.Name = "lblBDInputGain";
             this.lblBDInputGain.Size = new System.Drawing.Size(38, 15);
             this.lblBDInputGain.TabIndex = 6;
@@ -4093,7 +4334,7 @@
             // 
             this.lblBDInputGainLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblBDInputGainLabel.AutoSize = true;
-            this.lblBDInputGainLabel.Location = new System.Drawing.Point(108, 318);
+            this.lblBDInputGainLabel.Location = new System.Drawing.Point(115, 318);
             this.lblBDInputGainLabel.Name = "lblBDInputGainLabel";
             this.lblBDInputGainLabel.Size = new System.Drawing.Size(73, 15);
             this.lblBDInputGainLabel.TabIndex = 5;
@@ -4103,7 +4344,7 @@
             // 
             this.lblTickRateUnit.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTickRateUnit.AutoSize = true;
-            this.lblTickRateUnit.Location = new System.Drawing.Point(493, 252);
+            this.lblTickRateUnit.Location = new System.Drawing.Point(500, 252);
             this.lblTickRateUnit.Name = "lblTickRateUnit";
             this.lblTickRateUnit.Size = new System.Drawing.Size(32, 15);
             this.lblTickRateUnit.TabIndex = 4;
@@ -4112,7 +4353,7 @@
             // lblTickRate
             // 
             this.lblTickRate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblTickRate.Location = new System.Drawing.Point(457, 252);
+            this.lblTickRate.Location = new System.Drawing.Point(464, 252);
             this.lblTickRate.Name = "lblTickRate";
             this.lblTickRate.Size = new System.Drawing.Size(38, 15);
             this.lblTickRate.TabIndex = 3;
@@ -4123,7 +4364,7 @@
             // 
             this.lblTickRateLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTickRateLabel.AutoSize = true;
-            this.lblTickRateLabel.Location = new System.Drawing.Point(392, 252);
+            this.lblTickRateLabel.Location = new System.Drawing.Point(399, 252);
             this.lblTickRateLabel.Name = "lblTickRateLabel";
             this.lblTickRateLabel.Size = new System.Drawing.Size(59, 15);
             this.lblTickRateLabel.TabIndex = 2;
@@ -4133,7 +4374,7 @@
             // 
             this.picCompBlockDiagram.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.picCompBlockDiagram.Image = ((System.Drawing.Image)(resources.GetObject("picCompBlockDiagram.Image")));
-            this.picCompBlockDiagram.Location = new System.Drawing.Point(6, 22);
+            this.picCompBlockDiagram.Location = new System.Drawing.Point(13, 22);
             this.picCompBlockDiagram.Name = "picCompBlockDiagram";
             this.picCompBlockDiagram.Size = new System.Drawing.Size(906, 295);
             this.picCompBlockDiagram.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -4146,7 +4387,7 @@
             this.grpControlBlockDiagram.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpControlBlockDiagram.Location = new System.Drawing.Point(3, 3);
             this.grpControlBlockDiagram.Name = "grpControlBlockDiagram";
-            this.grpControlBlockDiagram.Size = new System.Drawing.Size(921, 403);
+            this.grpControlBlockDiagram.Size = new System.Drawing.Size(935, 403);
             this.grpControlBlockDiagram.TabIndex = 6;
             this.grpControlBlockDiagram.TabStop = false;
             this.grpControlBlockDiagram.Text = "Controller Block Diagram";
@@ -4157,7 +4398,7 @@
             this.picControlBlockDiagram.Image = ((System.Drawing.Image)(resources.GetObject("picControlBlockDiagram.Image")));
             this.picControlBlockDiagram.Location = new System.Drawing.Point(3, 19);
             this.picControlBlockDiagram.Name = "picControlBlockDiagram";
-            this.picControlBlockDiagram.Size = new System.Drawing.Size(915, 381);
+            this.picControlBlockDiagram.Size = new System.Drawing.Size(929, 381);
             this.picControlBlockDiagram.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picControlBlockDiagram.TabIndex = 1;
             this.picControlBlockDiagram.TabStop = false;
@@ -4168,7 +4409,7 @@
             this.tabPageCodeOutput.Location = new System.Drawing.Point(4, 22);
             this.tabPageCodeOutput.Name = "tabPageCodeOutput";
             this.tabPageCodeOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCodeOutput.Size = new System.Drawing.Size(944, 749);
+            this.tabPageCodeOutput.Size = new System.Drawing.Size(958, 745);
             this.tabPageCodeOutput.TabIndex = 0;
             this.tabPageCodeOutput.Text = "Source Code Output";
             this.tabPageCodeOutput.UseVisualStyleBackColor = true;
@@ -4184,7 +4425,7 @@
             this.tabSourceCode.Location = new System.Drawing.Point(3, 3);
             this.tabSourceCode.Name = "tabSourceCode";
             this.tabSourceCode.SelectedIndex = 0;
-            this.tabSourceCode.Size = new System.Drawing.Size(938, 743);
+            this.tabSourceCode.Size = new System.Drawing.Size(952, 739);
             this.tabSourceCode.TabIndex = 1;
             // 
             // tabPageAssembly
@@ -4195,7 +4436,7 @@
             this.tabPageAssembly.Location = new System.Drawing.Point(4, 24);
             this.tabPageAssembly.Name = "tabPageAssembly";
             this.tabPageAssembly.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAssembly.Size = new System.Drawing.Size(930, 715);
+            this.tabPageAssembly.Size = new System.Drawing.Size(944, 711);
             this.tabPageAssembly.TabIndex = 0;
             this.tabPageAssembly.Text = "Assembly";
             this.tabPageAssembly.UseVisualStyleBackColor = true;
@@ -4209,7 +4450,7 @@
             this.toolStripLabel1});
             this.tsbCodeGenUpdateWarningAssembly.Location = new System.Drawing.Point(3, 72);
             this.tsbCodeGenUpdateWarningAssembly.Name = "tsbCodeGenUpdateWarningAssembly";
-            this.tsbCodeGenUpdateWarningAssembly.Size = new System.Drawing.Size(924, 25);
+            this.tsbCodeGenUpdateWarningAssembly.Size = new System.Drawing.Size(938, 25);
             this.tsbCodeGenUpdateWarningAssembly.TabIndex = 31;
             this.tsbCodeGenUpdateWarningAssembly.Text = "toolStrip1";
             // 
@@ -4245,7 +4486,7 @@
             visualStudio2005SyntaxEditorRenderer1.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorAssembly.Renderer = visualStudio2005SyntaxEditorRenderer1;
             this.txtSyntaxEditorAssembly.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorAssembly.Size = new System.Drawing.Size(924, 640);
+            this.txtSyntaxEditorAssembly.Size = new System.Drawing.Size(938, 636);
             this.txtSyntaxEditorAssembly.TabIndex = 0;
             // 
             // panelASMSource
@@ -4257,7 +4498,7 @@
             this.panelASMSource.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelASMSource.Location = new System.Drawing.Point(3, 3);
             this.panelASMSource.Name = "panelASMSource";
-            this.panelASMSource.Size = new System.Drawing.Size(924, 69);
+            this.panelASMSource.Size = new System.Drawing.Size(938, 69);
             this.panelASMSource.TabIndex = 9;
             // 
             // chkASMIncludePath
@@ -4279,7 +4520,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtASMSourcePath.Location = new System.Drawing.Point(106, 12);
             this.txtASMSourcePath.Name = "txtASMSourcePath";
-            this.txtASMSourcePath.Size = new System.Drawing.Size(708, 23);
+            this.txtASMSourcePath.Size = new System.Drawing.Size(722, 23);
             this.txtASMSourcePath.TabIndex = 2;
             this.txtASMSourcePath.TextChanged += new System.EventHandler(this.SourcePathTextBox_TextChanged);
             // 
@@ -4295,7 +4536,7 @@
             // cmdASMSourcePath
             // 
             this.cmdASMSourcePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdASMSourcePath.Location = new System.Drawing.Point(814, 9);
+            this.cmdASMSourcePath.Location = new System.Drawing.Point(828, 9);
             this.cmdASMSourcePath.Name = "cmdASMSourcePath";
             this.cmdASMSourcePath.Size = new System.Drawing.Size(86, 29);
             this.cmdASMSourcePath.TabIndex = 0;
@@ -4311,7 +4552,7 @@
             this.tabPageCSource.Location = new System.Drawing.Point(4, 22);
             this.tabPageCSource.Name = "tabPageCSource";
             this.tabPageCSource.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCSource.Size = new System.Drawing.Size(930, 717);
+            this.tabPageCSource.Size = new System.Drawing.Size(944, 713);
             this.tabPageCSource.TabIndex = 2;
             this.tabPageCSource.Text = "C-Source";
             this.tabPageCSource.UseVisualStyleBackColor = true;
@@ -4325,7 +4566,7 @@
             this.tslCodeGenUpdateCSource});
             this.tsbCodeGenUpdateWarningCSource.Location = new System.Drawing.Point(3, 72);
             this.tsbCodeGenUpdateWarningCSource.Name = "tsbCodeGenUpdateWarningCSource";
-            this.tsbCodeGenUpdateWarningCSource.Size = new System.Drawing.Size(924, 25);
+            this.tsbCodeGenUpdateWarningCSource.Size = new System.Drawing.Size(938, 25);
             this.tsbCodeGenUpdateWarningCSource.TabIndex = 32;
             this.tsbCodeGenUpdateWarningCSource.Text = "toolStrip1";
             // 
@@ -4361,7 +4602,7 @@
             visualStudio2005SyntaxEditorRenderer2.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCSource.Renderer = visualStudio2005SyntaxEditorRenderer2;
             this.txtSyntaxEditorCSource.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(924, 642);
+            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(938, 638);
             this.txtSyntaxEditorCSource.TabIndex = 5;
             // 
             // panelCSourcePath
@@ -4373,7 +4614,7 @@
             this.panelCSourcePath.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelCSourcePath.Location = new System.Drawing.Point(3, 3);
             this.panelCSourcePath.Name = "panelCSourcePath";
-            this.panelCSourcePath.Size = new System.Drawing.Size(924, 69);
+            this.panelCSourcePath.Size = new System.Drawing.Size(938, 69);
             this.panelCSourcePath.TabIndex = 8;
             // 
             // chkCSourceIncludePath
@@ -4395,7 +4636,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCSourcePath.Location = new System.Drawing.Point(106, 12);
             this.txtCSourcePath.Name = "txtCSourcePath";
-            this.txtCSourcePath.Size = new System.Drawing.Size(708, 23);
+            this.txtCSourcePath.Size = new System.Drawing.Size(722, 23);
             this.txtCSourcePath.TabIndex = 2;
             this.txtCSourcePath.TextChanged += new System.EventHandler(this.SourcePathTextBox_TextChanged);
             // 
@@ -4411,7 +4652,7 @@
             // cmdCSourcePath
             // 
             this.cmdCSourcePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdCSourcePath.Location = new System.Drawing.Point(814, 9);
+            this.cmdCSourcePath.Location = new System.Drawing.Point(828, 9);
             this.cmdCSourcePath.Name = "cmdCSourcePath";
             this.cmdCSourcePath.Size = new System.Drawing.Size(86, 29);
             this.cmdCSourcePath.TabIndex = 0;
@@ -4427,7 +4668,7 @@
             this.tabPageCHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageCHeader.Name = "tabPageCHeader";
             this.tabPageCHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCHeader.Size = new System.Drawing.Size(930, 717);
+            this.tabPageCHeader.Size = new System.Drawing.Size(944, 713);
             this.tabPageCHeader.TabIndex = 3;
             this.tabPageCHeader.Text = "C-Header";
             this.tabPageCHeader.UseVisualStyleBackColor = true;
@@ -4441,7 +4682,7 @@
             this.tslCodeGenUpdateCHeader});
             this.tsbCodeGenUpdateWarningCHeader.Location = new System.Drawing.Point(3, 72);
             this.tsbCodeGenUpdateWarningCHeader.Name = "tsbCodeGenUpdateWarningCHeader";
-            this.tsbCodeGenUpdateWarningCHeader.Size = new System.Drawing.Size(924, 25);
+            this.tsbCodeGenUpdateWarningCHeader.Size = new System.Drawing.Size(938, 25);
             this.tsbCodeGenUpdateWarningCHeader.TabIndex = 33;
             this.tsbCodeGenUpdateWarningCHeader.Text = "toolStrip1";
             // 
@@ -4477,7 +4718,7 @@
             visualStudio2005SyntaxEditorRenderer3.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCHeader.Renderer = visualStudio2005SyntaxEditorRenderer3;
             this.txtSyntaxEditorCHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(924, 642);
+            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(938, 638);
             this.txtSyntaxEditorCHeader.TabIndex = 5;
             // 
             // panelCHeaderPath
@@ -4489,7 +4730,7 @@
             this.panelCHeaderPath.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelCHeaderPath.Location = new System.Drawing.Point(3, 3);
             this.panelCHeaderPath.Name = "panelCHeaderPath";
-            this.panelCHeaderPath.Size = new System.Drawing.Size(924, 69);
+            this.panelCHeaderPath.Size = new System.Drawing.Size(938, 69);
             this.panelCHeaderPath.TabIndex = 8;
             // 
             // chkCHeaderIncludePath
@@ -4511,7 +4752,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCHeaderPath.Location = new System.Drawing.Point(106, 12);
             this.txtCHeaderPath.Name = "txtCHeaderPath";
-            this.txtCHeaderPath.Size = new System.Drawing.Size(708, 23);
+            this.txtCHeaderPath.Size = new System.Drawing.Size(722, 23);
             this.txtCHeaderPath.TabIndex = 2;
             this.txtCHeaderPath.TextChanged += new System.EventHandler(this.SourcePathTextBox_TextChanged);
             // 
@@ -4527,7 +4768,7 @@
             // cmdCHeaderPath
             // 
             this.cmdCHeaderPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdCHeaderPath.Location = new System.Drawing.Point(814, 9);
+            this.cmdCHeaderPath.Location = new System.Drawing.Point(828, 9);
             this.cmdCHeaderPath.Name = "cmdCHeaderPath";
             this.cmdCHeaderPath.Size = new System.Drawing.Size(86, 29);
             this.cmdCHeaderPath.TabIndex = 0;
@@ -4543,7 +4784,7 @@
             this.tabPageLibraryHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageLibraryHeader.Name = "tabPageLibraryHeader";
             this.tabPageLibraryHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLibraryHeader.Size = new System.Drawing.Size(930, 717);
+            this.tabPageLibraryHeader.Size = new System.Drawing.Size(944, 713);
             this.tabPageLibraryHeader.TabIndex = 6;
             this.tabPageLibraryHeader.Text = "Library Header";
             this.tabPageLibraryHeader.UseVisualStyleBackColor = true;
@@ -4557,7 +4798,7 @@
             this.tslCodeGenUpdateLibHeader});
             this.tsbCodeGenUpdateWarningLibHeader.Location = new System.Drawing.Point(3, 72);
             this.tsbCodeGenUpdateWarningLibHeader.Name = "tsbCodeGenUpdateWarningLibHeader";
-            this.tsbCodeGenUpdateWarningLibHeader.Size = new System.Drawing.Size(924, 25);
+            this.tsbCodeGenUpdateWarningLibHeader.Size = new System.Drawing.Size(938, 25);
             this.tsbCodeGenUpdateWarningLibHeader.TabIndex = 33;
             this.tsbCodeGenUpdateWarningLibHeader.Text = "toolStrip1";
             // 
@@ -4593,7 +4834,7 @@
             visualStudio2005SyntaxEditorRenderer4.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCLibHeader.Renderer = visualStudio2005SyntaxEditorRenderer4;
             this.txtSyntaxEditorCLibHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(924, 642);
+            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(938, 638);
             this.txtSyntaxEditorCLibHeader.TabIndex = 6;
             // 
             // panelCLibPath
@@ -4605,7 +4846,7 @@
             this.panelCLibPath.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelCLibPath.Location = new System.Drawing.Point(3, 3);
             this.panelCLibPath.Name = "panelCLibPath";
-            this.panelCLibPath.Size = new System.Drawing.Size(924, 69);
+            this.panelCLibPath.Size = new System.Drawing.Size(938, 69);
             this.panelCLibPath.TabIndex = 7;
             // 
             // chkCLibIncludePath
@@ -4626,7 +4867,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCLibPath.Location = new System.Drawing.Point(106, 12);
             this.txtCLibPath.Name = "txtCLibPath";
-            this.txtCLibPath.Size = new System.Drawing.Size(708, 23);
+            this.txtCLibPath.Size = new System.Drawing.Size(722, 23);
             this.txtCLibPath.TabIndex = 2;
             this.txtCLibPath.TextChanged += new System.EventHandler(this.SourcePathTextBox_TextChanged);
             // 
@@ -4642,7 +4883,7 @@
             // cmdCLibPath
             // 
             this.cmdCLibPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdCLibPath.Location = new System.Drawing.Point(814, 9);
+            this.cmdCLibPath.Location = new System.Drawing.Point(828, 9);
             this.cmdCLibPath.Name = "cmdCLibPath";
             this.cmdCLibPath.Size = new System.Drawing.Size(86, 29);
             this.cmdCLibPath.TabIndex = 0;
@@ -4656,7 +4897,7 @@
             this.tabPageInfo.Location = new System.Drawing.Point(4, 22);
             this.tabPageInfo.Name = "tabPageInfo";
             this.tabPageInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInfo.Size = new System.Drawing.Size(930, 717);
+            this.tabPageInfo.Size = new System.Drawing.Size(944, 713);
             this.tabPageInfo.TabIndex = 5;
             this.tabPageInfo.Text = "Info";
             this.tabPageInfo.UseVisualStyleBackColor = true;
@@ -4665,12 +4906,12 @@
             // 
             this.txtOutput.BackColor = System.Drawing.SystemColors.Info;
             this.txtOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtOutput.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtOutput.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtOutput.Location = new System.Drawing.Point(3, 3);
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtOutput.Size = new System.Drawing.Size(924, 711);
+            this.txtOutput.Size = new System.Drawing.Size(938, 707);
             this.txtOutput.TabIndex = 0;
             this.txtOutput.WordWrap = false;
             // 
@@ -4682,6 +4923,9 @@
             // 
             this.tsbMain.BackColor = System.Drawing.Color.Transparent;
             this.tsbMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonConfig,
+            this.toolStripSeparator30,
+            this.toolStripSeparator29,
             this.toolStripButtonOpen,
             this.toolStripButtonSave,
             this.toolStripSeparator18,
@@ -4700,23 +4944,45 @@
             this.toolStripSeparator26,
             this.toolStripSeparator27,
             this.toolStripSeparator24,
-            this.toolStripButtonBrowse,
             this.txtMPLABXProjectDir,
             this.toolStripLabelMPLABXDirectory,
             this.toolStripButtonMPLABXPathWarning});
             this.tsbMain.Location = new System.Drawing.Point(0, 24);
             this.tsbMain.Name = "tsbMain";
-            this.tsbMain.Size = new System.Drawing.Size(1408, 25);
+            this.tsbMain.Size = new System.Drawing.Size(1408, 38);
             this.tsbMain.TabIndex = 18;
             this.tsbMain.Text = "toolStrip1";
+            // 
+            // toolStripButtonConfig
+            // 
+            this.toolStripButtonConfig.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripButtonConfig.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonConfig.Image")));
+            this.toolStripButtonConfig.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonConfig.Name = "toolStripButtonConfig";
+            this.toolStripButtonConfig.Size = new System.Drawing.Size(87, 35);
+            this.toolStripButtonConfig.Text = "Configuration";
+            this.toolStripButtonConfig.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.toolStripButtonConfig.ToolTipText = "Open Project Configuration";
+            this.toolStripButtonConfig.Click += new System.EventHandler(this.toolStripButtonConfig_Click);
+            // 
+            // toolStripSeparator30
+            // 
+            this.toolStripSeparator30.Name = "toolStripSeparator30";
+            this.toolStripSeparator30.Size = new System.Drawing.Size(6, 38);
+            // 
+            // toolStripSeparator29
+            // 
+            this.toolStripSeparator29.Name = "toolStripSeparator29";
+            this.toolStripSeparator29.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripButtonOpen
             // 
             this.toolStripButtonOpen.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonOpen.Image")));
             this.toolStripButtonOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonOpen.Name = "toolStripButtonOpen";
-            this.toolStripButtonOpen.Size = new System.Drawing.Size(56, 22);
+            this.toolStripButtonOpen.Size = new System.Drawing.Size(40, 35);
             this.toolStripButtonOpen.Text = "Open";
+            this.toolStripButtonOpen.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonOpen.ToolTipText = "Open File...";
             this.toolStripButtonOpen.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -4725,28 +4991,30 @@
             this.toolStripButtonSave.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSave.Image")));
             this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonSave.Name = "toolStripButtonSave";
-            this.toolStripButtonSave.Size = new System.Drawing.Size(51, 22);
+            this.toolStripButtonSave.Size = new System.Drawing.Size(35, 35);
             this.toolStripButtonSave.Text = "Save";
+            this.toolStripButtonSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonSave.ToolTipText = "Save File...";
             this.toolStripButtonSave.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripSeparator18
             // 
             this.toolStripSeparator18.Name = "toolStripSeparator18";
-            this.toolStripSeparator18.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator18.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripSeparator19
             // 
             this.toolStripSeparator19.Name = "toolStripSeparator19";
-            this.toolStripSeparator19.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator19.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripButtonShowCoefficientTable
             // 
             this.toolStripButtonShowCoefficientTable.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowCoefficientTable.Image")));
             this.toolStripButtonShowCoefficientTable.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonShowCoefficientTable.Name = "toolStripButtonShowCoefficientTable";
-            this.toolStripButtonShowCoefficientTable.Size = new System.Drawing.Size(90, 22);
+            this.toolStripButtonShowCoefficientTable.Size = new System.Drawing.Size(74, 35);
             this.toolStripButtonShowCoefficientTable.Text = "Coefficients";
+            this.toolStripButtonShowCoefficientTable.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonShowCoefficientTable.ToolTipText = "Show/Hide Coefficient Table";
             this.toolStripButtonShowCoefficientTable.Click += new System.EventHandler(this.showCoeffficientDataTableToolStripMenuItem_Click);
             // 
@@ -4755,8 +5023,9 @@
             this.toolStripButtonShowTimingTable.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShowTimingTable.Image")));
             this.toolStripButtonShowTimingTable.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonShowTimingTable.Name = "toolStripButtonShowTimingTable";
-            this.toolStripButtonShowTimingTable.Size = new System.Drawing.Size(64, 22);
+            this.toolStripButtonShowTimingTable.Size = new System.Drawing.Size(48, 35);
             this.toolStripButtonShowTimingTable.Text = "Timing";
+            this.toolStripButtonShowTimingTable.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonShowTimingTable.ToolTipText = "Show/Hide Timing Table";
             this.toolStripButtonShowTimingTable.Click += new System.EventHandler(this.showSourceCodeTimingToolStripMenuItem_Click);
             // 
@@ -4765,28 +5034,31 @@
             this.toolStripButtonRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRefresh.Image")));
             this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
-            this.toolStripButtonRefresh.Size = new System.Drawing.Size(66, 22);
+            this.toolStripButtonRefresh.Size = new System.Drawing.Size(50, 35);
             this.toolStripButtonRefresh.Text = "Refresh";
+            this.toolStripButtonRefresh.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonRefresh.ToolTipText = "Refresh Diagrams";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // toolStripSeparator17
             // 
             this.toolStripSeparator17.Name = "toolStripSeparator17";
-            this.toolStripSeparator17.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator17.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripSeparator20
             // 
             this.toolStripSeparator20.Name = "toolStripSeparator20";
-            this.toolStripSeparator20.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator20.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripButtonUpdateCode
             // 
             this.toolStripButtonUpdateCode.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUpdateCode.Image")));
             this.toolStripButtonUpdateCode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUpdateCode.Name = "toolStripButtonUpdateCode";
-            this.toolStripButtonUpdateCode.Size = new System.Drawing.Size(65, 22);
+            this.toolStripButtonUpdateCode.Size = new System.Drawing.Size(49, 35);
             this.toolStripButtonUpdateCode.Text = "Update";
+            this.toolStripButtonUpdateCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolStripButtonUpdateCode.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonUpdateCode.ToolTipText = "Update Generated Source Code";
             this.toolStripButtonUpdateCode.Click += new System.EventHandler(this.exportHeaderFileToolStripMenuItem_Click);
             // 
@@ -4795,74 +5067,63 @@
             this.toolStripButtonUpdateExportCode.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUpdateExportCode.Image")));
             this.toolStripButtonUpdateExportCode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUpdateExportCode.Name = "toolStripButtonUpdateExportCode";
-            this.toolStripButtonUpdateExportCode.Size = new System.Drawing.Size(61, 22);
+            this.toolStripButtonUpdateExportCode.Size = new System.Drawing.Size(45, 35);
             this.toolStripButtonUpdateExportCode.Text = "Export";
+            this.toolStripButtonUpdateExportCode.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonUpdateExportCode.ToolTipText = "Generate and Export Source Code";
             this.toolStripButtonUpdateExportCode.Click += new System.EventHandler(this.ExportGeneratedFiles);
             // 
             // toolStripSeparator16
             // 
             this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripSeparator21
             // 
             this.toolStripSeparator21.Name = "toolStripSeparator21";
-            this.toolStripSeparator21.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator21.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripButtonHelp
             // 
-            this.toolStripButtonHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButtonHelp.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonHelp.Image")));
             this.toolStripButtonHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonHelp.Name = "toolStripButtonHelp";
-            this.toolStripButtonHelp.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonHelp.Size = new System.Drawing.Size(36, 35);
             this.toolStripButtonHelp.Text = "Help";
+            this.toolStripButtonHelp.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonHelp.ToolTipText = "Help";
             this.toolStripButtonHelp.Click += new System.EventHandler(this.userGuideToolStripMenuItem_Click);
             // 
             // toolStripSeparator25
             // 
             this.toolStripSeparator25.Name = "toolStripSeparator25";
-            this.toolStripSeparator25.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator25.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripSeparator26
             // 
             this.toolStripSeparator26.Name = "toolStripSeparator26";
-            this.toolStripSeparator26.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator26.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripSeparator27
             // 
             this.toolStripSeparator27.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripSeparator27.Name = "toolStripSeparator27";
-            this.toolStripSeparator27.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator27.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripSeparator24
             // 
             this.toolStripSeparator24.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripSeparator24.Name = "toolStripSeparator24";
-            this.toolStripSeparator24.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripButtonBrowse
-            // 
-            this.toolStripButtonBrowse.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButtonBrowse.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.toolStripButtonBrowse.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonBrowse.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonBrowse.Image")));
-            this.toolStripButtonBrowse.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonBrowse.Name = "toolStripButtonBrowse";
-            this.toolStripButtonBrowse.Size = new System.Drawing.Size(49, 22);
-            this.toolStripButtonBrowse.Text = "Bro&wse";
-            this.toolStripButtonBrowse.ToolTipText = "Browse for MPLAB X Project Directory";
-            this.toolStripButtonBrowse.Click += new System.EventHandler(this.toolStripButtonBrowse_Click);
+            this.toolStripSeparator24.Size = new System.Drawing.Size(6, 38);
             // 
             // txtMPLABXProjectDir
             // 
             this.txtMPLABXProjectDir.AcceptsTab = true;
             this.txtMPLABXProjectDir.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.txtMPLABXProjectDir.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtMPLABXProjectDir.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtMPLABXProjectDir.Enabled = false;
             this.txtMPLABXProjectDir.Name = "txtMPLABXProjectDir";
-            this.txtMPLABXProjectDir.Size = new System.Drawing.Size(500, 25);
+            this.txtMPLABXProjectDir.Size = new System.Drawing.Size(400, 38);
             this.txtMPLABXProjectDir.ToolTipText = "MPLAB X Project Directory";
             this.txtMPLABXProjectDir.TextChanged += new System.EventHandler(this.SourcePathTextBox_TextChanged);
             // 
@@ -4871,7 +5132,7 @@
             this.toolStripLabelMPLABXDirectory.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripLabelMPLABXDirectory.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripLabelMPLABXDirectory.Name = "toolStripLabelMPLABXDirectory";
-            this.toolStripLabelMPLABXDirectory.Size = new System.Drawing.Size(207, 22);
+            this.toolStripLabelMPLABXDirectory.Size = new System.Drawing.Size(207, 35);
             this.toolStripLabelMPLABXDirectory.Text = "MPLAB X® Project Reference Path: ";
             // 
             // toolStripButtonMPLABXPathWarning
@@ -4881,14 +5142,9 @@
             this.toolStripButtonMPLABXPathWarning.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonMPLABXPathWarning.Image")));
             this.toolStripButtonMPLABXPathWarning.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonMPLABXPathWarning.Name = "toolStripButtonMPLABXPathWarning";
-            this.toolStripButtonMPLABXPathWarning.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonMPLABXPathWarning.Size = new System.Drawing.Size(23, 35);
             this.toolStripButtonMPLABXPathWarning.Text = "MPLAB X Project Directory Warning";
             this.toolStripButtonMPLABXPathWarning.Visible = false;
-            // 
-            // timToolHelp
-            // 
-            this.timToolHelp.Interval = 4000;
-            this.timToolHelp.Tick += new System.EventHandler(this.timToolHelp_Tick);
             // 
             // frmMain
             // 
@@ -4897,8 +5153,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1408, 855);
+            this.Controls.Add(this.splitContainerContents);
             this.Controls.Add(this.tsbMain);
-            this.Controls.Add(this.tabMain);
             this.Controls.Add(this.stbMain);
             this.Controls.Add(this.mnuMain);
             this.DoubleBuffered = true;
@@ -4918,8 +5174,6 @@
             this.mnuMain.PerformLayout();
             this.stbMain.ResumeLayout(false);
             this.stbMain.PerformLayout();
-            this.tabMain.ResumeLayout(false);
-            this.tabComp.ResumeLayout(false);
             this.splitContainerContents.Panel1.ResumeLayout(false);
             this.splitContainerContents.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerContents)).EndInit();
@@ -4929,8 +5183,13 @@
             this.pnlCompensator.ResumeLayout(false);
             this.grpPolesZeros.ResumeLayout(false);
             this.grpPolesZeros.PerformLayout();
+            this.grpOutputDataNormalization.ResumeLayout(false);
+            this.grpOutputDataNormalization.PerformLayout();
             this.grpInputDataSpecifications.ResumeLayout(false);
             this.grpInputDataSpecifications.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).EndInit();
             this.grpControllerSelection.ResumeLayout(false);
             this.grpControllerSelection.PerformLayout();
             this.tabSourceCodeConfig.ResumeLayout(false);
@@ -4941,8 +5200,12 @@
             this.grpDataProviderSources.PerformLayout();
             this.grpCodeFeatureDataIO.ResumeLayout(false);
             this.grpCodeFeatureDataIO.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAlternateInputSource)).EndInit();
             this.grpCodeFeatureOptions.ResumeLayout(false);
             this.grpCodeFeatureOptions.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoErrNorm)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoCascadeFunctionCall)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoDSPConfig)).EndInit();
             this.grpContextSaving.ResumeLayout(false);
             this.grpContextSaving.PerformLayout();
             this.grpFunctionLabel.ResumeLayout(false);
@@ -4978,6 +5241,10 @@
             this.grpExecutionTime.ResumeLayout(false);
             this.pnlTimingSettings.ResumeLayout(false);
             this.pnlTimingSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoCycleStats)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoUserTriggerDelay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoADCLatency)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoISRLatency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoTimingPWMFrequency)).EndInit();
             this.tabPageBlockDiagram.ResumeLayout(false);
             this.grpFilterProcessing.ResumeLayout(false);
@@ -5047,8 +5314,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMaxPFErrWarningLabel;
         private System.Windows.Forms.ToolStripMenuItem toolStripMaxPFErrLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.TabControl tabMain;
-        private System.Windows.Forms.TabPage tabComp;
         private ActiproSoftware.SyntaxEditor.SyntaxEditor txtSyntaxEditorAssembly;
         private System.Windows.Forms.Timer timRefresh;
         private System.Windows.Forms.ToolStripMenuItem showCoeffficientDataTableToolStripMenuItem;
@@ -5056,7 +5321,6 @@
         private System.Windows.Forms.SplitContainer splitContainerContents;
         private System.Windows.Forms.TextBox txtControllerNamePrefix;
         private System.Windows.Forms.Label lblControllerNamePrefix;
-        private System.Windows.Forms.CheckBox chkUserControllerNameLabel;
         private System.Windows.Forms.TextBox txtControllerNameLabel;
         private System.Windows.Forms.Label lblFinalNamePrefix;
         private System.Windows.Forms.Label lblFinalNamePrefixOutput;
@@ -5096,7 +5360,7 @@
         private System.Windows.Forms.CheckBox chkAddDataProviderErrorInput;
         private System.Windows.Forms.CheckBox chkAddDataProviderControlOutput;
         private System.Windows.Forms.CheckBox chkAddDataProviderControlInput;
-        private System.Windows.Forms.ComboBox cmbLoopOptimizationLevel;
+        private System.Windows.Forms.ComboBox cmbLoopTriggerOption;
         private System.Windows.Forms.Label lblLoopOptimizationLevel;
         private System.Windows.Forms.TabPage tabPageTiming;
         private System.Windows.Forms.SplitContainer splitContainerTiming;
@@ -5114,7 +5378,6 @@
         private System.Windows.Forms.TextBox txtPWMDutyCycle;
         private System.Windows.Forms.Label lblPWMFrequency;
         private System.Windows.Forms.Label lblPWMFrequencyUnit;
-        private System.Windows.Forms.TextBox txtPWMFrequency;
         private System.Windows.Forms.Label lblADCLatency;
         private System.Windows.Forms.Label lblADCLatencyUnit;
         private System.Windows.Forms.TextBox txtADCLatency;
@@ -5199,21 +5462,6 @@
         private System.Windows.Forms.TabPage tabController;
         private System.Windows.Forms.TabPage tabSourceCodeConfig;
         private System.Windows.Forms.GroupBox grpFunctionLabel;
-        private System.Windows.Forms.ToolStrip toolStripTiming;
-        private System.Windows.Forms.ToolStripLabel tslAbsolutePositionLabel;
-        private System.Windows.Forms.ToolStripTextBox txtTimingAbsolutePosition;
-        private System.Windows.Forms.ToolStripLabel tslAbsolutePositionUnit;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripLabel tslRelativePosToTrigger;
-        private System.Windows.Forms.ToolStripTextBox txtTimingRelativePosToTrigger;
-        private System.Windows.Forms.ToolStripLabel tslRelativePosToTriggerUnit;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.ToolStripLabel tslRelativePosToFallingEdge;
-        private System.Windows.Forms.ToolStripTextBox txtTimingRelativePosToFallingEdge;
-        private System.Windows.Forms.ToolStripLabel tslRelativePosToFallingEdgeUnit;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-        private System.Windows.Forms.ToolStripLabel tslTriggerPlacement;
-        private System.Windows.Forms.ToolStripComboBox cmbTriggerPlacement;
         private System.Windows.Forms.ToolStrip toolStripBode;
         private System.Windows.Forms.ToolStripTextBox txtBodeCursorFrequency;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
@@ -5222,14 +5470,12 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
         private System.Windows.Forms.ToolStripLabel tslBodeFrequencyLabel;
         private System.Windows.Forms.ToolStripLabel tslBodeMagnitudeLabel;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
         private System.Windows.Forms.ToolStripLabel tslBodePhaseLabel;
         private System.Windows.Forms.ToolStripLabel tslBodeFrequencyUnit;
         private System.Windows.Forms.ToolStripLabel BodeMagnitudeUnit;
         private System.Windows.Forms.ToolStripLabel tslBodePhaseUnit;
         private System.Windows.Forms.ToolStripButton chkBodeCursor;
-        private System.Windows.Forms.ToolStripButton chkTimingCursor;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripLabel tslPhaseErrosionLabel;
         private System.Windows.Forms.ToolStripTextBox txtBodePhaseErrosion;
@@ -5280,7 +5526,6 @@
         private System.Windows.Forms.ToolStripMenuItem libraryCHeaderExportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem libraryCSourceFileExportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem genericControlLibraryHeaderExportToolStripMenuItem;
-        private System.Windows.Forms.CheckBox chkUserVariableNamePrefix;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
         private System.Windows.Forms.ToolStripMenuItem generateCodeBeforeExportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sDomainDataToolStripMenuItem;
@@ -5345,8 +5590,6 @@
         private System.Windows.Forms.Panel pnlCodeGeneratorOptions;
         private System.Windows.Forms.CheckBox chkAntiWindupSoftDesaturationFlag;
         private System.Windows.Forms.PictureBox picInfoTimingPWMFrequency;
-        private System.Windows.Forms.Label lblToolTipHelp;
-        private System.Windows.Forms.Timer timToolHelp;
         private System.Windows.Forms.CheckBox chkCSourceIncludePath;
         private System.Windows.Forms.CheckBox chkCHeaderIncludePath;
         private System.Windows.Forms.CheckBox chkCLibIncludePath;
@@ -5383,7 +5626,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
         private System.Windows.Forms.ToolStripLabel toolStripLabelMPLABXDirectory;
         private System.Windows.Forms.ToolStripTextBox txtMPLABXProjectDir;
-        private System.Windows.Forms.ToolStripButton toolStripButtonBrowse;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator26;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator27;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator24;
@@ -5401,6 +5643,50 @@
         private System.Windows.Forms.Panel pnlCPULoadRatio;
         private System.Windows.Forms.Label lblCPULoadRatio;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox grpOutputDataNormalization;
+        private System.Windows.Forms.Label lblOutputGain;
+        private System.Windows.Forms.CheckBox chkNormalizeOutputGain;
+        private System.Windows.Forms.Button cmdGetOutputGain;
+        private System.Windows.Forms.TextBox txtOutputGain;
+        private System.Windows.Forms.TextBox txtPWMFrequency;
+        private System.Windows.Forms.Button cmdGetInputGain;
+        private System.Windows.Forms.PictureBox picInfoAlternateInputSource;
+        private System.Windows.Forms.ToolStrip toolStripTiming;
+        private System.Windows.Forms.ToolStripButton chkTimingCursor;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+        private System.Windows.Forms.ToolStripLabel tslAbsolutePositionLabel;
+        private System.Windows.Forms.ToolStripTextBox txtTimingAbsolutePosition;
+        private System.Windows.Forms.ToolStripLabel tslAbsolutePositionUnit;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripLabel tslRelativePosToTrigger;
+        private System.Windows.Forms.ToolStripTextBox txtTimingRelativePosToTrigger;
+        private System.Windows.Forms.ToolStripLabel tslRelativePosToTriggerUnit;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripLabel tslRelativePosToFallingEdge;
+        private System.Windows.Forms.ToolStripTextBox txtTimingRelativePosToFallingEdge;
+        private System.Windows.Forms.ToolStripLabel tslRelativePosToFallingEdgeUnit;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripLabel tslTriggerPlacement;
+        private System.Windows.Forms.ToolStripComboBox cmbTriggerPlacement;
+        private System.Windows.Forms.PictureBox picInfoDSPConfig;
+        private System.Windows.Forms.PictureBox picInfoCascadeFunctionCall;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox chkEnableAdaptiveGainControl;
+        private System.Windows.Forms.PictureBox picInfoAGC;
+        private System.Windows.Forms.ToolStripStatusLabel stbMainProgressTime;
+        private System.Windows.Forms.ToolStripButton toolStripButtonConfig;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator30;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator29;
+        private System.Windows.Forms.CheckBox chkAGCAddGetModFactorFunCall;
+        private System.Windows.Forms.CheckBox chkAGCAddEnable;
+        private System.Windows.Forms.PictureBox picInfoErrNorm;
+        private System.Windows.Forms.Label lbltxtUserTriggerDelay;
+        private System.Windows.Forms.Label lbltxtUserTriggerDelayUnit;
+        private System.Windows.Forms.TextBox txtUserTriggerDelay;
+        private System.Windows.Forms.PictureBox picInfoUserTriggerDelay;
+        private System.Windows.Forms.PictureBox picInfoADCLatency;
+        private System.Windows.Forms.PictureBox picInfoISRLatency;
+        private System.Windows.Forms.PictureBox picInfoCycleStats;
     }
 }
 

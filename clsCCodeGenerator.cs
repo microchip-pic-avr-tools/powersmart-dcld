@@ -8,13 +8,19 @@ namespace dcld
     public class clsCCodeGenerator
     {
 
-        // Settings file handling
-        [DllImport("kernel32.dll", EntryPoint = "GetPrivateProfileString", CallingConvention = CallingConvention.StdCall)]
-        static extern int GetPrivateProfileString(string lpAppName, string lpKeyName, string lpDefault, StringBuilder lpReturnedString, int nSize, string lpFileName);
-        [DllImport("kernel32.dll", EntryPoint = "WritePrivateProfileString", CallingConvention = CallingConvention.StdCall)]
-        static extern int WritePrivateProfileString(string lpAppName, string lpKeyName, StringBuilder lpString, int nSize, string lpFileName);
-        [DllImport("kernel32.dll", EntryPoint = "WritePrivateProfileString", CallingConvention = CallingConvention.StdCall)]
-        static extern bool WritePrivateProfileString(string lpAppName, string lpKeyName, string lpString, string lpFileName);
+        private clsINIFileHandler _GenScript = new clsINIFileHandler();
+        internal clsINIFileHandler GeneratorScript
+        {
+            get { return (_GenScript); }
+            set { _GenScript = value; return; }
+        }
+
+        private clsINIFileHandler _dcldProjectFile = new clsINIFileHandler();
+        internal clsINIFileHandler dcldProjectFile
+        {
+            get { return (_dcldProjectFile); }
+            set { _dcldProjectFile = value; return; }
+        }
 
         private bool _AddCHeaderIncludePath = false;
         internal bool AddCHeaderIncludePath
@@ -65,13 +71,6 @@ namespace dcld
             set { _ScalingMethodName = value; return; }
         }
 
-        private string _TemplateFile = "";
-        internal string TemplateFile
-        {
-            get { return (_TemplateFile); }
-            set { _TemplateFile = value; return; }
-        }
-
         private string _PreFix = "";
         internal string PreFix
         {
@@ -109,17 +108,6 @@ namespace dcld
 
         /*  */
 
-        private string ReadConfigString(string fname, string section, string name, string defstr)
-        {
-            string sDum = "";
-            int rc;
-            StringBuilder sb = new StringBuilder(65536);
-            rc = GetPrivateProfileString(section, name, defstr, sb, 65535, fname);
-            if (rc > 0) { sDum = sb.ToString(); }
-            else { sDum = defstr; }
-
-            return (sDum);
-        }
 
         private string ReplaceConfigStringTokens(string text_line, clsCompensatorNPNZ compFilter)
         {
@@ -128,16 +116,20 @@ namespace dcld
 
             switch (compFilter.ScalingMethod)
             { 
-                case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT:
+                //case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT:
+                //    _str_coeff_datatype = "int32_t";
+                //    _str_hist_datatype = "fractional";
+                //    _str_struct_label = "cNPNZ3216b_t";
+                //    break;
+                default:
                     _str_coeff_datatype = "int32_t";
                     _str_hist_datatype = "fractional";
-                    _str_struct_label = "cNPNZ3216b_t";
-                    break;
-                default:
-                    _str_coeff_datatype = "fractional";
                     _str_struct_label = "cNPNZ16b_t";
-                    _str_hist_datatype = "fractional";
                     break;
+                    //_str_coeff_datatype = "fractional";
+                    //_str_struct_label = "cNPNZ16b_t";
+                    //_str_hist_datatype = "fractional";
+                    //break;
             }
 
             sDum = text_line.Trim();
@@ -154,8 +146,9 @@ namespace dcld
                 sDum = sDum.Replace("%SPACE%", " ");
                 sDum = sDum.Replace("%APP_PRODUCT_NAME%", Application.ProductName);
                 sDum = sDum.Replace("%APP_PRODUCT_VERSION%", Application.ProductVersion.ToString());
+                sDum = sDum.Replace("%APP_PRODUCT_VERSION_KEY%", dcldGlobals.APP_VERSION_KEY.ToString());
                 sDum = sDum.Replace("%CGS_VERSION%", _CGS_Version);
-                sDum = sDum.Replace("%CSG_VERSION_DATE%", _CGS_VersionDate);
+                sDum = sDum.Replace("%CGS_VERSION_DATE%", _CGS_VersionDate);
                 sDum = sDum.Replace("%COMP_TYPE_NAME%", _CompTypeName);
                 sDum = sDum.Replace("%SAMPLING_FREQUENCY%", compFilter.SamplingFrequency.ToString());
                 sDum = sDum.Replace("%Q_FORMAT%", compFilter.QFormat.ToString());
@@ -178,9 +171,9 @@ namespace dcld
                 sDum = sDum.Replace("%STRUCTURE_LABEL%", _str_struct_label);
                 sDum = sDum.Replace("%USER_NAME%", Environment.UserName);
                 sDum = sDum.Replace("%DATE_TODAY%", System.DateTime.Now.ToString());
-                sDum = sDum.Replace("%SUPPORT_URL%", ReadConfigString(_TemplateFile, "labels", "%SUPPORT_URL%", "").Trim());
-                sDum = sDum.Replace("%VENDOR_URL%", ReadConfigString(_TemplateFile, "labels", "%VENDOR_URL%", "").Trim());
-                sDum = sDum.Replace("%TOOL_HOME_URL%", ReadConfigString(_TemplateFile, "labels", "%TOOL_HOME_URL%", "").Trim());
+                sDum = sDum.Replace("%SUPPORT_URL%", _GenScript.ReadKey("labels", "%SUPPORT_URL%", "").Trim());
+                sDum = sDum.Replace("%VENDOR_URL%", _GenScript.ReadKey("labels", "%VENDOR_URL%", "").Trim());
+                sDum = sDum.Replace("%TOOL_HOME_URL%", _GenScript.ReadKey("labels", "%TOOL_HOME_URL%", "").Trim());
                 sDum = sDum + "\r\n";
             }
 
@@ -197,10 +190,10 @@ namespace dcld
             try
             {
                 block_name = "library_header";
-                text_elements = Convert.ToUInt32(ReadConfigString(_TemplateFile, block_name, "count", "0"));
+                text_elements = Convert.ToUInt32(_GenScript.ReadKey(block_name, "count", "0"));
                 for(i=0; i<text_elements; i++)
                 {
-                    text_line = ReadConfigString(_TemplateFile, block_name, ("line" + i.ToString()), "");
+                    text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                     text_line = ReplaceConfigStringTokens(text_line, compFilter);
                     strBuffer.Append(text_line);
                 }
@@ -225,10 +218,10 @@ namespace dcld
             try
             {
                 block_name = "comp_header";
-                text_elements = Convert.ToUInt32(ReadConfigString(_TemplateFile, block_name, "count", "0"));
+                text_elements = Convert.ToUInt32(_GenScript.ReadKey(block_name, "count", "0"));
                 for (i = 0; i < text_elements; i++)
                 {
-                    text_line = ReadConfigString(_TemplateFile, block_name, ("line" + i.ToString()), "");
+                    text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                     text_line = ReplaceConfigStringTokens(text_line, compFilter);
                     strBuffer.Append(text_line);
                 }
@@ -245,6 +238,7 @@ namespace dcld
 
         internal StringBuilder BuildSource(clsCompensatorNPNZ compFilter)
         {
+            string _coeff_fill = "";
             string text_line = "", block_name = "";
             UInt32 functions = 0;
             UInt32 text_elements = 0, i = 0, k = 0, m = 0;
@@ -252,17 +246,29 @@ namespace dcld
 
             try
             {
+                // The coefficient format is unified to a 32-bit wide number. In normal Q15 bit-shift scaling modes
+                // the high-word is set = zero while the low-word holds the Q15 coefficient.
+                // In Fast Floating Point, the high-word holds the Q15 coefficient while the low-word holds the scaler.
+                switch (compFilter.ScalingMethod)
+                {
+                    case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT:
+                        _coeff_fill = "";
+                        break;
+                    default:
+                        _coeff_fill = "0000";
+                        break;
+                }
 
                 block_name = "comp_source_head";
-                text_elements = Convert.ToUInt32(ReadConfigString(_TemplateFile, block_name, "count", "0"));
+                text_elements = Convert.ToUInt32(_GenScript.ReadKey(block_name, "count", "0"));
                 for (i = 0; i < text_elements; i++)
                 {
-                    text_line = ReadConfigString(_TemplateFile, block_name, ("line" + i.ToString()), "");
+                    text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                     if (text_line.Contains("%LOOP_POLE_LOCATION_LIST%"))
                     {
                         for (k = 0; k < compFilter.FilterOrder; k++)
                         {
-                            text_line = ReadConfigString(_TemplateFile, block_name, ("line" + i.ToString()), ""); 
+                            text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), ""); 
                             text_line = ReplaceConfigStringTokens(text_line, compFilter);
                             text_line = text_line.Replace("%INDEX%", k.ToString());
                             text_line = text_line.Replace("%LOOP_POLE_LOCATION_LIST%", compFilter.Pole[k].Frequency.ToString());
@@ -273,7 +279,7 @@ namespace dcld
                     {
                         for (k = 1; k < compFilter.FilterOrder; k++)
                         {
-                            text_line = ReadConfigString(_TemplateFile, block_name, ("line" + i.ToString()), "");
+                            text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                             text_line = ReplaceConfigStringTokens(text_line, compFilter);
                             text_line = text_line.Replace("%INDEX%", k.ToString());
                             text_line = text_line.Replace("%LOOP_ZERO_LOCATION_LIST%", compFilter.Zero[k].Frequency.ToString());
@@ -284,36 +290,36 @@ namespace dcld
                     {
                         for (k = 1; k < compFilter.FilterOrder; k++)
                         {
-                            text_line = ReadConfigString(_TemplateFile, block_name, ("line" + i.ToString()), "");
+                            text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                             text_line = ReplaceConfigStringTokens(text_line, compFilter);
                             text_line = text_line.Replace("%INDEX%", k.ToString());
-                            text_line = text_line.Replace("%LOOP_A_COEFFICIENTS_LIST%", "0x" + compFilter.CoeffA[k].Hex.ToString() + ",");
+                            text_line = text_line.Replace("%LOOP_A_COEFFICIENTS_LIST%", "0x" + _coeff_fill + compFilter.CoeffA[k].Hex.ToString() + ",");
                             strBuffer.Append(text_line);
                         }
 
                         // Last coefficient is added to array without tailing comma
-                        text_line = ReadConfigString(_TemplateFile, block_name, ("line" + i.ToString()), "");
+                        text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                         text_line = ReplaceConfigStringTokens(text_line, compFilter);
                         text_line = text_line.Replace("%INDEX%", k.ToString());
-                        text_line = text_line.Replace("%LOOP_A_COEFFICIENTS_LIST%", "0x" + compFilter.CoeffA[k].Hex.ToString() + " ");
+                        text_line = text_line.Replace("%LOOP_A_COEFFICIENTS_LIST%", "0x" + _coeff_fill + compFilter.CoeffA[k].Hex.ToString() + " ");
                         strBuffer.Append(text_line);
                     }
                     else if (text_line.Contains("%LOOP_B_COEFFICIENTS_LIST%"))
                     {
                         for (k = 0; k < compFilter.FilterOrder; k++)
                         {
-                            text_line = ReadConfigString(_TemplateFile, block_name, ("line" + i.ToString()), "");
+                            text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                             text_line = ReplaceConfigStringTokens(text_line, compFilter);
                             text_line = text_line.Replace("%INDEX%", k.ToString());
-                            text_line = text_line.Replace("%LOOP_B_COEFFICIENTS_LIST%", "0x" + compFilter.CoeffB[k].Hex.ToString() + ",");
+                            text_line = text_line.Replace("%LOOP_B_COEFFICIENTS_LIST%", "0x" + _coeff_fill + compFilter.CoeffB[k].Hex.ToString() + ",");
                             strBuffer.Append(text_line);
                         }
 
                         // Last coefficient is added to array without tailing comma
-                        text_line = ReadConfigString(_TemplateFile, block_name, ("line" + i.ToString()), "");
+                        text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                         text_line = ReplaceConfigStringTokens(text_line, compFilter);
                         text_line = text_line.Replace("%INDEX%", k.ToString());
-                        text_line = text_line.Replace("%LOOP_B_COEFFICIENTS_LIST%", "0x" + compFilter.CoeffB[k].Hex.ToString() + " ");
+                        text_line = text_line.Replace("%LOOP_B_COEFFICIENTS_LIST%", "0x" + _coeff_fill + compFilter.CoeffB[k].Hex.ToString() + " ");
                         strBuffer.Append(text_line);
                     
                     }
@@ -325,17 +331,17 @@ namespace dcld
                 }
 
 
-                functions = Convert.ToUInt32(ReadConfigString(_TemplateFile, "comp_source_functions", "count", "0"));
+                functions = Convert.ToUInt32(_GenScript.ReadKey("comp_source_functions", "count", "0"));
 
                 for (m = 0; m < functions; m++)
                 {
 
-                    block_name = ReadConfigString(_TemplateFile, "comp_source_functions", "function" + m.ToString(), "0");
-                    text_elements = Convert.ToUInt32(ReadConfigString(_TemplateFile, block_name, "count", "0"));
+                    block_name = _GenScript.ReadKey("comp_source_functions", "function" + m.ToString(), "0");
+                    text_elements = Convert.ToUInt32(_GenScript.ReadKey(block_name, "count", "0"));
 
                     for (i = 0; i < text_elements; i++)
                     {
-                        text_line = ReadConfigString(_TemplateFile, block_name, ("line" + i.ToString()), "");
+                        text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                         text_line = ReplaceConfigStringTokens(text_line, compFilter);
                         strBuffer.Append(text_line);
                     }
@@ -345,7 +351,7 @@ namespace dcld
             catch
             {
                 strBuffer.Append("\r\n\r\n#error [Invalid values detected during body generation]\r\n");
-                strBuffer.Append("       => error triggered by " + _TemplateFile + ", " + block_name + ", line " + i.ToString() + "\r\n\r\n");
+                strBuffer.Append("       => error triggered by " + _GenScript.FileTitle + ", " + block_name + ", line " + i.ToString() + "\r\n\r\n");
             }
 
             return (strBuffer);

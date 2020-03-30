@@ -15,9 +15,11 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Numerics;
 
+using System.Diagnostics;
 
 namespace dcld
 {
+
     [System.Runtime.InteropServices.GuidAttribute("3952432A-6B37-4A47-8A68-A42D879C5A0D")]
     public partial class frmMain : Form
     {
@@ -27,6 +29,12 @@ namespace dcld
         const int MAX_FILTER_ORDER = 6;
         clsPoleZeroObject[] UserPoleSettings = new clsPoleZeroObject[MAX_FILTER_ORDER];
         clsPoleZeroObject[] UserZeroSettings = new clsPoleZeroObject[MAX_FILTER_ORDER];
+
+        clsFeedbackDeclaration feedback = new clsFeedbackDeclaration();
+        clsOutputDeclaration ctrl_output = new clsOutputDeclaration();
+
+        clsMPLABXHandler MPLABXProject = new clsMPLABXHandler();
+        clsFilePathHandler ConvertFilePath = new clsFilePathHandler();
 
         // Value table formating
         Color WarningBackground = Color.FromArgb(255, 255, 120);
@@ -39,13 +47,7 @@ namespace dcld
         string QFormatStr = "{0:0.000000000000000}";
 
 
-        // Settings file handling
-        [DllImport("kernel32.dll", EntryPoint = "GetPrivateProfileString", CallingConvention = CallingConvention.StdCall)]
-            static extern int GetPrivateProfileString(string lpAppName, string lpKeyName, string lpDefault, StringBuilder lpReturnedString, int nSize, string lpFileName);
-        [DllImport("kernel32.dll", EntryPoint = "WritePrivateProfileString", CallingConvention = CallingConvention.StdCall)]
-            static extern int WritePrivateProfileString(string lpAppName, string lpKeyName, StringBuilder lpString, int nSize, string lpFileName);
-        [DllImport("kernel32.dll", EntryPoint = "WritePrivateProfileString", CallingConvention = CallingConvention.StdCall)]
-            static extern bool WritePrivateProfileString(string lpAppName, string lpKeyName, string lpString, string lpFileName);
+        // Win API Function Calls
         [DllImport("Kernel32.dll")]
             static extern bool Beep(Int32 dwFreq, Int32 dwDuration);
 
@@ -55,6 +57,8 @@ namespace dcld
         int preLagElements = -1, preScalingMode = -1, preQFormat = -1;
         string DefaultFilePrefix = "";
         string DefaultVariablePrefix = "";
+        string _targetDevice = ""; // dsPIC-Product Number as string, e.g. dsPIC33CK256MP506
+        string _targetDeviceType = ""; // Reduced type indication, e.g. dsPIC33C
 
         // GUI status flags
         bool ExternalFileOpenEvent = false;
@@ -66,28 +70,30 @@ namespace dcld
         bool ProjectFileLoadActive = false;
         bool ProjectFileChanged = false;
         bool ShowSDomainTF = true;
-        bool MPLABXProjectDirUpdate = false;
+
+        bool showMPLABXconfigWindowAtStartup = true;
 
         // Project files
         string DefaultProjectFileNameExtension = ".dcld";
         string DefaultProjectFileName = "MyCtrlLoop";
-        
-        string CurrentProjectFileName = "";
         string NewProjectFilenameDummy = "";
         string ExternalFileOpenPath = "";
-        string MPLABXProjectDirectory = "";
         string UserGuideFileName = "";
 
         string rootPath = Application.StartupPath;
         string resourcePath = Application.StartupPath;
 
         const string DEFAULT_INI_FILE = "dcld.ini";
-        const string ASS_GEN_FILE = "assembly.gen";
+        const string ASM_GEN_FILE = "assembly.gen";
         const string C_GEN_FILE = "c-code.gen";
 
-        string INI_FILE = DEFAULT_INI_FILE;
-        string AssemblyGeneratorFile = ASS_GEN_FILE;
-        string CCodeGeneratorFile = C_GEN_FILE;
+        string _dsp = System.IO.Path.DirectorySeparatorChar.ToString();
+        string _adsp = System.IO.Path.AltDirectorySeparatorChar.ToString();
+
+        clsINIFileHandler SettingsFile = new clsINIFileHandler();
+        clsINIFileHandler ProjectFile = new clsINIFileHandler();
+        clsINIFileHandler AsmGeneratorScript = new clsINIFileHandler();
+        clsINIFileHandler CCodeGeneratorScript = new clsINIFileHandler();
 
         // GUI controls groups
         TextBox[] txtPole = null, txtZero = null;
@@ -126,7 +132,6 @@ namespace dcld
         int GroupFolding_grpDataProviderSourcesHeight = 100;
         int GroupFolding_grpAntiWindupHeight = 100;
 
-
         public frmMain(string[] args)
         {
             int i = 0;
@@ -140,7 +145,7 @@ namespace dcld
             if (args.Length != 0)
             {
 
-                dum_sep[0] = ("\\");
+                dum_sep[0] = (_dsp);
                 str_path = args[0].ToString().Trim();
                 str_arr = str_path.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
 
@@ -162,15 +167,295 @@ namespace dcld
             return;
         }
 
+        private void DebugInfoPrintLine(string str_debug)
+        {
+            if ((txtOutput.TextLength + str_debug.Length) > txtOutput.MaxLength) 
+                txtOutput.Clear();
+            txtOutput.AppendText(str_debug + "\r\n");
+            txtOutput.SelectionStart = txtOutput.TextLength;
+            txtOutput.ScrollToCaret();
+        }
+
+        private bool frmMain_SetAppEnvironment()
+        {
+            string _dps = ""; // Default Path Separator
+            bool f_res = false; // function return value
+
+            try 
+            {
+
+                // Determine App Product Version Key
+                string str_dum = "";
+                string[] dum_sep = new string[1];
+                dum_sep[0] = ".";
+                string[] str_arr = Application.ProductVersion.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries); ;
+
+                str_dum = Convert.ToInt32(str_arr[0]).ToString("#0") +
+                          Convert.ToInt32(str_arr[1]).ToString("#0") +
+                          Convert.ToInt32(str_arr[2]).ToString("#00");
+                dcldGlobals.APP_VERSION_KEY = Convert.ToInt32(str_dum);
+                
+                // Initialize debug output
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                DebugInfoPrintLine(
+                    "================================================================\r\n" + 
+                    ">Application start up..." + "\r\n" +
+                    "\r\n" +
+                    "Product Name:                    " + Application.ProductName.ToString() + "\r\n" +
+                    "Application Version:             " + Application.ProductVersion.ToString() + " (" + dcldGlobals.APP_VERSION_KEY.ToString() + ")\r\n" +
+                    "Company Name:                    " + Application.CompanyName.ToString() + "\r\n" +
+                    "\r\n" +
+                    "Operating System:\r\n" +
+                    "    - OS Version:                " + Environment.OSVersion.ToString() + "\r\n" +
+                    "    - 64-bit OS Type:            " + Environment.Is64BitOperatingSystem.ToString() + "\r\n" +
+                    "    - 64-bit Process:            " + Environment.Is64BitProcess.ToString() + "\r\n" +
+                    "    - .net Version:              " + Environment.Version.Major.ToString() + "." + Environment.Version.Minor.ToString() + " (" + Environment.Version.ToString() + ")" + "\r\n" +
+                    "\r\nHardware Information:\r\n" +
+                    "    - Machine Name:              " + Environment.MachineName.ToString() + "\r\n" +
+                    "    - No of CPUs:                " + Environment.ProcessorCount.ToString() + "\r\n" +
+                    "    - Mapped Memory:             " + Environment.WorkingSet.ToString() + "\r\n" +
+                    "    - System Page Size:          " + Environment.SystemPageSize.ToString() + "\r\n" +
+                    "\r\nSoftware Environment Information:\r\n" +
+                    "    - User Domain Name:          " + Environment.UserDomainName.ToString() + "\r\n" +
+                    "    - User Name:                 " + Environment.UserName.ToString() + "\r\n" +
+                    "    - Current Managed Thread-ID: " + Environment.CurrentManagedThreadId.ToString() + "\r\n" +
+                    "    - System Directory:          " + Environment.SystemDirectory.ToString() + "\r\n" +
+                    "    - My Documents Directory:    " + Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\r\n" +
+                    "    - User Interactive:          " + Environment.UserInteractive.ToString() + "\r\n" +
+                    "    - Version:                   " + Environment.Version.ToString() + "\r\n" +
+                    "\r\nRegional Settings:\r\n" +
+                    "    - Culture Info Name:         " + CultureInfo.CurrentCulture.NativeName + "\r\n" +
+                    "    - Keyboard Language:         " + Application.CurrentInputLanguage.Culture.DisplayName + "\r\n" +
+                    "    - Digit Substitution:        " + CultureInfo.CurrentCulture.NumberFormat.DigitSubstitution + "\r\n" +
+                    "    - NaN Symbol:                " + CultureInfo.CurrentCulture.NumberFormat.NaNSymbol + "\r\n" +
+                    "    - Negative Sign:             " + CultureInfo.CurrentCulture.NumberFormat.NegativeSign + "\r\n" +
+                    "    - Positive Sign:             " + CultureInfo.CurrentCulture.NumberFormat.PositiveSign + "\r\n" +
+                    "    - Decimal Separator:         " + CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator + "\r\n" +
+                    "    - Group Separator:           " + CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator + "\r\n" +
+                    "    - Group Sizes:               " + CultureInfo.CurrentCulture.NumberFormat.NumberGroupSizes + "\r\n" +
+                    "    - Floating Point Number:     " + Convert.ToDouble((float)1.234567).ToString("G") + "\r\n" +
+                    "    - Decimal Point Match:       " +
+                    (Convert.ToDouble((float)1.234567).ToString("G", CultureInfo.InvariantCulture) == Convert.ToDouble((float)1.234567).ToString("G", CultureInfo.CurrentCulture)).ToString() + "\r\n" +
+                    "    - Large Integer Number:      " + Convert.ToInt64(1234567).ToString("G") + "\r\n" +
+                    "\r\nApplication Environment Information:\r\n" +
+                    "    - Application Startup Path:  " + Application.StartupPath + "\r\n" +
+                    "    - Command Line:              " + Environment.CommandLine.ToString() + "\r\n" +
+                    "    - Current Directory:         " + Environment.CurrentDirectory.ToString() + "\r\n" +
+                    "    - Common AppData Path:       " + Application.CommonAppDataPath + "\r\n" +
+                    "    - User AppData Path:         " + Application.UserAppDataPath + "\r\n" + 
+                    "    - Executable Location:       " + Application.ExecutablePath + "\r\n" +
+                    "    - Start-up Path:             " + Application.StartupPath + "\r\n" +
+                    "================================================================\r\n" +
+                    "\r\n"
+                    );
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+                DebugInfoPrintLine(">Loading Application Components...");
+
+                // Set ROOT DIRECTORY
+                _dps = System.IO.Path.DirectorySeparatorChar.ToString();
+                rootPath = Application.StartupPath;
+                if (rootPath.Substring(rootPath.Length - _dps.Length, _dps.Length) != _dps) { rootPath = rootPath + _dps; }
+                if(System.IO.Directory.Exists(rootPath)) 
+                {
+                    DebugInfoPrintLine(">Set Root Path: " + rootPath);  
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Set Root Path: unable to access root directory " + rootPath + "\r\n" +
+                        ">    -> Abort setting application environment component dependnecies"
+                        );
+                    return(false);
+                }
+
+                // Set RESOURCE DIRECTORY
+                if (System.IO.Directory.Exists(rootPath + "Resources")) 
+                { 
+                    resourcePath = rootPath + "Resources" + _dps; 
+                    DebugInfoPrintLine(">Set Resource Path: " + resourcePath);  
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Set Resource Path: unable to access resource directory " + resourcePath + "\r\n" +
+                        ">    -> Abort setting application environment component dependnecies"
+                        );
+                    return(false);
+                }
+
+                // Set APPLICATION SETTINGS FILE
+                f_res = (System.IO.File.Exists(rootPath + DEFAULT_INI_FILE) && SettingsFile.SetFilename(rootPath + DEFAULT_INI_FILE));
+                if (f_res)
+                {
+                    DebugInfoPrintLine(">Load Application Settings File: " + SettingsFile.FileName); 
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Load Application Settings File: unable to access settings file " + rootPath + DEFAULT_INI_FILE + "\r\n" +
+                        ">    -> Abort setting application environment component dependnecies"
+                        );
+                    return(false);
+                }
+
+                // Set ASSEMBLY GENERATOR SCRIPT FILE
+                f_res = (System.IO.File.Exists(resourcePath + ASM_GEN_FILE) && AsmGeneratorScript.SetFilename(resourcePath + ASM_GEN_FILE));
+                if (f_res)
+                {
+                    DebugInfoPrintLine(
+                        ">Load Assembly Generator Script: " + AsmGeneratorScript.FileName + "\r\n" +
+                        ">    - AGS Version: " + AsmGeneratorScript.ReadKey("generic", "Version", "N/A") + "\r\n" +
+                        ">    - AGS Date:    " + AsmGeneratorScript.ReadKey("generic", "Date", "N/A") 
+                        );
+
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Load Assembly Generator Script: unable to access assembly generator script " + resourcePath + ASM_GEN_FILE + "\r\n" +
+                        ">    -> Abort setting application environment component dependnecies"
+                        );
+                    return(false);
+                }
+
+                // Set C-CODE GENERATOR SCRIPT FILE
+                f_res = (System.IO.File.Exists(resourcePath + C_GEN_FILE) && CCodeGeneratorScript.SetFilename(resourcePath + C_GEN_FILE));
+                if (f_res)
+                {
+                    DebugInfoPrintLine(
+                        ">Load ANSI C Generator Script: " + CCodeGeneratorScript.FileName + "\r\n" +
+                        ">    - CGS Version: " + CCodeGeneratorScript.ReadKey("generic", "Version", "N/A") + "\r\n" +
+                        ">    - CGS Date:    " + CCodeGeneratorScript.ReadKey("generic", "Date", "N/A") 
+                        );
+
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Load ANSI C Generator Script: unable to access ANSI C generator script " + resourcePath + C_GEN_FILE + "\r\n" +
+                        ">    -> Abort setting application environment component dependnecies"
+                        );
+                    return(false);
+                }
+
+                // Set ASSEMBLY PARSER FILE
+                f_res = System.IO.File.Exists(resourcePath + "ActiproSoftware.dsPICAssembly.xml");
+                if (f_res)
+                {
+                    DebugInfoPrintLine(">Load Assembly Parser Script: " + resourcePath + "ActiproSoftware.dsPICAssembly.xml");
+                    this.txtSyntaxEditorAssembly.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICAssembly.xml", 0);
+                    this.txtSyntaxEditorAssembly.LineNumberMarginVisible = true;
+                    this.txtSyntaxEditorAssembly.HideSelection = false;
+                    DebugInfoPrintLine(">    -> loaded successfully");
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Load Assembly Parser Script: unable to find/access ASM parser script " + resourcePath + "ActiproSoftware.dsPICAssembly.xml" + "\r\n" +
+                        ">    -> Assembly code highlighting might not be available."
+                        );
+                }
+
+                // Set XC16 C-CODE PARSER FILE
+                f_res = System.IO.File.Exists(resourcePath + "ActiproSoftware.dsPICXC16.xml");
+                if (f_res)
+                {
+                    DebugInfoPrintLine(">Load XC16 C-Code Parser Script: " + resourcePath + "ActiproSoftware.dsPICXC16.xml");
+                    
+                    this.txtSyntaxEditorCSource.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
+                    this.txtSyntaxEditorCSource.LineNumberMarginVisible = true;
+                    this.txtSyntaxEditorCSource.HideSelection = false;
+                    DebugInfoPrintLine(">    -> C-Source Editor: loaded successfully");
+
+                    this.txtSyntaxEditorCHeader.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
+                    this.txtSyntaxEditorCHeader.LineNumberMarginVisible = true;
+                    this.txtSyntaxEditorCHeader.HideSelection = false;
+                    DebugInfoPrintLine(">    -> C-Header Editor: loaded successfully");
+
+                    this.txtSyntaxEditorCLibHeader.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
+                    this.txtSyntaxEditorCLibHeader.LineNumberMarginVisible = true;
+                    this.txtSyntaxEditorCLibHeader.HideSelection = false;
+                    DebugInfoPrintLine(">    -> Library C-Header Editor: loaded successfully");
+
+                }
+                else
+                {
+                    DebugInfoPrintLine(
+                        ">Load XC16 C-Code Parser Script: unable to find/access XC16 C-Code parser script " + resourcePath + "ActiproSoftware.dsPICXC16.xml" + "\r\n" +
+                        ">    -> Assembly code highlighting might not be available."
+                        );
+                }
+
+                
+                // Create Default DCLD Project File 
+                f_res = ProjectFile.Clear();
+                NewProjectFilenameDummy = DefaultProjectFileName + DefaultProjectFileNameExtension;
+
+                // Set USER GUIDE/HELP FILE
+                UserGuideFileName = SettingsFile.ReadKey("common", "UserGuideFileName", "");
+                f_res = (System.IO.File.Exists(resourcePath + UserGuideFileName) && (UserGuideFileName.Trim().Length > 4));
+                if (!f_res) f_res = (System.IO.File.Exists(rootPath + UserGuideFileName) && (UserGuideFileName.Trim().Length > 4));
+
+                if (f_res)
+                {
+                    UserGuideFileName = resourcePath + UserGuideFileName;
+                    DebugInfoPrintLine(">Load User Guide: " + UserGuideFileName + "\r\n" +
+                                   ">    -> loaded successfully");
+                }
+                else
+                {
+                    DebugInfoPrintLine(">Load User Guide: " + resourcePath + UserGuideFileName + "\r\n" +
+                                   ">    -> unable to find/access user guide. File might not be availble.");
+                }
+
+                // Set return value to indicate success
+                f_res = true;
+
+            }   
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    this, 
+                    "Critical error (0x" + ex.HResult.ToString("X") + ") occured while initializing app body generator." + "\r\n" +
+                    "Error Message: " + ex.Message + "\r\n" + 
+                    "Check output window for details.", 
+                    "Critical Error",
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error
+                    );
+
+                // Set return value to indicate failure
+                f_res = false;
+            }
+
+            // Return success/failure
+            return(f_res);
+        }
+
         private void frmMain_Load(object sender, EventArgs e)
         {
-            string str_dum = "", str_file = "";
             double[,] GainSeries = new double[2, 100];
             Control[] AllControls;
             int i = 0;
 
+            // Prepare frmMain...
             this.Hide();
             Application.DoEvents();
+
+            // Load application envirnment components
+            if (!frmMain_SetAppEnvironment())
+            {
+                MessageBox.Show(
+                    this,
+                    Application.ProductName + " was not able to load all environment dependencies." + "\r\n" +
+                    "Check the messages in the output window for details.",
+                    "Critical Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                    );
+            }
 
             // Create array of text boxes for pole & zero editing
             txtPole = new TextBox[MAX_FILTER_ORDER];
@@ -219,100 +504,47 @@ namespace dcld
             }
 
             // Preventing number conflicts with default settings 
-            txtInputGain.Text = NumberTextBox_ToDouble(txtInputGain).ToString("F", CultureInfo.CurrentCulture);
+            txtInputGain.Text = NumberTextBox_ToDouble(txtInputGain).ToString("#0.000", CultureInfo.CurrentCulture);
+            txtOutputGain.Text = NumberTextBox_ToDouble(txtOutputGain).ToString("#0.000", CultureInfo.CurrentCulture);
             txtInputDataResolution.Text = NumberTextBox_ToDouble(txtInputDataResolution).ToString();
             txtSamplingFrequency.Text = NumberTextBox_ToDouble(txtSamplingFrequency).ToString();
-
-            // Load default settings
-            rootPath = "./";
-            if (System.IO.Directory.Exists("./Resources")) { resourcePath = "./Resources/"; }
-            else {
-                rootPath = Application.StartupPath;
-                if (rootPath.Substring(rootPath.Length - 1, 1) != "\\") { rootPath = rootPath + "\\"; }
-                if (System.IO.Directory.Exists(rootPath + "Resources")) { resourcePath = rootPath + "Resources\\"; }
-                else { resourcePath = rootPath; }
-            }
-
-            NewProjectFilenameDummy = DefaultProjectFileName + DefaultProjectFileNameExtension;
-            AssemblyGeneratorFile = resourcePath + ASS_GEN_FILE;
-            CCodeGeneratorFile = resourcePath + C_GEN_FILE;
-            
-            INI_FILE = "./" + DEFAULT_INI_FILE;
-            if (! System.IO.File.Exists(INI_FILE)) 
-            { 
-                if (System.IO.File.Exists(rootPath + DEFAULT_INI_FILE)) { 
-                    INI_FILE = rootPath + DEFAULT_INI_FILE;
-                }
-            }
-
-            // Capture User Guide filename
-            str_dum = Application.StartupPath;
-            if (str_dum.Substring(str_dum.Length - 1, 1) != "\\") { str_dum = str_dum + "\\"; }
-            UserGuideFileName = ReadConfigString(INI_FILE, "common", "UserGuideFileName", "");
-            str_file = str_dum + UserGuideFileName;
-            if (System.IO.File.Exists(str_file))
-            { UserGuideFileName = str_file; }
-            else {
-                str_dum = str_dum + "\\Resources\\";
-                str_file = str_dum + UserGuideFileName;
-                if (System.IO.File.Exists(str_file))
-                { UserGuideFileName = str_file; }
-                else
-                {
-                    str_dum = str_dum + "\\user_guide\\";
-                    str_file = str_dum + UserGuideFileName;
-                    if (System.IO.File.Exists(str_file))
-                    { UserGuideFileName = str_file; }
-                }
-            }
 
             // Set startup-status
             lvCoefficients.HideSelection = false;
             lvCoefficients.MultiSelect = false;
 
-
-            // Save last user settings
-            this.WindowState = (FormWindowState)Convert.ToInt32(ReadConfigString(INI_FILE, "main_window", "winstate", "0"));
-            if (WindowState == System.Windows.Forms.FormWindowState.Normal)
-            {
-                this.Width = Convert.ToInt32(ReadConfigString(INI_FILE, "main_window", "width", "1000"));
-                this.Height = Convert.ToInt32(ReadConfigString(INI_FILE, "main_window", "height", "1000"));
-            }
-            
-            // capture foldable object sizes
+            // capture foldable object sizes of code generator option catalog
             GroupFolding_grpContextSavingHeight = grpContextSaving.Height;
             GroupFolding_grpCodeFeatureOptionsHeight = grpCodeFeatureOptions.Height;
             GroupFolding_grpAntiWindupHeight = grpAntiWindup.Height;
 
             // reload last Bode chart settings
-            DefaultXMin = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "x_min", DefaultXMin.ToString()));
-            DefaultXMax = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "x_max", DefaultXMax.ToString()));
-            DefaultY1Min = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "y1_min", DefaultY1Min.ToString()));
-            DefaultY1Max = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "y1_max", DefaultY1Max.ToString()));
-            DefaultY2Min = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "y2_min", DefaultY2Min.ToString()));
-            DefaultY2Max = Convert.ToDouble(ReadConfigString(INI_FILE, "bode_plot", "y2_max", DefaultY2Max.ToString()));
+            DefaultXMin = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "x_min", DefaultXMin.ToString()));
+            DefaultXMax = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "x_max", DefaultXMax.ToString()));
+            DefaultY1Min = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "y1_min", DefaultY1Min.ToString()));
+            DefaultY1Max = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "y1_max", DefaultY1Max.ToString()));
+            DefaultY2Min = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "y2_min", DefaultY2Min.ToString()));
+            DefaultY2Max = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "y2_max", DefaultY2Max.ToString()));
 
             // reload data table status
-            splitContainerCoefficients.SplitterDistance = (splitContainerCoefficients.Panel1.Height + splitContainerCoefficients.Panel2.Height) - Convert.ToInt32(ReadConfigString(INI_FILE, "data_table", "splitter_pos", "500"));
-            showCoeffficientDataTableToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(INI_FILE, "data_table", "visible", "1")));
+            showCoeffficientDataTableToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToInt32(SettingsFile.ReadKey("data_table", "visible", "1")));
             showCoeffficientDataTableToolStripMenuItem_CheckedChanged(sender, e);
 
             // reload body generation and timing analysis window status
-            splitContainerContents.SplitterDistance = Convert.ToInt32(ReadConfigString(INI_FILE, "code_generator", "settings_splitter_pos", "375"));
+            // (none)
 
             // reload compensator settings status
-            splitContainerTiming.SplitterDistance = (splitContainerTiming.Panel1.Height + splitContainerTiming.Panel2.Height) - Convert.ToInt32(ReadConfigString(INI_FILE, "code_generator", "timing_splitter_pos", "248"));
-            showSourceCodeTimingToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(INI_FILE, "code_generator", "timing_visible", "1")));
+            showSourceCodeTimingToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(SettingsFile.ReadKey("code_generator", "timing_visible", "1")));
             showSourceCodeTimingToolStripMenuItem_CheckedChanged(sender, e);
 
             // Set default options
             cmbQFormat.SelectedIndex = 1;   // Always select Q15 format as default
             cmbQScalingMethod.SelectedIndex = 0;   // Always select single bit-shift scaling as default
             cmbCompType.SelectedIndex = 2;  // Always select 3P3Z controller as default
-            cmbLoopOptimizationLevel.SelectedIndex = 0; // Always select loop optimization level 0 (none) as default
+            cmbLoopTriggerOption.SelectedIndex = 0; // Always select loop trigger option (ADC-Triggered) as default
             cmbTriggerPlacement.SelectedIndex = 0; // Always select 50% On-Time as default
 
-            ShowSDomainTF = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(INI_FILE, "bode_plot", "show_s_domain", "1")));
+            ShowSDomainTF = Convert.ToBoolean(Convert.ToInt32(SettingsFile.ReadKey("bode_plot", "show_s_domain", "1")));
             showSDomainTransferFunctionToolStripMenuItem.Checked = ShowSDomainTF;
 
             // Load dynamic control properties
@@ -321,148 +553,23 @@ namespace dcld
                                 "The recent declaration of the MPLAB X® project directory is not valid. \r\n" +
                                 "Please make sure this path is valid or empty or code generation will fail.";
 
+
+            // Initialize generator file paths...
+            this.txtMPLABXProjectDir.Text = "";
+            this.txtASMSourcePath.Text = ""; // rootPath;
+            this.txtCSourcePath.Text = ""; // rootPath;
+            this.txtCHeaderPath.Text = ""; // rootPath;
+            this.txtCLibPath.Text = ""; // rootPath;
+
+
             // Refresh GUI
             ApplicationStartUp = false;
             UpdateTransferFunction(this, EventArgs.Empty);
             GenerateCode(this, EventArgs.Empty);
 
-            // set syntax editor
+            // create debugging output
             try
             {
-                this.txtOutput.Text = "Application start up..." + "\r\n" +
-                    "\r\n" +
-                    "Product Name:                    " + Application.ProductName.ToString() + "\r\n" +
-                    "Application Version:             " + Application.ProductVersion.ToString() + "\r\n" +
-                    "AGS Version:                     " + ReadConfigString(AssemblyGeneratorFile, "generic", "Version", "N/A") + "\r\n" +
-                    "CGS Version:                     " + ReadConfigString(CCodeGeneratorFile, "generic", "Version", "N/A") + "\r\n" +
-                    "Company Name:                    " + Application.CompanyName.ToString() + "\r\n" +
-                "\r\n";
-
-                this.txtOutput.Text = txtOutput.Text + 
-                    "Operating System:\r\n" +
-                    "    - OS Version:                " + Environment.OSVersion.ToString() + "\r\n" +
-                    "    - 64-bit OS Type:            " + Environment.Is64BitOperatingSystem.ToString() + "\r\n" +
-                    "    - 64-bit Process:            " + Environment.Is64BitProcess.ToString() + "\r\n" +
-                    "    - .net Version:              " + Environment.Version.Major.ToString() + "." + Environment.Version.Minor.ToString() + " (" + Environment.Version.ToString() + ")" + "\r\n" +
-                    "\r\nHardware Information:\r\n" +
-                    "    - Machine Name:              " + Environment.MachineName.ToString() + "\r\n" +
-                    "    - No of CPUs:                " + Environment.ProcessorCount.ToString() + "\r\n" +
-                    "    - Mapped Memory:             " + Environment.WorkingSet.ToString() + "\r\n" +
-                    "    - System Page Size:          " + Environment.SystemPageSize.ToString() + "\r\n" +
-                    "\r\nSoftware Environment Information:\r\n" +
-                    "    - User Domain Name:          " + Environment.UserDomainName.ToString() + "\r\n" +
-                    "    - User Name:                 " + Environment.UserName.ToString() + "\r\n" +
-                    "    - Current Managed Thread-ID: " + Environment.CurrentManagedThreadId.ToString() + "\r\n" +
-                    "    - Command Line:              " + Environment.CommandLine.ToString() + "\r\n" +
-                    "    - Current Directory:         " + Environment.CurrentDirectory.ToString() + "\r\n" +
-                    "    - AGS Filename:              " + AssemblyGeneratorFile + "\r\n" +
-                    "    - CGS Filename:              " + CCodeGeneratorFile + "\r\n" +
-                    "    - System Directory:          " + Environment.SystemDirectory.ToString() + "\r\n" +
-                    "    - User Interactive:          " + Environment.UserInteractive.ToString() + "\r\n" +
-                    "    - Version:                   " + Environment.Version.ToString() + "\r\n" +
-                    "\r\nRegional Settings:\r\n" +
-                    "    - Culture Info Name:         " + CultureInfo.CurrentCulture.NativeName + "\r\n" +
-                    "    - Keyboard Language:         " + Application.CurrentInputLanguage.Culture.DisplayName + "\r\n" +
-                    "    - Digit Substitution:        " + CultureInfo.CurrentCulture.NumberFormat.DigitSubstitution + "\r\n" +
-                    "    - NaN Symbol:                " + CultureInfo.CurrentCulture.NumberFormat.NaNSymbol + "\r\n" +
-                    "    - Negative Sign:             " + CultureInfo.CurrentCulture.NumberFormat.NegativeSign + "\r\n" +
-                    "    - Positive Sign:             " + CultureInfo.CurrentCulture.NumberFormat.PositiveSign + "\r\n" +
-                    "    - Decimal Separator:         " + CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator + "\r\n" +
-                    "    - Group Separator:           " + CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator + "\r\n" +
-                    "    - Group Sizes:               " + CultureInfo.CurrentCulture.NumberFormat.NumberGroupSizes + "\r\n" +
-                    "    - Floating Point Number:     " + Convert.ToDouble((float)1.234567).ToString("G") + "\r\n" +
-                    "    - Decimal Point Match:       " + 
-                    (Convert.ToDouble((float)1.234567).ToString("G", CultureInfo.InvariantCulture) == Convert.ToDouble((float)1.234567).ToString("G", CultureInfo.CurrentCulture)).ToString() + "\r\n" +
-                    "    - Large Integer Number:      " + Convert.ToInt64(1234567).ToString("G") + "\r\n" +
-                    "\r\n";
-
-                this.txtOutput.Text = txtOutput.Text + "00:    " + "common app data path: " + Application.CommonAppDataPath + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "01:    " + "user app data path: " + Application.UserAppDataPath + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "02:    " + "executable location: " + Application.ExecutablePath + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "03:    " + "start-up path: " + Application.StartupPath + "\r\n";
-
-                this.txtOutput.Text = txtOutput.Text + "04:    " + "root path: " + rootPath + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "05:    " + "resource path: " + resourcePath + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "06:    " + "settings file path: " + INI_FILE + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "07:    " + "assembly code generator file path: " + AssemblyGeneratorFile + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "08:    " + "c-code generator file path:" + CCodeGeneratorFile + "\r\n"; 
-
-                this.txtOutput.Text = txtOutput.Text + "09:    " + "assembly parser file: " + resourcePath + "ActiproSoftware.dsPICAssembly.xml";
-                if (System.IO.File.Exists(resourcePath + "ActiproSoftware.dsPICAssembly.xml"))
-                {
-                    this.txtSyntaxEditorAssembly.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICAssembly.xml", 0);
-                    this.txtSyntaxEditorAssembly.LineNumberMarginVisible = true;
-                    this.txtSyntaxEditorAssembly.HideSelection = false;
-                    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
-                }
-                else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
-
-                this.txtOutput.Text = txtOutput.Text + "10:    " + "XC16 parser file (source file): " + resourcePath + "ActiproSoftware.dsPICXC16.xml";
-                if (System.IO.File.Exists(resourcePath + "ActiproSoftware.dsPICXC16.xml"))
-                {
-                    this.txtSyntaxEditorCSource.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
-                    this.txtSyntaxEditorCSource.LineNumberMarginVisible = true;
-                    this.txtSyntaxEditorCSource.HideSelection = false;
-                    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
-
-                    this.txtOutput.Text = txtOutput.Text + "11:    " + "XC16 parser file (header file): " + resourcePath + "ActiproSoftware.dsPICXC16.xml";
-                    this.txtSyntaxEditorCHeader.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
-                    this.txtSyntaxEditorCHeader.LineNumberMarginVisible = true;
-                    this.txtSyntaxEditorCHeader.HideSelection = false;
-                    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
-
-                    this.txtOutput.Text = txtOutput.Text + "12:    " + "XC16 parser file (library API header): " + resourcePath + "ActiproSoftware.dsPICXC16.xml";
-                    this.txtSyntaxEditorCLibHeader.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.dsPICXC16.xml", 0);
-                    this.txtSyntaxEditorCLibHeader.LineNumberMarginVisible = true;
-                    this.txtSyntaxEditorCLibHeader.HideSelection = false;
-                    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
-                }
-                else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
-
-                //this.txtOutput.Text = txtOutput.Text + "13:    " + "INI script parser file: " + resourcePath + "ActiproSoftware.INIFile.xml";
-                //if (System.IO.File.Exists(resourcePath + "ActiproSoftware.INIFile.xml"))
-                //{
-                //    this.txtSyntaxEditorINIFile.Document.Language = ActiproSoftware.SyntaxEditor.Addons.Dynamic.DynamicSyntaxLanguage.LoadFromXml(resourcePath + "ActiproSoftware.INIFile.xml", 0);
-                //    this.txtSyntaxEditorINIFile.LineNumberMarginVisible = true;
-                //    this.txtSyntaxEditorINIFile.HideSelection = false;
-                //    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
-                //}
-                //else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
-
-                this.txtOutput.Text = txtOutput.Text + "14:    " + "ASM gemerator file: " + AssemblyGeneratorFile;
-                if (System.IO.File.Exists(AssemblyGeneratorFile))
-                {
-                    //this.txtSyntaxEditorINIFile.Document.LoadFile(AssemblyGeneratorFile);
-                    this.txtOutput.Text = txtOutput.Text + " ... OK\r\n";
-                }
-                else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
-
-                this.txtOutput.Text = txtOutput.Text + "15:    " + "C-Code gemerator file: " + CCodeGeneratorFile;
-                if (System.IO.File.Exists(CCodeGeneratorFile))
-                { this.txtOutput.Text = txtOutput.Text + " ... OK\r\n"; }
-                else { this.txtOutput.Text = txtOutput.Text + " ... not found\r\n"; }
-
-                this.txtOutput.Text = txtOutput.Text + "16:    " + "My Documents path: ";
-                str_dum = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                this.txtOutput.Text = txtOutput.Text + str_dum + "\r\n";
-
-                str_file = lblFinalNamePrefixOutput.Text;
-                this.txtMPLABXProjectDir.Text = "";
-                this.txtASMSourcePath.Text = str_dum + "\\"; // +str_file + "_asm.s";
-                this.txtCSourcePath.Text = str_dum + "\\"; // + str_file + ".c";
-                this.txtCHeaderPath.Text = str_dum + "\\"; // + str_file + ".h";
-                this.txtCLibPath.Text = str_dum + "\\"; // + "npnz16b.h";
-
-                this.txtOutput.Text = txtOutput.Text + "17:    " + "MPLAB X Project Directory: " + this.txtMPLABXProjectDir.Text + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "18:    " + "ASM source file path: " + str_dum + "\\" + str_file + "_asm.s" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "19:    " + "C-source file path: " + str_dum + "\\" + str_file + ".c" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "20:    " + "C-header file path: " + str_dum + "\\" + str_file + ".h" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "21:    " + "C-API header file path: " + str_dum + "\\npnz16b.h" + "\r\n";
-                this.txtOutput.Text = txtOutput.Text + "\r\n" + 
-                    "Application start up complete" + "\r\n" + "\r\n";
-
-                txtOutput.SelectionStart = txtOutput.TextLength;
-                txtOutput.ScrollToCaret();
 
                 // ensure visibility of all active controls
                 for (i = 0; i < cNPNZ.FilterOrder; i++)
@@ -478,28 +585,24 @@ namespace dcld
                     }
                 }
                 this.Show();
+
+                // Restore last user settings
+                this.WindowState = (FormWindowState)Convert.ToInt32(SettingsFile.ReadKey("main_window", "winstate", "0"));
+                if (WindowState == System.Windows.Forms.FormWindowState.Normal)
+                {
+                    this.Width = Convert.ToInt32(SettingsFile.ReadKey("main_window", "width", "1000"));
+                    this.Height = Convert.ToInt32(SettingsFile.ReadKey("main_window", "height", "1000"));
+                }
+                
+                splitContainerCoefficients.SplitterDistance = (splitContainerCoefficients.Panel1.Height + splitContainerCoefficients.Panel2.Height) - Convert.ToInt32(SettingsFile.ReadKey("data_table", "splitter_pos", "500"));
+                splitContainerContents.SplitterDistance = Convert.ToInt32(SettingsFile.ReadKey("code_generator", "settings_splitter_pos", "375"));
+                splitContainerTiming.SplitterDistance = (splitContainerTiming.Panel1.Height + splitContainerTiming.Panel2.Height) - Convert.ToInt32(SettingsFile.ReadKey("code_generator", "timing_splitter_pos", "248"));
+
+                DebugInfoPrintLine(">Loading Application completed");
+
                 Application.DoEvents();
                 this.Refresh();
                 Application.DoEvents();
-
-                // if external file is loaded, read configuration here
-                if (ExternalFileOpenEvent)
-                {
-
-                    if (System.IO.File.Exists(ExternalFileOpenPath))
-                    {
-                        this.txtOutput.Text = txtOutput.Text + "External file open call by: " + ExternalFileOpenPath + "\r\n";
-                        OpenFile(ExternalFileOpenPath);
-                        UpdateTransferFunction(sender, e);
-                        GenerateCode(sender, e);
-                    }
-                    else
-                    {
-                        this.txtOutput.Text = txtOutput.Text + "Cannot open external file: " + ExternalFileOpenPath + "\r\n";
-                    }
-                    ExternalFileOpenPath = "";
-                    ExternalFileOpenEvent = false;
-                }
 
 
             }
@@ -507,7 +610,7 @@ namespace dcld
             {
                 MessageBox.Show(
                     this, 
-                    "Critical error (0x" + ex.HResult.ToString("X") + ") occured while initializing app body generator." + "\r\n" +
+                    "Critical error (0x" + ex.HResult.ToString("X") + ") occured while initializing application." + "\r\n" +
                     "Error Message: " + ex.Message + "\r\n" + 
                     "Check output window for details.", 
                     "Critical Error",
@@ -515,6 +618,45 @@ namespace dcld
                     MessageBoxIcon.Error
                     );
             }
+
+            // if external file is loaded, read configuration here
+            if (ExternalFileOpenEvent)
+            {
+                if (System.IO.File.Exists(ExternalFileOpenPath))
+                {
+                    DebugInfoPrintLine(">Open file by external call: " + ExternalFileOpenPath);
+
+                    if (OpenFile(ExternalFileOpenPath))
+                        DebugInfoPrintLine(">    -> File loaded successfully");
+                    else
+                        DebugInfoPrintLine(">    -> File loaded with errors");
+
+                    UpdateTransferFunction(this, EventArgs.Empty);
+                    GenerateCode(this, EventArgs.Empty);
+
+                    if (this.txtMPLABXProjectDir.Text.Trim().Length == 0)
+                        DebugInfoPrintLine(">MPLAB X Project Directory: " + this.txtMPLABXProjectDir.Text + "(not set)");
+                    else
+                        DebugInfoPrintLine(">MPLAB X Project Directory: " + this.txtMPLABXProjectDir.Text);
+
+
+                }
+                else
+                {
+                    DebugInfoPrintLine(">    -> Cannot open/access external file");
+                }
+                ExternalFileOpenPath = "";
+                ExternalFileOpenEvent = false;
+            }
+
+            // Check if Configuraiton window should be shown by default
+            showMPLABXconfigWindowAtStartup = Convert.ToBoolean(Convert.ToInt32(SettingsFile.ReadKey("config_window", "show", "1")));
+
+            // I no MPLAB project has been specified, open project configuraition
+            if (MPLABXProject.MPLABXProjectDirectory == string.Empty)
+                if (showMPLABXconfigWindowAtStartup)
+                    OpenProjectConfigWindow();
+
 
             return;
         }
@@ -650,6 +792,8 @@ namespace dcld
             bool valid_data_entry = false;
             string str_buf = "";
 
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             try
             {
             
@@ -738,36 +882,14 @@ namespace dcld
                 // In case another compensator or scaling method has been selected, update data table format
                 if (FilterTypeChanged || ScalingChanged)
                 { 
+                    // update file prefix if automatied prefix is used (user labels won't get overwritten
+                    if ((txtControllerNamePrefix.Text == DefaultFilePrefix) || (txtControllerNamePrefix.Text.Trim() == string.Empty))
+                        txtControllerNamePrefix.Text = "c" + LagElements + "p" + LagElements + "z";
+
                     // update default name prefixes for body generation
-                    DefaultFilePrefix = "c" + LagElements + "p" + LagElements + "z" + (Q_format+1).ToString();
+                    DefaultFilePrefix = "c" + LagElements + "p" + LagElements + "z";
                     DefaultVariablePrefix = "c" + LagElements + "P" + LagElements + "Z";
 
-                    switch ((clsCompensatorNPNZ.dcldScalingMethod)Convert.ToInt32(cmbQScalingMethod.Text.Substring(0, 1)))
-                    {
-                        case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_SINGLE_BIT_SHIFT:
-                            DefaultFilePrefix = DefaultFilePrefix + "sbsft";
-                            break;
-
-                        case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_OUTPUT_SCALING_FACTOR:
-                            DefaultFilePrefix = DefaultFilePrefix + "cscl";
-                            break;
-
-                        case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT:
-                            DefaultFilePrefix = DefaultFilePrefix + "dbsft";
-                            break;
-
-                        case clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT:
-                            DefaultFilePrefix = DefaultFilePrefix + "fscl";
-                            break;
-                    }
-
-                    // update file prefix
-                    if (!chkUserControllerNameLabel.Checked)
-                    {
-                        txtControllerNamePrefix.Text = DefaultFilePrefix;
-                    }
-
-                    
                     // Destroy and rebuild the coefficient output table
                     BuildOutputTable(sender, e);
 
@@ -801,6 +923,9 @@ namespace dcld
                         cNPNZ.FeedbackRecitification = (chkFeedbackRectification.Checked & chkFeedbackRectification.Enabled);
                     else
                         cNPNZ.FeedbackRecitification = false;
+
+                    cNPNZ.OutputGainNormalization = chkNormalizeOutputGain.Checked;
+                    cNPNZ.OutputGain = NumberTextBox_ToDouble(txtOutputGain);
 
                     for (i = 0; i < LagElements; i++)
                     {
@@ -872,11 +997,7 @@ namespace dcld
                         "Sample History Timespan: " + (1e+6 * (cNPNZ.FilterOrder + 1) * cNPNZ.SamplingInterval).ToString("#0.000 usec", CultureInfo.CurrentCulture) + "\r\n";
 
                     // plot debug info to output window
-                    if ((txtOutput.TextLength + cNPNZ.DebugInfo.Length) > txtOutput.MaxLength) txtOutput.Clear();
-                    txtOutput.SelectionStart = txtOutput.TextLength;
-                    txtOutput.AppendText("\r\n" + cNPNZ.DebugInfo.ToString());
-                    txtOutput.SelectionStart = txtOutput.TextLength;
-                    txtOutput.ScrollToCaret();
+                    DebugInfoPrintLine(">" + cNPNZ.DebugInfo.ToString().Replace("\r\n", "\r\n>"));
 
                     // Update displayed data => A-Coefficients
                     for (i = 1; i <= LagElements; i++)
@@ -1016,6 +1137,10 @@ namespace dcld
             
             
             // Reset control flags
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds.ToString(CultureInfo.CurrentCulture);
+            stbMainProgressTime.Text = "Refresh Period: " + elapsedMs + " ms";
+
             FilterTypeChanged = false;
             ScalingChanged = false;
             UpdateComplete = true;
@@ -1074,8 +1199,6 @@ namespace dcld
                 chartBode.ChartAreas["GainPhase"].AxisY2.MinorGrid.LineDashStyle = ChartDashStyle.Dot;
                 chartBode.ChartAreas["GainPhase"].AxisY2.MinorGrid.LineWidth = 1;
 
-
-            
             }
 
             if (ForceAnnotations)
@@ -1131,6 +1254,10 @@ namespace dcld
 
             try
             {
+                if (chartBode == null) return (false);
+                if (chartBode.Series == null) return (false);
+                if (chartBode.Series.Count == 0) return (false);
+
                 // Load data into data series
                 chartBode.Series[0].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagGain_z);
                 chartBode.Series[1].Points.DataBindXY(cNPNZ.TransferFunction.FrequencyPoint, cNPNZ.TransferFunction.MagPhase_z);
@@ -1169,7 +1296,7 @@ namespace dcld
             }
             catch
             {
-                txtOutput.AppendText("UpdateBodePlot(" + ForceAnnotationUpdate.ToString() + ") Exception\r\n");
+                DebugInfoPrintLine("UpdateBodePlot(" + ForceAnnotationUpdate.ToString() + ") Exception");
             }
 
             return (true);
@@ -1225,278 +1352,40 @@ namespace dcld
             return v;
         }
 
-        private string ReadConfigString(string fname, string section, string name, string defstr)
-        {
-            int rc;
-            StringBuilder sb = new StringBuilder(65536);
-            rc = GetPrivateProfileString(section, name, defstr, sb, 65535, fname);
-            if (rc > 0)
-                return sb.ToString();
-            else
-                return defstr;
-        }
-
-        private bool WriteConfigString(string fname, string section, string name, string str)
-        {
-            bool rc;
-            rc = WritePrivateProfileString(section, name, str, fname);
-
-            return rc;
-        }
-
-        private bool DeleteConfigString(string fname, string section, string name)
-        {
-            bool rc;
-            rc = WritePrivateProfileString(section, name, null, fname);
-
-            return rc;
-        }
 
         /* ***************************************************************************************** 
-         * Extracts the path of the directory in which the DCLD project is been stored
+         * When the application or a file is closed or a new file is opened while project changes
+         * are still pending, throw a message box asking if the project should be saved.
          * ***************************************************************************************** */
-        private string GetCurrentProjectFilePath(object sender, EventArgs e)
-        {
-            string str_dum = "";
-            string[] str_arr;
-            string[] dum_sep = new string[1];
-
-            if (CurrentProjectFileName.Trim().Length > 0)
-            { 
-                dum_sep[0] = ("\\");
-                str_arr = CurrentProjectFileName.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
-                str_dum = CurrentProjectFileName.Substring(0, CurrentProjectFileName.Length - str_arr[str_arr.Length - 1].Length);
-            }
-
-            return (str_dum.Trim());
-        }
-
-        /* ***************************************************************************************** 
-         * Extracts the path of the directory with filename of the DCLD project file
-         * ***************************************************************************************** */
-        private string GetCurrentProjectFileName(object sender, EventArgs e)
-        {
-            string str_dum = "";
-            string[] str_arr;
-            string[] dum_sep = new string[1];
-
-            dum_sep[0] = ("\\");
-            str_arr = CurrentProjectFileName.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
-            str_dum = str_arr[Convert.ToInt32(str_arr.GetUpperBound(0))];
-
-            return (str_dum.Trim());
-        }
-
-        /* ***************************************************************************************** 
-         * Builds the absolute path of the MPLAB X project directory the current DCLD project
-         * is associated with.
-         * ***************************************************************************************** */
-        private string GetMPLABXProjectPath(object sender, EventArgs e)
-        {
-            string str_dum = "";
-
-            // Read directory path from text box
-            str_dum = txtMPLABXProjectDir.Text.Trim();
-
-            if ((str_dum.Length > 1) && (str_dum.Substring(0, 1) == "."))   // Path is relative
-            { // => Make and return absolute path
-                str_dum = GetAbsoluteFilePath(sender, e, str_dum, CurrentProjectFileName);
-            }
-
-            return (str_dum.Trim());
-        }
-
-        /* ***************************************************************************************** 
-         * Builds the absolute path of the MPLAB X project directory the current DCLD project
-         * is associated with.
-         * ***************************************************************************************** */
-        private string GetAbsoluteFilePath(object sender, EventArgs e, string RelativeFilePath, string ReferencePath)
-        {
-            int i = 0, up_steps = 0;
-            string str_dum = "", reference_path = "";
-            string[] str_arr_anchor_path;
-            string[] str_arr_relative_path;
-            string[] dum_sep = new string[1];
-
-            // If project file has not been saved yet, no relative path information can be derived.
-            //if (!File.Exists(CurrentProjectFileName)) return (RelativeFilePath.Trim());
-
-            // pre-formate relative path parameter
-            if (RelativeFilePath.Trim().Length == 0) return (RelativeFilePath.Trim()); // relative path parameter is empty => exit
-            if (RelativeFilePath.Trim().Substring(0, 1) != ".") return (RelativeFilePath.Trim()); // not a relative path => exit
-
-            // otherwise continue to determine relative path string
-            reference_path = ReferencePath.Trim();
-
-            if (reference_path.Length > 0)
-            { 
-                if (reference_path.ToLower() == MPLABXProjectDirectory.Trim().ToLower())
-                { // Reference is set to MPLAB X project directory reference
-                    reference_path = MPLABXProjectDirectory;
-                }
-                else if (reference_path.ToLower() == CurrentProjectFileName.Trim().ToLower())
-                { // Reference is set to DCLD project file reference
-                    reference_path = GetCurrentProjectFilePath(sender, e);
-                }
-                else if (reference_path.ToLower() == GetCurrentProjectFilePath(sender, e).Trim().ToLower())
-                { // Reference is set to DCLD project file directoy location reference
-                    reference_path = reference_path.Trim();
-                }
-                else if (reference_path.Length == 0)
-                { 
-                    return ("");
-                }
-            }
-            else // Reference path is empty 
-            {
-                if ((reference_path.ToLower() == MPLABXProjectDirectory.Trim().ToLower()) && (MPLABXProjectDirectory.Trim().Length == 0))
-                {
-                    if (CurrentProjectFileName.Trim().Length > 0)
-                    { reference_path = GetCurrentProjectFilePath(sender, e).Trim(); }
-                    else
-                    { return (RelativeFilePath.Trim()); }
-                }
-                else
-                { return (RelativeFilePath.Trim()); }
-                
-            }
-            
-            dum_sep[0] = ("\\");
-            str_arr_anchor_path = reference_path.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
-            str_arr_relative_path = RelativeFilePath.Trim().Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
-
-            for (i = str_arr_relative_path.Length; i > 0; i--)
-            {
-                if (str_arr_relative_path[i - 1] == ".")
-                { break; }
-                else if (str_arr_relative_path[i - 1] == "..")
-                { up_steps++; }
-                else
-                { str_dum = str_arr_relative_path[i - 1] + "\\" + str_dum; }
-            
-            }
-
-            for (i = (str_arr_anchor_path.Length - up_steps); i > 0;  i--)
-            {
-                str_dum = str_arr_anchor_path[i-1] + "\\" + str_dum;
-            }
-
-            if (str_dum.Contains("\\" + "\\")) str_dum = str_dum.Replace("\\" + "\\", "\\");
-            if (str_dum.Contains("\\" + "./" + "\\")) str_dum = str_dum.Replace("\\" + "./" + "\\", "\\");
-            return (str_dum.Trim());
-        }
-
-        private string GetRelativeFilePath(object sender, EventArgs e, string AbsoluteFilePath, string ReferencePath)
-        {
-            int i = 0, up_steps = 0;
-            string str_dum = "", reference_path = "";
-            string[] str_arr_anchor_path;
-            string[] str_arr_absolute_path;
-            string[] dum_sep = new string[1];
-
-            try
-            {
-
-                // If project file has not been saved yet, no relative path information can be derived.
-                //if (ReferencePath.Trim().ToLower() == GetCurrentProjectFilePath(sender, e).Trim().ToLower())
-                //{ if (!File.Exists(CurrentProjectFileName)) return (AbsoluteFilePath.Trim()); }
-
-                AbsoluteFilePath = AbsoluteFilePath.Trim();
-                ReferencePath = ReferencePath.Trim();
-
-                // Fix AbsoluteFilePath and ReferencePath if necessary
-                if ((AbsoluteFilePath.Length > 2) && (AbsoluteFilePath.Substring(AbsoluteFilePath.Length - 1, 1) != "\\"))
-                { AbsoluteFilePath = AbsoluteFilePath + "\\"; }
-                if ((ReferencePath.Length > 2) && (ReferencePath.Substring(ReferencePath.Length - 1, 1) != "\\"))
-                { ReferencePath = ReferencePath + "\\"; }
-
-                if (ReferencePath.Contains("\\" + "\\")) ReferencePath = ReferencePath.Replace("\\" + "\\", "\\");
-                if (AbsoluteFilePath.Contains("\\" + "\\")) AbsoluteFilePath = AbsoluteFilePath.Replace("\\" + "\\", "\\");
-
-                // otherwise continue to determine relative path string
-                reference_path = ReferencePath.Trim();
-
-                if (reference_path.Length == 0) // If reference path is empty, MPLAB X Project Directory has most probably not been set
-                {
-                    if (GetCurrentProjectFilePath(sender, e).Trim().Length > 0)
-                    { reference_path = GetCurrentProjectFilePath(sender, e).Trim(); }
-                }
-
-                if (reference_path.Substring(0, 1) != AbsoluteFilePath.Substring(0, 1))
-                {
-                    return (AbsoluteFilePath.Trim());   // if even the drive letter is different, exit here
-                }
-                else if (AbsoluteFilePath.Contains(reference_path))
-                {
-                    str_dum = AbsoluteFilePath.Trim();
-                    str_dum = str_dum.Replace(reference_path, ".\\");
-                }
-                else
-                {
-
-                    dum_sep[0] = ("\\");
-                    str_arr_anchor_path = reference_path.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
-                    str_arr_absolute_path = AbsoluteFilePath.Trim().Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (i = 0; i < str_arr_anchor_path.Length; i++)
-                    {
-                        if (i < str_arr_absolute_path.Length)
-                        {
-                            if (str_arr_anchor_path[i] == str_arr_absolute_path[i])
-                            {
-                                str_arr_anchor_path[i] = "";
-                                str_arr_absolute_path[i] = "";
-                            }
-                            else
-                            { up_steps = i; break; }
-                        }
-                        else { up_steps = i; break; }
-                    }
-
-                    for (i = up_steps; i < str_arr_anchor_path.Length; i++)
-                    { str_dum = str_dum + "..\\"; }
-
-                    for (i = up_steps; i < str_arr_absolute_path.Length; i++)
-                    { str_dum = str_dum + str_arr_absolute_path[i] + "\\"; }
-
-                }
-
-                if (str_dum.Contains("\\" + "\\")) str_dum = str_dum.Replace("\\" + "\\", "\\");
-                if (str_dum.Contains("\\" + "./" + "\\")) str_dum = str_dum.Replace("\\" + "./" + "\\", "\\");
-                return (str_dum.Trim());
-
-            }
-            catch
-            {
-                return (AbsoluteFilePath);
-            }
-        }
-
         private bool AskForFileSave(object sender, EventArgs e)
         {
             bool b_res = true;
             string str_dum = "";
             DialogResult dlgResult = 0;
 
-            // You can cancel the Form from closing.
-            if ((ProjectFileChanged) && (CurrentProjectFileName.Length > 7))
+            // If there are still unsaved project changes pending and the most recent project file is valid
+            if ((ProjectFileChanged) && (ProjectFile.Directory.Length > 7))
             {
+                // capture project file 
+                str_dum = ProjectFile.FileName;
 
-                str_dum = GetCurrentProjectFileName(sender, e);
-
+                // ask if the pending changes should be saved
                 dlgResult = MessageBox.Show("File '" + str_dum + "' has been changed.\r\nDo you wish to save these changes?", Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 switch (dlgResult)
                 {
+                    // User agreed to save the changes
                     case System.Windows.Forms.DialogResult.Yes:
                         SaveFile(sender, e);
                         if (ProjectFileChanged) b_res = false;
                         else b_res = true;
                         break;
 
+                    // User approved to discard the changes
                     case System.Windows.Forms.DialogResult.No:
                         b_res = true;
                         break;
 
+                    // User clicked 'Cancel' to go back to application
                     default:
                         b_res = false;
                         break;
@@ -1508,14 +1397,18 @@ namespace dcld
 
         }
 
+        /* ***************************************************************************************** 
+         * Save the most recent settings to project file
+         * ***************************************************************************************** */
         private bool SaveFile(object sender, EventArgs e)
         {
             SaveFileDialog sfdlg = new SaveFileDialog();
-            string str_path = "", str_dum = "";
+            string str_dum = "";
             string[] str_arr;
             string[] dum_sep = new string[1];
             int i = 0;
 
+            // Prepare the status bar progress bar
             stbMainStatusLabel.Text = "Saving File:";
             stbMainStatusLabel.Visible = true;
             stbProgressBar.Visible = true;
@@ -1523,38 +1416,46 @@ namespace dcld
             Application.DoEvents();
 
             // Save parameter file
-            if ((CurrentProjectFileName.Trim().Length == 0) || (sender == saveAsToolStripMenuItem) || (CurrentProjectFileName == NewProjectFilenameDummy))
+            if ((ProjectFile.FileName.Trim().Length == 0) || (sender == saveAsToolStripMenuItem) || (ProjectFile.FileName == NewProjectFilenameDummy))
             {
                 // Show "Save As..." Dialog
                 sfdlg.FileName = NewProjectFilenameDummy;
                 sfdlg.Filter = "Microchip Digital Control Loop Designer files (*.dcld)|*.dcld|All files (*.*)|*.*";
                 sfdlg.FilterIndex = 1;
 
-                if (CurrentProjectFileName.Trim().Length > 7)
-                { sfdlg.InitialDirectory = GetCurrentProjectFilePath(sender, e); }
-                else if (MPLABXProjectDirectory.Trim().Length > 7)
-                { sfdlg.InitialDirectory = MPLABXProjectDirectory; }
+                // If project file is valid
+                if (ProjectFile.FileName.Trim().Length > 7)
+                { sfdlg.InitialDirectory = ProjectFile.Directory; }
+                else if (MPLABXProject.MPLABXProjectDirectory.Trim().Length > 7)
+                { sfdlg.InitialDirectory = MPLABXProject.MPLABXProjectDirectory; }
 
+                // Showing the 'save file' dialog 
                 if (sfdlg.ShowDialog() == DialogResult.OK)
                 {
+                    // if user clicked OK...
                     try
                     {
+                        // When the selected path is valid
                         if (sfdlg.CheckPathExists)
                         {
-                            // Capture filename & path
-                            str_path = sfdlg.FileName.Trim();
-                            CurrentProjectFileName = str_path;
+                            // Capture user-defined filename & path
+                            ProjectFile.SetFilename(sfdlg.FileName.Trim());
 
                             // Display recent project file in window title bar
-                            dum_sep[0] = ("\\");
+                            dum_sep[0] = (_dsp);
                             str_arr = sfdlg.FileName.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries); ;
                             str_dum = str_arr[Convert.ToInt32(str_arr.GetUpperBound(0))];
                             this.Text = Application.ProductName + " v" + Application.ProductVersion + " - [" + str_dum + "]";
 
                             // Rescan and adopt code generator file path declarations
-                            if (MPLABXProjectDirectory.Trim().Length == 0)
-                            { MPLABXProjectDirectory = GetCurrentProjectFilePath(sender, e); }
-                            SetMPLABXProjectDirectory(sender, e, MPLABXProjectDirectory);
+                            if (MPLABXProject.MPLABXProjectDirectory.Trim().Length == 0)
+                            {
+                                MPLABXProject.SetMPLABXProject("");
+                                UpdateFilePaths();
+
+                                txtMPLABXProjectDir.ToolTipText = MPLABXProject.MPLABXProjectDirectory;
+                            }
+                            else { txtMPLABXProjectDir.ToolTipText = "(not specified)";  }
 
                         }
                     }
@@ -1571,6 +1472,7 @@ namespace dcld
                         sfdlg.Dispose();
                         stbMainStatusLabel.Visible = false;
                         stbProgressBar.Visible = false;
+                        ProjectFile.Clear();
 
                         return (false);
 
@@ -1587,10 +1489,6 @@ namespace dcld
                 }
 
             }
-            else if (CurrentProjectFileName != "")
-            {
-                str_path = CurrentProjectFileName;
-            }
 
             // Save output window to file
             try
@@ -1600,125 +1498,153 @@ namespace dcld
                 Application.DoEvents();
                 
                 // File Info
-                if (Convert.ToString(ReadConfigString(str_path, "GUI", "CreateDate", "")) == "")
-                    WriteConfigString(str_path, "GUI", "CreateDate", Convert.ToString(System.DateTime.Now));
+                if (Convert.ToString(ProjectFile.ReadKey("GUI", "CreateDate", "")) == "")
+                    ProjectFile.WriteKey("GUI", "CreateDate", System.DateTime.Now.ToString());
 
                 // GUI Version
-                WriteConfigString(str_path, "GUI", "SaveDate", Convert.ToString(System.DateTime.Now));
-                WriteConfigString(str_path, "GUI", "Name", Application.ProductName);
-                WriteConfigString(str_path, "GUI", "Version", Application.ProductVersion);
-                WriteConfigString(str_path, "GUI", "AGS Version", ReadConfigString(AssemblyGeneratorFile, "generic", "Version", "N/A"));
+                ProjectFile.WriteKey("GUI", "SaveDate", Convert.ToString(System.DateTime.Now));
+                ProjectFile.WriteKey("GUI", "Name", Application.ProductName);
+                ProjectFile.WriteKey("GUI", "Version", Application.ProductVersion);
+                ProjectFile.WriteKey("GUI", "VersionKey", dcldGlobals.APP_VERSION_KEY.ToString());
+                ProjectFile.WriteKey("GUI", "AGS Version", AsmGeneratorScript.ReadKey("generic", "Version", "N/A"));
+                ProjectFile.WriteKey("GUI", "CGS Version", CCodeGeneratorScript.ReadKey("generic", "Version", "N/A"));
 
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 20;
                 Application.DoEvents();
 
                 // GUI settings
-                WriteConfigString(str_path, "GUI", "WindoWState", this.WindowState.ToString());
-                WriteConfigString(str_path, "GUI", "Top", this.Top.ToString());
-                WriteConfigString(str_path, "GUI", "Left", this.Left.ToString());
-                WriteConfigString(str_path, "GUI", "Height", this.Height.ToString());
-                WriteConfigString(str_path, "GUI", "Width", this.Width.ToString());
-                WriteConfigString(str_path, "GUI", "TabHeight", splitContainerCoefficients.Panel2.ClientSize.Height.ToString());
+                ProjectFile.WriteKey("GUI", "WindoWState", this.WindowState.ToString());
+                ProjectFile.WriteKey("GUI", "Top", this.Top.ToString());
+                ProjectFile.WriteKey("GUI", "Left", this.Left.ToString());
+                ProjectFile.WriteKey("GUI", "Height", this.Height.ToString());
+                ProjectFile.WriteKey("GUI", "Width", this.Width.ToString());
+                ProjectFile.WriteKey("GUI", "TabHeight", splitContainerCoefficients.Panel2.ClientSize.Height.ToString());
 
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 25;
                 Application.DoEvents();
 
                 // Control Type and Mode
-                WriteConfigString(str_path, "ControlSetup", "ControlType", cmbCompType.SelectedIndex.ToString());
-                WriteConfigString(str_path, "ControlSetup", "ScalingMode", cmbQScalingMethod.SelectedIndex.ToString());
-                WriteConfigString(str_path, "ControlSetup", "QFormat", cmbQFormat.SelectedIndex.ToString());
-                WriteConfigString(str_path, "ControlSetup", "SamplingFrequency", txtSamplingFrequency.Text);
-                WriteConfigString(str_path, "ControlSetup", "InputGain", txtInputGain.Text);
-                WriteConfigString(str_path, "ControlSetup", "InputGainNormalization", Math.Abs(Convert.ToInt32(chkNormalizeInputGain.Checked)).ToString());
-                WriteConfigString(str_path, "ControlSetup", "BiDirectionalFeedback", Math.Abs(Convert.ToInt32(chkBiDirectionalFeedback.Checked)).ToString());
-                WriteConfigString(str_path, "ControlSetup", "FeedbackRectification", Math.Abs(Convert.ToInt32(chkFeedbackRectification.Checked & chkBiDirectionalFeedback.Checked)).ToString());
+                ProjectFile.WriteKey("ControlSetup", "ControlType", cmbCompType.SelectedIndex.ToString());
+                ProjectFile.WriteKey("ControlSetup", "ScalingMode", cmbQScalingMethod.SelectedIndex.ToString());
+                ProjectFile.WriteKey("ControlSetup", "QFormat", cmbQFormat.SelectedIndex.ToString());
+                ProjectFile.WriteKey("ControlSetup", "SamplingFrequency", txtSamplingFrequency.Text);
+                ProjectFile.WriteKey("ControlSetup", "InputGain", txtInputGain.Text);
+                ProjectFile.WriteKey("ControlSetup", "InputGainNormalization", Math.Abs(Convert.ToInt32(chkNormalizeInputGain.Checked)).ToString());
+                ProjectFile.WriteKey("ControlSetup", "BiDirectionalFeedback", Math.Abs(Convert.ToInt32(chkBiDirectionalFeedback.Checked)).ToString());
+                ProjectFile.WriteKey("ControlSetup", "FeedbackRectification", Math.Abs(Convert.ToInt32(chkFeedbackRectification.Checked & chkBiDirectionalFeedback.Checked)).ToString());
+                ProjectFile.WriteKey("ControlSetup", "OutputGain", txtOutputGain.Text);
+                ProjectFile.WriteKey("ControlSetup", "OutputGainNormalization", Math.Abs(Convert.ToInt32(chkNormalizeOutputGain.Checked)).ToString());
+
+                ProjectFile.WriteKey("ControlSetup", "EnableAGC", Math.Abs(Convert.ToInt32(chkEnableAdaptiveGainControl.Checked)).ToString());
+                ProjectFile.WriteKey("ControlSetup", "AddAGCEnableSwitch", Math.Abs(Convert.ToInt32(chkAGCAddEnable.Checked)).ToString());
+                ProjectFile.WriteKey("ControlSetup", "AddAGCGetModFunCall", Math.Abs(Convert.ToInt32(chkAGCAddGetModFactorFunCall.Checked)).ToString());
+
 
                 for (i = 0; i < txtPole.Length; i++)
                 { 
-                    WriteConfigString(str_path, "ControlSetup", "FrequencyP" + i.ToString(), txtPole[i].Text);
-                    if (i > 0) WriteConfigString(str_path, "ControlSetup", "FrequencyZ" + i.ToString(), txtZero[i].Text);
+                    ProjectFile.WriteKey("ControlSetup", "FrequencyP" + i.ToString(), txtPole[i].Text);
+                    if (i > 0) ProjectFile.WriteKey("ControlSetup", "FrequencyZ" + i.ToString(), txtZero[i].Text);
 
                 }
 
-                WriteConfigString(str_path, "ControlSetup", "InputDataResolution", txtInputDataResolution.Text);
+                ProjectFile.WriteKey("ControlSetup", "InputDataResolution", txtInputDataResolution.Text);
+                ProjectFile.WriteKey("ControlSetup", "FixedPointErrorMsg", taboptMaxFPError.Text);
+                ProjectFile.WriteKey("ControlSetup", "FixedPointErrorWarning", taboptMaxFPErrorWarning.Text);
 
-                WriteConfigString(str_path, "ControlSetup", "FixedPointErrorMsg", taboptMaxFPError.Text);
-                WriteConfigString(str_path, "ControlSetup", "FixedPointErrorWarning", taboptMaxFPErrorWarning.Text);
+                // Feedback Definition
+                ProjectFile.WriteKey("FeedbackDeclaration", "Type", Convert.ToInt32(feedback.FeedbackType).ToString());
+                ProjectFile.WriteKey("FeedbackDeclaration", "ADCref", feedback.ADCReference.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "ADCres", feedback.ADCResolution.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "ADCdiff", Convert.ToInt32(feedback.ADCIsDifferential).ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "VDR1", feedback.VoltageDividerR1.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "VDR2", feedback.VoltageDividerR2.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "VDGA", feedback.VoltageDividerAmplifierGain.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "CSRS", feedback.CurrentSenseRshunt.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "CSGA", feedback.CurrentSenseAmplifierGain.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "CTRB", feedback.CurrentTransformerBurdenResistance.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "CTWR", feedback.CurrentTransformerWindingRatio.ToString(CultureInfo.InvariantCulture));
+
+                // Ouptput Definition
+                ProjectFile.WriteKey("OutputDeclaration", "Type", Convert.ToInt32(ctrl_output.OutputType).ToString());
+                ProjectFile.WriteKey("OutputDeclaration", "PCLK", ctrl_output.PWMClock.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("OutputDeclaration", "PCLKDIV", ctrl_output.PWMClockDivider.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("OutputDeclaration", "PWMFREQ", ctrl_output.PWMFrequency.ToString(CultureInfo.InvariantCulture));
 
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 30;
                 Application.DoEvents();
 
                 // Code Generator Tab
-                WriteConfigString(str_path, "AssemblyGenerator", "UserPrefix1", txtControllerNamePrefix.Text);
-                WriteConfigString(str_path, "AssemblyGenerator", "UserPrefix2", txtControllerNameLabel.Text);
-                WriteConfigString(str_path, "AssemblyGenerator", "UseUserPrefix", Convert.ToUInt16(chkUserControllerNameLabel.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "UseUserPrefixVar", Convert.ToUInt16(chkUserVariableNamePrefix.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "UserPrefix1", txtControllerNamePrefix.Text);
+                ProjectFile.WriteKey("AssemblyGenerator", "UserPrefix2", txtControllerNameLabel.Text);
 
-                WriteConfigString(str_path, "AssemblyGenerator", "ContextSaving", Convert.ToUInt16(this.chkContextSaving.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "ContextSavingShadowRegisters", Convert.ToUInt16(this.chkSaveRestoreShadowRegisters.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "ContextSavingMACRegisters", Convert.ToUInt16(this.chkSaveRestoreMACRegisters.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "ContextSavingAccumulatorRegisters", Convert.ToUInt16(this.chkSaveRestoreAccumulators.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "ContextSavingCoreConfigRegister", Convert.ToUInt16(this.chkSaveRestoreCoreConfig.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "ContextSavingCoreStatusRegister", Convert.ToUInt16(this.chkSaveRestoreCoreStatus.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "ContextSaving", Convert.ToUInt16(this.chkContextSaving.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "ContextSavingShadowRegisters", Convert.ToUInt16(this.chkSaveRestoreShadowRegisters.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "ContextSavingMACRegisters", Convert.ToUInt16(this.chkSaveRestoreMACRegisters.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "ContextSavingAccumulatorRegisters", Convert.ToUInt16(this.chkSaveRestoreAccumulators.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "ContextSavingCoreConfigRegister", Convert.ToUInt16(this.chkSaveRestoreCoreConfig.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "ContextSavingCoreStatusRegister", Convert.ToUInt16(this.chkSaveRestoreCoreStatus.Checked).ToString());
 
-                WriteConfigString(str_path, "AssemblyGenerator", "CodeFeatureOptions", Convert.ToUInt16(this.chkCodeFeatureOptions.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "EnforceCoreConfiguration", Convert.ToUInt16(this.chkAddCoreConfig.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddEnableDisableFeature", Convert.ToUInt16(this.chkAddEnableDisable.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddDisableDummyReadFeature", Convert.ToUInt16(this.chkAddDisableDummyRead.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddErrorNormalization", Convert.ToUInt16(this.chkAddErrorNormalization.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddADCTriggerAPlacement", Convert.ToUInt16(this.chkAddADCTriggerAPlacement.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddADCTriggerBPlacement", Convert.ToUInt16(this.chkAddADCTriggerBPlacement.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddCascadedFunctionCall", Convert.ToUInt16(this.chkAddCascadedFunctionCall.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "CodeFeatureOptions", Convert.ToUInt16(this.chkCodeFeatureOptions.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "EnforceCoreConfiguration", Convert.ToUInt16(this.chkAddCoreConfig.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddEnableDisableFeature", Convert.ToUInt16(this.chkAddEnableDisable.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddDisableDummyReadFeature", Convert.ToUInt16(this.chkAddDisableDummyRead.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddErrorNormalization", Convert.ToUInt16(this.chkAddErrorNormalization.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddADCTriggerAPlacement", Convert.ToUInt16(this.chkAddADCTriggerAPlacement.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddADCTriggerBPlacement", Convert.ToUInt16(this.chkAddADCTriggerBPlacement.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddCascadedFunctionCall", Convert.ToUInt16(this.chkAddCascadedFunctionCall.Checked).ToString());
 
-                WriteConfigString(str_path, "AssemblyGenerator", "AddAutomatedDataInterface", Convert.ToUInt16(this.chkAutomatedDataInterface.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddAlternateSource", Convert.ToUInt16(this.chkAddAlternateSource.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddAlternateTarget", Convert.ToUInt16(this.chkAddAlternateTarget.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddAutomatedDataInterface", Convert.ToUInt16(this.chkAutomatedDataInterface.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddAlternateSource", Convert.ToUInt16(this.chkAddAlternateSource.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddAlternateTarget", Convert.ToUInt16(this.chkAddAlternateTarget.Checked).ToString());
 
-                WriteConfigString(str_path, "AssemblyGenerator", "DataProviderSource", Convert.ToUInt16(this.chkDataProviderSource.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlInput", Convert.ToUInt16(this.chkAddDataProviderControlInput.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderErrorInput", Convert.ToUInt16(this.chkAddDataProviderErrorInput.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlOutput", Convert.ToUInt16(this.chkAddDataProviderControlOutput.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "DataProviderSource", Convert.ToUInt16(this.chkDataProviderSource.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddDataProviderControlInput", Convert.ToUInt16(this.chkAddDataProviderControlInput.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddDataProviderErrorInput", Convert.ToUInt16(this.chkAddDataProviderErrorInput.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddDataProviderControlOutput", Convert.ToUInt16(this.chkAddDataProviderControlOutput.Checked).ToString());
 
-                WriteConfigString(str_path, "AssemblyGenerator", "AntiWindup", Convert.ToUInt16(this.chkAntiWindup.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AntiWindupSoftDesaturation", Convert.ToUInt16(this.chkAntiWindupSoftDesaturationFlag.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMaximumClamping", Convert.ToUInt16(this.chkAntiWindupClampMax.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMaximumClampingStatusFlag", Convert.ToUInt16(this.chkAntiWindupMaxStatusFlag.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMinimumClamping", Convert.ToUInt16(this.chkAntiWindupClampMin.Checked).ToString());
-                WriteConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMinimumClampingStatusFlag", Convert.ToUInt16(this.chkAntiWindupMinStatusFlag.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AntiWindup", Convert.ToUInt16(this.chkAntiWindup.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AntiWindupSoftDesaturation", Convert.ToUInt16(this.chkAntiWindupSoftDesaturationFlag.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddAntiWindupMaximumClamping", Convert.ToUInt16(this.chkAntiWindupClampMax.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddAntiWindupMaximumClampingStatusFlag", Convert.ToUInt16(this.chkAntiWindupMaxStatusFlag.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddAntiWindupMinimumClamping", Convert.ToUInt16(this.chkAntiWindupClampMin.Checked).ToString());
+                ProjectFile.WriteKey("AssemblyGenerator", "AddAntiWindupMinimumClampingStatusFlag", Convert.ToUInt16(this.chkAntiWindupMinStatusFlag.Checked).ToString());
 
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 50;
                 Application.DoEvents();
 
                 // source code pages
-                WriteConfigString(str_path, "CodeGenerationPaths", "ExportASMSource", Convert.ToUInt32(assemblyLibraryExportToolStripMenuItem.Checked).ToString());
-                WriteConfigString(str_path, "CodeGenerationPaths", "ExportCSource", Convert.ToUInt32(libraryCSourceFileExportToolStripMenuItem.Checked).ToString());
-                WriteConfigString(str_path, "CodeGenerationPaths", "ExportCHeader", Convert.ToUInt32(libraryCHeaderExportToolStripMenuItem.Checked).ToString());
-                WriteConfigString(str_path, "CodeGenerationPaths", "ExportCLib", Convert.ToUInt32(genericControlLibraryHeaderExportToolStripMenuItem.Checked).ToString());
-                WriteConfigString(str_path, "CodeGenerationPaths", "EnableOneClickExport", Convert.ToUInt32(generateCodeBeforeExportToolStripMenuItem.Checked).ToString());
-                WriteConfigString(str_path, "CodeGenerationPaths", "MPLABX_ProjectDirectory", txtMPLABXProjectDir.Text);
-                WriteConfigString(str_path, "CodeGenerationPaths", "ASMSourcePath", txtASMSourcePath.Text);
-                WriteConfigString(str_path, "CodeGenerationPaths", "CSourcePath", txtCSourcePath.Text);
-                WriteConfigString(str_path, "CodeGenerationPaths", "CHeaderPath", txtCHeaderPath.Text);
-                WriteConfigString(str_path, "CodeGenerationPaths", "CLibPath", txtCLibPath.Text);
-                WriteConfigString(str_path, "CodeGenerationPaths", "IncludeCHeaderPathInCSource", Convert.ToUInt32(chkCSourceIncludePath.Checked).ToString());
-                WriteConfigString(str_path, "CodeGenerationPaths", "IncludeCLibPathInCHeader", Convert.ToUInt32(chkCHeaderIncludePath.Checked).ToString());
+                ProjectFile.WriteKey("CodeGenerationPaths", "ExportASMSource", Convert.ToUInt32(assemblyLibraryExportToolStripMenuItem.Checked).ToString());
+                ProjectFile.WriteKey("CodeGenerationPaths", "ExportCSource", Convert.ToUInt32(libraryCSourceFileExportToolStripMenuItem.Checked).ToString());
+                ProjectFile.WriteKey("CodeGenerationPaths", "ExportCHeader", Convert.ToUInt32(libraryCHeaderExportToolStripMenuItem.Checked).ToString());
+                ProjectFile.WriteKey("CodeGenerationPaths", "ExportCLib", Convert.ToUInt32(genericControlLibraryHeaderExportToolStripMenuItem.Checked).ToString());
+                ProjectFile.WriteKey("CodeGenerationPaths", "EnableOneClickExport", Convert.ToUInt32(generateCodeBeforeExportToolStripMenuItem.Checked).ToString());
+                ProjectFile.WriteKey("CodeGenerationPaths", "MPLABX_ProjectDirectory", ConvertFilePath.ToRelativeFilePath(MPLABXProject.MPLABXProjectDirectory, ProjectFile.Directory));
+                ProjectFile.WriteKey("CodeGenerationPaths", "ASMSourcePath", ConvertFilePath.Unix2Win(txtASMSourcePath.Text));
+                ProjectFile.WriteKey("CodeGenerationPaths", "CSourcePath", ConvertFilePath.Unix2Win(txtCSourcePath.Text));
+                ProjectFile.WriteKey("CodeGenerationPaths", "CHeaderPath", ConvertFilePath.Unix2Win(txtCHeaderPath.Text));
+                ProjectFile.WriteKey("CodeGenerationPaths", "CLibPath", ConvertFilePath.Unix2Win(txtCLibPath.Text));
+                ProjectFile.WriteKey("CodeGenerationPaths", "IncludeCHeaderPathInCSource", Convert.ToUInt32(chkCSourceIncludePath.Checked).ToString());
+                ProjectFile.WriteKey("CodeGenerationPaths", "IncludeCLibPathInCHeader", Convert.ToUInt32(chkCHeaderIncludePath.Checked).ToString());
 
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 65;
                 Application.DoEvents();
 
                 // Timing graph
-                WriteConfigString(str_path, "TimingGraph", "ControlLoopOptimization", this.cmbLoopOptimizationLevel.SelectedIndex.ToString());
+                ProjectFile.WriteKey("TimingGraph", "LoopTriggerOption", this.cmbLoopTriggerOption.SelectedIndex.ToString());
 
-                WriteConfigString(str_path, "TimingGraph", "CPUClock", this.txtCPUClock.Text);
-                WriteConfigString(str_path, "TimingGraph", "ADCLatency", this.txtADCLatency.Text);
-                WriteConfigString(str_path, "TimingGraph", "PWMFrequency", this.txtPWMFrequency.Text);
-                WriteConfigString(str_path, "TimingGraph", "PWMDutyCycle", this.txtPWMDutyCycle.Text);
-                WriteConfigString(str_path, "TimingGraph", "ControlLoopLatency", this.txtISRLatency.Text);
+                ProjectFile.WriteKey("TimingGraph", "CPUClock", this.txtCPUClock.Text);
+                ProjectFile.WriteKey("TimingGraph", "ADCLatency", this.txtADCLatency.Text);
+                ProjectFile.WriteKey("TimingGraph", "PWMFrequency", this.txtPWMFrequency.Text);
+                ProjectFile.WriteKey("TimingGraph", "PWMDutyCycle", this.txtPWMDutyCycle.Text);
+                ProjectFile.WriteKey("TimingGraph", "ControlLoopLatency", this.txtISRLatency.Text);
+
+                ProjectFile.WriteKey("TimingGraph", "TriggerPlacement", this.cmbTriggerPlacement.SelectedIndex.ToString());
+                ProjectFile.WriteKey("TimingGraph", "UserTriggerPosition", this.chartTiming.Annotations["annADCTrigger"].AnchorX.ToString(CultureInfo.InvariantCulture));
 
                 // Parameter listing complete
 
@@ -1758,19 +1684,30 @@ namespace dcld
 
         private bool OpenFile(string Filename)
         {
-            int i = 0;
-            string str_path = "", str_dum = "", str_file = "";
-
-            str_path = Filename.Trim();
+            bool project_conflicts = false;
+            int i = 0, int_dum = 0;
+            string str_dum = ""; //, str_file = "";
 
             stbProgressBarLabel.Text = "Load Configuration:";
             stbProgressBarLabel.Visible = true;
             stbProgressBar.Visible = true;
-            stbProgressBar.Value = 0;
+            stbProgressBar.Value = 5;
             Application.DoEvents();
 
             try
             {
+
+                // write debugging info to output window
+                DebugInfoPrintLine(">Open File '" + Filename + "'...");
+                
+                // Set Project File
+                if (!ProjectFile.SetFilename(Filename.Trim()))
+                {
+                    DebugInfoPrintLine(">File loading error. Could not set project file.");
+                    return (false);
+                }
+                else
+                    DebugInfoPrintLine(">File found");
 
                 // Set flag
                 ProjectFileLoadActive = true;
@@ -1779,116 +1716,142 @@ namespace dcld
                 stbProgressBar.Value = 10;
                 Application.DoEvents();
 
-                // write debugging info to output window
-                txtOutput.AppendText("Open File '" + Filename + "'...\r\n");
 
                 // Control Type and Mode
-                this.cmbCompType.SelectedIndex = Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "ControlType", "2"));
-                cmbQScalingMethod.SelectedIndex = Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "ScalingMode", "0"));
-                cmbQFormat.SelectedIndex = Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "QFormat", "1"));
+                cmbCompType.SelectedIndex = Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "ControlType", "2"));
+                cmbQScalingMethod.SelectedIndex = Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "ScalingMode", "0"));
+                cmbQFormat.SelectedIndex = Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "QFormat", "1"));
 
-                txtSamplingFrequency.Text = ReadConfigString(str_path, "ControlSetup", "SamplingFrequency", "50000");
-                txtInputGain.Text = ReadConfigString(str_path, "ControlSetup", "InputGain", "1");
-                chkNormalizeInputGain.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "InputGainNormalization", "0")));
-                chkBiDirectionalFeedback.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "BiDirectionalFeedback", "0")));
-                chkFeedbackRectification.Checked = Convert.ToBoolean(Convert.ToInt32(ReadConfigString(str_path, "ControlSetup", "FeedbackRectification", "0")));
+                txtSamplingFrequency.Text = ProjectFile.ReadKey("ControlSetup", "SamplingFrequency", "50000");
+                txtInputGain.Text = ProjectFile.ReadKey("ControlSetup", "InputGain", "1.000");
+                chkNormalizeInputGain.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "InputGainNormalization", "1")));
+                chkBiDirectionalFeedback.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "BiDirectionalFeedback", "0")));
+                chkFeedbackRectification.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "FeedbackRectification", "0")));
+                txtOutputGain.Text = ProjectFile.ReadKey("ControlSetup", "OutputGain", "1.000");
+                chkNormalizeOutputGain.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "OutputGainNormalization", "1")));
+
+                chkEnableAdaptiveGainControl.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "EnableAGC", "0")));
+                chkAGCAddEnable.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "AddAGCEnableSwitch", "0")));
+                chkAGCAddGetModFactorFunCall.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "AddAGCGetModFunCall", "0")));
+
 
                 for (i = 0; i < txtPole.Length; i++)
                 {
-                    txtPole[i].Text = ReadConfigString(str_path, "ControlSetup", "FrequencyP" + i.ToString(), "1");
-                    if (i > 0) txtZero[i].Text = ReadConfigString(str_path, "ControlSetup", "FrequencyZ" + i.ToString(), "1");
+                    txtPole[i].Text = ProjectFile.ReadKey("ControlSetup", "FrequencyP" + i.ToString(), "1");
+                    if (i > 0) txtZero[i].Text = ProjectFile.ReadKey("ControlSetup", "FrequencyZ" + i.ToString(), "1");
                 }
 
-                txtInputDataResolution.Text = ReadConfigString(str_path, "ControlSetup", "InputDataResolution", "12");
+                txtInputDataResolution.Text = ProjectFile.ReadKey("ControlSetup", "InputDataResolution", "12");
 
-                taboptMaxFPError.Text = ReadConfigString(str_path, "ControlSetup", "FixedPointErrorMsg", "0.5");
-                taboptMaxFPErrorWarning.Text = ReadConfigString(str_path, "ControlSetup", "FixedPointErrorWarning", "0.1");
+                taboptMaxFPError.Text = ProjectFile.ReadKey("ControlSetup", "FixedPointErrorMsg", "0.5");
+                taboptMaxFPErrorWarning.Text = ProjectFile.ReadKey("ControlSetup", "FixedPointErrorWarning", "0.1");
 
                 stbProgressBar.Value = 20;
                 Application.DoEvents();
 
+                // Feedback Definition
+                int_dum = Convert.ToInt32(ProjectFile.ReadKey("FeedbackDeclaration", "Type", "1"));
+                feedback.FeedbackType = (clsFeedbackDeclaration.dcldFeedbackType)int_dum;
+                feedback.ADCReference = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "ADCref", "3.3"));
+                feedback.ADCResolution = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "ADCres", "12.0"));
+                feedback.ADCIsDifferential = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("FeedbackDeclaration", "ADCdiff", "0")));
+                feedback.VoltageDividerR1 = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "VDR1", "12000"));
+                feedback.VoltageDividerR2 = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "VDR2", "2200"));
+                feedback.VoltageDividerAmplifierGain = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "VDGA", "1.0"));
+                feedback.CurrentSenseRshunt = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CSRS", "0.010"));
+                feedback.CurrentSenseAmplifierGain = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CSGA", "20"));
+                feedback.CurrentTransformerBurdenResistance = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CTRB", "10"));
+                feedback.CurrentTransformerWindingRatio = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CTWR", "50"));
+
+                // Ouptput Definition
+                int_dum = Convert.ToInt32(ProjectFile.ReadKey("OutputDeclaration", "Type", "1"));
+                ctrl_output.OutputType = (clsOutputDeclaration.dcldOutputType)int_dum;
+                ctrl_output.PWMClock = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "PCLK", "4000000000"));
+                ctrl_output.PWMClockDivider = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "PCLKDIV", "1.0"));
+                ctrl_output.PWMFrequency = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "PWMFREQ", "250000.0"));
+
                 // Code Generator Tab
-                txtControllerNamePrefix.Text = ReadConfigString(str_path, "AssemblyGenerator", "UserPrefix1", "");
-                txtControllerNameLabel.Text = ReadConfigString(str_path, "AssemblyGenerator", "UserPrefix2", "");
-                chkUserControllerNameLabel.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "UseUserPrefix", "1")));
-                chkUserVariableNamePrefix.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "UseUserPrefixVar", "1")));
+                txtControllerNamePrefix.Text = ProjectFile.ReadKey("AssemblyGenerator", "UserPrefix1", "");
+                txtControllerNameLabel.Text = ProjectFile.ReadKey("AssemblyGenerator", "UserPrefix2", "");
 
                 stbProgressBar.Value = 30;
                 Application.DoEvents();
 
-                this.chkContextSaving.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "ContextSaving", "1")));
-                this.chkSaveRestoreShadowRegisters.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "ContextSavingShadowRegisters", "1")));
-                this.chkSaveRestoreMACRegisters.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "ContextSavingMACRegisters", "1")));
-                this.chkSaveRestoreAccumulators.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "ContextSavingAccumulatorRegisters", "1")));
-                this.chkSaveRestoreCoreConfig.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "ContextSavingCoreConfigRegister", "1")));
-                this.chkSaveRestoreCoreStatus.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "ContextSavingCoreStatusRegister", "1")));
+                this.chkContextSaving.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "ContextSaving", "1")));
+                this.chkSaveRestoreShadowRegisters.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "ContextSavingShadowRegisters", "1")));
+                this.chkSaveRestoreMACRegisters.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "ContextSavingMACRegisters", "1")));
+                this.chkSaveRestoreAccumulators.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "ContextSavingAccumulatorRegisters", "1")));
+                this.chkSaveRestoreCoreConfig.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "ContextSavingCoreConfigRegister", "1")));
+                this.chkSaveRestoreCoreStatus.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "ContextSavingCoreStatusRegister", "1")));
 
                 stbProgressBar.Value = 40;
                 Application.DoEvents();
 
-                this.chkCodeFeatureOptions.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "CodeFeatureOptions", "1")));
-                this.chkAddCoreConfig.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "EnforceCoreConfiguration", "1")));
-                this.chkAddEnableDisable.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddEnableDisableFeature", "1")));
-                this.chkAddDisableDummyRead.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDisableDummyReadFeature", "1")));
-                this.chkAddErrorNormalization.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddErrorNormalization", "1")));
-                this.chkAddADCTriggerAPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddADCTriggerAPlacement", "1")));
-                this.chkAddADCTriggerBPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddADCTriggerBPlacement", "0")));
-                this.chkAddCascadedFunctionCall.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddCascadedFunctionCall", "0")));
+                this.chkCodeFeatureOptions.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "CodeFeatureOptions", "1")));
+                this.chkAddCoreConfig.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "EnforceCoreConfiguration", "1")));
+                this.chkAddEnableDisable.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddEnableDisableFeature", "1")));
+                this.chkAddDisableDummyRead.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddDisableDummyReadFeature", "1")));
+                this.chkAddErrorNormalization.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddErrorNormalization", "1")));
+                this.chkAddADCTriggerAPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddADCTriggerAPlacement", "1")));
+                this.chkAddADCTriggerBPlacement.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddADCTriggerBPlacement", "0")));
+                this.chkAddCascadedFunctionCall.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddCascadedFunctionCall", "0")));
 
-                this.chkAutomatedDataInterface.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAutomatedDataInterface", "0")));
-                this.chkAddAlternateSource.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAlternateSource", "0")));
-                this.chkAddAlternateTarget.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAlternateTarget", "0")));
+                this.chkAutomatedDataInterface.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddAutomatedDataInterface", "0")));
+                this.chkAddAlternateSource.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddAlternateSource", "0")));
+                this.chkAddAlternateTarget.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddAlternateTarget", "0")));
 
-                this.chkDataProviderSource.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "DataProviderSource", "0")));
-                this.chkAddDataProviderControlInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlInput", "0")));
-                this.chkAddDataProviderErrorInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderErrorInput", "0")));
-                this.chkAddDataProviderControlOutput.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddDataProviderControlOutput", "0")));
+                this.chkDataProviderSource.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "DataProviderSource", "0")));
+                this.chkAddDataProviderControlInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddDataProviderControlInput", "0")));
+                this.chkAddDataProviderErrorInput.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddDataProviderErrorInput", "0")));
+                this.chkAddDataProviderControlOutput.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddDataProviderControlOutput", "0")));
 
                 stbProgressBar.Value = 50;
                 Application.DoEvents();
 
-                this.chkAntiWindup.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AntiWindup", "1")));
-                this.chkAntiWindupSoftDesaturationFlag.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AntiWindupSoftDesaturation", "0")));
-                this.chkAntiWindupClampMax.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMaximumClamping", "1")));
-                this.chkAntiWindupMaxStatusFlag.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMaximumClampingStatusFlag", "0")));
-                this.chkAntiWindupClampMin.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMinimumClamping", "1")));
-                this.chkAntiWindupMinStatusFlag.Checked = Convert.ToBoolean(Convert.ToUInt16(ReadConfigString(str_path, "AssemblyGenerator", "AddAntiWindupMinimumClampingStatusFlag", "0")));
+                this.chkAntiWindup.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AntiWindup", "1")));
+                this.chkAntiWindupSoftDesaturationFlag.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AntiWindupSoftDesaturation", "0")));
+                this.chkAntiWindupClampMax.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddAntiWindupMaximumClamping", "1")));
+                this.chkAntiWindupMaxStatusFlag.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddAntiWindupMaximumClampingStatusFlag", "0")));
+                this.chkAntiWindupClampMin.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddAntiWindupMinimumClamping", "1")));
+                this.chkAntiWindupMinStatusFlag.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddAntiWindupMinimumClampingStatusFlag", "0")));
                 
 
                 stbProgressBar.Value = 60;
                 Application.DoEvents();
 
                 // Source code pages
-                str_dum = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                str_file = lblFinalNamePrefixOutput.Text;
-                this.txtASMSourcePath.Text = ReadConfigString(str_path, "CodeGenerationPaths", "ASMSourcePath", str_dum + "\\" + str_file + "_asm.s");
-                this.txtCSourcePath.Text = ReadConfigString(str_path, "CodeGenerationPaths", "CSourcePath", str_dum + "\\" + str_file + ".c");
-                this.txtCHeaderPath.Text = ReadConfigString(str_path, "CodeGenerationPaths", "CHeaderPath", str_dum + "\\" + str_file + ".h");
-                this.txtCLibPath.Text = ReadConfigString(str_path, "CodeGenerationPaths", "CLibPath", "\\" + "npnz16b.h");
+                this.txtASMSourcePath.Text = ProjectFile.ReadKey("CodeGenerationPaths", "ASMSourcePath", ""); //str_dum + _dsp + str_file + "_asm.s");
+                this.txtCSourcePath.Text = ProjectFile.ReadKey("CodeGenerationPaths", "CSourcePath", ""); //str_dum + _dsp + str_file + ".c");
+                this.txtCHeaderPath.Text = ProjectFile.ReadKey("CodeGenerationPaths", "CHeaderPath", ""); //str_dum + _dsp + str_file + ".h");
+                this.txtCLibPath.Text = ProjectFile.ReadKey("CodeGenerationPaths", "CLibPath", ""); //_dsp + "npnz16b.h");
 
                 stbProgressBar.Value = 70;
                 Application.DoEvents();
 
-                this.assemblyLibraryExportToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(str_path, "CodeGenerationPaths", "ExportASMSource", "1")));
-                this.libraryCSourceFileExportToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(str_path, "CodeGenerationPaths", "ExportCSource", "1")));
-                this.libraryCHeaderExportToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(str_path, "CodeGenerationPaths", "ExportCHeader", "1")));
-                this.genericControlLibraryHeaderExportToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(str_path, "CodeGenerationPaths", "ExportCLib", "1")));
-                this.generateCodeBeforeExportToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(str_path, "CodeGenerationPaths", "EnableOneClickExport", "1")));
-                //this.txtMPLABXProjectDir.Text = ReadConfigString(str_path, "CodeGenerationPaths", "MPLABX_ProjectDirectory", ""); // Is loaded separately when project file is opened
-                this.chkCSourceIncludePath.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(str_path, "CodeGenerationPaths", "IncludeCHeaderPathInCSource", "1")));
-                this.chkCHeaderIncludePath.Checked = Convert.ToBoolean(Convert.ToUInt32(ReadConfigString(str_path, "CodeGenerationPaths", "IncludeCLibPathInCHeader", "1")));
+                this.assemblyLibraryExportToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("CodeGenerationPaths", "ExportASMSource", "1")));
+                this.libraryCSourceFileExportToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("CodeGenerationPaths", "ExportCSource", "1")));
+                this.libraryCHeaderExportToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("CodeGenerationPaths", "ExportCHeader", "1")));
+                this.genericControlLibraryHeaderExportToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("CodeGenerationPaths", "ExportCLib", "1")));
+                this.generateCodeBeforeExportToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("CodeGenerationPaths", "EnableOneClickExport", "1")));
+                //this.txtMPLABXProjectDir.Text = ProjectFile.ReadKey("CodeGenerationPaths", "MPLABX_ProjectDirectory", ""); // Is loaded separately when project file is opened
+                this.chkCSourceIncludePath.Checked = Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("CodeGenerationPaths", "IncludeCHeaderPathInCSource", "1")));
+                this.chkCHeaderIncludePath.Checked = Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("CodeGenerationPaths", "IncludeCLibPathInCHeader", "1")));
 
                 stbProgressBar.Value = 80;
                 Application.DoEvents();
 
                 // Timing graph
-                this.cmbLoopOptimizationLevel.SelectedIndex = Convert.ToInt16(ReadConfigString(str_path, "TimingGraph", "ControlLoopOptimization", "0"));
+                this.cmbLoopTriggerOption.SelectedIndex = Convert.ToInt16(ProjectFile.ReadKey("TimingGraph", "LoopTriggerOption", "0"));
 
-                this.txtCPUClock.Text = ReadConfigString(str_path, "TimingGraph", "CPUClock", "70");
-                this.txtADCLatency.Text = ReadConfigString(str_path, "TimingGraph", "ADCLatency", "310");
-                this.txtPWMFrequency.Text = ReadConfigString(str_path, "TimingGraph", "PWMFrequency", "250");
-                this.txtPWMDutyCycle.Text = ReadConfigString(str_path, "TimingGraph", "PWMDutyCycle", "30");
-                this.txtISRLatency.Text = ReadConfigString(str_path, "TimingGraph", "ControlLoopLatency", "171");
+                this.txtCPUClock.Text = ProjectFile.ReadKey("TimingGraph", "CPUClock", "70");
+                this.txtADCLatency.Text = ProjectFile.ReadKey("TimingGraph", "ADCLatency", "310");
+                this.txtPWMFrequency.Text = ProjectFile.ReadKey("TimingGraph", "PWMFrequency", "250");
+                this.txtPWMDutyCycle.Text = ProjectFile.ReadKey("TimingGraph", "PWMDutyCycle", "30");
+                this.txtISRLatency.Text = ProjectFile.ReadKey("TimingGraph", "ControlLoopLatency", "171");
+                this.cmbTriggerPlacement.SelectedIndex = Convert.ToInt32(ProjectFile.ReadKey("TimingGraph", "TriggerPlacement", "0"));
+                this.chartTiming.Annotations["annADCTrigger"].AnchorX = Convert.ToDouble(ProjectFile.ReadKey("TimingGraph", "UserTriggerPosition", "0"));
+                
+                chartTimingSetAnnotationLabelPositions(this, EventArgs.Empty);
 
                 stbProgressBar.Value = 90;
                 Application.DoEvents();
@@ -1897,30 +1860,51 @@ namespace dcld
                 // Parameter listing complete
 
                 // Load user history
-                LoadHistorySettingsList(str_path);
-
+                LoadHistorySettingsList(ProjectFile.FileName);
                 ForceCoefficientsUpdate(this, EventArgs.Empty);
 
-                // First load recent project name
-                CurrentProjectFileName = str_path;
-                this.Text = Application.ProductName + " v" + Application.ProductVersion + " - [" + CurrentProjectFileName + "]";
+                // First load recent project name into title bar
+                this.Text = Application.ProductName + " v" + Application.ProductVersion + " - [" + ProjectFile.FileName + "]";
 
                 // Construct absolute MPLAB X project directory path
-                this.txtMPLABXProjectDir.Text = ReadConfigString(str_path, "CodeGenerationPaths", "MPLABX_ProjectDirectory", "");
-                if (txtMPLABXProjectDir.Text.Trim().Length > 0)
+                str_dum = ProjectFile.ReadKey("CodeGenerationPaths", "MPLABX_ProjectDirectory", "");
+                str_dum = ConvertFilePath.ToAbsoluteFilePath(str_dum, ProjectFile.Directory);
+
+                if ((str_dum.Trim().Length > 3) && (System.IO.Directory.Exists(str_dum)))
                 {
-                    MPLABXProjectDirectory = GetMPLABXProjectPath((object)txtMPLABXProjectDir, (EventArgs)null);
-                    txtMPLABXProjectDir.ToolTipText = MPLABXProjectDirectory;
+                    if (MPLABXProject.SetMPLABXProject(str_dum))
+                    {
+                        txtMPLABXProjectDir.Text = MPLABXProject.MPLABXProjectDirectory;
+                        txtMPLABXProjectDir.ToolTipText = MPLABXProject.MPLABXProjectDirectory;
+                    }
+                    else
+                    {
+                        project_conflicts = true;
+                    }
+                }
+                else
+                {
+                    project_conflicts = true;
+                }
+
+                // Check for project loading errors
+                if (project_conflicts) { 
+                MessageBox.Show(
+                    "The location of the assiciated MPLAB x project is not valid anymore. " +
+                    "Please review the project configuration to make sure the associated  " +
+                    "MPLAB X project does exist and is accessible.",
+                    "Project Loading Warning",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
 
                 // write debugging info to output window
-                txtOutput.AppendText("Code Generator File Paths:\r\n");
-                txtOutput.AppendText("    - DCLD Project Directory:         " + GetCurrentProjectFilePath(this, EventArgs.Empty) + "\r\n");
-                txtOutput.AppendText("    - MPLAB X Project Directory:      " + MPLABXProjectDirectory + "\r\n");
-                txtOutput.AppendText("    - ASM Source File Directory:      " + GetAbsoluteFilePath(this, EventArgs.Empty, txtASMSourcePath.Text, MPLABXProjectDirectory) + "\r\n");
-                txtOutput.AppendText("    - C Source File Directory:        " + GetAbsoluteFilePath(this, EventArgs.Empty, txtCSourcePath.Text, MPLABXProjectDirectory) + "\r\n");
-                txtOutput.AppendText("    - C Header File Directory:        " + GetAbsoluteFilePath(this, EventArgs.Empty, txtCHeaderPath.Text, MPLABXProjectDirectory) + "\r\n");
-                txtOutput.AppendText("    - Library Header File Directory:  " + GetAbsoluteFilePath(this, EventArgs.Empty, txtCLibPath.Text, MPLABXProjectDirectory) + "\r\n");
+                DebugInfoPrintLine(">Code Generator File Paths:");
+                DebugInfoPrintLine(">    - DCLD Project Directory:         " + ProjectFile.Directory);
+                DebugInfoPrintLine(">    - MPLAB X Project Directory:      " + MPLABXProject.MPLABXProjectDirectory);
+                DebugInfoPrintLine(">    - ASM Source File Directory:      " + ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXProjectDirectory));
+                DebugInfoPrintLine(">    - C Source File Directory:        " + ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXProjectDirectory));
+                DebugInfoPrintLine(">    - C Header File Directory:        " + ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXProjectDirectory));
+                DebugInfoPrintLine(">    - Library Header File Directory:  " + ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXProjectDirectory));
 
                 // Set Flags
                 ProjectFileLoadActive = false;
@@ -1928,14 +1912,23 @@ namespace dcld
                 saveToolStripMenuItem.Enabled = false;
                 toolStripButtonSave.Enabled = saveToolStripMenuItem.Enabled;
 
+                stbProgressBar.Value = 100;
+                Application.DoEvents();
                 stbProgressBar.Visible = false;
                 stbProgressBarLabel.Visible = false;
-                
+
+                if (project_conflicts)
+                    OpenProjectConfigWindow();
+
                 return (true);
 
             }
             catch (Exception ex)
             {
+                DebugInfoPrintLine(
+                    ">Open File Error (0x" + ex.HResult.ToString("X") + ")\r\n" + 
+                    ">Original error: " + ex.Message
+                    );
                 MessageBox.Show(
                     "Error (0x" + ex.HResult.ToString("X") + "): Could not read file from disk.\r\n" + 
                     "Original error: " + ex.Message, 
@@ -1944,10 +1937,44 @@ namespace dcld
                     MessageBoxIcon.Error
                     );
 
+                // Clear Project File
+                ProjectFile.Clear();
+
                 stbProgressBarLabel.Visible = false;
                 stbProgressBar.Visible = false;
                 return (false);
             }
+        }
+
+        private void UpdateFilePaths()
+        {
+            string asm_source_buf = "", c_cource_buf = "", c_head_buf = "", c_lib_buf = "";
+
+            asm_source_buf = ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute);
+            c_cource_buf = ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute);
+            c_head_buf = ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute);
+            c_lib_buf = ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute);
+
+            // Make file locations relative
+            txtASMSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(asm_source_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
+            txtCSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_cource_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
+            txtCHeaderPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_head_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
+            txtCLibPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_lib_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
+
+
+            //asm_source_buf = ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXProjectDirectory);
+            //c_cource_buf = ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXProjectDirectory);
+            //c_head_buf = ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXProjectDirectory);
+            //c_lib_buf = ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXProjectDirectory);
+
+            //// Make file locations relative
+            //txtASMSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(asm_source_buf, MPLABXProject.MPLABXProjectDirectory));
+            //txtCSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_cource_buf, MPLABXProject.MPLABXProjectDirectory));
+            //txtCHeaderPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_head_buf, MPLABXProject.MPLABXProjectDirectory));
+            //txtCLibPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_lib_buf, MPLABXProject.MPLABXProjectDirectory));
+
+            return;
+
         }
 
         private void NumberTextBox_KeyDownNoScaling(object sender, KeyEventArgs e)
@@ -1973,7 +2000,7 @@ namespace dcld
 
         }
 
-        private void NumberTextBox_KeyDownWithScaling(object sender, KeyEventArgs e)
+        public void NumberTextBox_KeyDownWithScaling(object sender, KeyEventArgs e)
         {
             string tval = "";
             TextBox tBox;
@@ -2342,34 +2369,22 @@ namespace dcld
             SaveFileDialog sfdlg = new SaveFileDialog();
 
             // Export is only allowed if the project file has been saved by the user, to prevent that files end up in Nirvana...
-            if (!File.Exists(CurrentProjectFileName))
-            { 
+            if (!File.Exists(ProjectFile.FileName))
+            {
                 result = MessageBox.Show(this,
-                        "The recent configuration has not been saved yet. \r\n" +
+                        "The recent configuration has not been copleted yet. \r\n" +
                         "\r\n" + 
                         "Features such as relative path declaration in source files and the user setting " +
-                        "hitory log, will not be supported until this configuration has been saved. It is" +
-                        "highly recommended to safe the file before you continue.\r\n" +
-                        "\r\n" + 
-                        "- Click 'Yes' to save the configuration right now.\r\n" +
-                        "- Click 'No' to export the generated source code files \r\n" +
-                        "- Click 'Cancel' to return to the application\r\n" +
+                        "hitory log, will not be supported until this configuration has been saved. \r\n"+
+                        "\r\n" +
+                        "Please complete the configuraiton of the most recent project on the following " +
+                        "window  before you continue.\r\n" +
                         "\r\n",
-                        "Warning", 
-                        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                        "Project Configuration Warning", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-                switch (result)
-                {
-                    case System.Windows.Forms.DialogResult.Yes:
-                        SaveFile(sender, e);
-                        return;
-
-                    case System.Windows.Forms.DialogResult.No:
-                        break;
-
-                    case System.Windows.Forms.DialogResult.Cancel:
-                        return;
-                }
+                OpenProjectConfigWindow();
+                return;
 
             }
 
@@ -2403,14 +2418,14 @@ namespace dcld
                 }
 
                 // check if filename is valid
+                str_path = ConvertFilePath.Unix2Win(str_path);   // Always switch path into Windows path format
 
-
-                if (str_path.Contains(".\\"))  // path contains relative path items
+                if (str_path.Contains("." + _dsp))  // path contains relative path items
                 {
-                    str_path = GetAbsoluteFilePath(sender, e, str_path, MPLABXProjectDirectory);
+                    str_path = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(str_path, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                 }
                 
-                else if ((str_path.Length < 3) && (str_path.Substring(0, 2) != ".\\") && (str_path.Substring(0, 3) != "..\\"))
+                else if ((str_path.Length < 3) && (str_path.Substring(0, 2) != "." + _dsp) && (str_path.Substring(0, 3) != ".." + _dsp))
                 {
                     MessageBox.Show(
                         "No target directory has been defined yet.\r\n\r\n" +
@@ -2430,14 +2445,14 @@ namespace dcld
                     string[] str_arr;
                     string[] dum_sep = new string[1];
 
-                    dum_sep[0] = ("\\");
+                    dum_sep[0] = (_dsp);
                     str_arr = str_path.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries); ;
                     str_dum = str_arr[Convert.ToInt32(str_arr.GetUpperBound(0))];
                     str_path = str_path.Substring(0, str_path.IndexOf(str_dum));
                 }
 
-                if (str_path.Substring(str_path.Length - 1, 1) != "\\")
-                { str_path = str_path + "\\"; }
+                if (str_path.Substring(str_path.Length - _dsp.Length, _dsp.Length) != _dsp)
+                { str_path = str_path + _dsp; }
 
 
                 switch (i)
@@ -2448,7 +2463,7 @@ namespace dcld
                         if (assemblyLibraryExportToolStripMenuItem.Checked)
                         {
                             sfdlg.FileName = str_path + lblFinalNamePrefixOutput.Text + "_asm.s";
-                            txtOutput.AppendText("\r\nGenerating file " + sfdlg.FileName);
+                            DebugInfoPrintLine(">Generating file " + sfdlg.FileName);
                             if (System.IO.Directory.Exists(str_path))
                             {
                                 System.IO.File.WriteAllText(sfdlg.FileName, txtSyntaxEditorAssembly.Text);
@@ -2481,7 +2496,7 @@ namespace dcld
                         if (libraryCHeaderExportToolStripMenuItem.Checked)
                         {
                             sfdlg.FileName = str_path + lblFinalNamePrefixOutput.Text + ".h";
-                            txtOutput.AppendText("\r\nGenerating file " + sfdlg.FileName);
+                            DebugInfoPrintLine(">Generating file " + sfdlg.FileName);
                             if (System.IO.Directory.Exists(str_path)) 
                             {
                                 System.IO.File.WriteAllText(sfdlg.FileName, txtSyntaxEditorCHeader.Text);
@@ -2513,7 +2528,7 @@ namespace dcld
                         if (libraryCSourceFileExportToolStripMenuItem.Checked)
                         { 
                             sfdlg.FileName = str_path + lblFinalNamePrefixOutput.Text + ".c";
-                            txtOutput.AppendText("\r\nGenerating file " + sfdlg.FileName);
+                            DebugInfoPrintLine(">Generating file " + sfdlg.FileName);
                             if (System.IO.Directory.Exists(str_path)) 
                             {
                                 System.IO.File.WriteAllText(sfdlg.FileName, txtSyntaxEditorCSource.Text);
@@ -2545,7 +2560,7 @@ namespace dcld
                         if (genericControlLibraryHeaderExportToolStripMenuItem.Checked)
                         {
                             sfdlg.FileName = str_path + "npnz16b.h";
-                            txtOutput.AppendText("\r\nGenerating file " + sfdlg.FileName);
+                            DebugInfoPrintLine(">Generating file " + sfdlg.FileName);
                             if (System.IO.Directory.Exists(str_path))
                             { 
                                 System.IO.File.WriteAllText(sfdlg.FileName, txtSyntaxEditorCLibHeader.Text);
@@ -2621,33 +2636,34 @@ namespace dcld
             if (!AskForFileSave(sender, e)) e.Cancel = true;
 
             // Save last user settings
-            WriteConfigString(INI_FILE, "main_window", "winstate", Convert.ToInt32(WindowState).ToString());
+            SettingsFile.WriteKey("main_window", "winstate", Convert.ToInt32(WindowState).ToString());
             if (WindowState == System.Windows.Forms.FormWindowState.Normal)
             {
-                WriteConfigString(INI_FILE, "main_window", "width", Convert.ToString(Width));
-                WriteConfigString(INI_FILE, "main_window", "height", Convert.ToString(Height));
+               SettingsFile.WriteKey("main_window", "width", Convert.ToString(Width));
+               SettingsFile.WriteKey("main_window", "height", Convert.ToString(Height));
             }
 
             // save last Bode axis settings
-            WriteConfigString(INI_FILE, "bode_plot", "x_min", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisX.Minimum));
-            WriteConfigString(INI_FILE, "bode_plot", "x_max", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisX.Maximum));
-            WriteConfigString(INI_FILE, "bode_plot", "y1_min", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisY.Minimum));
-            WriteConfigString(INI_FILE, "bode_plot", "y1_max", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisY.Maximum));
-            WriteConfigString(INI_FILE, "bode_plot", "y2_min", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisY2.Minimum));
-            WriteConfigString(INI_FILE, "bode_plot", "y2_max", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisY2.Maximum));
-            WriteConfigString(INI_FILE, "bode_plot", "show_s_domain", Convert.ToString(Convert.ToInt32(showSDomainTransferFunctionToolStripMenuItem.Checked)));
+           SettingsFile.WriteKey("bode_plot", "x_min", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisX.Minimum));
+           SettingsFile.WriteKey("bode_plot", "x_max", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisX.Maximum));
+           SettingsFile.WriteKey("bode_plot", "y1_min", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisY.Minimum));
+           SettingsFile.WriteKey("bode_plot", "y1_max", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisY.Maximum));
+           SettingsFile.WriteKey("bode_plot", "y2_min", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisY2.Minimum));
+           SettingsFile.WriteKey("bode_plot", "y2_max", Convert.ToString(chartBode.ChartAreas["GainPhase"].AxisY2.Maximum));
+           SettingsFile.WriteKey("bode_plot", "show_s_domain", Convert.ToString(Convert.ToInt32(showSDomainTransferFunctionToolStripMenuItem.Checked)));
 
             // save data table status
-            WriteConfigString(INI_FILE, "data_table", "visible", Convert.ToUInt16(showCoeffficientDataTableToolStripMenuItem.Checked).ToString());
-            WriteConfigString(INI_FILE, "data_table", "splitter_pos", splitContainerCoefficients.Panel2.Height.ToString());
+           SettingsFile.WriteKey("data_table", "visible", Convert.ToUInt16(showCoeffficientDataTableToolStripMenuItem.Checked).ToString());
+           SettingsFile.WriteKey("data_table", "splitter_pos", splitContainerCoefficients.Panel2.Height.ToString());
 
             // save compenstor setting status
-            WriteConfigString(INI_FILE, "compensator", "visible", Convert.ToUInt16(showSourceCodeTimingToolStripMenuItem.Checked).ToString());
+           SettingsFile.WriteKey("compensator", "visible", Convert.ToUInt16(showSourceCodeTimingToolStripMenuItem.Checked).ToString());
 
             // save body generation and timing analysis window status
-            WriteConfigString(INI_FILE, "code_generator", "settings_splitter_pos", splitContainerContents.SplitterDistance.ToString());
-            WriteConfigString(INI_FILE, "code_generator", "timing_visible", Convert.ToUInt16(showSourceCodeTimingToolStripMenuItem.Checked).ToString());
-            WriteConfigString(INI_FILE, "code_generator", "timing_splitter_pos", splitContainerTiming.Panel2.Height.ToString());
+           SettingsFile.WriteKey("code_generator", "settings_splitter_pos", splitContainerContents.SplitterDistance.ToString());
+           SettingsFile.WriteKey("code_generator", "timing_visible", Convert.ToUInt16(showSourceCodeTimingToolStripMenuItem.Checked).ToString());
+           SettingsFile.WriteKey("code_generator", "timing_splitter_pos", splitContainerTiming.Panel2.Height.ToString());
+            
 
         }
 
@@ -2763,7 +2779,7 @@ namespace dcld
             }
             catch
             {
-                txtOutput.AppendText("chartBode_UpdateCursorMeasurement(" + ForceCursorPositionX.ToString() + ", " + ForceCursorPositionY.ToString() + ", " + CursorX.ToString() + ") Exception\r\n");
+                DebugInfoPrintLine(">chartBode_UpdateCursorMeasurement(" + ForceCursorPositionX.ToString() + ", " + ForceCursorPositionY.ToString() + ", " + CursorX.ToString() + ") Exception");
             }
 
             return;
@@ -2792,7 +2808,7 @@ namespace dcld
             }
             catch
             {
-                txtOutput.AppendText("chartBode_ResetCursorMeasurement(" + HideCursor.ToString() + ") Exception\r\n");
+                DebugInfoPrintLine(">chartBode_ResetCursorMeasurement(" + HideCursor.ToString() + ") Exception");
             }
 
             return;
@@ -3081,7 +3097,7 @@ namespace dcld
             }
             catch
             {
-                txtOutput.AppendText("chartBode_MouseMove() Exception\r\n");
+                DebugInfoPrintLine(">chartBode_MouseMove() Exception");
             }
 
 
@@ -3146,7 +3162,7 @@ namespace dcld
             sfdlg.CheckPathExists = true;
             sfdlg.OverwritePrompt = true;
 
-            sfdlg.Filter = "Assembly files (*.s)|*.s|Header files (*.h)|*.h|Source files (*.c)|*.c|All files (*.*)|*.*";
+            sfdlg.Filter = "Assembly files (*.s)|*.s|C-Header files (*.h)|*.h|C-Source files (*.c)|*.c|All files (*.*)|*.*";
 
             try { cmd = (Button)sender; }
             catch{ return(false); }
@@ -3155,28 +3171,28 @@ namespace dcld
             switch (sender_name) 
             { 
                 case "cmdASMSourcePath":
-                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtASMSourcePath.Text, MPLABXProjectDirectory);
+                    sfdlg.InitialDirectory = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text + "_asm";
                     sfdlg.DefaultExt = ".s";
                     sfdlg.FilterIndex = 1;
                     break;
 
                 case "cmdCHeaderPath":
-                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtCHeaderPath.Text, MPLABXProjectDirectory);
+                    sfdlg.InitialDirectory = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text;
                     sfdlg.DefaultExt = ".h";
                     sfdlg.FilterIndex = 2;
                     break;
 
                 case "cmdCLibPath":
-                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtCLibPath.Text, MPLABXProjectDirectory);
+                    sfdlg.InitialDirectory = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                     sfdlg.FileName = "npnz16b.h";
                     sfdlg.DefaultExt = ".h";
                     sfdlg.FilterIndex = 2;
                     break;
 
                 case "cmdCSourcePath":
-                    sfdlg.InitialDirectory = GetAbsoluteFilePath(sender, e, txtCSourcePath.Text, MPLABXProjectDirectory);
+                    sfdlg.InitialDirectory = ConvertFilePath.Unix2Win(ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                     sfdlg.FileName = lblFinalNamePrefixOutput.Text;
                     sfdlg.DefaultExt = ".c";
                     sfdlg.FilterIndex = 3;
@@ -3195,7 +3211,7 @@ namespace dcld
                     {
                         str_path = sfdlg.FileName.Trim();
 
-                        dum_sep[0] = ("\\");
+                        dum_sep[0] = (_dsp);
                         str_arr = str_path.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries); ;
                         str_dum = str_arr[Convert.ToInt32(str_arr.GetUpperBound(0))];
                         str_path = str_path.Substring(0, str_path.IndexOf(str_dum));
@@ -3204,19 +3220,19 @@ namespace dcld
                         {
                                 
                             case "cmdASMSourcePath":
-                                txtASMSourcePath.Text = GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory);
+                                txtASMSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(str_path, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                                 break;
 
                             case "cmdCHeaderPath":
-                                txtCHeaderPath.Text = GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory);
+                                txtCHeaderPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(str_path, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                                 break;
 
                             case "cmdCLibPath":
-                                txtCLibPath.Text = GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory);
+                                txtCLibPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(str_path, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                                 break;
 
                             case "cmdCSourcePath":
-                                txtCSourcePath.Text = GetRelativeFilePath(sender, e, str_path, MPLABXProjectDirectory);
+                                txtCSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(str_path, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
                                 break;
 
                             default:
@@ -3297,30 +3313,31 @@ namespace dcld
             // Set common C-Code Generator Settings
             clsCCodeGenerator cGen = new clsCCodeGenerator();
 
+            cGen.dcldProjectFile = ProjectFile;
+
             cGen.FileNamePattern = txtControllerNamePrefix.Text.Trim() + txtControllerNameLabel.Text.Trim();
             cGen.PreShift = (int)(Convert.ToUInt32(cmbQFormat.Text.Substring(1, (int)cmbQFormat.Text.Length - 1)) - Convert.ToUInt32(txtInputDataResolution.Text));
 
-            if ((chkUserVariableNamePrefix.Checked) && (chkUserVariableNamePrefix.Enabled))
-            //            { cGen.PreFix = cGen.FileNamePattern + "_"; }
+            if (txtControllerNamePrefix.Text.Trim().Length > 0)
             { cGen.PreFix = txtControllerNamePrefix.Text.Trim() + "_"; }
             else { cGen.PreFix = DefaultVariablePrefix + "_"; }
 
             if (chkCSourceIncludePath.Checked)
-            { cGen.CHeaderIncludePath = GetIncludePath(txtCHeaderPath.Text); }
+            { cGen.CHeaderIncludePath = ConvertFilePath.Win2Unix(GetIncludePath(txtCHeaderPath.Text)); }
             else
             { cGen.CHeaderIncludePath = ""; }
 
             if (chkCHeaderIncludePath.Checked)
-            { cGen.LibHeaderIncludePath = GetIncludePath(txtCLibPath.Text); }
+            { cGen.LibHeaderIncludePath = ConvertFilePath.Win2Unix(GetIncludePath(txtCLibPath.Text)); }
             else
-            { cGen.CHeaderIncludePath = ""; }
+            { cGen.LibHeaderIncludePath = ""; }
 
-            cGen.TemplateFile = CCodeGeneratorFile;
-            cGen.CGS_Version = ReadConfigString(CCodeGeneratorFile, "generic", "Version", "n/a");
-            cGen.CGS_VersionDate = ReadConfigString(CCodeGeneratorFile, "generic", "Date", "n/a");
+            cGen.GeneratorScript = CCodeGeneratorScript;
+            cGen.CGS_Version = CCodeGeneratorScript.ReadKey("generic", "Version", "n/a");
+            cGen.CGS_VersionDate = CCodeGeneratorScript.ReadKey("generic", "Date", "n/a");
             cGen.CompTypeName = cmbCompType.Text;
             cGen.ScalingMethodName = cmbQScalingMethod.Text;
-
+            
             // Generate C-Source incorporating coefficients
 
             txtSyntaxEditorCSource.Text = cGen.BuildSource(cNPNZ).ToString(); // GenerateCSource(sender, e).ToString();
@@ -3334,7 +3351,7 @@ namespace dcld
 
             // Generate C Library Header
             txtSyntaxEditorCLibHeader.Text = cGen.BuildCLibHeader(cNPNZ).ToString(); //  GenerateCLibHeader(sender, e).ToString();
-            stbProgressBar.Value = 30;
+            stbProgressBar.Value = 35;
             Application.DoEvents();
 
             // ========================================================================
@@ -3363,7 +3380,9 @@ namespace dcld
             // Reset editor windows vertial scroll status
             if (EditorASMScrollPos > 0)
                 txtSyntaxEditorAssembly.SelectedView.GoToLine(EditorASMScrollPos-1);
-            
+
+            stbProgressBar.Value = 100;
+            Application.DoEvents();
             stbProgressBar.Visible = false;
             stbProgressBarLabel.Visible = false;
 
@@ -3373,22 +3392,47 @@ namespace dcld
         private string GetIncludePath(string PathDeclaration)
         {
             string str_dum = "";
+            string ref_dum = "";
 
-            str_dum = PathDeclaration;
+            // Trim parameter
+            PathDeclaration = PathDeclaration.Trim();
+
+            // If nothing has been specified yet, return empty string
+            if (PathDeclaration == string.Empty)
+                return (""); // Return Empty Path
+            else
+                str_dum = PathDeclaration; // Copy path declaration
+
+
+            // Check for include paths
+            // All files are reference to the common include directory declared in MPLAB X
+            // If nothing has been declared by the user, the MPLAB X project cirectory
+            // is set (location of MAKEFILE)
+
+            if ((MPLABXProject.MPLABXIncludeDirectory.Trim() == string.Empty) &&
+                (MPLABXProject.MPLABXProjectDirectory.Trim() != string.Empty))
+                ref_dum = MPLABXProject.MPLABXProjectDirectory.Trim();
+            else if (MPLABXProject.MPLABXIncludeDirectory.Trim() != string.Empty)
+                ref_dum = MPLABXProject.MPLABXIncludeDirectory.Trim();
+            else
+                ref_dum = str_dum;
+
+            // Get relative path with regards to reference path of MPLAB X include path
+            str_dum = ConvertFilePath.ToRelativeFilePath(str_dum, ref_dum);
 
             if ((str_dum.Length > 1) && (str_dum.Substring(0, 1) == "."))
             {
-                str_dum = str_dum.Replace("\\", "/");
-                if ((str_dum.Length > 1) && (str_dum.Substring(str_dum.Length - 1, 1) != "/")) str_dum = str_dum + "/";
+                str_dum = str_dum.Replace(_dsp, _adsp);
+                if ((str_dum.Length > 1) && (str_dum.Substring(str_dum.Length - _adsp.Length, _adsp.Length) != _adsp)) str_dum = str_dum + _adsp;
             }
             else
             {
-                if ((str_dum.Length > 1) && (str_dum.Substring(str_dum.Length - 1, 1) != "\\")) str_dum = str_dum + "\\";
+                if ((str_dum.Length > 1) && (str_dum.Substring(str_dum.Length - _dsp.Length, _dsp.Length) != _dsp)) str_dum = str_dum + _dsp;
             }
 
             // Return corrected include path
             return (str_dum);
-
+            
         }
 
         private StringBuilder GenerateAssembly(object sender, EventArgs e)
@@ -3424,15 +3468,20 @@ namespace dcld
 
             // Set basic options
             AssGen.Prefix = prefix;
-            AssGen.TemplateFile = AssemblyGeneratorFile;
+            AssGen.GeneratorScript = AsmGeneratorScript;
             AssGen.ScalingMethod = (int)(cNPNZ.ScalingMethod);
             AssGen.FilterOrder = (int)(cNPNZ.FilterOrder);
-            AssGen.CodeOptimizationLevel = cmbLoopOptimizationLevel.SelectedIndex;
+            AssGen.CodeOptimizationLevel = 0;
             AssGen.BidirectionalFeedback = cNPNZ.IsBidirectional;
             if (AssGen.BidirectionalFeedback) // feedback rectification option only allowed with bi-directional feedbacks
                 AssGen.FeedbackRectification = cNPNZ.FeedbackRecitification; 
             else
                 AssGen.FeedbackRectification = false;
+
+            // Set Adaptive Gain Control options
+            AssGen.AdaptiveGainModulationEnable = (chkEnableAdaptiveGainControl.Checked && chkEnableAdaptiveGainControl.Enabled);
+            AssGen.AdaptiveGainModulationAddEnableSwitch = (chkAGCAddEnable.Checked && chkAGCAddEnable.Enabled);
+            AssGen.AdaptiveGainModulationAddFunctionCall = (chkAGCAddGetModFactorFunCall.Checked && chkAGCAddGetModFactorFunCall.Enabled);
 
             // set dynamic execution options
             AssGen.SaveRestoreContext = this.chkContextSaving.Checked;
@@ -3471,9 +3520,9 @@ namespace dcld
 
             AssGen.CustomComment = "; **********************************************************************************" + "\r\n" +
                                    ";  SDK Version: " + Application.ProductName + " v" + Application.ProductVersion + "\r\n" +
-                                   ";  AGS Version: " + ReadConfigString(AssGen.TemplateFile, "generic", "Name", "") + 
-                                                    " v" + ReadConfigString(AssGen.TemplateFile, "generic", "Version", "") + 
-                                                    " (" + ReadConfigString(AssGen.TemplateFile, "generic", "Date", "") + ")" + "\r\n" +
+                                   ";  AGS Version: " + AsmGeneratorScript.ReadKey("generic", "Name", "") +
+                                                    " v" + AsmGeneratorScript.ReadKey("generic", "Version", "") +
+                                                    " (" + AsmGeneratorScript.ReadKey("generic", "Date", "") + ")" + "\r\n" +
                                    ";  Author:      " + Environment.UserName + "\r\n" +
                                    ";  Date/Time:   " + System.DateTime.Now.ToString() + "\r\n" +
                                    "; **********************************************************************************" + "\r\n" +
@@ -3496,7 +3545,7 @@ namespace dcld
             int i = 0;
             double pwm_freq = 0.0, pwm_per = 0.0, pwm_dc = 0.0;
             double adc_latency = 0.0, adc_trig = 0.0;
-            double cpu_clk = 0.0, cpu_load = 0.0, control_start_delay = 0.0, control_latency = 0.0, control_read = 0.0, control_write = 0.0;
+            double cpu_clk = 0.0, cpu_load = 0.0, control_start_delay = 0.0, control_latency = 0.0, control_read = 0.0, control_write = 0.0, user_trigger_delay = 0.0;
             double execution_time = 0.0, read_delay = 0.0, response_delay = 0.0;
             double pwm_fragment_start = 0.0, pwm_fragment_end = 0.0;
             int pwm_cycles = 0;
@@ -3517,32 +3566,26 @@ namespace dcld
                     control_read = 1e+3 * Convert.ToDouble(lblNumberOfInstructionCyclesRead.Text) * (1.0 / cpu_clk);
                     control_write = 1e+3 * Convert.ToDouble(lblNumberOfInstructionCyclesResponse.Text) * (1.0 / cpu_clk);
 
-                    if (this.txtISRLatency.Text.Length > 0) 
-                    { control_start_delay = Convert.ToDouble(this.txtISRLatency.Text); }
-                    else { return; }
                 }
                 else { return; }
 
-                // Update timing chart parameters
-                if (txtADCLatency.TextLength > 0)
-                {
+
+                // Set user, control and ADC delays
+                if (this.txtISRLatency.Text.Length > 0) 
+                    control_start_delay = Convert.ToDouble(this.txtISRLatency.Text);
+                if (txtPWMDutyCycle.TextLength > 0)
+                    pwm_dc = (Convert.ToDouble(txtPWMDutyCycle.Text) / 100.0);
+                if (this.txtADCLatency.Text.Length > 0)
                     adc_latency = Convert.ToDouble(txtADCLatency.Text);
-                }
-                else { return; }
-
-                if (txtPWMFrequency.TextLength > 0) 
+                if (this.txtPWMFrequency.TextLength > 0)
                 {
                     pwm_freq = Convert.ToDouble(txtPWMFrequency.Text);
                     if (pwm_freq == 0.0) return;
                     pwm_per = (1e+6 / pwm_freq);
                 }
-                else{ return; }
+                if (this.txtUserTriggerDelay.Text.Length > 0)
+                    user_trigger_delay = Convert.ToDouble(this.txtUserTriggerDelay.Text);
 
-                if (txtPWMDutyCycle.TextLength > 0) 
-                {
-                    pwm_dc = (Convert.ToDouble(txtPWMDutyCycle.Text) / 100.0);
-                }
-                else{ return; }
 
                 if ((control_latency < 0) || (float.IsInfinity((float)control_latency)))
                 { return; }
@@ -3575,6 +3618,10 @@ namespace dcld
                             case 4:     // Set trigger at falling edge
                                 adc_trig = (pwm_per * pwm_dc); //(default)
                                 break;
+                            default:
+                                adc_trig = chartTiming.Annotations[0].X;
+                                user_trigger_delay = 0;
+                                break;
                         }
                         
                         
@@ -3582,12 +3629,23 @@ namespace dcld
                     else{ adc_trig = (pwm_per * pwm_dc) / 2.0; } // set to default
                 }
 
+                // Incorporate user-defined trigger delay
+                adc_trig += user_trigger_delay;
+
                 // Update timing chart 
-            
                 // Build PWM Singal
             
                 // determine number of PWM cycles which need to be displayed
-                pwm_cycles = Convert.ToInt32(Math.Floor((adc_trig + control_start_delay + control_latency) / pwm_per) + 1.0);
+                switch (cmbLoopTriggerOption.SelectedIndex)
+                {
+                    case 0: // Control loop is called by the ADC interrupt
+                        pwm_cycles = Convert.ToInt32(Math.Floor((adc_trig + control_start_delay + control_latency) / pwm_per) + 1.0);
+                        break;
+
+                    case 1: // Control loop is called by the PWM interupt synchronous with ADC trigger
+                        pwm_cycles = Convert.ToInt32(Math.Floor((control_start_delay + control_latency) / pwm_per) + 1.0);
+                        break;
+                }
 
                 // Build time scale of PWM signal
 
@@ -3643,9 +3701,31 @@ namespace dcld
                 chartTiming.Series["ADC"].Points[5].XValue = pwm_per + pwm_fragment_end;
 
                 // Create signal timing plot of Control Loop activity
-                chartTiming.Series["Control"].Points[1].XValue = adc_trig + control_start_delay;
+
+                double control_start = 0.0, control_end = 0.0, control_read_delay = 0.0, control_write_delay = 0.0;
+
+                switch (cmbLoopTriggerOption.SelectedIndex)
+                {
+                    case 0: // Control loop is called by the ADC interrupt
+                        control_start = adc_trig + control_start_delay;
+                        control_read_delay = adc_trig + control_start_delay + control_read;
+                        control_write_delay = adc_trig + control_start_delay + control_write;
+                        control_end = adc_trig + control_start_delay + control_latency;
+
+                        break;
+
+                    case 1: // Control loop is called by the PWM interupt synchronous with ADC trigger
+
+                        control_start = adc_trig + adc_latency + control_start_delay;
+                        control_read_delay = adc_trig + adc_latency + control_start_delay + control_read;
+                        control_write_delay = adc_trig + adc_latency + control_start_delay + control_write;
+                        control_end = adc_trig + adc_latency + control_start_delay + control_latency;
+                        break;
+                }
+
+                chartTiming.Series["Control"].Points[1].XValue = control_start;
                 chartTiming.Series["Control"].Points[2].XValue = chartTiming.Series["Control"].Points[1].XValue;
-                chartTiming.Series["Control"].Points[3].XValue = adc_trig + control_start_delay + control_latency;
+                chartTiming.Series["Control"].Points[3].XValue = control_end;
                 chartTiming.Series["Control"].Points[4].XValue = chartTiming.Series["Control"].Points[3].XValue;
                 chartTiming.Series["Control"].Points[5].XValue = pwm_per + pwm_fragment_end;
 
@@ -3661,10 +3741,10 @@ namespace dcld
                 chartTiming.Annotations["annADCTrigger"].AnchorX = (float)adc_trig;
 
                 chartTiming.Annotations["annDataCapture"].X = nan;
-                chartTiming.Annotations["annDataCapture"].AnchorX = (float)(adc_trig + control_start_delay + control_read);
+                chartTiming.Annotations["annDataCapture"].AnchorX = (float)(control_read_delay); // (adc_trig + control_start_delay + control_read);
 
                 chartTiming.Annotations["annDataWriteBack"].X = nan;
-                chartTiming.Annotations["annDataWriteBack"].AnchorX = (float)(adc_trig + control_start_delay + control_write);
+                chartTiming.Annotations["annDataWriteBack"].AnchorX = (float)(control_write_delay); //(adc_trig + control_start_delay + control_write);
 
                 // Update timing table
                 execution_time = (adc_trig + control_start_delay + control_latency) - adc_trig;
@@ -3729,17 +3809,6 @@ namespace dcld
             return;
         }
 
-        private void chkUserControllerNameLabel_CheckedChanged(object sender, EventArgs e)
-        {
-            txtControllerNamePrefix.Enabled = chkUserControllerNameLabel.Checked;
-            chkUserVariableNamePrefix.Enabled = chkUserControllerNameLabel.Checked;
-            if (!chkUserControllerNameLabel.Checked) { txtControllerNamePrefix.Text = DefaultFilePrefix; }
-            GenerateCode(sender, e);
-
-            return;
-
-        }
-
         private void txtControllerNamePrefix_TextChanged(object sender, EventArgs e)
         {
             lblFinalNamePrefixOutput.Text = txtControllerNamePrefix.Text.Trim() + txtControllerNameLabel.Text.Trim();
@@ -3785,11 +3854,16 @@ namespace dcld
         {
             int i = 0;
             CheckBox check;
+            bool ACCBIsValid = false;
+
+            ACCBIsValid = (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT) ||
+                          (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT);
 
             for (i=0; i<grpContextSaving.Controls.Count; i++)
             {
                 check = (CheckBox)grpContextSaving.Controls[i];
-                if (check.Name != chkContextSaving.Name) check.Enabled = chkContextSaving.Checked; 
+                if (check.Name == chkSaveRestoreAccumulatorB.Name) check.Enabled = (chkContextSaving.Checked & ACCBIsValid);
+                else if (check.Name != chkContextSaving.Name) check.Enabled = chkContextSaving.Checked; 
             }
 
             CodeGeneratorOptions_CheckedChanged(sender, e);
@@ -3805,8 +3879,8 @@ namespace dcld
             for (i = 0; i < grpCodeFeatureOptions.Controls.Count; i++)
             {
                 check = (CheckBox)grpCodeFeatureOptions.Controls[i];
-                if (check.Name == chkStoreReloadAccLevel1.Name) check.Enabled = ((chkCodeFeatureOptions.Checked) && (cmbLoopOptimizationLevel.SelectedIndex == 1));
-                else if (check.Name != chkCodeFeatureOptions.Name) check.Enabled = chkCodeFeatureOptions.Checked;
+                if (check.Name != chkCodeFeatureOptions.Name) 
+                    check.Enabled = chkCodeFeatureOptions.Checked;
             }
 
             CodeGeneratorOptions_CheckedChanged(sender, e);
@@ -3896,13 +3970,22 @@ namespace dcld
         {
             UpdateTransferFunction(sender, e);
             chkSaveRestoreAccumulators_CheckedChanged(sender, e);
+
+            chkEnableAdaptiveGainControl.Enabled = (cmbQScalingMethod.SelectedIndex == 2);
+
+            //chkEnableAdaptiveGainControl.Enabled = ((cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT) ||
+            //                                        (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_SINGLE_BIT_SHIFT) ||
+            //                                        (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_OUTPUT_SCALING_FACTOR)
+            //                                        );
+            chkAGCAddEnable.Enabled = (chkEnableAdaptiveGainControl.Enabled && chkEnableAdaptiveGainControl.Checked);
+            chkAGCAddGetModFactorFunCall.Enabled = (chkEnableAdaptiveGainControl.Enabled && chkEnableAdaptiveGainControl.Checked);
             return;
         }
 
-        private void cmbLoopOptimizationLevel_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbLoopTriggerOption_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.chkStoreReloadAccLevel1.Enabled = (cmbLoopOptimizationLevel.SelectedIndex == 1);
-            CodeGeneratorOptions_CheckedChanged(sender, e);
+
+            UpdateExecutionRuntime(sender, e);
             return;
         }
 
@@ -4021,6 +4104,8 @@ namespace dcld
             chartTimingSetAnnotationLabelPositions(sender, e);
             UpdateExecutionRuntime(sender, e);
 
+            eventProjectFileChanged(sender, e);
+
             return;
         }
 
@@ -4039,6 +4124,8 @@ namespace dcld
 
             UpdateExecutionRuntime(sender, e);
             chartTimingSetAnnotationLabelPositions(sender, e);
+
+            eventProjectFileChanged(sender, e);            
             
             return;
         }
@@ -4048,7 +4135,6 @@ namespace dcld
 
             try
             {
-
                 // Set scales to show all available data
                 chartBode.ChartAreas["GainPhase"].AxisX.IsLogarithmic = true;
 
@@ -4085,7 +4171,7 @@ namespace dcld
 
             }
             catch {
-                txtOutput.AppendText("chartBode_SetScales(" + XAxesLimitType.ToString() + ") Exception\r\n");
+                DebugInfoPrintLine(">chartBode_SetScales(" + XAxesLimitType.ToString() + ") Exception");
             }
             return;
         }
@@ -4194,41 +4280,11 @@ namespace dcld
 
         private void SourcePathTextBox_TextChanged(object sender, EventArgs e)
         {
-            string txtName = "", str_dum = "";
+            string txtName = "";
 
-            if (sender.GetType().ToString() == "System.Windows.Forms.ToolStripTextBox")
-            { 
-                // Set control type
-                ToolStripTextBox txt = (ToolStripTextBox)sender;
-                txtName = txt.Name;
-
-                if (txtName == txtMPLABXProjectDir.Name)
-                {
-                    // Capture absolute path of MPLAB X project declaration
-                    str_dum = GetAbsoluteFilePath(sender, e, txt.Text, CurrentProjectFileName).Trim();
-
-                    // If user types in a directory, update MPLAB X Project Directory value
-                    if (str_dum.Length == 0)
-                    {
-                        MPLABXProjectDirectory = "";                        // Clear MPLAB X project directory declaration
-                        toolStripButtonMPLABXPathWarning.Visible = false;   // Hide warning icon
-                    }
-                    if (System.IO.Directory.Exists(str_dum))
-                    {
-                        if (!MPLABXProjectDirUpdate)
-                        { SetMPLABXProjectDirectory(sender, e, str_dum); }     // If path is valid, set path as new MPLAB X project pdirectory
-
-                        toolStripButtonMPLABXPathWarning.Visible = false;   // Hide warning icon
-                        
-                    }
-                    else
-                    {  // Show warning icon
-                        toolStripButtonMPLABXPathWarning.Visible = true;
-                    }
-                }
-            }
-            else if (sender.GetType().ToString() == "System.Windows.Forms.TextBox")
-            { 
+            // If a new source or header file path has been declared
+            if (sender.GetType().ToString() == "System.Windows.Forms.TextBox")
+            {
                 TextBox txt = (TextBox)sender;
                 txtName = txt.Name;
 
@@ -4246,7 +4302,7 @@ namespace dcld
 
         private void CopyConfigFileLocation2Clipboard(object sender, EventArgs e)
         {
-            Clipboard.SetText(AssemblyGeneratorFile.ToString());
+            Clipboard.SetText(AsmGeneratorScript.FileName);
 
             MessageBox.Show(this, "Configuraiton file path has been successfully copied into the clipboard.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -4285,50 +4341,6 @@ namespace dcld
 
                 e.SuppressKeyPress = true;
             }
-
-            return;
-        }
-
-        private void ToolTip_Show(object sender, EventArgs e, string tool_tip_text)
-        {
-            int _width = 0, _height = 0;
-            PictureBox TTpic;
-
-            lblToolTipHelp.Text = tool_tip_text;
-            lblToolTipHelp.AutoSize = true;
-            _width = lblToolTipHelp.Width;
-            _height = lblToolTipHelp.Height;
-            lblToolTipHelp.AutoSize = false;
-            lblToolTipHelp.Width = _width;
-            lblToolTipHelp.Height = _height;
-
-            if (sender.GetType().ToString() == "System.Windows.Forms.PictureBox") 
-            {
-                TTpic = (PictureBox)sender;
-                lblToolTipHelp.Left = TTpic.Left + (TTpic.Width / 2);
-                lblToolTipHelp.Top = TTpic.Top + (TTpic.Height / 2);
-            }
-
-            lblToolTipHelp.Visible=true;
-            timToolHelp.Enabled = true;
-
-            return;
-        }
-
-        private void timToolHelp_Tick(object sender, EventArgs e)
-        {
-            lblToolTipHelp.Visible = false;
-            timToolHelp.Enabled = false;
-        }
-
-        private void picInfoTimingPWMFrequency_MouseHover(object sender, EventArgs e)
-        {
-            ToolTip_Show(sender, e, 
-                "Note:\r\n" +
-                "Switching frequency can be different from sampling frequency. \r\n" + 
-                "CPU load estimation is based on sampling frequency. \r\n" +
-                "The sampling frequency can be adjusted in the Controller view.\r\n"
-            );
 
             return;
         }
@@ -4400,14 +4412,14 @@ namespace dcld
 
             lstCoefficientsHistory.Items.Clear();
 
-            lst_count = Convert.ToInt32(ReadConfigString(project_file, "generator_history", "count", "0"));
-            active_item = Convert.ToInt32(ReadConfigString(project_file, "generator_history", "active_item", "0"));
+            lst_count = Convert.ToInt32(ProjectFile.ReadKey("generator_history", "count", "0"));
+            active_item = Convert.ToInt32(ProjectFile.ReadKey("generator_history", "active_item", "0"));
 
             if (lst_count > 0)
             {
                 for (i = 1; i <= lst_count; i++)
                 {
-                    str_dum = ReadConfigString(project_file, "generator_history", i.ToString(), "");
+                    str_dum = ProjectFile.ReadKey("generator_history", i.ToString(), "");
 
                     if ((str_dum.Length > 0) && (str_dum.Contains("||")))
                     {
@@ -4439,10 +4451,11 @@ namespace dcld
             string id = "", key = "", user = "", label = "", settings = "";
             Int32 save_item = 0;
 
-            if (!File.Exists(CurrentProjectFileName)) return;
+            if (ProjectFile == null) return;
+            if (!File.Exists(ProjectFile.FileName)) return;
 
             // Add time stamp
-            save_item = (Convert.ToInt32(ReadConfigString(CurrentProjectFileName, "generator_history", "count", "0")) + 1);
+            save_item = (Convert.ToInt32(ProjectFile.ReadKey("generator_history", "count", "0")) + 1);
 
             id = save_item.ToString();
             key = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Datecode identifies the item
@@ -4480,9 +4493,9 @@ namespace dcld
             { lstCoefficientsHistory.Items[i].BackColor = SystemColors.Window; }
             itm.BackColor = SystemColors.ActiveCaption;
 
-            WriteConfigString(CurrentProjectFileName, "generator_history", "count", id);
-            WriteConfigString(CurrentProjectFileName, "generator_history", id.Trim(), key.Trim() + "||" + user.Trim() + "||" + label.Trim() + "||" + settings.Trim());
-            WriteConfigString(CurrentProjectFileName, "generator_history", "active_item", id);
+            ProjectFile.WriteKey("generator_history", "count", id);
+            ProjectFile.WriteKey("generator_history", id.Trim(), key.Trim() + "||" + user.Trim() + "||" + label.Trim() + "||" + settings.Trim());
+            ProjectFile.WriteKey("generator_history", "active_item", id);
 
             return;
         }
@@ -4502,7 +4515,7 @@ namespace dcld
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 itm.SubItems[3].Text = label;
-                WriteConfigString(CurrentProjectFileName, "generator_history",
+                ProjectFile.WriteKey("generator_history",
                     itm.SubItems[0].Text.Trim(),
                     itm.SubItems[1].Text.Trim() + "||" +
                     itm.SubItems[2].Text.Trim() + "||" + 
@@ -4515,16 +4528,31 @@ namespace dcld
 
         private void DeleteHistorySettings(object sender, EventArgs e)
         {
-            string id = "";
+            string id = "", aid = "";
+            int i = 0, del_cnt = 0;
             ListViewItem itm = new ListViewItem();
 
-            itm = lstCoefficientsHistory.SelectedItems[0];
-            id = itm.SubItems[0].Text.Trim();
-            DeleteConfigString(CurrentProjectFileName, "generator_history", id);
-            id = ReadConfigString(CurrentProjectFileName, "generator_history", "active_item", "0");
-            if (id.Trim().ToLower() == itm.SubItems[0].Text.Trim().ToLower())
-                WriteConfigString(CurrentProjectFileName, "generator_history", "active_item", "0");
-            itm.Remove();
+            for (i = (lstCoefficientsHistory.SelectedItems.Count); i > 0;  i--)
+            {
+                itm = lstCoefficientsHistory.SelectedItems[i-1];
+                id = itm.SubItems[0].Text.Trim();
+
+                aid = ProjectFile.ReadKey("generator_history", "active_item", "0");
+                if (aid.Trim().ToLower() == id.Trim().ToLower())
+                    ProjectFile.WriteKey("generator_history", "active_item", "0");
+
+                ProjectFile.DeleteKey("generator_history", id); // Remove file entry
+                itm.Remove(); // Remove table item
+                del_cnt++;
+            
+            }
+
+            // Adjust item count
+            aid = ProjectFile.ReadKey("generator_history", "count", "0");
+            del_cnt = (Convert.ToInt32(aid) - del_cnt);
+            if (del_cnt < 0) del_cnt = 0;
+            ProjectFile.WriteKey("generator_history", "count", del_cnt.ToString());
+                
             return;
         }
 
@@ -4560,36 +4588,38 @@ namespace dcld
                     ApplicationStartUp = true;  // Prevent repeated GUI updates
 
                     // Loading transfer function settings
-                    cmbCompType.SelectedIndex = Convert.ToInt32(str_arr[0].Trim());
-                    cmbQScalingMethod.SelectedIndex = Convert.ToInt32(str_arr[1].Trim());
-                    txtInputDataResolution.Text = str_arr[2].Trim();
-                    txtInputGain.Text = str_arr[3].Trim();
+                    if (str_arr.Length > 0) cmbCompType.SelectedIndex = Convert.ToInt32(str_arr[0].Trim());
+                    if (str_arr.Length > 1) cmbQScalingMethod.SelectedIndex = Convert.ToInt32(str_arr[1].Trim());
+                    if (str_arr.Length > 2) txtInputDataResolution.Text = str_arr[2].Trim();
+                    if (str_arr.Length > 3) txtInputGain.Text = str_arr[3].Trim();
+                    if (str_arr.Length > 4) chkNormalizeInputGain.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[4].Trim()));
+                    if (str_arr.Length > 5) chkBiDirectionalFeedback.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[5].Trim()));
+                    if (str_arr.Length > 6) chkFeedbackRectification.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[6].Trim()));
 
-                    chkNormalizeInputGain.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[4].Trim()));
-                    chkBiDirectionalFeedback.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[5].Trim()));
-                    chkFeedbackRectification.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[6].Trim()));
+                    if (str_arr.Length > 7) txtSamplingFrequency.Text = str_arr[7].Trim();
+                    if (str_arr.Length > 8) txtFP0.Text = str_arr[8].Trim();
+                    if (str_arr.Length > 9) txtFP1.Text = str_arr[9].Trim();
+                    if (str_arr.Length > 10) txtFP2.Text = str_arr[10].Trim();
+                    if (str_arr.Length > 11) txtFP3.Text = str_arr[11].Trim();
+                    if (str_arr.Length > 12) txtFP4.Text = str_arr[12].Trim();
+                    if (str_arr.Length > 13) txtFP5.Text = str_arr[13].Trim();
+                    if (str_arr.Length > 14) txtFZ1.Text = str_arr[14].Trim();
+                    if (str_arr.Length > 15) txtFZ2.Text = str_arr[15].Trim();
+                    if (str_arr.Length > 16) txtFZ3.Text = str_arr[16].Trim();
+                    if (str_arr.Length > 17) txtFZ4.Text = str_arr[17].Trim();
+                    if (str_arr.Length > 18) txtFZ5.Text = str_arr[18].Trim();
 
-                    txtSamplingFrequency.Text = str_arr[7].Trim();
-                    txtFP0.Text = str_arr[8].Trim();
-                    txtFP1.Text = str_arr[9].Trim();
-                    txtFP2.Text = str_arr[10].Trim();
-                    txtFP3.Text = str_arr[11].Trim();
-                    txtFP4.Text = str_arr[12].Trim();
-                    txtFP5.Text = str_arr[13].Trim();
-                    txtFZ1.Text = str_arr[14].Trim();
-                    txtFZ2.Text = str_arr[15].Trim();
-                    txtFZ3.Text = str_arr[16].Trim();
-                    txtFZ4.Text = str_arr[17].Trim();
-                    txtFZ5.Text = str_arr[18].Trim();
+                    if (str_arr.Length > 19) txtOutputGain.Text = str_arr[19].Trim();
+                    if (str_arr.Length > 20) chkNormalizeOutputGain.Checked = Convert.ToBoolean(Convert.ToInt32(str_arr[20].Trim()));
 
                     ApplicationStartUp = false; //Enable repeated GUI updates
                     UpdateTransferFunction(this, EventArgs.Empty);
                     GenerateCode(this, EventArgs.Empty);
 
-                    if (File.Exists(CurrentProjectFileName))
+                    if (File.Exists(ProjectFile.FileName))
                     {
                         str_dum = itm.SubItems[0].Text.ToString().Trim();
-                        WriteConfigString(CurrentProjectFileName, "generator_history", "active_item", str_dum); 
+                        ProjectFile.WriteKey("generator_history", "active_item", str_dum); 
                     }
 
                 }
@@ -4706,128 +4736,6 @@ namespace dcld
             showSDomainTransferFunctionToolStripMenuItem.Checked = ShowSDomainTF;
         }
 
-        private void SetMPLABXProjectDirectory(object sender, EventArgs e, string NewMPLABXProjectPath)
-        {
-            string str_path = "", ref_path = "";
-            string asm_source_buf = "", c_cource_buf = "", c_head_buf = "", c_lib_buf = "";
-            string[] dum_sep = new string[1];
-
-            // Read new MPLAB X Project Directory 
-            str_path = NewMPLABXProjectPath.Trim();
-
-            // Set MPLAB X Project Directory Path Reference (always absolute)
-            MPLABXProjectDirectory = str_path;
-            txtMPLABXProjectDir.ToolTipText = MPLABXProjectDirectory;
-
-            // Buffer file paths as absolute paths
-            if (MPLABXProjectDirectory.Length > 0)
-            { ref_path = MPLABXProjectDirectory; }
-            else
-            { ref_path = GetCurrentProjectFilePath(sender, e); }
-
-            asm_source_buf = GetAbsoluteFilePath(sender, e, txtASMSourcePath.Text, ref_path);
-            c_cource_buf = GetAbsoluteFilePath(sender, e, txtCSourcePath.Text, ref_path);
-            c_head_buf = GetAbsoluteFilePath(sender, e, txtCHeaderPath.Text, ref_path);
-            c_lib_buf = GetAbsoluteFilePath(sender, e, txtCLibPath.Text, ref_path);
-
-            // Make file locations relative
-            txtASMSourcePath.Text = GetRelativeFilePath(sender, e, asm_source_buf, MPLABXProjectDirectory);  //"./";
-            txtCSourcePath.Text = GetRelativeFilePath(sender, e, c_cource_buf, MPLABXProjectDirectory);  //"./";
-            txtCHeaderPath.Text = GetRelativeFilePath(sender, e, c_head_buf, MPLABXProjectDirectory); //"./";
-            txtCLibPath.Text = GetRelativeFilePath(sender, e, c_lib_buf, MPLABXProjectDirectory); //"./";
-
-            // Determine relative path of MPLAB X Project Directory Path and show it in directory test box
-
-            // Set MPLAB X Project Directory Update Flag
-            MPLABXProjectDirUpdate = true;
-
-            // Update MPLAB X Project Directory TextBox
-            if (System.IO.Directory.Exists(str_path.Trim()))
-                txtMPLABXProjectDir.Text = GetRelativeFilePath(sender, e, str_path.Trim(), GetCurrentProjectFilePath(sender, e));
-
-            // Clear MPLAB X Project Directory Update Flag
-            MPLABXProjectDirUpdate = false;
-
-            return;
-
-        }
-
-        private void toolStripButtonBrowse_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog fbdlg = new FolderBrowserDialog();
-            System.Windows.Forms.DialogResult ans = new System.Windows.Forms.DialogResult();
-            string str_path = "";
-
-            // Determine target directory of folder dialog
-            if (MPLABXProjectDirectory.Trim().Length > 0)   // MPLAB X project location is available
-            { str_path = MPLABXProjectDirectory.Trim(); }
-            else 
-            {
-                if (CurrentProjectFileName.Trim().Length == 0) // DCLD project location is not available
-                { str_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); }
-                else
-                { str_path = GetCurrentProjectFilePath(sender, e); }  // DCLD project location is available
-            }
-
-            // Set target directory of folder dialog
-            fbdlg.SelectedPath = str_path;
-
-            while ((ans == System.Windows.Forms.DialogResult.None) || (ans == System.Windows.Forms.DialogResult.Retry))
-            {
-                // Show Folder Browse Dialog
-                if (fbdlg.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        // Read selected directory path
-                        str_path = fbdlg.SelectedPath;
-
-                        // If MPLAB X project path is valid...
-                        if (str_path.Substring(str_path.Length - 2).ToUpper() == ".X")
-                        {
-                            SetMPLABXProjectDirectory(sender, e, str_path);
-                            ans = System.Windows.Forms.DialogResult.OK;
-                        }
-                        else
-                        {
-
-                            ans = MessageBox.Show(
-                                        "Selected directory \r\n\r\n'" + str_path + "' is not a valid MPLAB X® project directory.\r\n\r\n" +
-                                        "Please select a valid directory (e.g. my_project.X)",
-                                        Application.ProductName,
-                                        MessageBoxButtons.RetryCancel,
-                                        MessageBoxIcon.Exclamation,
-                                        MessageBoxDefaultButton.Button1
-                                        );
-                        }
-
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(
-                            "Error (0x" + ex.HResult.ToString("X") + "): Could not identify path or selected directory is not available.\r\n" +
-                            "Original error: " + ex.Message,
-                            Application.ProductName,
-                            MessageBoxButtons.RetryCancel,
-                            MessageBoxIcon.Exclamation,
-                            MessageBoxDefaultButton.Button1
-                            );
-
-                    }
-                }
-                else
-                { 
-                    ans = System.Windows.Forms.DialogResult.Cancel;
-                    break;
-                }
-            }
-
-            // Restore output window
-            fbdlg.Dispose();
-
-            return;
-
-        }
 
         private void userGuideToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -4842,9 +4750,273 @@ namespace dcld
 
         private void visitURLToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(ReadConfigString(INI_FILE, "common", "URL", ""));
+            System.Diagnostics.Process.Start(SettingsFile.ReadKey("common", "URL", ""));
+        }
+
+        private void cmdGetOutputGain_Click(object sender, EventArgs e)
+        {
+            // Create a new instance of the form class
+            frmCalculateOutputGain frm = new frmCalculateOutputGain();
+
+            // Show the settings form
+            if (ctrl_output.OutputType == clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_UNDEFINED)
+                ctrl_output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_FIXED_FREQUENCY;
+            frm.output = ctrl_output;
+            frm.PWMFrequency = (Convert.ToDouble(this.txtPWMFrequency.Text) * 1000.0);
+            frm.PWMClock = (4e+9);
+            frm.PWMClockDivider = 1.0;
+
+            if(frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                double outgain = 0.0;
+                string str_outgain = "";
+                outgain = frm.OutputGain;
+                str_outgain = outgain.ToString("#0.000000", CultureInfo.CurrentCulture);
+                txtOutputGain.Text = str_outgain;
+                txtPWMFrequency.Text = (frm.PWMFrequency / 1000.0).ToString(CultureInfo.CurrentCulture);
+                ctrl_output = frm.output;
+            }
+        }
+
+        private void chkNormalizeOutputGain_CheckedChanged(object sender, EventArgs e)
+        {
+            chkNormalizeOutputGain.Checked = false;
+            grpOutputDataNormalization.Enabled = chkNormalizeOutputGain.Checked;
+            txtOutputGain.Enabled = chkNormalizeOutputGain.Checked;
+            lblOutputGain.Enabled = chkNormalizeOutputGain.Checked;
+            cmdGetOutputGain.Enabled = chkNormalizeOutputGain.Checked;
+            UpdateTransferFunction(sender, e);
+        }
+
+        private void chkNormalizeInputGain_CheckedChanged(object sender, EventArgs e)
+        {
+            txtInputGain.Enabled = chkNormalizeInputGain.Checked;
+            lblInputGain.Enabled = chkNormalizeInputGain.Checked;
+            UpdateTransferFunction(sender, e);
+        }
+
+        private void cmdGetInputGain_Click(object sender, EventArgs e)
+        {
+            // Create a new instance of the form class
+            frmCalculateInputGain frm = new frmCalculateInputGain();
+
+            // Show the settings form
+            frm.feedback = feedback;
+            frm.feedback.ADCResolution = cNPNZ.InputDataResolution;
+            frm.feedback.FeedbackGain = cNPNZ.InputGain;
+
+            if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                txtInputGain.Text = frm.feedback.FeedbackGain.ToString("#0.000000", CultureInfo.CurrentCulture); ;
+                txtInputDataResolution.Text = frm.feedback.ADCResolution.ToString("#0.#", CultureInfo.CurrentCulture);
+                feedback = frm.feedback;
+            }
+
+        }
+
+        private void ToolTip_Show(object sender, EventArgs e, string tool_tip_text)
+        {
+            // guarding condition...
+            if (sender.GetType().ToString() != "System.Windows.Forms.PictureBox")
+                return;
+
+            PictureBox TTpic = (PictureBox)sender;
+            frmToolTip TTip = new frmToolTip();
+
+            TTip.BackColor = SystemColors.Info;
+            TTip.ToolTipText = tool_tip_text;
+            TTip.StartPosition = FormStartPosition.Manual;
+            TTip.WinPos = TTpic.PointToScreen(Point.Empty); ;
+            TTip.Show(this);
+
+            return;
+
+        }
+
+        private void chkEnableAdaptiveGainControl_CheckedChanged(object sender, EventArgs e)
+        {
+            chkAGCAddGetModFactorFunCall.Enabled = chkEnableAdaptiveGainControl.Checked;
+            chkAGCAddEnable.Enabled = chkEnableAdaptiveGainControl.Checked;
+            CodeGeneratorOptions_CheckedChanged(sender, e);
+        }
+
+        private void OpenProjectConfigWindow()
+        {
+            // Create a new instance of the form class
+            frmMPLABXProject frm = new frmMPLABXProject();
+
+            // Show the settings form
+            frm.MPLABXProject = MPLABXProject;
+
+            // Set DCLD default filename in case no DCLD configuraiton is available
+            frm.dcldDefaultFilename = DefaultProjectFileName;
+
+            // Check if project file available
+            if (ProjectFile.Directory != string.Empty)
+                frm.dcldProject = ProjectFile;
+
+            // Load Filename and Variable Prefix
+            if (txtControllerNamePrefix.Text.Trim().Length > 0)
+            { frm.dcldVariablePrefix = txtControllerNamePrefix.Text.Trim(); }
+            else { frm.dcldVariablePrefix = DefaultVariablePrefix; }
+
+            // Load Controller Name Label 
+            if (txtControllerNameLabel.Text.Trim().Length > 0)
+            { frm.dcldControllerNameLabel = txtControllerNameLabel.Text.Trim(); }
+            else { frm.dcldControllerNameLabel = ""; }
+
+            // 
+            frm.ShowWinAtStartup = showMPLABXconfigWindowAtStartup;
+
+            if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                MPLABXProject = frm.MPLABXProject;
+
+                // If no DCLD Project File has been defined yet...
+                if (frm.dcldProject != null)
+                    ProjectFile.SetFilename(frm.dcldProject.FileName);
+                else if (frm.dcldDefaultFilename != string.Empty)
+                    ProjectFile.Create(frm.dcldDefaultFilename, "GUI", "CreateDate", DateTime.Now.ToString());
+
+                // Update controller names
+                txtControllerNamePrefix.Text = frm.dcldVariablePrefix;
+                txtControllerNameLabel.Text = frm.dcldControllerNameLabel;
+
+                // capture selected target device
+                _targetDevice = MPLABXProject.MPLABXConfiguration[MPLABXProject.ActiveConfiguration].TargetDevice;
+                if (_targetDevice.Length >= 5) _targetDeviceType = _targetDevice.Substring(0, 5);
+                ProjectFile.WriteKey("ControlSetup", "TargetDevice", _targetDevice);
+
+                // If both objects have been set, update path information
+                if ((ProjectFile != null) && (MPLABXProject != null))
+                {
+                    txtMPLABXProjectDir.Text = MPLABXProject.MPLABXProjectDirectory;
+
+                    if (txtASMSourcePath.Text.Trim() == string.Empty)
+                        txtASMSourcePath.Text = ConvertFilePath.ToRelativeFilePath(MPLABXProject.MPLABXIncludeDirectoryAbsolute, MPLABXProject.MPLABXProjectDirectory);
+
+                    if (txtCSourcePath.Text.Trim() == string.Empty)
+                        txtCSourcePath.Text = ConvertFilePath.ToRelativeFilePath(MPLABXProject.MPLABXIncludeDirectoryAbsolute, MPLABXProject.MPLABXProjectDirectory);
+
+                    if (txtCHeaderPath.Text.Trim() == string.Empty)
+                        txtCHeaderPath.Text = ConvertFilePath.ToRelativeFilePath(MPLABXProject.MPLABXIncludeDirectoryAbsolute, MPLABXProject.MPLABXProjectDirectory);
+
+                    if (txtCLibPath.Text.Trim() == string.Empty)
+                        txtCLibPath.Text = ConvertFilePath.ToRelativeFilePath(MPLABXProject.MPLABXIncludeDirectoryAbsolute, MPLABXProject.MPLABXProjectDirectory);
+                    
+                    SaveFile(this, EventArgs.Empty);
+
+                }
+
+            }
+
+            // Save if Window should be shown next time
+            showMPLABXconfigWindowAtStartup = frm.ShowWinAtStartup;
+            SettingsFile.WriteKey("config_window", "show", Convert.ToInt32(showMPLABXconfigWindowAtStartup).ToString());
+
+
+        }
+
+        private void toolStripButtonConfig_Click(object sender, EventArgs e)
+        {
+            OpenProjectConfigWindow();
+        }
+
+        private void picInfo_MouseHover(object sender, EventArgs e)
+        {
+            PictureBox pic = new PictureBox();
+            string msg = "";
+
+            // If function was call from other control than a picture box, exit here
+            if (sender.GetType().ToString() != "System.Windows.Forms.PictureBox")
+                return;
+
+            pic = (PictureBox)sender;
+
+            if (pic.Name == picInfoADCLatency.Name)
+                msg = "ADC Latency is the time delay between the trigger event, and the time the result is " +
+                      "loaded into the respective ADC result buffer register (ADCBUFx). This time depends on " +
+                      "the settings for sampling and conversion time as well as the ADC resolution. \r\n" +
+                      "\r\n" +
+                      "Please refer to the device data sheet for more details.";
+
+            else if (pic.Name == picInfoAGC.Name)
+                msg = "This function adds a modulation factor to the control loop code allowing runtime tuning " +
+                      "of the loop gain. \r\n" +
+                      "\r\n" +
+                      "This option is only available for fast number scaling modes.\r\n" +
+                      "Please refer to the user guide for more details.";
+
+            else if (pic.Name == picInfoAlternateInputSource.Name)
+                msg = "The NPNZ controller xupport up to two input ports. For common feedback loops only one port " +
+                      "is required. The second 'Alternate Source' port is provided to support enhanced functoins where " +
+                      "control inputs need to be swapped during runtime (e.g. bi-directional control loops). \r\n" +
+                      "Alternatively, a second input port is required for control modes where the controller result " +
+                      "has further dependencies. (e.g. Adaptive Gain Modulation) \r\n" +
+                      "\r\n" +
+                      "Please note:\r\n" +
+                      "This option is locked when option\r\n'Adaptive Gain Control' is enabled.";
+
+            else if (pic.Name == picInfoCascadeFunctionCall.Name)
+                msg = "By enabling this function, you can specify a function pointer" + "\r\n" +
+                      "to an additional function which should be executed right after" + "\r\n" +
+                      "the execution of this loop has been completed." + "\r\n" +
+                      "\r\n" +
+                      "Please refer to the user guide for more details.";
+
+            else if (pic.Name == picInfoCycleStats.Name)
+                msg = "The number of cycles and related timings shown in this statistics is provided by the code generator " +
+                      "and the number of cycles counted across the code options selected. However, these numbers are not " +
+                      "considering conditional code excution such as branches and are referring to the maximum number of cycles. \r\n" +
+                      "\r\n" +
+                      "Hence, the total number of cycles shown may therefore differ from the real number of executions " +
+                      "and this statics should be used for estimations only.";
+
+            else if (pic.Name == picInfoDSPConfig.Name)
+                msg = "Executing control loops require a specific DSP core configuration," + "\r\n" +
+                      "which has to be set once in per project. " + "\r\n" +
+                      "\r\n" +
+                      "Enable this option if the DSP core is also used by other software " + "\r\n" +
+                      "instances with a different configuration." + "\r\n" +
+                      "\r\n" +
+                      "If the DSP is only used for control loop executions, it's recommended" + "\r\n" +
+                      "to configure the DSP in a separated routine during decive initialization" + "\r\n" +
+                      "and disable this option";
+
+            else if (pic.Name == picInfoErrNorm.Name)
+                msg = "Error Normalization is required when data is read \r\n" +
+                      "in integer format from the source (e.g. ADC converter)\r\n" +
+                      "If the source is providing data in Q15 number format \r\n" +
+                      "this option can be disabled.";
+
+            else if (pic.Name == picInfoISRLatency.Name)
+                msg = "The Interrupt Latency is the delay between an interrupt event being triggered and the " +
+                      "time were the first instruction of the Interrupt Service Routine (ISR) is executed. " +
+                      "This delay depends on the device clock, device architecture but also on compiler settings " +
+                      "such as utilization of Alternate Working Registers (AltWREG / CTXTx) as well as interrupt " +
+                      "priorities." + "\r\n" +
+                      "\r\n" +
+                      "Please refer to the user guide for more details.";
+
+            else if (pic.Name == picInfoTimingPWMFrequency.Name)
+                msg = "The switching frequency settingis only used to create the above waveform (blue) and does not " +
+                      "influence sampling frequency and thus also does not influence CPU load estimation.";
+
+            else if (pic.Name == picInfoUserTriggerDelay.Name)
+                msg = "Most designs need to specify a defined ADC trigger delay to compensate for the propagation delay of " +
+                      "internally generated PWM signals and the delayed point in time where switches will be turned on/off " +
+                      "and/or feedback signal delays. \r\n" +
+                      "\r\n" +
+                      "This setting is highly hardware dependent and would have to be determined for each design individually";
+
+            else
+                msg = "(help message missing)";
+
+            // Show ToolTip Window
+            ToolTip_Show(sender, e, msg);
         }
 
 
     }
+
 }

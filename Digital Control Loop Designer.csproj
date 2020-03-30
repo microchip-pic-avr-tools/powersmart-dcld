@@ -34,8 +34,8 @@
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <AutorunEnabled>true</AutorunEnabled>
     <DisallowUrlActivation>true</DisallowUrlActivation>
-    <ApplicationRevision>82</ApplicationRevision>
-    <ApplicationVersion>0.9.1.82</ApplicationVersion>
+    <ApplicationRevision>96</ApplicationRevision>
+    <ApplicationVersion>0.9.4.96</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <ExcludeDeploymentUrl>true</ExcludeDeploymentUrl>
@@ -54,7 +54,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -67,7 +67,7 @@
     <StartupObject>dcld.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\icon_bode.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\dcld.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>21D91C85DF497185CFD00F806B139609A59E75F2</ManifestCertificateThumbprint>
@@ -154,17 +154,41 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="clsGlobals.cs" />
+    <Compile Include="clsFilePathHandler.cs" />
+    <Compile Include="clsMPLABXHandler.cs" />
+    <Compile Include="clsOutputDeclaration.cs" />
+    <Compile Include="clsFeedbackDeclaration.cs" />
+    <Compile Include="clsINIFileHandler.cs" />
     <Compile Include="clsTransferFunction.cs" />
     <Compile Include="clsCoefficientObject.cs" />
     <Compile Include="clsPoleZeroObject.cs" />
     <Compile Include="clsNPNZ.cs" />
-    <Compile Include="AssemblyGenerator.cs" />
-    <Compile Include="CCodeGenerator.cs" />
-    <Compile Include="frmGenerate.cs">
+    <Compile Include="clsAssemblyGenerator.cs" />
+    <Compile Include="clsCCodeGenerator.cs" />
+    <Compile Include="frmMPLABXProject.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmGenerate.Designer.cs">
-      <DependentUpon>frmGenerate.cs</DependentUpon>
+    <Compile Include="frmMPLABXProject.Designer.cs">
+      <DependentUpon>frmMPLABXProject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmToolTip.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmToolTip.Designer.cs">
+      <DependentUpon>frmToolTip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCalculateInputGain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCalculateInputGain.designer.cs">
+      <DependentUpon>frmCalculateInputGain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCalculateOutputGain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCalculateOutputGain.Designer.cs">
+      <DependentUpon>frmCalculateOutputGain.cs</DependentUpon>
     </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
@@ -182,10 +206,20 @@
     <Content Include="Resources\181026e_dcld_beta_user_guide.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\VFreq.png" />
+    <None Include="Resources\PSFT1.png" />
+    <None Include="Resources\CS.png" />
+    <None Include="Resources\CT.png" />
+    <None Include="Resources\VD.png" />
     <None Include="Resources\z-domain_compensator_block_diagram.png" />
     <None Include="Resources\z-transform_euqations.PNG" />
     <None Include="Resources\hz_flowchart.PNG" />
-    <Content Include="Resources\icon_bode.ico" />
+    <None Include="Resources\calculate.ico" />
+    <Content Include="Resources\dcld.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\DS.png" />
+    <None Include="Resources\FFreq1.png" />
     <Content Include="Resources\icon_generate_export.ico" />
     <None Include="Resources\icon_help.ico" />
     <None Include="Resources\icon_legend.ico" />
@@ -201,8 +235,17 @@
     <Content Include="Resources\ActiproSoftware.INIFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="frmGenerate.resx">
-      <DependentUpon>frmGenerate.cs</DependentUpon>
+    <EmbeddedResource Include="frmMPLABXProject.resx">
+      <DependentUpon>frmMPLABXProject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmToolTip.resx">
+      <DependentUpon>frmToolTip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCalculateInputGain.resx">
+      <DependentUpon>frmCalculateInputGain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCalculateOutputGain.resx">
+      <DependentUpon>frmCalculateOutputGain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
@@ -326,7 +369,7 @@
       <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
-    <PublishFile Include="Resources\icon_bode.ico">
+    <PublishFile Include="Resources\dcld.ico">
       <Visible>False</Visible>
       <Group>
       </Group>
