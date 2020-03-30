@@ -68,4 +68,6 @@ Makefile-genesis.properties
 !readme.txt
 
 dcld.ini
+debug.log
 Digital Control Loop Designer.csproj.user
+Digital Control Loop Designer.v11.suo
