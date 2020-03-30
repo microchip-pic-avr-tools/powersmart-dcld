@@ -2,11 +2,11 @@
 Name=C-Source and Header Generator Script
 Description=This scriptprovides C-source and header files for user-tailored SMPS control loops based on DSP assembly code modules templates generated using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=2.0.1
-Date=03/27/2020
+Version=2.0.2
+Date=03/30/2020
 
 [history]
-count=9
+count=10
 0=11/08/19;1.0.0;Initial version after moving C-sources and headers from application code to external script
 1=01/10/20;1.1.0;Added support for cascaded functions. This allows the assembly routine to call another controller or user-defined function extension code module.\r\nAdded pointers to alternate source and terget register supporting bi-directional control and advanced adaptive control methods
 2=03/18/2020;1.1.1;Changed function call name of controller initialization from xxx_Init to xxx_Initialize to stay consistent with other generic code modules
@@ -16,6 +16,7 @@ count=9
 6=03/25/2020;1.1.5;Fixed typo in CGS_VERSION_DATE token
 7=03/26/2020;2.0.0;Introduction of unified, 32-bit wide coefficient number format
 8=03/27/2020;2.0.1;Separated input and output ports and added individual normalization scaling parameters
+9=03/30/2020;2.0.2;Renamed data structure group 'TriggerControl' to 'ADC TriggerControl'
 
 
 [tokens]
@@ -181,7 +182,7 @@ line130=%IDENT%%IDENT%volatile uint16_t* ptrADCTriggerARegister; // Pointer to A
 line131=%IDENT%%IDENT%volatile uint16_t ADCTriggerAOffset; // ADC trigger #1 offset to compensate propagation delays 
 line132=%IDENT%%IDENT%volatile uint16_t* ptrADCTriggerBRegister; // Pointer to ADC trigger #2 register (e.g. TRIG2)
 line133=%IDENT%%IDENT%volatile uint16_t ADCTriggerBOffset; // ADC trigger #2 offset to compensate propagation delays 
-line134=%IDENT%} __attribute__((packed))TriggerControl; // Automatic ADC trigger placement options for ADC Trigger A and B
+line134=%IDENT%} __attribute__((packed))ADCTriggerControl; // Automatic ADC trigger placement options for ADC Trigger A and B
 line135=%EMPTY%
 line136=%IDENT%// Data Provider Sources
 line137=%IDENT%struct {
