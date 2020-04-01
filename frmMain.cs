@@ -131,6 +131,7 @@ namespace dcld
         int GroupFolding_grpCodeFeatureDataIOHeight = 80;
         int GroupFolding_grpDataProviderSourcesHeight = 100;
         int GroupFolding_grpAntiWindupHeight = 100;
+        int GroupFolding_grpDevelopmentToolsHeight = 100;
 
         public frmMain(string[] args)
         {
@@ -513,10 +514,34 @@ namespace dcld
             lvCoefficients.HideSelection = false;
             lvCoefficients.MultiSelect = false;
 
+
+            // arrange group boxes of code generator option catalog
+            // => needs to be set in reverse order of apprearance (from bottom to top of page)
+
+            grpDevelopmentTools.Parent = tabSourceCodeConfig;
+            grpDevelopmentTools.Dock = DockStyle.Top;
+            grpAntiWindup.Parent = tabSourceCodeConfig;
+            grpAntiWindup.Dock = DockStyle.Top;
+            grpDataProviderSources.Parent = tabSourceCodeConfig;
+            grpDataProviderSources.Dock = DockStyle.Top;
+            grpCodeFeatureDataIO.Parent = tabSourceCodeConfig;
+            grpCodeFeatureDataIO.Dock = DockStyle.Top;
+            grpCodeFeatureOptions.Parent = tabSourceCodeConfig;
+            grpCodeFeatureOptions.Dock = DockStyle.Top;
+            grpContextManagement.Parent = tabSourceCodeConfig;
+            grpContextManagement.Dock = DockStyle.Top;
+            grpFunctionLabel.Parent = tabSourceCodeConfig;
+            grpFunctionLabel.Dock = DockStyle.Top;
+            
+            tabSourceCodeConfig.AutoScroll = true; // enable AutoScroll
+           
             // capture foldable object sizes of code generator option catalog
-            GroupFolding_grpContextSavingHeight = grpContextSaving.Height;
+            GroupFolding_grpContextSavingHeight = grpContextManagement.Height;
             GroupFolding_grpCodeFeatureOptionsHeight = grpCodeFeatureOptions.Height;
+            GroupFolding_grpCodeFeatureDataIOHeight = grpCodeFeatureDataIO.Height;
+            GroupFolding_grpDataProviderSourcesHeight = grpDataProviderSources.Height;
             GroupFolding_grpAntiWindupHeight = grpAntiWindup.Height;
+            GroupFolding_grpDevelopmentToolsHeight = grpDevelopmentTools.Height;
 
             // reload last Bode chart settings
             DefaultXMin = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "x_min", DefaultXMin.ToString()));
@@ -1612,6 +1637,8 @@ namespace dcld
                 ProjectFile.WriteKey("AssemblyGenerator", "AddAntiWindupMinimumClamping", Convert.ToUInt16(this.chkAntiWindupClampMin.Checked).ToString());
                 ProjectFile.WriteKey("AssemblyGenerator", "AddAntiWindupMinimumClampingStatusFlag", Convert.ToUInt16(this.chkAntiWindupMinStatusFlag.Checked).ToString());
 
+                ProjectFile.WriteKey("AssemblyGenerator", "AddPTermLoop", Convert.ToUInt16(this.chkAddPTermLoop.Checked).ToString());
+
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 50;
                 Application.DoEvents();
@@ -1814,7 +1841,10 @@ namespace dcld
                 this.chkAntiWindupMaxStatusFlag.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddAntiWindupMaximumClampingStatusFlag", "0")));
                 this.chkAntiWindupClampMin.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddAntiWindupMinimumClamping", "1")));
                 this.chkAntiWindupMinStatusFlag.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddAntiWindupMinimumClampingStatusFlag", "0")));
-                
+
+                this.chkAddPTermLoop.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddPTermLoop", "0")));
+
+
 
                 stbProgressBar.Value = 60;
                 Application.DoEvents();
@@ -3817,8 +3847,26 @@ namespace dcld
 
         private void codeGeneratorConfig_GroupFolding(object sender, EventArgs e)
         {
-            if (!chkContextSaving.Checked){ grpContextSaving.Height = GroupFolding_MinHeight; }
-            else { grpContextSaving.Height = GroupFolding_grpContextSavingHeight; }
+            /*
+            CheckBox check, chkItem;
+            GroupBox group;
+
+            // If function was called from other control than a check box, exit here
+            if (sender.GetType().ToString() != "System.Windows.Forms.CheckBox")
+                check = (CheckBox)sender;
+            else
+                return;
+
+            // If parent of selected check box is not a group box, exit here
+            if (check.Parent.GetType().ToString() == "System.Windows.Forms.GroupBox")
+                group = (GroupBox)check.Parent;
+            else
+                return;
+            */
+
+
+            if (!chkContextSaving.Checked){ grpContextManagement.Height = GroupFolding_MinHeight; }
+            else { grpContextManagement.Height = GroupFolding_grpContextSavingHeight; }
             //grpContextSaving.Top = grpFunctionLabel.Top + grpFunctionLabel.Height + GroupFolding_VDistance; // changed to object Docking->Top
 
             if (!chkCodeFeatureOptions.Checked) { grpCodeFeatureOptions.Height = GroupFolding_MinHeight; }
@@ -3837,87 +3885,109 @@ namespace dcld
             else { grpAntiWindup.Height = GroupFolding_grpAntiWindupHeight; }
             //grpAntiWindup.Top = grpCodeFeatureOptions.Top + grpCodeFeatureOptions.Height + GroupFolding_VDistance;
 
+            if (!chkEnableDevelopmentTools.Checked) { grpDevelopmentTools.Height = GroupFolding_MinHeight; }
+            else { grpDevelopmentTools.Height = GroupFolding_grpDevelopmentToolsHeight; }
+            //grpAntiWindup.Top = grpCodeFeatureOptions.Top + grpCodeFeatureOptions.Height + GroupFolding_VDistance;
+
             return;
         }
 
         private void CodeGeneratorOptions_CheckedChanged(object sender, EventArgs e)
         {
             codeGeneratorConfig_GroupFolding(sender, e);
+            
             GenerateCode(sender, e);
+            //ForceCoefficientsUpdate(sender, e);
 
             eventProjectFileChanged(sender, e);
             
             return;
         }
 
-        private void chkContextSaving_CheckedChanged(object sender, EventArgs e)
+        private void FoldingBoxEnable_CheckChanged(object sender, EventArgs e)
         {
+            // generic variables
             int i = 0;
-            CheckBox check;
-            bool ACCBIsValid = false;
+            CheckBox check, chkItem;
+            GroupBox group;
+            Button btn;
 
-            ACCBIsValid = (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT) ||
-                          (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT);
 
-            for (i=0; i<grpContextSaving.Controls.Count; i++)
+            // If function was called from other control than a check box, exit here
+            if (sender.GetType().ToString() != "System.Windows.Forms.CheckBox")
+                return;
+
+            check = (CheckBox)sender;
+
+            // If parent of selected check box is not a group box, exit here
+            if (check.Parent.GetType().ToString() != "System.Windows.Forms.GroupBox")
+                return;
+
+            group = (GroupBox)check.Parent;
+
+            // Let the Check Box respond before updating the GUI
+            Application.DoEvents();
+
+            // enable/disable child controls within a group box
+            for (i = 0; i < group.Controls.Count; i++)
             {
-                check = (CheckBox)grpContextSaving.Controls[i];
-                if (check.Name == chkSaveRestoreAccumulatorB.Name) check.Enabled = (chkContextSaving.Checked & ACCBIsValid);
-                else if (check.Name != chkContextSaving.Name) check.Enabled = chkContextSaving.Checked; 
-            }
 
-            CodeGeneratorOptions_CheckedChanged(sender, e);
-            
-            return;
-        }
+                switch (group.Controls[i].GetType().ToString())
+                {
 
-        private void chkCodeFeatureOptions_CheckedChanged(object sender, EventArgs e)
-        {
-            int i = 0;
-            CheckBox check;
+                    // If control is a check box
+                    case "System.Windows.Forms.CheckBox":
 
-            for (i = 0; i < grpCodeFeatureOptions.Controls.Count; i++)
-            {
-                check = (CheckBox)grpCodeFeatureOptions.Controls[i];
-                if (check.Name != chkCodeFeatureOptions.Name) 
-                    check.Enabled = chkCodeFeatureOptions.Checked;
-            }
+                        chkItem = (CheckBox)group.Controls[i];
+                        
 
-            CodeGeneratorOptions_CheckedChanged(sender, e);
+                        // ~~~~~~~~~ Handle individual exceptions ~~~~~~~~~~~~~~~~~~
 
-            return;
-        }
+                        // Context Management Box
+                        if (check.Name == chkSaveRestoreAccumulatorB.Name) 
+                        {
+                            bool ACCBIsValid = (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT) ||
+                                               (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT);
 
-        private void chkAntiWindup_CheckedChanged(object sender, EventArgs e)
-        {
-            int i = 0;
-            CheckBox check;
+                            check.Enabled = (chkContextSaving.Checked & ACCBIsValid);
+                        }
 
-            for (i = 0; i < grpAntiWindup.Controls.Count; i++)
-            {
-                check = (CheckBox)grpAntiWindup.Controls[i];
-                if (check.Name != "chkAntiWindup") check.Enabled = chkAntiWindup.Checked;
-            }
 
-            CodeGeneratorOptions_CheckedChanged(sender, e);
-            return;
-        }
+                        // ~~~~~~~~~
+                        else if (chkItem.Name != check.Name)
+                            chkItem.Enabled = check.Checked;
+                        else
+                        {  } // ??? //
 
-        private void chkAutomatedDataInterface_CheckedChanged(object sender, EventArgs e)
-        {
-            int i = 0;
-            CheckBox check;
 
-            for (i = 0; i < grpCodeFeatureDataIO.Controls.Count; i++)
-            {
-                if (grpCodeFeatureDataIO.Controls[i].Name.Substring(0, 3) == "chk")
-                { 
-                    check = (CheckBox)grpCodeFeatureDataIO.Controls[i];
-                    if (check.Name != "chkAutomatedDataInterface") check.Enabled = chkAutomatedDataInterface.Checked;
+                        break;
+
+                    // If control is a command button
+                    case "System.Windows.Forms.Button":
+
+                        btn = (Button)group.Controls[i];
+
+                        // ~~~~~~~~~ Handle individual exceptions ~~~~~~~~~~~~~~~~~~
+    
+                        // Development Tools
+                        if (check.Name == chkEnableDevelopmentTools.Name)
+                            btn.Enabled = (chkAddPTermLoop.Checked & chkAddPTermLoop.Enabled & chkEnableDevelopmentTools.Checked);
+
+
+                        // ~~~~~~~~~
+                        else
+                            btn.Enabled = check.Checked;
+
+
+                        break;
+
+                    default:
+                        break;
                 }
 
             }
 
+            // Update project settings
             CodeGeneratorOptions_CheckedChanged(sender, e);
             return;
 
@@ -4711,12 +4781,35 @@ namespace dcld
             CodeGeneratorOptions_CheckedChanged(sender, e);
         }
 
-        private void chkDataProviderSource_CheckedChanged(object sender, EventArgs e)
+        private void chkAddPTermLoop_CheckedChanged(object sender, EventArgs e)
         {
-            chkAddDataProviderControlInput.Enabled = chkDataProviderSource.Checked;
-            chkAddDataProviderControlOutput.Enabled = chkDataProviderSource.Checked;
-            chkAddDataProviderErrorInput.Enabled = chkDataProviderSource.Checked;
-            CodeGeneratorOptions_CheckedChanged(sender, e);
+            DialogResult msg_res = new DialogResult();
+
+            if (!ProjectFileLoadActive)
+            {
+                // When enabled by user, show warning message
+                if (chkAddPTermLoop.Checked)
+                {
+                    msg_res = MessageBox.Show(
+                        "Attention!\r\n\r\n" +
+                        "This P-Term control loop is by default unstable and is not suited to be used to regulate the power supply stage. " +
+                        "It only serves the sole purpose of being used as regulator during measurements of the plant transfer function.\r\n\r\n" +
+                        "By enabling this option, a P-Term Control Loop will be added to the assembly library file. This P-Term controller " +
+                        "is meant to replace the main control loop."
+                        , "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+
+                    // If user denies, uncheck this option
+                    chkAddPTermLoop.Checked = (bool)(msg_res == System.Windows.Forms.DialogResult.OK);
+
+                }
+
+                // Update project settings
+                CodeGeneratorOptions_CheckedChanged(sender, e);
+            }
+
+            // Enable configuration command button
+            cmdConfigurePTermControl.Enabled = (chkAddPTermLoop.Checked && chkEnableDevelopmentTools.Checked);
+
         }
 
         private void showSDomainTransferFunctionToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
@@ -5008,6 +5101,11 @@ namespace dcld
                       "and/or feedback signal delays. \r\n" +
                       "\r\n" +
                       "This setting is highly hardware dependent and would have to be determined for each design individually";
+
+            else if (pic.Name == picInfoPTermController.Name)
+                msg = "This option enables the configuration of a simple P-Term Controller. \r\n" +
+                      "\r\n" +
+                      "";
 
             else
                 msg = "(help message missing)";
