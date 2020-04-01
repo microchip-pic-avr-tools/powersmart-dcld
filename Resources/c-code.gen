@@ -2,11 +2,11 @@
 Name=C-Source and Header Generator Script
 Description=This scriptprovides C-source and header files for user-tailored SMPS control loops based on DSP assembly code modules templates generated using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=2.0.2
-Date=03/30/2020
+Version=2.0.3
+Date=03/31/2020
 
 [history]
-count=10
+count=11
 0=11/08/19;1.0.0;Initial version after moving C-sources and headers from application code to external script
 1=01/10/20;1.1.0;Added support for cascaded functions. This allows the assembly routine to call another controller or user-defined function extension code module.\r\nAdded pointers to alternate source and terget register supporting bi-directional control and advanced adaptive control methods
 2=03/18/2020;1.1.1;Changed function call name of controller initialization from xxx_Init to xxx_Initialize to stay consistent with other generic code modules
@@ -17,6 +17,7 @@ count=10
 7=03/26/2020;2.0.0;Introduction of unified, 32-bit wide coefficient number format
 8=03/27/2020;2.0.1;Separated input and output ports and added individual normalization scaling parameters
 9=03/30/2020;2.0.2;Renamed data structure group 'TriggerControl' to 'ADC TriggerControl'
+10=03/31/2020;2.0.3;Added P-Term controller for plant transfer function measurement support
 
 
 [tokens]
@@ -193,7 +194,7 @@ line141=%IDENT%} __attribute__((packed))DataProviders; // Automated data sources
 line142=%EMPTY%
 line143=%IDENT%// Cascaded Function Call Parameters
 line144=%IDENT%struct {
-line145=%IDENT%%IDENT%volatile uint16_t CascadedFunction; // Pointer to Function which should be called at the end of the control loop
+line145=%IDENT%%IDENT%volatile uint16_t ptrCascadedFunction; // Pointer to Function which should be called at the end of the control loop
 line146=%IDENT%%IDENT%volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
 line147=%IDENT%} __attribute__((packed))CascadeTrigger; // Cascade triggers with parameters for next function call
 line148=%EMPTY%
@@ -225,7 +226,7 @@ line173=%EMPTY%
 
 
 [comp_header]
-count=93
+count=101
 line0=/* ********************************************************************************
 line1=%SPACE%* %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
 line2=%SPACE%* ********************************************************************************
@@ -306,19 +307,27 @@ line76=%IDENT%%IDENT%volatile %HISTORY_DATA_TYPE% ctrl_input, // user-defined, c
 line77=%IDENT%%IDENT%volatile %HISTORY_DATA_TYPE% ctrl_output // user-defined, constant control output history value
 line78=%IDENT%);
 line79=%EMPTY%
-line80=// Calls the %FILENAME_PATTERN% controller object
+line80=// Calls the %FILENAME_PATTERN% control loop
 line81=extern void %FILENAME_PATTERN%_Update( // Calls the %FILTER_ORDER%P%FILTER_ORDER%Z controller (Assembly)
 line82=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
 line83=%IDENT%);
 line84=%EMPTY%
-line85=%EMPTY%
-line86=#endif // end of __SPECIAL_FUNCTION_LAYER_%FILENAME_PATTERN_U%_H__
-line87=%EMPTY%
-line88=%EMPTY%
-line89=//**********************************************************************************
-line90=// Download latest version of this tool here: %TOOL_HOME_URL%
-line91=//**********************************************************************************
+line85=// Calls the %FILENAME_PATTERN% P-Term controller during measurements of plant transfer functions
+line86=// THIS CONTROLLER IS USED FOR MEASUREMENTS OF THE PLANT TRANSFER FUNCTION ONLY.
+line87=// THIS LOOP IS BY DEFAULT UNSTABLE AND ONLY WORKS UNDER STABLE TEST CONDITIONS
+line88=// DO NOT USE THIS CONTROLLER TYPE FOR NORMAL OPERATION
+line89=extern void %FILENAME_PATTERN%_PTermUpdate( // Calls the P-Term controller (Assembly)
+line90=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
+line91=%IDENT%);
 line92=%EMPTY%
+line93=%EMPTY%
+line94=#endif // end of __SPECIAL_FUNCTION_LAYER_%FILENAME_PATTERN_U%_H__
+line95=%EMPTY%
+line96=%EMPTY%
+line97=//**********************************************************************************
+line98=// Download latest version of this tool here: %TOOL_HOME_URL%
+line99=//**********************************************************************************
+line100=%EMPTY%
 
 
 [comp_source_head]

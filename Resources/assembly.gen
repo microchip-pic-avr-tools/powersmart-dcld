@@ -2,11 +2,11 @@
 Name=Assembly Generator Script
 Description=This script defines DSP assembly code generation templates used to generate user-tailored SMPS control loops using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=2.0.2
-Date=03/30/2020
+Version=2.0.3
+Date=03/31/2020
 
 [history]
-count=17
+count=18
 0=04/03/19;1.1.1;Added input offset compensation applied to input source
 1=10/18/19;1.2.0;Changed existing input offset compensation to full bi-directional feedback implementation
 2=10/19/19;1.2.1;Added code option for feedback signal rectification
@@ -24,6 +24,7 @@ count=17
 14=03/26/2020;2.0.0;Introduction of unified 32-bit wide coefficient number format
 15=03/27/2020;2.0.1;Separated controller input and output port definitions in individual data structures with normalization parameters
 16=03/30/2020;2.0.2;Polished comments
+17=03/31/2020;2.0.3;Added P-Term control loop  for plant measurement support
 
 [filter_block_scaling_modes]
 count=6
@@ -168,11 +169,11 @@ code49=.equ AdvParam4,                 98
 
 
 [blockset_sbsft_0]
-;Instruction blockset for signle-bitshed 16-bit fixed point controllers
-;linear execution of compensation filter (MAC_A - READ - UPDATE_B - MAC_B - CLAMP - WRITE - ATRIG - UPDATE_A)
+;Instruction blockset for controllers using 16-bit fixed point coefficients scaled with one common single bit-shift scaler
+;linear execution of compensation filter
 wreg_usage=4,6,8,10,13
 accu_usage=a
-count=81
+count=124
 0=disclaimer
 1=lists
 2=section_header
@@ -253,7 +254,50 @@ count=81
 77=charge_control_history_loop
 78=charge_control_history_end
 79=return
-80=end
+80=pterm_function_head
+81=context_save
+82=context_save_shadow
+83=context_save_status_word_wreg
+84=enable_disable_start_pterm
+85=context_save
+86=context_save_mac_registers
+87=context_save_accumulator_a
+88=context_save_accumulator_b
+89=context_save_core_config
+90=context_save_core_status
+91=core_config
+92=comp_read_input
+93=shadow_copy_control_input
+94=comp_get_error
+95=comp_zero_input
+96=comp_invert_input
+97=comp_norm_error
+98=shadow_copy_error_input
+99=pterm_comp_load_gain_factor
+100=pterm_comp_exec_pterm
+101=anti_windup
+102=anti_windup_max
+103=anti_windup_min
+104=comp_writeback
+105=shadow_copy_control_output
+106=adc_trigger_a_placement
+107=adc_trigger_b_placement
+108=update_status_bitfield
+109=context_restore
+110=context_restore_mac_registers
+111=context_restore_accumulator_a
+112=context_restore_accumulator_b
+113=context_restore_core_config
+114=context_restore_core_status
+115=enable_disable_end_pterm
+116=enable_disable_end_dummy_read_pterm
+117=enable_disable_end_dummy_read_end_pterm
+118=cascaded_function_call
+119=context_restore
+120=context_restore_shadow
+121=context_restore_status_word_wreg
+122=return
+123=end
 
 
 [blockset_sbsft_1]
@@ -460,7 +504,7 @@ code49=.equ AdvParam4,                 98
 ;linear execution of compensation filter
 wreg_usage=4,6,8,10,13
 accu_usage=a
-count=83
+count=126
 0=disclaimer
 1=lists
 2=section_header
@@ -543,7 +587,50 @@ count=83
 79=charge_control_history_loop
 80=charge_control_history_end
 81=return
-82=end
+82=pterm_function_head
+83=context_save
+84=context_save_shadow
+85=context_save_status_word_wreg
+86=enable_disable_start_pterm
+87=context_save
+88=context_save_mac_registers
+89=context_save_accumulator_a
+90=context_save_accumulator_b
+91=context_save_core_config
+92=context_save_core_status
+93=core_config
+94=comp_read_input
+95=shadow_copy_control_input
+96=comp_get_error
+97=comp_zero_input
+98=comp_invert_input
+99=comp_norm_error
+100=shadow_copy_error_input
+101=pterm_comp_load_gain_factor
+102=pterm_comp_exec_pterm
+103=anti_windup
+104=anti_windup_max
+105=anti_windup_min
+106=comp_writeback
+107=shadow_copy_control_output
+108=adc_trigger_a_placement
+109=adc_trigger_b_placement
+110=update_status_bitfield
+111=context_restore
+112=context_restore_mac_registers
+113=context_restore_accumulator_a
+114=context_restore_accumulator_b
+115=context_restore_core_config
+116=context_restore_core_status
+117=enable_disable_end_pterm
+118=enable_disable_end_dummy_read_pterm
+119=enable_disable_end_dummy_read_end_pterm
+120=cascaded_function_call
+121=context_restore
+122=context_restore_shadow
+123=context_restore_status_word_wreg
+124=return
+125=end
 
 
 [add_data_structure_dbsft]
@@ -657,7 +744,7 @@ code49=.equ AdvParam4,                 98
 ;linear execution of compensation filter
 wreg_usage=4,6,8,10,13
 accu_usage=ab
-count=88
+count=131
 0=disclaimer
 1=lists
 2=section_header
@@ -745,6 +832,49 @@ count=88
 84=charge_control_history_loop
 85=charge_control_history_end
 86=return
+80=pterm_function_head
+81=context_save
+82=context_save_shadow
+83=context_save_status_word_wreg
+84=enable_disable_start_pterm
+85=context_save
+86=context_save_mac_registers
+87=context_save_accumulator_a
+88=context_save_accumulator_b
+89=context_save_core_config
+90=context_save_core_status
+91=core_config
+92=comp_read_input
+93=shadow_copy_control_input
+94=comp_get_error
+95=comp_zero_input
+96=comp_invert_input
+97=comp_norm_error
+98=shadow_copy_error_input
+99=pterm_comp_load_gain_factor
+100=pterm_comp_exec_pterm
+101=anti_windup
+102=anti_windup_max
+103=anti_windup_min
+104=comp_writeback
+105=shadow_copy_control_output
+106=adc_trigger_a_placement
+107=adc_trigger_b_placement
+108=update_status_bitfield
+109=context_restore
+110=context_restore_mac_registers
+111=context_restore_accumulator_a
+112=context_restore_accumulator_b
+113=context_restore_core_config
+114=context_restore_core_status
+115=enable_disable_end_pterm
+116=enable_disable_end_dummy_read_pterm
+117=enable_disable_end_dummy_read_end_pterm
+118=cascaded_function_call
+119=context_restore
+120=context_restore_shadow
+121=context_restore_status_word_wreg
+122=return
 87=end
 
 
@@ -859,7 +989,7 @@ code49=.equ AdvParam4,                 98
 ;linear execution of compensation filter
 wreg_usage=4,5,6,8,10,13
 accu_usage=ab
-count=82
+count=125
 0=disclaimer
 1=lists
 2=section_header
@@ -941,7 +1071,50 @@ count=82
 78=charge_control_history_loop
 79=charge_control_history_end
 80=return
-81=end
+81=pterm_function_head
+82=context_save
+83=context_save_shadow
+84=context_save_status_word_wreg
+85=enable_disable_start_pterm
+86=context_save
+87=context_save_mac_registers
+88=context_save_accumulator_a
+89=context_save_accumulator_b
+90=context_save_core_config
+91=context_save_core_status
+92=core_config
+93=comp_read_input
+94=shadow_copy_control_input
+95=comp_get_error
+96=comp_zero_input
+97=comp_invert_input
+98=comp_norm_error
+99=shadow_copy_error_input
+100=pterm_comp_load_gain_factor
+101=pterm_comp_exec_pterm
+102=anti_windup
+103=anti_windup_max
+104=anti_windup_min
+105=comp_writeback
+106=shadow_copy_control_output
+107=adc_trigger_a_placement
+108=adc_trigger_b_placement
+109=update_status_bitfield
+110=context_restore
+111=context_restore_mac_registers
+112=context_restore_accumulator_a
+113=context_restore_accumulator_b
+114=context_restore_core_config
+115=context_restore_core_status
+116=enable_disable_end_pterm
+117=enable_disable_end_dummy_read_pterm
+118=enable_disable_end_dummy_read_end_pterm
+119=cascaded_function_call
+120=context_restore
+121=context_restore_shadow
+122=context_restore_status_word_wreg
+123=return
+124=end
 
 
 [disclaimer]
@@ -1021,6 +1194,15 @@ comment0=%EMPTY%
 comment1=%EMPTY%
 code0=.global %PREFIXG%_Precharge
 code1=%PREFIXG%_Precharge:
+
+[pterm_function_head]
+head_comment=%SEPARATOR%; Global function declaration %PREFIXG%_PTermUpdate\n; This function executes a P-term based control loop used for plant measurements only.\n; THIS LOOP IS NOT SUITED FOR STABLE OPERATION%SEPARATOR%
+cycles=0
+lines=2
+comment0=%EMPTY%
+comment1=%EMPTY%
+code0=.global %PREFIXG%_PTermUpdate
+code1=%PREFIXG%_PTermUpdate:
 
 [clear_control_history_start]
 head_comment=%SEPARATOR%; Clear control history array
@@ -1272,7 +1454,20 @@ comment1=check ENABLED bit state, skip (do not execute) next instruction if set
 comment2=if ENABLED bit is cleared, jump to end of control code
 code0=mov [w0 + #Status], w12
 code1=btss w12, #NPNZ16_STATUS_ENABLED
-code2=bra %PREFIXU%_BYPASS_LOOP
+code2=bra %PREFIXU%_LOOP_BYPASS
+
+[enable_disable_start_pterm]
+declaration=.equ NPNZ16_STATUS_ENABLED, 15
+data_structure=.equ	Status, 0
+head_comment=%SEPARATOR%; Check status word for Enable/Disable flag and bypass computation when disabled
+cycles=4
+lines=3
+comment0=load value of status word into working register
+comment1=check ENABLED bit state, skip (do not execute) next instruction if set
+comment2=if ENABLED bit is cleared, jump to end of control code
+code0=mov [w0 + #Status], w12
+code1=btss w12, #NPNZ16_STATUS_ENABLED
+code2=bra %PREFIXU%_PTERM_LOOP_BYPASS
 
 [enable_disable_end_dummy_read]
 head_comment=%SEPARATOR%; Enable/Disable bypass branch target with dummy read of source buffer
@@ -1282,8 +1477,21 @@ comment0=when enabled, step over dummy read and go straight to EXIT
 comment1=Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
 comment2=load pointer to input source register
 comment3=move value from input source into working register
-code0=goto %PREFIXU%_EXIT_LOOP
-code1=%PREFIXU%_BYPASS_LOOP:
+code0=goto %PREFIXU%_LOOP_EXIT
+code1=%PREFIXU%_LOOP_BYPASS:
+code2=mov [w0 + #ptrSourceRegister], w2
+code3=mov [w2], w1 
+
+[enable_disable_end_dummy_read_pterm]
+head_comment=%SEPARATOR%; Enable/Disable bypass branch target with dummy read of source buffer
+cycles=2
+lines=4
+comment0=when enabled, step over dummy read and go straight to EXIT
+comment1=Enable/Disable bypass branch target to perform dummy read of source to clear the source buffer
+comment2=load pointer to input source register
+comment3=move value from input source into working register
+code0=goto %PREFIXU%_PTERM_LOOP_EXIT
+code1=%PREFIXU%_PTERM_LOOP_BYPASS:
 code2=mov [w0 + #ptrSourceRegister], w2
 code3=mov [w2], w1 
 
@@ -1292,14 +1500,28 @@ head_comment=%EMPTY%
 cycles=1
 lines=1
 comment0=Exit control loop branch target 
-code0=%PREFIXU%_EXIT_LOOP:
+code0=%PREFIXU%_LOOP_EXIT:
+
+[enable_disable_end_dummy_read_end_pterm]
+head_comment=%EMPTY%
+cycles=1
+lines=1
+comment0=Exit P-Term control loop branch target 
+code0=%PREFIXU%_PTERM_LOOP_EXIT:
 
 [enable_disable_end]
 head_comment=%SEPARATOR%; Enable/Disable bypass branch target
 cycles=0
 lines=1
 comment0=%EMPTY%
-code0=%PREFIXU%_BYPASS_LOOP:
+code0=%PREFIXU%_LOOP_BYPASS:
+
+[enable_disable_end_pterm]
+head_comment=%SEPARATOR%; Enable/Disable bypass branch target
+cycles=0
+lines=1
+comment0=%EMPTY%
+code0=%PREFIXU%_PTERM_LOOP_BYPASS:
 
 [core_config]
 head_comment=%SEPARATOR%; Configure DSP for fractional operation with normal saturation (Q1.31 format)
@@ -2156,6 +2378,28 @@ code0=mov [w8 - #%ADDR_DATA*3%], w5
 code1=mpy w4*w6, a
 code2=sftac a, w5
 code3=add b
+
+[pterm_comp_load_gain_factor]
+head_comment=%SEPARATOR%; Load P-gain factor from data structure
+cycles=3
+lines=3
+comment0=move P-coefficient fractional into working register
+comment1=move P-coefficient scaler into working register
+comment2=move error to MPY working register 
+code0=mov [w0 + #AdvParam1], w6
+code1=mov [w0 + #AdvParam2], w5 
+code2=mov w1, w4
+
+[pterm_comp_exec_pterm]
+head_comment=; calculate P-control result
+cycles=3
+lines=3
+comment0=multiply most recent error with P-coefficient
+comment1=shift accumulator to post-scale floating number
+comment2=store accumulator result to working register
+code0=mpy w4*w6, a
+code1=sftac a, w5
+code2=sac.r a, w4
 
 [agc_factor_multiply_start]
 head_comment=%SEPARATOR%; Adaptive Loop Gain Modulation
