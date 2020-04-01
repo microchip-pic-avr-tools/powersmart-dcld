@@ -311,6 +311,8 @@ namespace dcld
             set { _FilterOrder = value; return; }
         }
 
+        private bool _CycleCountEnable = false;
+
         private int _CycleCountTotal = 0;
         internal int CycleCountTotal
         {
@@ -447,6 +449,16 @@ namespace dcld
                         case "disclaimer":
                             str_dum = BuildCodeBlock(command);
                             str_dum = str_dum + _CustomComment;
+                            break;
+
+                        case "exec_function_head":
+                            str_dum = BuildCodeBlock(command);
+                            _CycleCountEnable = true; // Setting flag starting cycle count of main loop
+                            break;
+
+                        case "return":
+                            str_dum = BuildCodeBlock(command);
+                            _CycleCountEnable = false; // Clearing flag ending cycle count of main loop
                             break;
 
                         case "context_save":
@@ -587,13 +599,13 @@ namespace dcld
                             if (_SpreadSpectrumModulation) { command = command + "_ssm"; }
                             if (_AddAlternateTarget) { command = command + "_with_alt_target_switch"; }
                             str_dum = BuildCodeBlock(command);
-                            _CycleCountToWriteback = _CycleCountTotal;  // Capture value from most recent cycle count
+                            if (_CycleCountEnable) _CycleCountToWriteback = _CycleCountTotal;  // Capture value from most recent cycle count
                             break;
 
                         case "comp_read_input":
                             if (_AddAlternateSource) { command = command + "_with_alt_source_switch"; }
                             str_dum = BuildCodeBlock(command);
-                            _CycleCountToDataCapture = _CycleCountTotal;  // Capture value from most recent cycle count
+                            if (_CycleCountEnable) _CycleCountToDataCapture = _CycleCountTotal;  // Capture value from most recent cycle count
                             break;
 
                         case "comp_norm_error":
@@ -734,7 +746,10 @@ namespace dcld
 
             // get line count and execution cycles
             line_cnt = Convert.ToInt32(_GenScript.ReadKey(block_name, "lines", "0"));
-            cycles = Convert.ToInt32(_GenScript.ReadKey(block_name, "cycles", "0"));
+            if (_CycleCountEnable) 
+                cycles = Convert.ToInt32(_GenScript.ReadKey(block_name, "cycles", "0"));
+            else
+                cycles = 0;
 
             // Insert code lines with comments
 
