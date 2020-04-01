@@ -1661,6 +1661,12 @@ namespace dcld
                 stbProgressBar.Value = 65;
                 Application.DoEvents();
 
+                // Bode Plot settings
+                ProjectFile.WriteKey("BodePlot", "XScale-NyquistShannonLimit", Convert.ToInt32(nyquistShannonLimitToolStripMenuItem.Checked).ToString());
+                ProjectFile.WriteKey("BodePlot", "XScale-SamplingFrequency", Convert.ToInt32(samplingFrequencyToolStripMenuItem.Checked).ToString());
+                ProjectFile.WriteKey("BodePlot", "XScale-FullScale", Convert.ToInt32(fullScaleToolStripMenuItem.Checked).ToString());
+                ProjectFile.WriteKey("BodePlot", "YScale-UnwrapPhase", Convert.ToInt32(unwrapPhaseToolStripMenuItem.Checked).ToString());
+                    
                 // Timing graph
                 ProjectFile.WriteKey("TimingGraph", "LoopTriggerOption", this.cmbLoopTriggerOption.SelectedIndex.ToString());
 
@@ -1869,6 +1875,18 @@ namespace dcld
 
                 stbProgressBar.Value = 80;
                 Application.DoEvents();
+
+                // Bode Plot settings
+                unwrapPhaseToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("BodePlot", "YScale-UnwrapPhase", "1")));
+
+                if (Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("BodePlot", "XScale-NyquistShannonLimit", "1"))))
+                    chartBode_ScaleOptionChanged(nyquistShannonLimitToolStripMenuItem, EventArgs.Empty);
+
+                if ( Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("BodePlot", "XScale-SamplingFrequency", "0"))) )
+                    chartBode_ScaleOptionChanged(samplingFrequencyToolStripMenuItem, EventArgs.Empty);
+                
+                if ( Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("BodePlot", "XScale-FullScale", "0"))) )
+                    chartBode_ScaleOptionChanged(fullScaleToolStripMenuItem, EventArgs.Empty);
 
                 // Timing graph
                 this.cmbLoopTriggerOption.SelectedIndex = Convert.ToInt16(ProjectFile.ReadKey("TimingGraph", "LoopTriggerOption", "0"));
