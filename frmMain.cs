@@ -132,7 +132,7 @@ namespace dcld
         int GroupFolding_grpCodeFeatureDataIOHeight = 80;
         int GroupFolding_grpDataProviderSourcesHeight = 100;
         int GroupFolding_grpAntiWindupHeight = 100;
-        int GroupFolding_grpDevelopmentToolsHeight = 100;
+//        int GroupFolding_grpDevelopmentToolsHeight = 100;
 
         public frmMain(string[] args)
         {
@@ -3880,47 +3880,23 @@ namespace dcld
 
         private void codeGeneratorConfig_GroupFolding(object sender, EventArgs e)
         {
-            /*
-            CheckBox check, chkItem;
-            GroupBox group;
-
-            // If function was called from other control than a check box, exit here
-            if (sender.GetType().ToString() != "System.Windows.Forms.CheckBox")
-                check = (CheckBox)sender;
-            else
-                return;
-
-            // If parent of selected check box is not a group box, exit here
-            if (check.Parent.GetType().ToString() == "System.Windows.Forms.GroupBox")
-                group = (GroupBox)check.Parent;
-            else
-                return;
-            */
-
-
             if (!chkContextSaving.Checked){ grpContextManagement.Height = GroupFolding_MinHeight; }
             else { grpContextManagement.Height = GroupFolding_grpContextSavingHeight; }
-            //grpContextSaving.Top = grpFunctionLabel.Top + grpFunctionLabel.Height + GroupFolding_VDistance; // changed to object Docking->Top
 
             if (!chkCodeFeatureOptions.Checked) { grpCodeFeatureOptions.Height = GroupFolding_MinHeight; }
             else { grpCodeFeatureOptions.Height = GroupFolding_grpCodeFeatureOptionsHeight; }
-            //grpCodeFeatureOptions.Top = grpContextSaving.Top + grpContextSaving.Height + GroupFolding_VDistance;
 
             if (!chkAutomatedDataInterface.Checked) { grpCodeFeatureDataIO.Height = GroupFolding_MinHeight; }
             else { grpCodeFeatureDataIO.Height = GroupFolding_grpCodeFeatureDataIOHeight; }
-            //grpCodeFeatureOptions.Top = grpContextSaving.Top + grpContextSaving.Height + GroupFolding_VDistance;
 
             if (!chkDataProviderSource.Checked) { grpDataProviderSources.Height = GroupFolding_MinHeight; }
             else { grpDataProviderSources.Height = GroupFolding_grpDataProviderSourcesHeight; }
-            //grpCodeFeatureOptions.Top = grpContextSaving.Top + grpContextSaving.Height + GroupFolding_VDistance;
 
             if (!chkAntiWindup.Checked) { grpAntiWindup.Height = GroupFolding_MinHeight; }
             else { grpAntiWindup.Height = GroupFolding_grpAntiWindupHeight; }
-            //grpAntiWindup.Top = grpCodeFeatureOptions.Top + grpCodeFeatureOptions.Height + GroupFolding_VDistance;
 
-            if (!chkEnableDevelopmentTools.Checked) { grpDevelopmentTools.Height = GroupFolding_MinHeight; }
-            else { grpDevelopmentTools.Height = GroupFolding_grpDevelopmentToolsHeight; }
-            //grpAntiWindup.Top = grpCodeFeatureOptions.Top + grpCodeFeatureOptions.Height + GroupFolding_VDistance;
+            //if (!chkEnableDevelopmentTools.Checked) { grpDevelopmentTools.Height = GroupFolding_MinHeight; }
+            //else { grpDevelopmentTools.Height = GroupFolding_grpDevelopmentToolsHeight; }
 
             return;
         }
