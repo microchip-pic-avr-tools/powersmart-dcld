@@ -516,11 +516,26 @@ namespace dcld
             lvCoefficients.MultiSelect = false;
 
 
+            // arrange group boxes of control loop configuration option catalog
+            // => needs to be set in reverse order of apprearance (from bottom to top of page)
+            grpDevelopmentTools.Parent = tabController;
+            grpDevelopmentTools.Dock = DockStyle.Top;
+            grpAdaptiveGainControl.Parent = tabController;
+            grpAdaptiveGainControl.Dock = DockStyle.Top;
+            grpOutputDataNormalization.Parent = tabController;
+            grpOutputDataNormalization.Dock = DockStyle.Top;
+            grpInputDataSpecifications.Parent = tabController;
+            grpInputDataSpecifications.Dock = DockStyle.Top;
+            grpPolesZeros.Parent = tabController;
+            grpPolesZeros.Dock = DockStyle.Top;
+            grpControllerSelection.Parent = tabController;
+            grpControllerSelection.Dock = DockStyle.Top;
+
             // arrange group boxes of code generator option catalog
             // => needs to be set in reverse order of apprearance (from bottom to top of page)
 
-            grpDevelopmentTools.Parent = tabSourceCodeConfig;
-            grpDevelopmentTools.Dock = DockStyle.Top;
+            //grpDevelopmentTools.Parent = tabSourceCodeConfig;
+            //grpDevelopmentTools.Dock = DockStyle.Top;
             grpAntiWindup.Parent = tabSourceCodeConfig;
             grpAntiWindup.Dock = DockStyle.Top;
             grpDataProviderSources.Parent = tabSourceCodeConfig;
