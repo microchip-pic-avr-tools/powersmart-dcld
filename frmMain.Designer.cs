@@ -1968,10 +1968,10 @@
             // tabSourceCodeConfig
             // 
             this.tabSourceCodeConfig.Controls.Add(this.pnlCodeGeneratorOptions);
-            this.tabSourceCodeConfig.Location = new System.Drawing.Point(4, 24);
+            this.tabSourceCodeConfig.Location = new System.Drawing.Point(4, 22);
             this.tabSourceCodeConfig.Name = "tabSourceCodeConfig";
             this.tabSourceCodeConfig.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 743);
+            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 745);
             this.tabSourceCodeConfig.TabIndex = 1;
             this.tabSourceCodeConfig.Text = "Source Code Configuration";
             this.tabSourceCodeConfig.UseVisualStyleBackColor = true;
@@ -1990,7 +1990,7 @@
             this.pnlCodeGeneratorOptions.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlCodeGeneratorOptions.Location = new System.Drawing.Point(3, 3);
             this.pnlCodeGeneratorOptions.Name = "pnlCodeGeneratorOptions";
-            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 737);
+            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 739);
             this.pnlCodeGeneratorOptions.TabIndex = 19;
             // 
             // grpAntiWindup
