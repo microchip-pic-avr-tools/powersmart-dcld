@@ -3374,96 +3374,111 @@ namespace dcld
             if (ProjectFileLoadActive) return;  // If settings are loaded from a file, suppress all updates
             if (cNPNZ.QFormat != 15) return;    // Q15-Format supported only
 
-            stbProgressBarLabel.Text = "Generating Source Code:";
-            stbProgressBarLabel.Visible = true;
-            stbProgressBar.Visible = true;
+            //try
+            {
 
-            stbProgressBar.Value = 10;
-            Application.DoEvents();
 
-            // capture editor windows vertical scroll status
-            EditorASMScrollPos = txtSyntaxEditorAssembly.SelectedView.CurrentDisplayLine.Index;   //SelectedView.DisplayLines.IndexOf();  //.VerticalScroll.Value;
+                stbProgressBarLabel.Text = "Generating Source Code:";
+                stbProgressBarLabel.Visible = true;
+                stbProgressBar.Visible = true;
 
-            // ========================================================================
+                stbProgressBar.Value = 10;
+                Application.DoEvents();
 
-            // Set common C-Code Generator Settings
-            clsCCodeGenerator cGen = new clsCCodeGenerator();
+                // capture editor windows vertical scroll status
+                EditorASMScrollPos = txtSyntaxEditorAssembly.SelectedView.CurrentDisplayLine.Index;   //SelectedView.DisplayLines.IndexOf();  //.VerticalScroll.Value;
 
-            cGen.dcldProjectFile = ProjectFile;
+                // ========================================================================
 
-            cGen.FileNamePattern = txtControllerNamePrefix.Text.Trim() + txtControllerNameLabel.Text.Trim();
-            cGen.PreShift = (int)(Convert.ToUInt32(cmbQFormat.Text.Substring(1, (int)cmbQFormat.Text.Length - 1)) - Convert.ToUInt32(txtInputDataResolution.Text));
+                // Set common C-Code Generator Settings
+                clsCCodeGenerator cGen = new clsCCodeGenerator();
 
-            if (txtControllerNamePrefix.Text.Trim().Length > 0)
-            { cGen.PreFix = txtControllerNamePrefix.Text.Trim() + "_"; }
-            else { cGen.PreFix = DefaultVariablePrefix + "_"; }
+                cGen.dcldProjectFile = ProjectFile;
 
-            if (chkCSourceIncludePath.Checked)
-            { cGen.CHeaderIncludePath = ConvertFilePath.Win2Unix(GetIncludePath(txtCHeaderPath.Text)); }
-            else
-            { cGen.CHeaderIncludePath = ""; }
+                cGen.FileNamePattern = txtControllerNamePrefix.Text.Trim() + txtControllerNameLabel.Text.Trim();
+                cGen.PreShift = (int)(Convert.ToUInt32(cmbQFormat.Text.Substring(1, (int)cmbQFormat.Text.Length - 1)) - Convert.ToUInt32(txtInputDataResolution.Text));
 
-            if (chkCHeaderIncludePath.Checked)
-            { cGen.LibHeaderIncludePath = ConvertFilePath.Win2Unix(GetIncludePath(txtCLibPath.Text)); }
-            else
-            { cGen.LibHeaderIncludePath = ""; }
+                if (txtControllerNamePrefix.Text.Trim().Length > 0)
+                { cGen.PreFix = txtControllerNamePrefix.Text.Trim() + "_"; }
+                else { cGen.PreFix = DefaultVariablePrefix + "_"; }
 
-            cGen.GeneratorScript = CCodeGeneratorScript;
-            cGen.CGS_Version = CCodeGeneratorScript.ReadKey("generic", "Version", "n/a");
-            cGen.CGS_VersionDate = CCodeGeneratorScript.ReadKey("generic", "Date", "n/a");
-            cGen.CompTypeName = cmbCompType.Text;
-            cGen.ScalingMethodName = cmbQScalingMethod.Text;
-            
-            // Generate C-Source incorporating coefficients
+                if (chkCSourceIncludePath.Checked)
+                { cGen.CHeaderIncludePath = ConvertFilePath.Win2Unix(GetIncludePath(txtCHeaderPath.Text)); }
+                else
+                { cGen.CHeaderIncludePath = ""; }
 
-            txtSyntaxEditorCSource.Text = cGen.BuildSource(cNPNZ).ToString(); // GenerateCSource(sender, e).ToString();
-            stbProgressBar.Value = 20;
-            Application.DoEvents();
+                if (chkCHeaderIncludePath.Checked)
+                { cGen.LibHeaderIncludePath = ConvertFilePath.Win2Unix(GetIncludePath(txtCLibPath.Text)); }
+                else
+                { cGen.LibHeaderIncludePath = ""; }
 
-            // Generate C-Header
-            txtSyntaxEditorCHeader.Text = cGen.BuildCHeader(cNPNZ).ToString(); // GenerateCHeader(sender, e).ToString();
-            stbProgressBar.Value = 30;
-            Application.DoEvents();
+                cGen.GeneratorScript = CCodeGeneratorScript;
+                cGen.CGS_Version = CCodeGeneratorScript.ReadKey("generic", "Version", "n/a");
+                cGen.CGS_VersionDate = CCodeGeneratorScript.ReadKey("generic", "Date", "n/a");
+                cGen.CompTypeName = cmbCompType.Text;
+                cGen.ScalingMethodName = cmbQScalingMethod.Text;
 
-            // Generate C Library Header
-            txtSyntaxEditorCLibHeader.Text = cGen.BuildCLibHeader(cNPNZ).ToString(); //  GenerateCLibHeader(sender, e).ToString();
-            stbProgressBar.Value = 35;
-            Application.DoEvents();
                 // Set Code Generation Options
                 cGen.Tokens.Items[cGen.Tokens.GetIndexOf(101)].Enabled = chkAddPTermLoop.Checked;
 
-            // ========================================================================
+                // Generate C-Source incorporating coefficients
 
-            // Generate assembly body
-            txtSyntaxEditorAssembly.Document.Text = GenerateAssembly(sender, e).ToString();
+                txtSyntaxEditorCSource.Text = cGen.BuildSource(cNPNZ).ToString(); // GenerateCSource(sender, e).ToString();
+                stbProgressBar.Value = 20;
+                Application.DoEvents();
 
-            stbProgressBar.Value = 70;
-            Application.DoEvents();
+                // Generate C-Header
+                txtSyntaxEditorCHeader.Text = cGen.BuildCHeader(cNPNZ).ToString(); // GenerateCHeader(sender, e).ToString();
+                stbProgressBar.Value = 30;
+                Application.DoEvents();
 
-            // ========================================================================
+                // Generate C Library Header
+                txtSyntaxEditorCLibHeader.Text = cGen.BuildCLibHeader(cNPNZ).ToString(); //  GenerateCLibHeader(sender, e).ToString();
+                stbProgressBar.Value = 35;
+                Application.DoEvents();
 
-            // Hide code generation update warnings
-            tsbCodeGenUpdateWarningAssembly.Visible = false;
-            tsbCodeGenUpdateWarningCSource.Visible = false;
-            tsbCodeGenUpdateWarningCHeader.Visible = false;
-            tsbCodeGenUpdateWarningLibHeader.Visible = false;
-            tsbCodeGenUpdateWarningTiming.Visible = false;
+                // ========================================================================
 
-            stbProgressBar.Value = 90;
-            Application.DoEvents();
+                // Generate assembly body
+                txtSyntaxEditorAssembly.Document.Text = GenerateAssembly(sender, e).ToString();
 
-            // Update execution timing chart and data
-            UpdateExecutionRuntime(sender, e);
+                stbProgressBar.Value = 70;
+                Application.DoEvents();
 
-            // Reset editor windows vertial scroll status
-            if (EditorASMScrollPos > 0)
-                txtSyntaxEditorAssembly.SelectedView.GoToLine(EditorASMScrollPos-1);
+                // ========================================================================
 
-            stbProgressBar.Value = 100;
-            Application.DoEvents();
-            stbProgressBar.Visible = false;
-            stbProgressBarLabel.Visible = false;
+                // Hide code generation update warnings
+                tsbCodeGenUpdateWarningAssembly.Visible = false;
+                tsbCodeGenUpdateWarningCSource.Visible = false;
+                tsbCodeGenUpdateWarningCHeader.Visible = false;
+                tsbCodeGenUpdateWarningLibHeader.Visible = false;
+                tsbCodeGenUpdateWarningTiming.Visible = false;
 
+                stbProgressBar.Value = 90;
+                Application.DoEvents();
+
+                // Update execution timing chart and data
+                UpdateExecutionRuntime(sender, e);
+
+                // Reset editor windows vertial scroll status
+                if (EditorASMScrollPos > 0)
+                    txtSyntaxEditorAssembly.SelectedView.GoToLine(EditorASMScrollPos - 1);
+
+                stbProgressBar.Value = 100;
+                Application.DoEvents();
+                stbProgressBar.Visible = false;
+                stbProgressBarLabel.Visible = false;
+            }
+            //catch 
+            {
+                if (!ApplicationShutDown) 
+                {
+                    stbMainStatusLabel.Text = "Unexpected exception during code generation. The generated code may be incomplete or corrupted.";
+                    stbMainStatusLabel.Image = dcld.Properties.Resources.icon_critical.ToBitmap();
+                    stbMainStatusLabel.BackColor = stbMain.BackColor;
+                }
+            }
+            
             return;
         }
 
