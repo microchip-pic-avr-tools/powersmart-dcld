@@ -126,8 +126,6 @@ namespace dcld
             string sDum = "";
             string _str_coeff_datatype = "", _str_hist_datatype = "", _str_struct_label = "";
 
-            int _id = 0, _id_start = 0, _id_stop = 0;
-            string _str_id = "", _str_token = "";
 
             switch (compFilter.ScalingMethod)
             { 
@@ -193,33 +191,61 @@ namespace dcld
                 sDum = sDum.Replace("%TOOL_HOME_URL%", _GenScript.ReadKey("labels", "%TOOL_HOME_URL%", "").Trim());
                 sDum = sDum + "\r\n";
 
-                // Check for OptionToken 
+                // Check for Option Tokens
                 if (sDum.Contains("%{(") && sDum.Contains(")}%"))
                 {
+                    // Capture all tokens
+                    int _i = 0;
+                    bool _id_result = false, _generator_result = true;
+                    int _id = 0, _id_start = 0, _id_stop = 0;
+                    string _str_id = "", _str_token = "", _str_code_line = "";
+                    string _str_line_end = "";
+                    
                     // Extract Token
-                    _str_token = sDum.Substring(sDum.IndexOf("%{("), sDum.IndexOf(")}%") + 3);
+                    _str_code_line = sDum;  // capture code line incl. tokens
 
-                    // Extract ID
-                    _id_start = (_str_token.IndexOf("%{(") + 3);
-                    _id_stop = (_str_token.IndexOf(")}%") - _id_start);
-                    _str_id = _str_token.Substring(_id_start, _id_stop);
-                    if (_str_id.Trim().Length == 0) 
-                        _str_id = "-1";
+                    string[] dum_sep = new string[] { ")}%" }; // Set token separator
+                    string[] str_arr = _str_code_line.Split(dum_sep, StringSplitOptions.None);
 
-                    _id = Convert.ToInt32(_str_id); // Read ID
 
-                    if (_tokens.Exists(_id)) // if ID is valid....
+                    for (_i=0; _i<str_arr.Length; _i++)
                     {
-                        if (!_tokens.Items[_tokens.GetIndexOf(_id)].Enabled)
-                            sDum = ""; // Delete String if code line generation is disabled
-                        else
-                            sDum = sDum.Replace(_str_token, ""); // Delete Token from string
-                    }
-                    else
-                    { sDum = "[Conditional Token Error: Token '" + _str_token + "' invalid] "; }
-                
-                }
+                        if (str_arr[_i].Trim().StartsWith("%{("))
+                        {
+                            // Trim sub-string
+                            str_arr[_i] = str_arr[_i].Trim();   
+                            
+                            // Exctact Token ID
+                            _id_start = (str_arr[_i].IndexOf("%{(") + 3); // Set ID Start
+                            _id_stop = (str_arr[_i].Length - _id_start); // Set ID Stop
+                            _str_id = str_arr[_i].Substring(_id_start, _id_stop); // Exctract ID string
+                            if (_str_id.Trim().Length == 0) _str_id = "-1"; // if Token is empty, set it as "invalid"
+                            _id_result = (bool)(_str_id.Trim().Substring(0, 1) != "!"); // Capture condition and remove Exlamation Mark
+                            if(!_id_result) _str_id = _str_id.Substring(1, (_str_id.Length-1)); // Remove exclamation mark
 
+                            _id = Convert.ToInt32(_str_id); // Read ID
+
+                            if (_tokens.Exists(_id)) // if ID is valid....
+                            {
+                                _generator_result &= (_id_result == _tokens.Items[_tokens.GetIndexOf(_id)].Enabled);
+                            }
+                            else
+                            {
+                                _generator_result = false;
+                                sDum = "[Conditional Token Error: Token '" + _str_token + "' invalid] ";
+                                break;
+                            }
+                            
+                        }
+                    }
+
+                    // Filter code line
+                    if (_generator_result)
+                        sDum = str_arr[(str_arr.Length-1)];
+                    else
+                    { sDum = ""; }
+
+                }
             }
 
             return (sDum);
