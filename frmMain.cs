@@ -5136,7 +5136,11 @@ namespace dcld
                       "This setting is highly hardware dependent and would have to be determined for each design individually";
 
             else if (pic.Name == picInfoPTermController.Name)
-                msg = "This option enables the configuration of a simple P-Term Controller. \r\n" +
+                msg = "This option enables the configuration of a simple proportional error controller (P-Term Controller). \r\n" +
+                      "This control loop serves the sole purpose of regulating the output voltage during plant measurements. \r\n\r\n" + 
+                      "Please note: \r\n" + 
+                      "This control loop is highly unstable and requires absolutely stable operating conditions to remain working. \r\n" +
+                      "Do not use this controller for regulation under normal operating conditions!" +
                       "\r\n" +
                       "";
 
