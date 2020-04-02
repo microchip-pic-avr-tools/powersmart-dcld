@@ -771,7 +771,7 @@ namespace dcld
             else
                 cycles = 0;
 
-            // Insert code lines with comments
+            // ~~~~~~ Insert code lines with comments ~~~~~~ 
 
             code_line.Clear();  // clear buffer
 
