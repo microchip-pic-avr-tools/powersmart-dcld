@@ -3401,6 +3401,8 @@ namespace dcld
             txtSyntaxEditorCLibHeader.Text = cGen.BuildCLibHeader(cNPNZ).ToString(); //  GenerateCLibHeader(sender, e).ToString();
             stbProgressBar.Value = 35;
             Application.DoEvents();
+                // Set Code Generation Options
+                cGen.Tokens.Items[cGen.Tokens.GetIndexOf(101)].Enabled = chkAddPTermLoop.Checked;
 
             // ========================================================================
 
