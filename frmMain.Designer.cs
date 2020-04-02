@@ -158,6 +158,11 @@
             this.tabConfig = new System.Windows.Forms.TabControl();
             this.tabController = new System.Windows.Forms.TabPage();
             this.pnlCompensator = new System.Windows.Forms.Panel();
+            this.grpDevelopmentTools = new System.Windows.Forms.GroupBox();
+            this.cmdConfigurePTermControl = new System.Windows.Forms.Button();
+            this.chkEnableDevelopmentTools = new System.Windows.Forms.CheckBox();
+            this.picInfoPTermController = new System.Windows.Forms.PictureBox();
+            this.chkAddPTermLoop = new System.Windows.Forms.CheckBox();
             this.grpAdaptiveGainControl = new System.Windows.Forms.GroupBox();
             this.chkAGCAddGetModFactorFunCall = new System.Windows.Forms.CheckBox();
             this.chkAGCAddEnable = new System.Windows.Forms.CheckBox();
@@ -224,11 +229,6 @@
             this.lblQFormat = new System.Windows.Forms.Label();
             this.tabSourceCodeConfig = new System.Windows.Forms.TabPage();
             this.pnlCodeGeneratorOptions = new System.Windows.Forms.Panel();
-            this.grpDevelopmentTools = new System.Windows.Forms.GroupBox();
-            this.cmdConfigurePTermControl = new System.Windows.Forms.Button();
-            this.chkEnableDevelopmentTools = new System.Windows.Forms.CheckBox();
-            this.picInfoPTermController = new System.Windows.Forms.PictureBox();
-            this.chkAddPTermLoop = new System.Windows.Forms.CheckBox();
             this.grpAntiWindup = new System.Windows.Forms.GroupBox();
             this.chkAntiWindupSoftDesaturationFlag = new System.Windows.Forms.CheckBox();
             this.chkAntiWindupMinStatusFlag = new System.Windows.Forms.CheckBox();
@@ -511,6 +511,8 @@
             this.tabConfig.SuspendLayout();
             this.tabController.SuspendLayout();
             this.pnlCompensator.SuspendLayout();
+            this.grpDevelopmentTools.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoPTermController)).BeginInit();
             this.grpAdaptiveGainControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).BeginInit();
             this.grpOutputDataNormalization.SuspendLayout();
@@ -519,8 +521,6 @@
             this.grpControllerSelection.SuspendLayout();
             this.tabSourceCodeConfig.SuspendLayout();
             this.pnlCodeGeneratorOptions.SuspendLayout();
-            this.grpDevelopmentTools.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picInfoPTermController)).BeginInit();
             this.grpAntiWindup.SuspendLayout();
             this.grpDataProviderSources.SuspendLayout();
             this.grpCodeFeatureDataIO.SuspendLayout();
@@ -1076,6 +1076,7 @@
             // 
             this.pnlCompensator.AutoScroll = true;
             this.pnlCompensator.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pnlCompensator.Controls.Add(this.grpDevelopmentTools);
             this.pnlCompensator.Controls.Add(this.grpAdaptiveGainControl);
             this.pnlCompensator.Controls.Add(this.grpOutputDataNormalization);
             this.pnlCompensator.Controls.Add(this.grpInputDataSpecifications);
@@ -1088,6 +1089,62 @@
             this.pnlCompensator.Size = new System.Drawing.Size(422, 737);
             this.pnlCompensator.TabIndex = 18;
             // 
+            // grpDevelopmentTools
+            // 
+            this.grpDevelopmentTools.Controls.Add(this.cmdConfigurePTermControl);
+            this.grpDevelopmentTools.Controls.Add(this.chkEnableDevelopmentTools);
+            this.grpDevelopmentTools.Controls.Add(this.picInfoPTermController);
+            this.grpDevelopmentTools.Controls.Add(this.chkAddPTermLoop);
+            this.grpDevelopmentTools.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpDevelopmentTools.Location = new System.Drawing.Point(0, 689);
+            this.grpDevelopmentTools.Name = "grpDevelopmentTools";
+            this.grpDevelopmentTools.Size = new System.Drawing.Size(405, 96);
+            this.grpDevelopmentTools.TabIndex = 10;
+            this.grpDevelopmentTools.TabStop = false;
+            // 
+            // cmdConfigurePTermControl
+            // 
+            this.cmdConfigurePTermControl.Location = new System.Drawing.Point(251, 57);
+            this.cmdConfigurePTermControl.Name = "cmdConfigurePTermControl";
+            this.cmdConfigurePTermControl.Size = new System.Drawing.Size(80, 23);
+            this.cmdConfigurePTermControl.TabIndex = 75;
+            this.cmdConfigurePTermControl.Text = "&Configure...";
+            this.cmdConfigurePTermControl.UseVisualStyleBackColor = true;
+            // 
+            // chkEnableDevelopmentTools
+            // 
+            this.chkEnableDevelopmentTools.AutoSize = true;
+            this.chkEnableDevelopmentTools.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkEnableDevelopmentTools.Location = new System.Drawing.Point(10, 0);
+            this.chkEnableDevelopmentTools.Name = "chkEnableDevelopmentTools";
+            this.chkEnableDevelopmentTools.Size = new System.Drawing.Size(199, 19);
+            this.chkEnableDevelopmentTools.TabIndex = 74;
+            this.chkEnableDevelopmentTools.Text = "Enable Development Extensions";
+            this.chkEnableDevelopmentTools.UseVisualStyleBackColor = true;
+            // 
+            // picInfoPTermController
+            // 
+            this.picInfoPTermController.Image = ((System.Drawing.Image)(resources.GetObject("picInfoPTermController.Image")));
+            this.picInfoPTermController.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoPTermController.InitialImage")));
+            this.picInfoPTermController.Location = new System.Drawing.Point(346, 31);
+            this.picInfoPTermController.Name = "picInfoPTermController";
+            this.picInfoPTermController.Size = new System.Drawing.Size(16, 16);
+            this.picInfoPTermController.TabIndex = 73;
+            this.picInfoPTermController.TabStop = false;
+            this.picInfoPTermController.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
+            // 
+            // chkAddPTermLoop
+            // 
+            this.chkAddPTermLoop.AutoSize = true;
+            this.chkAddPTermLoop.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAddPTermLoop.Location = new System.Drawing.Point(30, 31);
+            this.chkAddPTermLoop.Name = "chkAddPTermLoop";
+            this.chkAddPTermLoop.Size = new System.Drawing.Size(309, 19);
+            this.chkAddPTermLoop.TabIndex = 10;
+            this.chkAddPTermLoop.Text = "Use P-Term Loop Controller for Plant Measurements";
+            this.chkAddPTermLoop.UseVisualStyleBackColor = true;
+            this.chkAddPTermLoop.CheckedChanged += new System.EventHandler(this.chkAddPTermLoop_CheckedChanged);
+            // 
             // grpAdaptiveGainControl
             // 
             this.grpAdaptiveGainControl.Controls.Add(this.chkAGCAddGetModFactorFunCall);
@@ -1097,7 +1154,7 @@
             this.grpAdaptiveGainControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpAdaptiveGainControl.Location = new System.Drawing.Point(0, 610);
             this.grpAdaptiveGainControl.Name = "grpAdaptiveGainControl";
-            this.grpAdaptiveGainControl.Size = new System.Drawing.Size(422, 79);
+            this.grpAdaptiveGainControl.Size = new System.Drawing.Size(405, 79);
             this.grpAdaptiveGainControl.TabIndex = 9;
             this.grpAdaptiveGainControl.TabStop = false;
             // 
@@ -1158,7 +1215,7 @@
             this.grpOutputDataNormalization.Enabled = false;
             this.grpOutputDataNormalization.Location = new System.Drawing.Point(0, 537);
             this.grpOutputDataNormalization.Name = "grpOutputDataNormalization";
-            this.grpOutputDataNormalization.Size = new System.Drawing.Size(422, 73);
+            this.grpOutputDataNormalization.Size = new System.Drawing.Size(405, 73);
             this.grpOutputDataNormalization.TabIndex = 3;
             this.grpOutputDataNormalization.TabStop = false;
             this.grpOutputDataNormalization.Visible = false;
@@ -1228,7 +1285,7 @@
             this.grpInputDataSpecifications.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpInputDataSpecifications.Location = new System.Drawing.Point(0, 388);
             this.grpInputDataSpecifications.Name = "grpInputDataSpecifications";
-            this.grpInputDataSpecifications.Size = new System.Drawing.Size(422, 149);
+            this.grpInputDataSpecifications.Size = new System.Drawing.Size(405, 149);
             this.grpInputDataSpecifications.TabIndex = 2;
             this.grpInputDataSpecifications.TabStop = false;
             // 
@@ -1380,7 +1437,7 @@
             this.grpPolesZeros.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpPolesZeros.Location = new System.Drawing.Point(0, 126);
             this.grpPolesZeros.Name = "grpPolesZeros";
-            this.grpPolesZeros.Size = new System.Drawing.Size(422, 262);
+            this.grpPolesZeros.Size = new System.Drawing.Size(405, 262);
             this.grpPolesZeros.TabIndex = 4;
             this.grpPolesZeros.TabStop = false;
             this.grpPolesZeros.Text = "Compensation Settings";
@@ -1816,7 +1873,7 @@
             this.grpControllerSelection.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpControllerSelection.Location = new System.Drawing.Point(0, 0);
             this.grpControllerSelection.Name = "grpControllerSelection";
-            this.grpControllerSelection.Size = new System.Drawing.Size(422, 126);
+            this.grpControllerSelection.Size = new System.Drawing.Size(405, 126);
             this.grpControllerSelection.TabIndex = 1;
             this.grpControllerSelection.TabStop = false;
             this.grpControllerSelection.Text = "Controller Selection";
@@ -1922,7 +1979,6 @@
             // 
             this.pnlCodeGeneratorOptions.AutoScroll = true;
             this.pnlCodeGeneratorOptions.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pnlCodeGeneratorOptions.Controls.Add(this.grpDevelopmentTools);
             this.pnlCodeGeneratorOptions.Controls.Add(this.grpAntiWindup);
             this.pnlCodeGeneratorOptions.Controls.Add(this.grpDataProviderSources);
             this.pnlCodeGeneratorOptions.Controls.Add(this.grpCodeFeatureDataIO);
@@ -1935,62 +1991,6 @@
             this.pnlCodeGeneratorOptions.Name = "pnlCodeGeneratorOptions";
             this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 739);
             this.pnlCodeGeneratorOptions.TabIndex = 19;
-            // 
-            // grpDevelopmentTools
-            // 
-            this.grpDevelopmentTools.Controls.Add(this.cmdConfigurePTermControl);
-            this.grpDevelopmentTools.Controls.Add(this.chkEnableDevelopmentTools);
-            this.grpDevelopmentTools.Controls.Add(this.picInfoPTermController);
-            this.grpDevelopmentTools.Controls.Add(this.chkAddPTermLoop);
-            this.grpDevelopmentTools.Location = new System.Drawing.Point(6, 240);
-            this.grpDevelopmentTools.Name = "grpDevelopmentTools";
-            this.grpDevelopmentTools.Size = new System.Drawing.Size(405, 96);
-            this.grpDevelopmentTools.TabIndex = 6;
-            this.grpDevelopmentTools.TabStop = false;
-            // 
-            // cmdConfigurePTermControl
-            // 
-            this.cmdConfigurePTermControl.Location = new System.Drawing.Point(251, 57);
-            this.cmdConfigurePTermControl.Name = "cmdConfigurePTermControl";
-            this.cmdConfigurePTermControl.Size = new System.Drawing.Size(80, 23);
-            this.cmdConfigurePTermControl.TabIndex = 75;
-            this.cmdConfigurePTermControl.Text = "&Configure...";
-            this.cmdConfigurePTermControl.UseVisualStyleBackColor = true;
-            // 
-            // chkEnableDevelopmentTools
-            // 
-            this.chkEnableDevelopmentTools.AutoSize = true;
-            this.chkEnableDevelopmentTools.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkEnableDevelopmentTools.Location = new System.Drawing.Point(10, 0);
-            this.chkEnableDevelopmentTools.Name = "chkEnableDevelopmentTools";
-            this.chkEnableDevelopmentTools.Size = new System.Drawing.Size(199, 19);
-            this.chkEnableDevelopmentTools.TabIndex = 74;
-            this.chkEnableDevelopmentTools.Text = "Enable Development Extensions";
-            this.chkEnableDevelopmentTools.UseVisualStyleBackColor = true;
-            this.chkEnableDevelopmentTools.CheckedChanged += new System.EventHandler(this.FoldingBoxEnable_CheckChanged);
-            // 
-            // picInfoPTermController
-            // 
-            this.picInfoPTermController.Image = ((System.Drawing.Image)(resources.GetObject("picInfoPTermController.Image")));
-            this.picInfoPTermController.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoPTermController.InitialImage")));
-            this.picInfoPTermController.Location = new System.Drawing.Point(346, 31);
-            this.picInfoPTermController.Name = "picInfoPTermController";
-            this.picInfoPTermController.Size = new System.Drawing.Size(16, 16);
-            this.picInfoPTermController.TabIndex = 73;
-            this.picInfoPTermController.TabStop = false;
-            this.picInfoPTermController.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
-            // 
-            // chkAddPTermLoop
-            // 
-            this.chkAddPTermLoop.AutoSize = true;
-            this.chkAddPTermLoop.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddPTermLoop.Location = new System.Drawing.Point(30, 31);
-            this.chkAddPTermLoop.Name = "chkAddPTermLoop";
-            this.chkAddPTermLoop.Size = new System.Drawing.Size(309, 19);
-            this.chkAddPTermLoop.TabIndex = 10;
-            this.chkAddPTermLoop.Text = "Use P-Term Loop Controller for Plant Measurements";
-            this.chkAddPTermLoop.UseVisualStyleBackColor = true;
-            this.chkAddPTermLoop.CheckedChanged += new System.EventHandler(this.chkAddPTermLoop_CheckedChanged);
             // 
             // grpAntiWindup
             // 
@@ -4610,7 +4610,7 @@
             this.tabPageCSource.Location = new System.Drawing.Point(4, 22);
             this.tabPageCSource.Name = "tabPageCSource";
             this.tabPageCSource.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCSource.Size = new System.Drawing.Size(944, 713);
+            this.tabPageCSource.Size = new System.Drawing.Size(944, 707);
             this.tabPageCSource.TabIndex = 2;
             this.tabPageCSource.Text = "C-Source";
             this.tabPageCSource.UseVisualStyleBackColor = true;
@@ -4660,7 +4660,7 @@
             visualStudio2005SyntaxEditorRenderer2.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCSource.Renderer = visualStudio2005SyntaxEditorRenderer2;
             this.txtSyntaxEditorCSource.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(938, 638);
+            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(938, 632);
             this.txtSyntaxEditorCSource.TabIndex = 5;
             // 
             // panelCSourcePath
@@ -4726,7 +4726,7 @@
             this.tabPageCHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageCHeader.Name = "tabPageCHeader";
             this.tabPageCHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCHeader.Size = new System.Drawing.Size(944, 713);
+            this.tabPageCHeader.Size = new System.Drawing.Size(944, 707);
             this.tabPageCHeader.TabIndex = 3;
             this.tabPageCHeader.Text = "C-Header";
             this.tabPageCHeader.UseVisualStyleBackColor = true;
@@ -4776,7 +4776,7 @@
             visualStudio2005SyntaxEditorRenderer3.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCHeader.Renderer = visualStudio2005SyntaxEditorRenderer3;
             this.txtSyntaxEditorCHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(938, 638);
+            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(938, 632);
             this.txtSyntaxEditorCHeader.TabIndex = 5;
             // 
             // panelCHeaderPath
@@ -4842,7 +4842,7 @@
             this.tabPageLibraryHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageLibraryHeader.Name = "tabPageLibraryHeader";
             this.tabPageLibraryHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLibraryHeader.Size = new System.Drawing.Size(944, 713);
+            this.tabPageLibraryHeader.Size = new System.Drawing.Size(944, 707);
             this.tabPageLibraryHeader.TabIndex = 6;
             this.tabPageLibraryHeader.Text = "Library Header";
             this.tabPageLibraryHeader.UseVisualStyleBackColor = true;
@@ -4892,7 +4892,7 @@
             visualStudio2005SyntaxEditorRenderer4.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCLibHeader.Renderer = visualStudio2005SyntaxEditorRenderer4;
             this.txtSyntaxEditorCLibHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(938, 638);
+            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(938, 632);
             this.txtSyntaxEditorCLibHeader.TabIndex = 6;
             // 
             // panelCLibPath
@@ -4955,7 +4955,7 @@
             this.tabPageInfo.Location = new System.Drawing.Point(4, 22);
             this.tabPageInfo.Name = "tabPageInfo";
             this.tabPageInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInfo.Size = new System.Drawing.Size(944, 713);
+            this.tabPageInfo.Size = new System.Drawing.Size(944, 707);
             this.tabPageInfo.TabIndex = 5;
             this.tabPageInfo.Text = "Info";
             this.tabPageInfo.UseVisualStyleBackColor = true;
@@ -4969,7 +4969,7 @@
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtOutput.Size = new System.Drawing.Size(938, 707);
+            this.txtOutput.Size = new System.Drawing.Size(938, 701);
             this.txtOutput.TabIndex = 0;
             this.txtOutput.WordWrap = false;
             // 
@@ -5239,6 +5239,9 @@
             this.tabConfig.ResumeLayout(false);
             this.tabController.ResumeLayout(false);
             this.pnlCompensator.ResumeLayout(false);
+            this.grpDevelopmentTools.ResumeLayout(false);
+            this.grpDevelopmentTools.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoPTermController)).EndInit();
             this.grpAdaptiveGainControl.ResumeLayout(false);
             this.grpAdaptiveGainControl.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).EndInit();
@@ -5252,9 +5255,6 @@
             this.grpControllerSelection.PerformLayout();
             this.tabSourceCodeConfig.ResumeLayout(false);
             this.pnlCodeGeneratorOptions.ResumeLayout(false);
-            this.grpDevelopmentTools.ResumeLayout(false);
-            this.grpDevelopmentTools.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picInfoPTermController)).EndInit();
             this.grpAntiWindup.ResumeLayout(false);
             this.grpAntiWindup.PerformLayout();
             this.grpDataProviderSources.ResumeLayout(false);
@@ -5743,16 +5743,16 @@
         private System.Windows.Forms.PictureBox picInfoADCLatency;
         private System.Windows.Forms.PictureBox picInfoISRLatency;
         private System.Windows.Forms.PictureBox picInfoCycleStats;
-        private System.Windows.Forms.GroupBox grpDevelopmentTools;
-        private System.Windows.Forms.CheckBox chkAddPTermLoop;
-        private System.Windows.Forms.PictureBox picInfoPTermController;
-        private System.Windows.Forms.CheckBox chkEnableDevelopmentTools;
-        private System.Windows.Forms.Button cmdConfigurePTermControl;
         private System.Windows.Forms.GroupBox grpAdaptiveGainControl;
         private System.Windows.Forms.CheckBox chkAGCAddGetModFactorFunCall;
         private System.Windows.Forms.CheckBox chkAGCAddEnable;
         private System.Windows.Forms.PictureBox picInfoAGC;
         private System.Windows.Forms.CheckBox chkEnableAdaptiveGainControl;
+        private System.Windows.Forms.GroupBox grpDevelopmentTools;
+        private System.Windows.Forms.Button cmdConfigurePTermControl;
+        private System.Windows.Forms.CheckBox chkEnableDevelopmentTools;
+        private System.Windows.Forms.PictureBox picInfoPTermController;
+        private System.Windows.Forms.CheckBox chkAddPTermLoop;
     }
 }
 
