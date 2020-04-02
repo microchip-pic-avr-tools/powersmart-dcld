@@ -3365,9 +3365,18 @@ namespace dcld
 
         }
 
+        public static Control FindByTag(Control root, string tag)
+        {
+            if (root == null) return null;
+            if (root.Tag is string && (string)root.Tag == tag) return root;
+            return (from Control control in root.Controls
+                    select FindByTag(control, tag)).FirstOrDefault(c => c != null);
+        }
+
         private void GenerateCode(object sender, EventArgs e)
         {
-
+            int _i = 0, _k = 0;
+            string tagName = "";
             int EditorASMScrollPos = 0;
 
             if (ApplicationStartUp) return;     // During the startup-phase o fhte application, suppress all updates
@@ -3419,7 +3428,35 @@ namespace dcld
                 cGen.ScalingMethodName = cmbQScalingMethod.Text;
 
                 // Set Code Generation Options
-                cGen.Tokens.Items[cGen.Tokens.GetIndexOf(101)].Enabled = chkAddPTermLoop.Checked;
+                Control parent = new Control();
+                CheckBox check = new CheckBox();
+
+                for (_i = 0; _i < cGen.Tokens.Items.Count(); _i++)
+                {
+                    for (_k = 0; _k < 3; _k++)
+                    { 
+                        switch (_k)
+                        {
+                            case 0: parent = grpDevelopmentTools; break;
+                            case 1: parent = grpContextManagement; break;
+                            case 2: parent = grpContextManagement; break;
+                        }
+
+                        tagName = cGen.Tokens.Items[_i].Key;
+                        var items = parent.Controls;
+                        var item = items.Cast<Control>().FirstOrDefault(control => String.Equals(control.Tag, tagName));
+
+                        if (item != null) 
+                        { 
+                            if (item.GetType().ToString() == "System.Windows.Forms.CheckBox")
+                            {
+                                check = (CheckBox)item;
+                                cGen.Tokens.Items[_i].Enabled = check.Checked;
+                                break;
+                            }
+                        }
+                    }
+                }
 
                 // Generate C-Source incorporating coefficients
 

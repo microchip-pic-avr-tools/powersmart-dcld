@@ -444,6 +444,12 @@ namespace dcld
             set { _items = value; return; }
         }
 
+        private int _count = 0;
+        internal int Count
+        {
+            get { _count = _items.Length; return (_count); }
+        }
+
         internal bool Add(string NewToken)
         {
             ConditionalCodeToken[] item_dummy = _items;
@@ -499,11 +505,6 @@ namespace dcld
             }
             catch
             { return (false); }
-        }
-
-        internal int Count()
-        {
-            return (_items.Length);
         }
 
         internal int GetIdOfKey(string TokenKey)

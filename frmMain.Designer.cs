@@ -1141,6 +1141,7 @@
             this.chkAddPTermLoop.Name = "chkAddPTermLoop";
             this.chkAddPTermLoop.Size = new System.Drawing.Size(309, 19);
             this.chkAddPTermLoop.TabIndex = 10;
+            this.chkAddPTermLoop.Tag = "pterm_enable";
             this.chkAddPTermLoop.Text = "Use P-Term Loop Controller for Plant Measurements";
             this.chkAddPTermLoop.UseVisualStyleBackColor = true;
             this.chkAddPTermLoop.CheckedChanged += new System.EventHandler(this.chkAddPTermLoop_CheckedChanged);
@@ -1967,10 +1968,10 @@
             // tabSourceCodeConfig
             // 
             this.tabSourceCodeConfig.Controls.Add(this.pnlCodeGeneratorOptions);
-            this.tabSourceCodeConfig.Location = new System.Drawing.Point(4, 22);
+            this.tabSourceCodeConfig.Location = new System.Drawing.Point(4, 24);
             this.tabSourceCodeConfig.Name = "tabSourceCodeConfig";
             this.tabSourceCodeConfig.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 745);
+            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 743);
             this.tabSourceCodeConfig.TabIndex = 1;
             this.tabSourceCodeConfig.Text = "Source Code Configuration";
             this.tabSourceCodeConfig.UseVisualStyleBackColor = true;
@@ -1989,7 +1990,7 @@
             this.pnlCodeGeneratorOptions.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlCodeGeneratorOptions.Location = new System.Drawing.Point(3, 3);
             this.pnlCodeGeneratorOptions.Name = "pnlCodeGeneratorOptions";
-            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 739);
+            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 737);
             this.pnlCodeGeneratorOptions.TabIndex = 19;
             // 
             // grpAntiWindup
@@ -4610,7 +4611,7 @@
             this.tabPageCSource.Location = new System.Drawing.Point(4, 22);
             this.tabPageCSource.Name = "tabPageCSource";
             this.tabPageCSource.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCSource.Size = new System.Drawing.Size(944, 707);
+            this.tabPageCSource.Size = new System.Drawing.Size(944, 713);
             this.tabPageCSource.TabIndex = 2;
             this.tabPageCSource.Text = "C-Source";
             this.tabPageCSource.UseVisualStyleBackColor = true;
@@ -4660,7 +4661,7 @@
             visualStudio2005SyntaxEditorRenderer2.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCSource.Renderer = visualStudio2005SyntaxEditorRenderer2;
             this.txtSyntaxEditorCSource.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(938, 632);
+            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(938, 638);
             this.txtSyntaxEditorCSource.TabIndex = 5;
             // 
             // panelCSourcePath
@@ -4726,7 +4727,7 @@
             this.tabPageCHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageCHeader.Name = "tabPageCHeader";
             this.tabPageCHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCHeader.Size = new System.Drawing.Size(944, 707);
+            this.tabPageCHeader.Size = new System.Drawing.Size(944, 713);
             this.tabPageCHeader.TabIndex = 3;
             this.tabPageCHeader.Text = "C-Header";
             this.tabPageCHeader.UseVisualStyleBackColor = true;
@@ -4776,7 +4777,7 @@
             visualStudio2005SyntaxEditorRenderer3.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCHeader.Renderer = visualStudio2005SyntaxEditorRenderer3;
             this.txtSyntaxEditorCHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(938, 632);
+            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(938, 638);
             this.txtSyntaxEditorCHeader.TabIndex = 5;
             // 
             // panelCHeaderPath
@@ -4842,7 +4843,7 @@
             this.tabPageLibraryHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageLibraryHeader.Name = "tabPageLibraryHeader";
             this.tabPageLibraryHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLibraryHeader.Size = new System.Drawing.Size(944, 707);
+            this.tabPageLibraryHeader.Size = new System.Drawing.Size(944, 713);
             this.tabPageLibraryHeader.TabIndex = 6;
             this.tabPageLibraryHeader.Text = "Library Header";
             this.tabPageLibraryHeader.UseVisualStyleBackColor = true;
@@ -4892,7 +4893,7 @@
             visualStudio2005SyntaxEditorRenderer4.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCLibHeader.Renderer = visualStudio2005SyntaxEditorRenderer4;
             this.txtSyntaxEditorCLibHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(938, 632);
+            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(938, 638);
             this.txtSyntaxEditorCLibHeader.TabIndex = 6;
             // 
             // panelCLibPath
@@ -4955,7 +4956,7 @@
             this.tabPageInfo.Location = new System.Drawing.Point(4, 22);
             this.tabPageInfo.Name = "tabPageInfo";
             this.tabPageInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInfo.Size = new System.Drawing.Size(944, 707);
+            this.tabPageInfo.Size = new System.Drawing.Size(944, 713);
             this.tabPageInfo.TabIndex = 5;
             this.tabPageInfo.Text = "Info";
             this.tabPageInfo.UseVisualStyleBackColor = true;
@@ -4969,7 +4970,7 @@
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtOutput.Size = new System.Drawing.Size(938, 701);
+            this.txtOutput.Size = new System.Drawing.Size(938, 707);
             this.txtOutput.TabIndex = 0;
             this.txtOutput.WordWrap = false;
             // 
