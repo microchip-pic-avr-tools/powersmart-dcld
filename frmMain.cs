@@ -67,6 +67,7 @@ namespace dcld
         bool UpdateComplete = false;
         bool UpdateWarning = false;
         bool ApplicationStartUp = true;
+        bool ApplicationShutDown = false;
         bool ProjectFileLoadActive = false;
         bool ProjectFileChanged = false;
         bool ShowSDomainTF = true;
@@ -2444,6 +2445,11 @@ namespace dcld
             }
             else { str_msg = ""; }
 
+            // Lease here is application is shutting down while code was updated
+            if (ApplicationShutDown) 
+                return;
+
+            // Show Status bar
             stbProgressBarLabel.Text = "Exporting Generated Files:";
             stbProgressBarLabel.Visible = true;
             stbProgressBar.Visible = true;
@@ -2681,7 +2687,14 @@ namespace dcld
         {
 
             // Check for unsaved changes
-            if (!AskForFileSave(sender, e)) e.Cancel = true;
+            if (!AskForFileSave(sender, e))
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            // Set FORM CLOSING flag
+            ApplicationShutDown = true;
 
             // Save last user settings
             SettingsFile.WriteKey("main_window", "winstate", Convert.ToInt32(WindowState).ToString());
