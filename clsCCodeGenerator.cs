@@ -12,7 +12,11 @@ namespace dcld
         internal clsINIFileHandler GeneratorScript
         {
             get { return (_GenScript); }
-            set { _GenScript = value; return; }
+            set { 
+                _GenScript = value;
+                GetConditionalCodeTokens();
+                return; 
+            }
         }
 
         private clsINIFileHandler _dcldProjectFile = new clsINIFileHandler();
@@ -106,13 +110,24 @@ namespace dcld
             set { _CGS_VersionDate = value; return; }
         }
 
-        /*  */
+        /* Code Generation Options */
+
+        private ConditionalCode _tokens;
+        internal ConditionalCode Tokens
+        {
+            get { return (_tokens); }
+            set { _tokens = value; return; }
+        }
 
 
         private string ReplaceConfigStringTokens(string text_line, clsCompensatorNPNZ compFilter)
         {
+
             string sDum = "";
             string _str_coeff_datatype = "", _str_hist_datatype = "", _str_struct_label = "";
+
+            int _id = 0, _id_start = 0, _id_stop = 0;
+            string _str_id = "", _str_token = "";
 
             switch (compFilter.ScalingMethod)
             { 
@@ -133,8 +148,10 @@ namespace dcld
             }
 
             sDum = text_line.Trim();
+
             if (sDum.Length > 0)
-            { 
+            {
+                // Check for constant tokens to replace
                 sDum = sDum.Replace("\\n", "\r\n");
                 sDum = sDum.Replace("%PREFIX%", _PreFix.ToLower().Trim());
                 sDum = sDum.Replace("%PREFIXG%", "_" + _PreFix.Trim());
@@ -175,11 +192,66 @@ namespace dcld
                 sDum = sDum.Replace("%VENDOR_URL%", _GenScript.ReadKey("labels", "%VENDOR_URL%", "").Trim());
                 sDum = sDum.Replace("%TOOL_HOME_URL%", _GenScript.ReadKey("labels", "%TOOL_HOME_URL%", "").Trim());
                 sDum = sDum + "\r\n";
+
+                // Check for OptionToken 
+                if (sDum.Contains("%{(") && sDum.Contains(")}%"))
+                {
+                    // Extract Token
+                    _str_token = sDum.Substring(sDum.IndexOf("%{("), sDum.IndexOf(")}%") + 3);
+
+                    // Extract ID
+                    _id_start = (_str_token.IndexOf("%{(") + 3);
+                    _id_stop = (_str_token.IndexOf(")}%") - _id_start);
+                    _str_id = _str_token.Substring(_id_start, _id_stop);
+                    if (_str_id.Trim().Length == 0) 
+                        _str_id = "-1";
+
+                    _id = Convert.ToInt32(_str_id); // Read ID
+
+                    if (_tokens.Exists(_id)) // if ID is valid....
+                    {
+                        if (!_tokens.Items[_tokens.GetIndexOf(_id)].Enabled)
+                            sDum = ""; // Delete String if code line generation is disabled
+                        else
+                            sDum = sDum.Replace(_str_token, ""); // Delete Token from string
+                    }
+                    else
+                    { sDum = "[Conditional Token Error: Token '" + _str_token + "' invalid] "; }
+                
+                }
+
             }
 
             return (sDum);
         }
 
+        // This function reads all Token-IDs and Token Keys of conditional code blocks from the script
+        private bool GetConditionalCodeTokens()
+        {
+            bool fres = false;
+            int _i = 0, _token_count = 0;
+            string text_line = "";
+            
+            //try
+            {
+                _token_count = Convert.ToInt32(_GenScript.ReadKey("option_ids", "count", "0"));
+
+                for (_i = 0; _i < _token_count; _i++)
+                {
+                    text_line = _GenScript.ReadKey("option_ids", (_i.ToString()), "");
+                    if(_tokens == null) 
+                        _tokens = new ConditionalCode();
+                    fres = _tokens.Add(text_line);
+                    if (!fres) break;
+                }
+
+                return (fres);
+            }
+            //catch
+            //{ return(false); }
+
+
+        }
 
         internal StringBuilder BuildCLibHeader(clsCompensatorNPNZ compFilter)
         {
@@ -195,14 +267,15 @@ namespace dcld
                 {
                     text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                     text_line = ReplaceConfigStringTokens(text_line, compFilter);
-                    strBuffer.Append(text_line);
+                    if(text_line.Length > 0)
+                        strBuffer.Append(text_line);
                 }
                 
 
             }
             catch
             {
-                strBuffer.Append("\r\n\r\n#error [Invalid values detected during header body generation]\r\n\r\n");
+                strBuffer.Append("\r\n\r\n#error [Invalid tokens detected during header body generation]\r\n\r\n");
             }
 
             return (strBuffer);
@@ -229,7 +302,7 @@ namespace dcld
             }
             catch
             {
-                strBuffer.Append("\r\n\r\n#error [Invalid values detected during header body generation]\r\n\r\n");
+                strBuffer.Append("\r\n\r\n#error [Invalid tokens detected during header body generation]\r\n\r\n");
             }
 
             return (strBuffer);
@@ -350,7 +423,7 @@ namespace dcld
             }
             catch
             {
-                strBuffer.Append("\r\n\r\n#error [Invalid values detected during body generation]\r\n");
+                strBuffer.Append("\r\n\r\n#error [Invalid tokens detected during body generation]\r\n");
                 strBuffer.Append("       => error triggered by " + _GenScript.FileTitle + ", " + block_name + ", line " + i.ToString() + "\r\n\r\n");
             }
 
@@ -359,6 +432,172 @@ namespace dcld
         }
 
     
+    }
+
+
+    public class ConditionalCode
+    {
+        private ConditionalCodeToken[] _items;
+        internal ConditionalCodeToken[] Items
+        {
+            get { return (_items); }
+            set { _items = value; return; }
+        }
+
+        internal bool Add(string NewToken)
+        {
+            ConditionalCodeToken[] item_dummy = _items;
+            string[] dum_sep = new string[1];
+            string[] str_arr;
+
+            // ID Parser
+            int _id_start = 0, _id_stop = 0;
+            string _str_id = "";
+
+            try
+            {
+                // Split token string into ID and KEY
+                dum_sep[0] = (";"); // Set ID/KEY Separator
+                str_arr = NewToken.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries); // Split Token
+
+                // Extract ID
+                if (str_arr[0].Contains("%{(") && str_arr[0].Contains(")}%"))
+                {
+                    _id_start = str_arr[0].IndexOf("%{(") + 3;
+                    _id_stop = (str_arr[0].IndexOf(")}%") - _id_start);
+                    _str_id = str_arr[0].Substring(_id_start, _id_stop);
+                }
+                else { _str_id = "0"; }
+
+                // Resize Array adding one new item
+                if (item_dummy == null)
+                    Array.Resize(ref item_dummy, 1);
+                else
+                    Array.Resize(ref item_dummy, (item_dummy.Length + 1));
+
+                // Set ID, Key and TOKEN
+                item_dummy[item_dummy.Length - 1] = new ConditionalCodeToken();
+                item_dummy[item_dummy.Length - 1].Token = NewToken.Trim();
+                item_dummy[item_dummy.Length - 1].Id = Convert.ToInt32(_str_id);
+                item_dummy[item_dummy.Length - 1].Key = str_arr[1].ToLower().Trim();
+
+                // If everything went OK, copy dummy item array to Item array
+                _items = item_dummy;
+
+                return (true);
+            }
+            catch
+            { return (false); }
+        }
+
+        internal bool Clear()
+        {
+            try{
+                // Reset array to one item
+                Array.Resize(ref _items, 0);
+                return (true);
+            }
+            catch
+            { return (false); }
+        }
+
+        internal int Count()
+        {
+            return (_items.Length);
+        }
+
+        internal int GetIdOfKey(string TokenKey)
+        {
+            int _token_index = 0;
+            int _id = 0;
+            string _search_token = TokenKey.ToLower().Trim();
+
+            try
+            {
+                // Reset array to one item
+                _token_index = Array.FindIndex(_items, _itm => _itm.Key == _search_token);
+                if (_token_index >= 0)
+                    _id = _items[_token_index].Id;
+                return (_id);
+            }
+            catch
+            { return (_id); }
+        }
+
+        internal string GetKeyOfId(int TokenID)
+        {
+            int _token_index = 0;
+            string _key = "";
+            int _search_token = TokenID;
+
+            try
+            {
+                // Reset array to one item
+                _token_index = Array.FindIndex(_items, _itm => _itm.Id == _search_token);
+                if (_token_index >= 0)
+                    _key = _items[_token_index].Key;
+                return (_key);
+            }
+            catch
+            { return (_key); }
+        }
+
+        internal int GetIndexOf(int TokenID)
+        {
+            int _token_index = 0;
+            int _search_token = TokenID;
+
+            try
+            {
+                // Reset array to one item
+                _token_index = Array.FindIndex(_items, _itm => _itm.Id == _search_token);
+                return (_token_index);
+            }
+            catch
+            { return (0); }
+        }
+
+        internal bool Exists(int TokenID)
+        {
+            int _token_index = 0;
+            int _search_token = TokenID;
+
+            _token_index = Array.FindIndex(_items, _itm => _itm.Id == _search_token);
+            return ((bool)(_token_index >= 0));
+        }
+    
+    }
+
+    public class ConditionalCodeToken
+    {
+        private int _id = 0;
+        internal int Id
+        {
+            get { return (_id); }
+            set { _id = value; return; }
+        }
+
+        private string _token = "";
+        internal string Token
+        {
+            get { return (_token); }
+            set { _token = value; return; }
+        }
+
+        private string _key = "";
+        internal string Key
+        {
+            get { return (_key); }
+            set { _key = value; return; }
+        }
+
+        private bool _enabled = false;
+        internal bool Enabled
+        {
+            get { return (_enabled); }
+            set { _enabled = value; return; }
+        }
+
     }
 
 }

@@ -40,6 +40,9 @@ count=17
 15=%VENDOR_URL%
 16=%TOOL_HOME_URL%
 
+[option_ids]
+count=1
+0=%{(101)}%;pterm_enable
 
 [labels]
 %SUPPORT_URL%=https://www.microchip.com/SMPS/
@@ -312,14 +315,14 @@ line81=extern void %FILENAME_PATTERN%_Update( // Calls the %FILTER_ORDER%P%FILTE
 line82=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
 line83=%IDENT%);
 line84=%EMPTY%
-line85=// Calls the %FILENAME_PATTERN% P-Term controller during measurements of plant transfer functions
-line86=// THIS CONTROLLER IS USED FOR MEASUREMENTS OF THE PLANT TRANSFER FUNCTION ONLY.
-line87=// THIS LOOP IS BY DEFAULT UNSTABLE AND ONLY WORKS UNDER STABLE TEST CONDITIONS
-line88=// DO NOT USE THIS CONTROLLER TYPE FOR NORMAL OPERATION
-line89=extern void %FILENAME_PATTERN%_PTermUpdate( // Calls the P-Term controller (Assembly)
-line90=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
-line91=%IDENT%);
-line92=%EMPTY%
+line85=%{(101)}%// Calls the %FILENAME_PATTERN% P-Term controller during measurements of plant transfer functions
+line86=%{(101)}%// THIS CONTROLLER IS USED FOR MEASUREMENTS OF THE PLANT TRANSFER FUNCTION ONLY.
+line87=%{(101)}%// THIS LOOP IS BY DEFAULT UNSTABLE AND ONLY WORKS UNDER STABLE TEST CONDITIONS
+line88=%{(101)}%// DO NOT USE THIS CONTROLLER TYPE FOR NORMAL OPERATION
+line89=%{(101)}%extern void %FILENAME_PATTERN%_PTermUpdate( // Calls the P-Term controller (Assembly)
+line90=%{(101)}%%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
+line91=%{(101)}%%IDENT%);
+line92=%{(101)}%%EMPTY%
 line93=%EMPTY%
 line94=#endif // end of __SPECIAL_FUNCTION_LAYER_%FILENAME_PATTERN_U%_H__
 line95=%EMPTY%
