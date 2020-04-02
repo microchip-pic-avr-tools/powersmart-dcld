@@ -3994,12 +3994,12 @@ namespace dcld
                         // ~~~~~~~~~ Handle individual exceptions ~~~~~~~~~~~~~~~~~~
     
                         // Development Tools
-                        if (check.Name == chkEnableDevelopmentTools.Name)
-                            btn.Enabled = (chkAddPTermLoop.Checked & chkAddPTermLoop.Enabled & chkEnableDevelopmentTools.Checked);
+                        //if (check.Name == chkEnableDevelopmentTools.Name)
+                        //    btn.Enabled = (chkAddPTermLoop.Checked & chkAddPTermLoop.Enabled & chkEnableDevelopmentTools.Checked);
 
 
                         // ~~~~~~~~~
-                        else
+                        //else
                             btn.Enabled = check.Checked;
 
 
@@ -4832,7 +4832,8 @@ namespace dcld
             }
 
             // Enable configuration command button
-            cmdConfigurePTermControl.Enabled = (chkAddPTermLoop.Checked && chkEnableDevelopmentTools.Checked);
+            // cmdConfigurePTermControl.Enabled = (chkAddPTermLoop.Checked && chkEnableDevelopmentTools.Checked);
+            cmdConfigurePTermControl.Enabled = chkAddPTermLoop.Checked;
 
         }
 
