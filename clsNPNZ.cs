@@ -180,14 +180,14 @@ namespace dcld
         internal double SamplingFrequency   // Sampling freq determining the convolution ratio of the digital filter
         {
             get { return _SamplingFrequency; }
-            set { _SamplingFrequency = value; _SamplingInterval = (1 / _SamplingFrequency); UpdateCoefficients(); return; }
+            set { _SamplingFrequency = value; _SamplingPeriod = (1 / _SamplingFrequency); UpdateCoefficients(); return; }
         }
 
-        private double _SamplingInterval = 1.000;
-        internal double SamplingInterval   // Sampling interval determed by sampling freq set
+        private double _SamplingPeriod = 1.000;
+        internal double SamplingInterval   // Sampling period determed by sampling freq set
         {
-            get { return _SamplingInterval; }
-            set { _SamplingInterval = value; UpdateCoefficients(); return; }
+            get { return _SamplingPeriod; }
+            set { _SamplingPeriod = value; UpdateCoefficients(); return; }
         }
 
         private double _PrimaryZOH = 0.500;
@@ -394,7 +394,7 @@ namespace dcld
 
             if (!_AutoUpdate) return (fres);
 
-            _Ts = _SamplingInterval;
+            _Ts = _SamplingPeriod;
 
             if (_InputGainNormalization)
             { _wp0s = (1.0 / _InputGain) * Pole[0].Radians; }
