@@ -3967,9 +3967,6 @@ namespace dcld
             if (!chkAntiWindup.Checked) { grpAntiWindup.Height = GroupFolding_MinHeight; }
             else { grpAntiWindup.Height = GroupFolding_grpAntiWindupHeight; }
 
-            //if (!chkEnableDevelopmentTools.Checked) { grpDevelopmentTools.Height = GroupFolding_MinHeight; }
-            //else { grpDevelopmentTools.Height = GroupFolding_grpDevelopmentToolsHeight; }
-
             return;
         }
 
@@ -4889,7 +4886,6 @@ namespace dcld
             }
 
             // Enable configuration command button
-            // cmdConfigurePTermControl.Enabled = (chkAddPTermLoop.Checked && chkEnableDevelopmentTools.Checked);
             cmdConfigurePTermControl.Enabled = chkAddPTermLoop.Checked;
 
         }
