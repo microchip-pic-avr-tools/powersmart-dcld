@@ -791,6 +791,14 @@ namespace dcld
     
         }
 
+        private void UpdatePTermController(object sender, EventArgs e)
+        {
+            cNPNZ.PTermNominalFeedback = Convert.ToInt32(txtPTermNominalFeedback.Text);
+            cNPNZ.PTermNominalControlOutput = Convert.ToInt32(txtPTermNominalOutput.Text);
+            txtPTermFactor.Text = NumberBaseConverter.Dec2Fractional(cNPNZ.PTermFactor, Q_format).ToString(CultureInfo.CurrentCulture);
+            txtPTermScaler.Text = cNPNZ.PTermScaler.ToString(CultureInfo.CurrentCulture);
+        }
+
         private void UpdateTransferFunction(object sender, EventArgs e)
         {
             int i = 0;
@@ -1546,6 +1554,10 @@ namespace dcld
                 ProjectFile.WriteKey("ControlSetup", "AddAGCEnableSwitch", Math.Abs(Convert.ToInt32(chkAGCAddEnable.Checked)).ToString());
                 ProjectFile.WriteKey("ControlSetup", "AddAGCGetModFunCall", Math.Abs(Convert.ToInt32(chkAGCAddGetModFactorFunCall.Checked)).ToString());
 
+                ProjectFile.WriteKey("ControlSetup", "PTermNomFeedback", cNPNZ.PTermNominalFeedback.ToString());
+                ProjectFile.WriteKey("ControlSetup", "PTermNomOutput", cNPNZ.PTermNominalControlOutput.ToString());
+                ProjectFile.WriteKey("ControlSetup", "PTermFactor", cNPNZ.PTermFactor.ToString());
+                ProjectFile.WriteKey("ControlSetup", "PTermScaler", cNPNZ.PTermScaler.ToString());
 
                 for (i = 0; i < txtPole.Length; i++)
                 { 
@@ -1747,6 +1759,8 @@ namespace dcld
                 chkAGCAddEnable.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "AddAGCEnableSwitch", "0")));
                 chkAGCAddGetModFactorFunCall.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "AddAGCGetModFunCall", "0")));
 
+                txtPTermNominalFeedback.Text = Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "PTermNomFeedback", "0")).ToString(CultureInfo.CurrentCulture);
+                txtPTermNominalOutput.Text = Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "PTermNomOutput", "0")).ToString(CultureInfo.CurrentCulture);
 
                 for (i = 0; i < txtPole.Length; i++)
                 {

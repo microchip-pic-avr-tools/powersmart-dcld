@@ -184,6 +184,8 @@ namespace dcld
                 sDum = sDum.Replace("%POSTSHIFT_A%", compFilter.PostShiftA.ToString());
                 sDum = sDum.Replace("%POSTSHIFT_B%", compFilter.PostShiftB.ToString());
                 sDum = sDum.Replace("%POSTSCALER%", NumberBaseConverter.Dec2Hex(compFilter.PostScaler, compFilter.QFormat, true, true));
+                sDum = sDum.Replace("%PTERMFACTOR%", NumberBaseConverter.Dec2Hex(compFilter.PTermFactor, compFilter.QFormat, true, true));
+                sDum = sDum.Replace("%PTERMSCALER%", NumberBaseConverter.Dec2Hex(compFilter.PTermScaler, compFilter.QFormat, true, true));
                 sDum = sDum.Replace("%HISTORY_DATA_TYPE%", _str_hist_datatype);
                 sDum = sDum.Replace("%STRUCTURE_LABEL%", _str_struct_label);
                 sDum = sDum.Replace("%USER_NAME%", Environment.UserName);

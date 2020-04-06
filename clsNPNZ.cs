@@ -241,6 +241,59 @@ namespace dcld
             set { _OutputGainNormalization = value; UpdateCoefficients(); return; }
         }
 
+        private int _PTermMaxError = 0x07FF;
+        internal int PTermNominalFeedback
+        {
+            get { return _PTermMaxError; }
+            set { 
+                _PTermMaxError = value;
+                PTermFactorUpdate();
+                return; 
+            }
+        }
+
+        private int _PTermNominalControlOutput = 0x3FFF;
+        internal int PTermNominalControlOutput
+        {
+            get { return _PTermNominalControlOutput; }
+            set { 
+                _PTermNominalControlOutput = value;
+                PTermFactorUpdate();
+                return; 
+            }
+        }
+
+        private int _PTermFactor = 0x7FFF;
+        internal int PTermFactor
+        {
+            get { return _PTermFactor; }
+            set { _PTermFactor = value; return; }
+        }
+
+        private int _PTermScaler = 0x0000;
+        internal int PTermScaler
+        {
+            get { return _PTermScaler; }
+            set { _PTermScaler = value; return; }
+        }
+
+        private void PTermFactorUpdate()
+        {
+            double _pfactor = 0.0;
+            try
+            {
+                _pfactor = (double)_PTermNominalControlOutput / (double)_PTermMaxError;
+                _PTermScaler = -(Convert.ToInt32(Math.Floor(Math.Log(_pfactor, 2.0))) + 1);
+                _PTermFactor = Convert.ToInt32((Math.Pow(2.0, 15.0) - 1.0) * _pfactor / Math.Pow(2.0, (double)(-_PTermScaler)));
+            }
+            catch
+            {
+                _PTermFactor = 0x7FFF;
+                _PTermScaler = 0;
+            }
+                
+        }
+
         private void DebugInfoAppend(string debug_msg)
         {
             _debugInfo.Append(debug_msg);
