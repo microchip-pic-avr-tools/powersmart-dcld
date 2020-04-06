@@ -2,11 +2,11 @@
 Name=C-Source and Header Generator Script
 Description=This scriptprovides C-source and header files for user-tailored SMPS control loops based on DSP assembly code modules templates generated using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=2.0.3
-Date=03/31/2020
+Version=2.0.4
+Date=04/03/2020
 
 [history]
-count=11
+count=12
 0=11/08/19;1.0.0;Initial version after moving C-sources and headers from application code to external script
 1=01/10/20;1.1.0;Added support for cascaded functions. This allows the assembly routine to call another controller or user-defined function extension code module.\r\nAdded pointers to alternate source and terget register supporting bi-directional control and advanced adaptive control methods
 2=03/18/2020;1.1.1;Changed function call name of controller initialization from xxx_Init to xxx_Initialize to stay consistent with other generic code modules
@@ -18,10 +18,11 @@ count=11
 8=03/27/2020;2.0.1;Separated input and output ports and added individual normalization scaling parameters
 9=03/30/2020;2.0.2;Renamed data structure group 'TriggerControl' to 'ADC TriggerControl'
 10=03/31/2020;2.0.3;Added P-Term controller for plant transfer function measurement support
+11=04/03/2020;2.0.4;Added Token IDs for enhanced code generation option support
 
 
 [tokens]
-count=17
+count=18
 0=%EMPTY%
 1=%SPACE%
 2=%IDENT%
@@ -41,8 +42,45 @@ count=17
 16=%TOOL_HOME_URL%
 
 [option_ids]
-count=1
-0=%{(101)}%;pterm_enable
+count=37
+0=%{(1100)}%;context_management
+1=%{(1101)}%;context_shadow
+2=%{(1102)}%;context_mac_wreg
+3=%{(1103)}%;context_acc
+4=%{(1104)}%;context_acc_a
+5=%{(1105)}%;context_acc_b
+6=%{(1106)}%;context_core_config
+7=%{(1107)}%;context_core_status
+8=%{(1200)}%;option_enable
+9=%{(1201)}%;option_store_reload_acc
+10=%{(1202)}%;option_core_config
+11=%{(1203)}%;option_enable_switch
+12=%{(1204)}%;option_enable_switch_always_read
+13=%{(1205)}%;option_error_normalization
+14=%{(1206)}%;option_adc_trigger_a_placement
+15=%{(1207)}%;option_adc_trigger_b_placement
+16=%{(1208)}%;option_cascade_call
+17=%{(1209)}%;option_add_p-term
+18=%{(1300)}%;data_interface_enable
+19=%{(1301)}%;data_interface_alt_input
+20=%{(1302)}%;data_interface_alt_output
+21=%{(1400)}%;data_provider_enable
+22=%{(1401)}%;data_provider_control_input
+23=%{(1402)}%;data_provider_control_error
+24=%{(1403)}%;data_provider_control_output
+25=%{(1500)}%;anti_windup_enable
+26=%{(1501)}%;anti_windup_max
+27=%{(1502)}%;anti_windup_max_status_flag
+28=%{(1503)}%;anti_windup_min
+29=%{(1504)}%;anti_windup_min_status_flag
+30=%{(1505)}%;anti_windup_soft_desat_flag
+31=%{(1600)}%;feedback_conditioning_enable
+32=%{(1601)}%;feedback_offset_compensation
+33=%{(1602)}%;bi_directional_feedback_flag
+34=%{(1800)}%;agc_enable
+35=%{(1802)}%;agc_enable_switch
+36=%{(1803)}%;agc_get_factor_function_call
+
 
 [labels]
 %SUPPORT_URL%=https://www.microchip.com/SMPS/
@@ -315,14 +353,14 @@ line81=extern void %FILENAME_PATTERN%_Update( // Calls the %FILTER_ORDER%P%FILTE
 line82=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
 line83=%IDENT%);
 line84=%EMPTY%
-line85=%{(101)}%// Calls the %FILENAME_PATTERN% P-Term controller during measurements of plant transfer functions
-line86=%{(101)}%// THIS CONTROLLER IS USED FOR MEASUREMENTS OF THE PLANT TRANSFER FUNCTION ONLY.
-line87=%{(101)}%// THIS LOOP IS BY DEFAULT UNSTABLE AND ONLY WORKS UNDER STABLE TEST CONDITIONS
-line88=%{(101)}%// DO NOT USE THIS CONTROLLER TYPE FOR NORMAL OPERATION
-line89=%{(101)}%extern void %FILENAME_PATTERN%_PTermUpdate( // Calls the P-Term controller (Assembly)
-line90=%{(101)}%%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
-line91=%{(101)}%%IDENT%);
-line92=%{(101)}%%EMPTY%
+line85=%{(1209)}%// Calls the %FILENAME_PATTERN% P-Term controller during measurements of plant transfer functions
+line86=%{(1209)}%// THIS CONTROLLER IS USED FOR MEASUREMENTS OF THE PLANT TRANSFER FUNCTION ONLY.
+line87=%{(1209)}%// THIS LOOP IS BY DEFAULT UNSTABLE AND ONLY WORKS UNDER STABLE TEST CONDITIONS
+line88=%{(1209)}%// DO NOT USE THIS CONTROLLER TYPE FOR NORMAL OPERATION
+line89=%{(1209)}%extern void %FILENAME_PATTERN%_PTermUpdate( // Calls the P-Term controller (Assembly)
+line90=%{(1209)}%%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
+line91=%{(1209)}%%IDENT%);
+line92=%{(1209)}%%EMPTY%
 line93=%EMPTY%
 line94=#endif // end of __SPECIAL_FUNCTION_LAYER_%FILENAME_PATTERN_U%_H__
 line95=%EMPTY%
