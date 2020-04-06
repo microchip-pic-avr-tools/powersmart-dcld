@@ -3339,7 +3339,7 @@ namespace dcld
 
         private void GenerateCode(object sender, EventArgs e)
         {
-            int _i = 0, _k = 0;
+            int _i = 0;
             string tagName = "";
             int EditorASMScrollPos = 0;
 
@@ -3392,31 +3392,33 @@ namespace dcld
                 cGen.ScalingMethodName = cmbQScalingMethod.Text;
 
                 // Set Code Generation Options
-                Control parent = new Control();
+                //Control parent = new Control();
                 CheckBox check = new CheckBox();
 
                 for (_i = 0; _i < cGen.Tokens.Items.Count(); _i++)
                 {
-                    for (_k = 0; _k < 3; _k++)
-                    { 
-                        switch (_k)
+                    foreach (Control _tab in tabConfig.Controls)
+                    {
+                        if (_tab.GetType().ToString() == "System.Windows.Forms.TabPage")
                         {
-                            case 0: parent = grpDevelopmentTools; break;
-                            case 1: parent = grpContextManagement; break;
-                            case 2: parent = grpContextManagement; break;
-                        }
-
-                        tagName = cGen.Tokens.Items[_i].Key;
-                        var items = parent.Controls;
-                        var item = items.Cast<Control>().FirstOrDefault(control => String.Equals(control.Tag, tagName));
-
-                        if (item != null) 
-                        { 
-                            if (item.GetType().ToString() == "System.Windows.Forms.CheckBox")
+                            foreach (Control parent in _tab.Controls)
                             {
-                                check = (CheckBox)item;
-                                cGen.Tokens.Items[_i].Enabled = check.Checked;
-                                break;
+                                if (parent.GetType().ToString() == "System.Windows.Forms.GroupBox")
+                                {
+                                    tagName = cGen.Tokens.Items[_i].Key;
+                                    var items = parent.Controls;
+                                    var item = items.Cast<Control>().FirstOrDefault(control => String.Equals(control.Tag, tagName));
+
+                                    if (item != null)
+                                    {
+                                        if (item.GetType().ToString() == "System.Windows.Forms.CheckBox")
+                                        {
+                                            check = (CheckBox)item;
+                                            cGen.Tokens.Items[_i].Enabled = (bool)(check.Checked && check.Enabled);
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -3532,6 +3534,9 @@ namespace dcld
         private StringBuilder GenerateAssembly(object sender, EventArgs e)
         {
 
+            int _i = 0; // Runtime indices for loading option catalog
+            string tagName = ""; // Tag name to identify related user control on frmMain
+
             string prefix = "";
             StringBuilder code = new StringBuilder();
             clsAssemblyGenerator AssGen = new clsAssemblyGenerator();
@@ -3572,43 +3577,79 @@ namespace dcld
             else
                 AssGen.FeedbackRectification = false;
 
-            // Set Adaptive Gain Control options
-            AssGen.AdaptiveGainModulationEnable = (chkEnableAdaptiveGainControl.Checked && chkEnableAdaptiveGainControl.Enabled);
-            AssGen.AdaptiveGainModulationAddEnableSwitch = (chkAGCAddEnable.Checked && chkAGCAddEnable.Enabled);
-            AssGen.AdaptiveGainModulationAddFunctionCall = (chkAGCAddGetModFactorFunCall.Checked && chkAGCAddGetModFactorFunCall.Enabled);
 
-            // set dynamic execution options
-            AssGen.SaveRestoreContext = this.chkContextSaving.Checked;
-            AssGen.SaveRestoreShadowRegisters = ((this.chkSaveRestoreShadowRegisters.Checked) && (this.chkContextSaving.Checked));
-            AssGen.SaveRestoreMACRegisters = ((this.chkSaveRestoreMACRegisters.Checked) && (this.chkContextSaving.Checked));
-            AssGen.SaveRestoreAccumulators = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked));
-            AssGen.SaveRestoreAccumulatorA = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked) && (this.chkSaveRestoreAccumulatorA.Checked));
-            AssGen.SaveRestoreAccumulatorB = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked) && (this.chkSaveRestoreAccumulatorB.Checked));
-            AssGen.SaveRestoreCoreConfig = ((this.chkSaveRestoreCoreConfig.Checked) && (this.chkContextSaving.Checked));
-            AssGen.SaveRestoreCoreStatusRegister = ((this.chkSaveRestoreCoreStatus.Checked) && (this.chkContextSaving.Checked));
+            // Set Code Generation Options
+            //Control parent = new Control();
+            CheckBox check = new CheckBox();
+            
 
-            AssGen.AddAlternateSource = ((this.chkAddAlternateSource.Checked) && (this.chkAddAlternateSource.Enabled));
-            AssGen.AddAlternateTarget = ((this.chkAddAlternateTarget.Checked) && (this.chkAddAlternateTarget.Enabled));
-            AssGen.AddADCTriggerAPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerAPlacement.Checked));
-            AssGen.AddADCTriggerBPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerBPlacement.Checked));
-            AssGen.AddCascadedFunctionCall = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCascadedFunctionCall.Checked));
-            AssGen.AddErrorInputNormalization = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddErrorNormalization.Checked));
-            AssGen.AddEnableDisableFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked));
-            AssGen.AddDisableDummyReadFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked) && (this.chkAddDisableDummyRead.Checked));
-            AssGen.AddCoreConfig = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCoreConfig.Checked));
+            for (_i = 0; _i < AssGen.Tokens.Items.Count(); _i++)
+            {
+                foreach (Control _tab in tabConfig.Controls)
+                {
+                    if (_tab.GetType().ToString() == "System.Windows.Forms.TabPage") 
+                    {
+                        foreach (Control parent in _tab.Controls)
+                        {
+                            if (parent.GetType().ToString() == "System.Windows.Forms.GroupBox")
+                            { 
+                                tagName = AssGen.Tokens.Items[_i].Key;
+                                var items = parent.Controls;
+                                var item = items.Cast<Control>().FirstOrDefault(control => String.Equals(control.Tag, tagName));
 
-            AssGen.AddAntiWindup = this.chkAntiWindup.Checked;
-            AssGen.AntiWindupSoftDesaturationFlag = ((this.chkAntiWindupSoftDesaturationFlag.Checked) && ((this.chkAntiWindupClampMax.Checked) || (this.chkAntiWindupClampMin.Checked)));
-            AssGen.AntiWindupClampMax = this.chkAntiWindupClampMax.Checked;
-            AssGen.AntiWindupClampMaxWithStatusFlag = ((this.chkAntiWindupMaxStatusFlag.Checked) && (this.chkAntiWindupClampMax.Checked));
-            AssGen.AntiWindupClampMin = this.chkAntiWindupClampMin.Checked;
-            AssGen.AntiWindupClampMinWithStatusFlag = ((this.chkAntiWindupMinStatusFlag.Checked) && (this.chkAntiWindupClampMin.Checked));
+                                if (item != null)
+                                {
+                                    if (item.GetType().ToString() == "System.Windows.Forms.CheckBox")
+                                    {
+                                        check = (CheckBox)item;
+                                        AssGen.Tokens.Items[_i].Enabled = (bool)(check.Checked && check.Enabled);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
-            AssGen.CreateCopyOfMostRecentControlInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlInput.Checked) && (chkDataProviderSource.Checked));
-            AssGen.CreateCopyOfMostRecentErrorInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderErrorInput.Checked) && (chkDataProviderSource.Checked));
-            AssGen.CreateCopyOfMostRecentControlOutput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlOutput.Checked) && (chkDataProviderSource.Checked));
 
-            AssGen.StoreReloadAccLevel1 = ((this.chkCodeFeatureOptions.Checked) && (this.chkStoreReloadAccLevel1.Checked) && (this.chkStoreReloadAccLevel1.Enabled) && (AssGen.CodeOptimizationLevel == 1));
+            //// Set Adaptive Gain Control options
+            //AssGen.AdaptiveGainModulationEnable = (chkEnableAdaptiveGainControl.Checked && chkEnableAdaptiveGainControl.Enabled);
+            //AssGen.AdaptiveGainModulationAddEnableSwitch = (chkAGCAddEnable.Checked && chkAGCAddEnable.Enabled);
+            //AssGen.AdaptiveGainModulationAddFunctionCall = (chkAGCAddGetModFactorFunCall.Checked && chkAGCAddGetModFactorFunCall.Enabled);
+
+            //// set dynamic execution options
+            //AssGen.SaveRestoreContext = this.chkContextSaving.Checked;
+            //AssGen.SaveRestoreShadowRegisters = ((this.chkSaveRestoreShadowRegisters.Checked) && (this.chkContextSaving.Checked));
+            //AssGen.SaveRestoreMACRegisters = ((this.chkSaveRestoreMACRegisters.Checked) && (this.chkContextSaving.Checked));
+            //AssGen.SaveRestoreAccumulators = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked));
+            //AssGen.SaveRestoreAccumulatorA = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked) && (this.chkSaveRestoreAccumulatorA.Checked));
+            //AssGen.SaveRestoreAccumulatorB = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked) && (this.chkSaveRestoreAccumulatorB.Checked));
+            //AssGen.SaveRestoreCoreConfig = ((this.chkSaveRestoreCoreConfig.Checked) && (this.chkContextSaving.Checked));
+            //AssGen.SaveRestoreCoreStatusRegister = ((this.chkSaveRestoreCoreStatus.Checked) && (this.chkContextSaving.Checked));
+
+            //AssGen.AddAlternateSource = ((this.chkAddAlternateSource.Checked) && (this.chkAddAlternateSource.Enabled));
+            //AssGen.AddAlternateTarget = ((this.chkAddAlternateTarget.Checked) && (this.chkAddAlternateTarget.Enabled));
+            //AssGen.AddADCTriggerAPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerAPlacement.Checked));
+            //AssGen.AddADCTriggerBPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerBPlacement.Checked));
+            //AssGen.AddCascadedFunctionCall = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCascadedFunctionCall.Checked));
+            //AssGen.AddErrorInputNormalization = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddErrorNormalization.Checked));
+            //AssGen.AddEnableDisableFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked));
+            //AssGen.AddDisableDummyReadFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked) && (this.chkAddDisableDummyRead.Checked));
+            //AssGen.AddCoreConfig = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCoreConfig.Checked));
+
+            //AssGen.AddAntiWindup = this.chkAntiWindup.Checked;
+            //AssGen.AntiWindupSoftDesaturationFlag = ((this.chkAntiWindupSoftDesaturationFlag.Checked) && ((this.chkAntiWindupClampMax.Checked) || (this.chkAntiWindupClampMin.Checked)));
+            //AssGen.AntiWindupClampMax = this.chkAntiWindupClampMax.Checked;
+            //AssGen.AntiWindupClampMaxWithStatusFlag = ((this.chkAntiWindupMaxStatusFlag.Checked) && (this.chkAntiWindupClampMax.Checked));
+            //AssGen.AntiWindupClampMin = this.chkAntiWindupClampMin.Checked;
+            //AssGen.AntiWindupClampMinWithStatusFlag = ((this.chkAntiWindupMinStatusFlag.Checked) && (this.chkAntiWindupClampMin.Checked));
+
+            //AssGen.CreateCopyOfMostRecentControlInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlInput.Checked) && (chkDataProviderSource.Checked));
+            //AssGen.CreateCopyOfMostRecentErrorInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderErrorInput.Checked) && (chkDataProviderSource.Checked));
+            //AssGen.CreateCopyOfMostRecentControlOutput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlOutput.Checked) && (chkDataProviderSource.Checked));
+
+            //AssGen.StoreReloadAccLevel1 = ((this.chkCodeFeatureOptions.Checked) && (this.chkStoreReloadAccLevel1.Checked) && (this.chkStoreReloadAccLevel1.Enabled) && (AssGen.CodeOptimizationLevel == 1));
 
             // Start body generation by adding generator header
 
