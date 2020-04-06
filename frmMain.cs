@@ -4911,7 +4911,13 @@ namespace dcld
             }
 
             // Enable configuration command button
-            cmdConfigurePTermControl.Enabled = chkAddPTermLoop.Checked;
+            cmdGetPTermNominalFeedback.Enabled = chkAddPTermLoop.Checked;
+            cmdGetPTermNominalOutput.Enabled = chkAddPTermLoop.Checked;
+            
+            txtPTermNominalFeedback.Enabled = chkAddPTermLoop.Checked;
+            lblPTermNominalFeedback.Enabled = chkAddPTermLoop.Checked;
+            txtPTermNominalOutput.Enabled = chkAddPTermLoop.Checked;
+            lblPTermNominalOutput.Enabled = chkAddPTermLoop.Checked;
 
         }
 
