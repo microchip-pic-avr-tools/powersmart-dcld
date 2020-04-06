@@ -214,7 +214,7 @@ namespace dcld
             {
                 // Capture all tokens
                 int _i = 0, _k = 0;
-                int _id_start = 0, _id_stop = 0, _id_condition = 0;
+                int _id_start = 0, _id_stop = 0;
                 string _str_id = "", _str_code_line = "", _str_token = "";
 
                 // Extract Token
@@ -337,8 +337,6 @@ namespace dcld
         // This function reads all Token-IDs and Token Keys of conditional code blocks from the script
         internal bool GetTokenList(clsINIFileHandler GeneratorScript)
         {
-
-
 
             bool fres = false;
             int _i = 0, _token_count = 0;
