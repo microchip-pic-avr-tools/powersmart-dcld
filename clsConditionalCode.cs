@@ -170,12 +170,20 @@ namespace dcld
          *      {(number)}  = code line should be generated if option = true 
          *      {(!number)} = code line should be generated if option = false
          *
-         *    Multiple tokens can be set for more complex comparisons. In the following example a 
-         *    code line is only generated when 
+         * Token Groups:
+         * 
+         *    Multiple tokens can be combined for more complex comparisons. In the following 
+         *    example a code line is generated when 
          *    
          *      option A = true and option B = true while option C = false:
          *
-         *      %{(option_id_A)}%%{(option_id_B)}%%{(!option_id_C)}% 
+         *      %{(option_id_A) && (option_id_B) && (!option_id_C)}% 
+         * 
+         *    When multiple %...%-Tokens are used their contents will always be AND-ed. The following 
+         *    example generates a code line, if option A = true and EITHER option B OR option C = true
+         *      
+         *      %{(option_id_A)}% %{(option_id_B) || (option_id_C)}%
+         * 
          * 
          * Returns: 
          *
@@ -205,54 +213,111 @@ namespace dcld
             if (CodeLine.Contains("%{(") && CodeLine.Contains(")}%"))
             {
                 // Capture all tokens
-                int _i = 0;
-                bool _id_result = false;
-                int _id = 0, _id_start = 0, _id_stop = 0;
+                int _i = 0, _k = 0;
+                int _id_start = 0, _id_stop = 0, _id_condition = 0;
                 string _str_id = "", _str_code_line = "", _str_token = "";
-
 
                 // Extract Token
                 _str_code_line = CodeLine;  // capture code line incl. tokens
 
-                string[] dum_sep = new string[] { ")}%" }; // Set token separator
-                string[] str_arr = _str_code_line.Split(dum_sep, StringSplitOptions.None);
+                string[] _dum_sep = new string[] { ")}%" }; // Set token separator
+                string[] _str_arr = _str_code_line.Split(_dum_sep, StringSplitOptions.None);
+                string[] _arr_token_string;
+                CCTokenString[] _arr_token;
 
-                for (_i = 0; _i < str_arr.Length; _i++)
+                for (_i = 0; _i < _str_arr.Length; _i++)
                 {
-                    if (str_arr[_i].Trim().StartsWith("%{("))
+                    // If code line contains a valid TOKEN_START stirng...
+                    if (_str_arr[_i].Trim().StartsWith("%{("))
                     {
                         // Trim sub-string
-                        str_arr[_i] = str_arr[_i].Trim();
-                        _str_token += str_arr[_i] + dum_sep[0];
+                        _str_arr[_i] = _str_arr[_i].Trim(); // Set token separator ")}%"
+                        _str_arr[_i] = _str_arr[_i].Replace(" ", ""); // remove all inner spaces fro more robust parsing
+                        _str_token += _str_arr[_i] + _dum_sep[0]; // add the token ending back to token string
 
-                        // Exctact Token ID
-                        _id_start = (str_arr[_i].IndexOf("%{(") + 3); // Set ID Start
-                        _id_stop = (str_arr[_i].Length - _id_start); // Set ID Stop
-                        _str_id = str_arr[_i].Substring(_id_start, _id_stop); // Exctract ID string
-                        if (_str_id.Trim().Length == 0) _str_id = "-1"; // if Token is empty, set it as "invalid"
-                        _id_result = (bool)(_str_id.Trim().Substring(0, 1) != "!"); // Capture condition and remove Exlamation Mark
-                        if (!_id_result) _str_id = _str_id.Substring(1, (_str_id.Length - 1)); // Remove exclamation mark
+                        // Exctact Token ID string (can contain multiple IDs)
+                        _id_start = (_str_arr[_i].IndexOf("%{(") + 3); // Set ID Start
+                        _id_stop = (_str_arr[_i].Length - _id_start); // Set ID Stop
+                        _str_id = _str_arr[_i].Substring(_id_start, _id_stop); // Exctract ID string
 
-                        _id = Convert.ToInt32(_str_id); // Read ID
-
-                        if (Exists(_id)) // if ID is valid....
-                        {
-                            _result.TokenResult &= (_id_result == _items[GetIndexOf(_id)].Enabled);
+                        if (_str_id.Trim().Length == 0)
+                        { // if Token is empty, set it as "invalid"
+                            _str_id = "-1"; 
                         }
                         else
-                        {
-                            _result.CodeLine = "[Conditional Token Error: Token %{(" + _str_id + ")}% is invalid] \r\n";
-                            _result.TokenResult = false;
-                            break;
+                        { // Slpit all items in brackets
+
+                            _dum_sep = new string[] { ")" };
+                            _arr_token_string = _str_id.Split(_dum_sep, StringSplitOptions.None);
+                            _arr_token = new CCTokenString[_arr_token_string.Length];
+
+                            for (_k = 0; _k < _arr_token_string.Length; _k++)
+                            {
+                                _arr_token[_k] = new CCTokenString();   // Ceate new conditional token object
+                                _arr_token_string[_k] = _arr_token_string[_k].Replace(" ", ""); // remove all spaces for robust parsing 
+                                //_arr_token_string[_k] += ")"; // Add closing bracket back in
+
+                                if (_arr_token_string[_k].Substring(0, 3) == "&&(")  // AND condition
+                                {
+                                    _id_start = (_arr_token_string[_k].IndexOf("&&(") + 3);
+                                    _id_stop = _arr_token_string[_k].Length - _id_start;
+                                    _arr_token[_k].IdString = _arr_token_string[_k].Substring(_id_start, _id_stop).Trim();
+                                    _arr_token[_k].CombinatorialConstructor = "&";
+                                }
+                                else if (_arr_token_string[_k].Substring(0, 3) == "||(")  // OR condition
+                                {
+                                    _id_start = (_arr_token_string[_k].IndexOf("||(") + 3);
+                                    _id_stop = _arr_token_string[_k].Length - _id_start;
+                                    _arr_token[_k].IdString = _arr_token_string[_k].Substring(_id_start, _id_stop).Trim();
+                                    _arr_token[_k].CombinatorialConstructor = "|";
+                                }
+                                else // Single ID Token
+                                {
+                                    _arr_token[_k].IdString = _arr_token_string[_k]; // _str_id;
+                                    _arr_token[_k].CombinatorialConstructor = "";
+                                }
+
+                                // Check if item is negated (test on NOT xxx)
+                                _arr_token[_k].Negate = (bool)(_arr_token[_k].IdString.Substring(0, 1) != "!"); // Capture condition and remove Exlamation Mark
+                                if (!_arr_token[_k].Negate) _arr_token[_k].IdString = _arr_token[_k].IdString.Substring(1, (_arr_token[_k].IdString.Length - 1)); // Remove exclamation mark
+
+                                // Capture ID
+                                _arr_token[_k].Id = Convert.ToInt32(_arr_token[_k].IdString);
+
+                                // if parsed ID is valid....
+                                if (Exists(_arr_token[_k].Id)) 
+                                {
+                                    switch (_arr_token[_k].CombinatorialConstructor)
+                                    {
+                                        case "|":
+                                            _result.TokenResult |= (_arr_token[_k].Negate == _items[GetIndexOf(_arr_token[_k].Id)].Enabled);
+                                            break;
+                                        default:
+                                            _result.TokenResult &= (_arr_token[_k].Negate == _items[GetIndexOf(_arr_token[_k].Id)].Enabled);
+                                            break;
+                                    }
+                                    
+                                }
+                                else
+                                { // If ID is unknown, return error message instead of code line
+                                    _result.CodeLine = "[Conditional Token Error: Token %{(" + _str_id + ")}% is invalid] \r\n";
+                                    _result.TokenResult = false;
+                                    break;
+                                }
+
+
+                            }
+                        
                         }
 
                     }
+
                 }
 
                 // Complete result
                 _result.TokenString = _str_token.Trim();
                 if (_result.TokenResult)
-                    _result.CodeLine = str_arr[(str_arr.Length - 1)];
+                    _result.CodeLine = _str_arr[(_str_arr.Length - 1)];
 
             }
 
@@ -322,6 +387,38 @@ namespace dcld
         {
             get { return (_code_line); }
             set { _code_line = value; return; }
+        }
+
+    }
+
+    internal class CCTokenString
+    {
+        private string _str_id = "";
+        internal string IdString
+        {
+            get { return (_str_id); }
+            set { _str_id = value; return; }
+        }
+
+        private int _id = 0;
+        internal int Id
+        {
+            get { return (_id); }
+            set { _id = value; return; }
+        }
+
+        private bool _neg = true;
+        internal bool Negate
+        {
+            get { return(_neg); }
+            set { _neg = value; return; }
+        }
+
+        private string _comb = "&";
+        internal string CombinatorialConstructor
+        {
+            get { return (_comb); }
+            set { _comb = value; return; }
         }
 
     }
