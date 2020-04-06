@@ -107,7 +107,7 @@
             this.txtParam1.Location = new System.Drawing.Point(151, 52);
             this.txtParam1.Name = "txtParam1";
             this.txtParam1.Size = new System.Drawing.Size(95, 23);
-            this.txtParam1.TabIndex = 1;
+            this.txtParam1.TabIndex = 9;
             this.txtParam1.Text = "12000";
             this.txtParam1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtParam1.TextChanged += new System.EventHandler(this.CalculateInputGain);
@@ -119,7 +119,7 @@
             this.txtParam2.Location = new System.Drawing.Point(151, 81);
             this.txtParam2.Name = "txtParam2";
             this.txtParam2.Size = new System.Drawing.Size(95, 23);
-            this.txtParam2.TabIndex = 2;
+            this.txtParam2.TabIndex = 10;
             this.txtParam2.Text = "2200";
             this.txtParam2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtParam2.TextChanged += new System.EventHandler(this.CalculateInputGain);
@@ -168,7 +168,7 @@
             this.tabFeedback.Name = "tabFeedback";
             this.tabFeedback.SelectedIndex = 0;
             this.tabFeedback.Size = new System.Drawing.Size(551, 281);
-            this.tabFeedback.TabIndex = 6;
+            this.tabFeedback.TabIndex = 0;
             this.tabFeedback.SelectedIndexChanged += new System.EventHandler(this.tabFeedback_SelectedIndexChanged);
             // 
             // tabVD
@@ -327,7 +327,7 @@
             this.txtParam3.Location = new System.Drawing.Point(151, 110);
             this.txtParam3.Name = "txtParam3";
             this.txtParam3.Size = new System.Drawing.Size(95, 23);
-            this.txtParam3.TabIndex = 8;
+            this.txtParam3.TabIndex = 11;
             this.txtParam3.Text = "1.000";
             this.txtParam3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtParam3.TextChanged += new System.EventHandler(this.CalculateInputGain);
@@ -383,7 +383,7 @@
             this.grpVoltageDividerCalculation.Location = new System.Drawing.Point(235, 283);
             this.grpVoltageDividerCalculation.Name = "grpVoltageDividerCalculation";
             this.grpVoltageDividerCalculation.Size = new System.Drawing.Size(298, 199);
-            this.grpVoltageDividerCalculation.TabIndex = 14;
+            this.grpVoltageDividerCalculation.TabIndex = 2;
             this.grpVoltageDividerCalculation.TabStop = false;
             this.grpVoltageDividerCalculation.Text = "Calculation";
             // 
@@ -404,19 +404,20 @@
             this.txtParam0.Location = new System.Drawing.Point(151, 21);
             this.txtParam0.Name = "txtParam0";
             this.txtParam0.Size = new System.Drawing.Size(95, 23);
-            this.txtParam0.TabIndex = 53;
+            this.txtParam0.TabIndex = 8;
             this.txtParam0.Text = "1.000";
             this.txtParam0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtParam0.TextChanged += new System.EventHandler(this.txtParam0_TextChanged);
             // 
             // lblParam0Label
             // 
             this.lblParam0Label.AutoSize = true;
             this.lblParam0Label.BackColor = System.Drawing.Color.Transparent;
-            this.lblParam0Label.Location = new System.Drawing.Point(48, 24);
+            this.lblParam0Label.Location = new System.Drawing.Point(37, 24);
             this.lblParam0Label.Name = "lblParam0Label";
-            this.lblParam0Label.Size = new System.Drawing.Size(97, 15);
+            this.lblParam0Label.Size = new System.Drawing.Size(108, 15);
             this.lblParam0Label.TabIndex = 54;
-            this.lblParam0Label.Text = "Maximum Input:";
+            this.lblParam0Label.Text = "Maximum Voltage:";
             this.lblParam0Label.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // grmInputGain
@@ -449,7 +450,7 @@
             this.txtInputMaximum.Location = new System.Drawing.Point(114, 110);
             this.txtInputMaximum.Name = "txtInputMaximum";
             this.txtInputMaximum.Size = new System.Drawing.Size(64, 22);
-            this.txtInputMaximum.TabIndex = 48;
+            this.txtInputMaximum.TabIndex = 5;
             this.txtInputMaximum.Text = "4095";
             this.txtInputMaximum.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtInputMaximum.WordWrap = false;
@@ -473,7 +474,7 @@
             this.txtInputReference.Location = new System.Drawing.Point(114, 22);
             this.txtInputReference.Name = "txtInputReference";
             this.txtInputReference.Size = new System.Drawing.Size(64, 22);
-            this.txtInputReference.TabIndex = 45;
+            this.txtInputReference.TabIndex = 2;
             this.txtInputReference.Text = "3.300";
             this.txtInputReference.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtInputReference.WordWrap = false;
@@ -485,7 +486,7 @@
             this.txtInputResolution.Location = new System.Drawing.Point(114, 51);
             this.txtInputResolution.Name = "txtInputResolution";
             this.txtInputResolution.Size = new System.Drawing.Size(64, 22);
-            this.txtInputResolution.TabIndex = 42;
+            this.txtInputResolution.TabIndex = 3;
             this.txtInputResolution.Text = "12";
             this.txtInputResolution.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtInputResolution.WordWrap = false;
@@ -544,7 +545,7 @@
             this.txtInputMinimum.Location = new System.Drawing.Point(114, 80);
             this.txtInputMinimum.Name = "txtInputMinimum";
             this.txtInputMinimum.Size = new System.Drawing.Size(64, 22);
-            this.txtInputMinimum.TabIndex = 50;
+            this.txtInputMinimum.TabIndex = 4;
             this.txtInputMinimum.Text = "0";
             this.txtInputMinimum.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtInputMinimum.WordWrap = false;
@@ -568,7 +569,7 @@
             this.chkInputSigned.Location = new System.Drawing.Point(29, 146);
             this.chkInputSigned.Name = "chkInputSigned";
             this.chkInputSigned.Size = new System.Drawing.Size(135, 19);
-            this.chkInputSigned.TabIndex = 53;
+            this.chkInputSigned.TabIndex = 6;
             this.chkInputSigned.Text = "&Differential (signed)";
             this.chkInputSigned.UseVisualStyleBackColor = true;
             this.chkInputSigned.CheckedChanged += new System.EventHandler(this.CalculateInputGain);
@@ -589,7 +590,7 @@
             this.groupBox1.Location = new System.Drawing.Point(4, 283);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(225, 199);
-            this.groupBox1.TabIndex = 15;
+            this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Input Scaling";
             // 

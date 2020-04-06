@@ -5010,6 +5010,36 @@ namespace dcld
 
         }
 
+        private void cmdGetPTermNominalFeedback_Click(object sender, EventArgs e)
+        {
+            // Create a new instance of the form class
+            frmCalculateInputGain frm = new frmCalculateInputGain();
+
+            // Show the settings form
+            frm.feedback = feedback;
+            if (frm.feedback.ADCResolution != cNPNZ.InputDataResolution) frm.feedback.ADCResolution = cNPNZ.InputDataResolution;
+            if (frm.feedback.FeedbackGain != cNPNZ.InputGain) frm.feedback.FeedbackGain = cNPNZ.InputGain;
+            frm.feedback.VoltageDividerSenseVoltage = (Convert.ToDouble(txtPTermNominalFeedback.Text) * feedback.ADCGranulatiry) / feedback.VoltageDividerFeedbackGain;
+            frm.AllowInputVoltageEdits = true;
+
+            if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                // Set maximum feedback error value
+                txtPTermNominalFeedback.Text = frm.feedback.FeedbackValue.ToString(CultureInfo.CurrentCulture);
+
+                // Keep Input Gain and INput Resolution in Sync
+                if (chkNormalizeInputGain.Checked)
+                { 
+                    txtInputGain.Text = frm.feedback.FeedbackGain.ToString("#0.000000", CultureInfo.CurrentCulture); ;
+                    txtInputDataResolution.Text = frm.feedback.ADCResolution.ToString("#0.#", CultureInfo.CurrentCulture);
+                    feedback = frm.feedback;
+                }
+
+                CodeGeneratorOptions_CheckedChanged(chkAddPTermLoop, e);
+            }
+
+        }
+
         private void ToolTip_Show(object sender, EventArgs e, string tool_tip_text)
         {
             // guarding condition...
