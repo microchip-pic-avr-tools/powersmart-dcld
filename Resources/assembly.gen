@@ -1666,7 +1666,7 @@ head_comment=%EMPTY%
 cycles=2
 lines=2
 comment0=load address of most recent item in error history
-comment1=set most recent error to zero
+comment1=clear most recent error
 code0=mov [w0 + #ptrErrorHistory], w6
 code1=clr [w6]
 
