@@ -5040,6 +5040,20 @@ namespace dcld
 
         }
 
+
+        private void cmdGetPTermNominalOutput_Click(object sender, EventArgs e)
+        {
+            // Create a new instance of the form class
+            frmCalculateOutputGain frm = new frmCalculateOutputGain();
+
+            if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+
+            }
+
+        }
+
+
         private void ToolTip_Show(object sender, EventArgs e, string tool_tip_text)
         {
             // guarding condition...
