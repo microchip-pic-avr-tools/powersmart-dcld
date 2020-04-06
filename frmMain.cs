@@ -514,42 +514,6 @@ namespace dcld
             // Set startup-status
             lvCoefficients.HideSelection = false;
             lvCoefficients.MultiSelect = false;
-
-
-            // arrange group boxes of control loop configuration option catalog
-            // => needs to be set in reverse order of apprearance (from bottom to top of page)
-            grpDevelopmentTools.Parent = tabController;
-            grpDevelopmentTools.Dock = DockStyle.Top;
-            grpAdaptiveGainControl.Parent = tabController;
-            grpAdaptiveGainControl.Dock = DockStyle.Top;
-            grpOutputDataNormalization.Parent = tabController;
-            grpOutputDataNormalization.Dock = DockStyle.Top;
-            grpInputDataSpecifications.Parent = tabController;
-            grpInputDataSpecifications.Dock = DockStyle.Top;
-            grpPolesZeros.Parent = tabController;
-            grpPolesZeros.Dock = DockStyle.Top;
-            grpControllerSelection.Parent = tabController;
-            grpControllerSelection.Dock = DockStyle.Top;
-
-            // arrange group boxes of code generator option catalog
-            // => needs to be set in reverse order of apprearance (from bottom to top of page)
-
-            //grpDevelopmentTools.Parent = tabSourceCodeConfig;
-            //grpDevelopmentTools.Dock = DockStyle.Top;
-            grpAntiWindup.Parent = tabSourceCodeConfig;
-            grpAntiWindup.Dock = DockStyle.Top;
-            grpDataProviderSources.Parent = tabSourceCodeConfig;
-            grpDataProviderSources.Dock = DockStyle.Top;
-            grpCodeFeatureDataIO.Parent = tabSourceCodeConfig;
-            grpCodeFeatureDataIO.Dock = DockStyle.Top;
-            grpCodeFeatureOptions.Parent = tabSourceCodeConfig;
-            grpCodeFeatureOptions.Dock = DockStyle.Top;
-            grpContextManagement.Parent = tabSourceCodeConfig;
-            grpContextManagement.Dock = DockStyle.Top;
-            grpFunctionLabel.Parent = tabSourceCodeConfig;
-            grpFunctionLabel.Dock = DockStyle.Top;
-            
-            tabSourceCodeConfig.AutoScroll = true; // enable AutoScroll
            
             // capture foldable object sizes of code generator option catalog
             GroupFolding_grpContextSavingHeight = grpContextManagement.Height;
