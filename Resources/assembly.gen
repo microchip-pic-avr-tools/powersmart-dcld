@@ -1682,6 +1682,13 @@ lines=1
 comment0=jump to override label if control output > upper limit
 code0=bra %PREFIXU%_CLAMP_MAX_OVERRIDE
 
+[anti_windup_max_options_start_pterm]
+head_comment=%EMPTY%
+cycles=2
+lines=1
+comment0=jump to override label if control output > upper limit
+code0=bra %PREFIXU%_PTERM_CLAMP_MAX_OVERRIDE
+
 [anti_windup_max_options_override_bypass]
 head_comment=%EMPTY%
 cycles=2
@@ -1689,12 +1696,26 @@ lines=2
 comment0=jump to exit
 code0=bra %PREFIXU%_CLAMP_MAX_EXIT
 
+[anti_windup_max_options_override_bypass_pterm]
+head_comment=%EMPTY%
+cycles=2
+lines=2
+comment0=jump to exit
+code0=bra %PREFIXU%_PTERM_CLAMP_MAX_EXIT
+
 [anti_windup_max_options_override_start]
 head_comment=%EMPTY%
 cycles=2
 lines=1
 comment0=%EMPTY%
 code0=%PREFIXU%_CLAMP_MAX_OVERRIDE:
+
+[anti_windup_max_options_override_start_pterm]
+head_comment=%EMPTY%
+cycles=2
+lines=1
+comment0=%EMPTY%
+code0=%PREFIXU%_PTERM_CLAMP_MAX_OVERRIDE:
 
 [anti_windup_max_set_status_flag]
 head_comment=%EMPTY%
@@ -1724,16 +1745,12 @@ lines=1
 comment0=%EMPTY%
 code0=%PREFIXU%_CLAMP_MAX_EXIT:
 
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[anti_windup_soft_desaturation]
+[anti_windup_max_options_end_pterm]
 head_comment=%EMPTY%
-cycles=2
-lines=2
-comment0=load address of most recent item in error history
-comment1=set most recent error to zero
-code0=mov [w0 + #ptrErrorHistory], w6
-code1=clr [w6]
+cycles=0
+lines=1
+comment0=%EMPTY%
+code0=%PREFIXU%_PTERM_CLAMP_MAX_EXIT:
 
 [anti_windup_min_start]
 head_comment=\n; Check for lower limit violation
@@ -1751,6 +1768,13 @@ lines=1
 comment0=jump to override label if control output < lower limit
 code0=bra %PREFIXU%_CLAMP_MIN_OVERRIDE
 
+[anti_windup_min_options_start_pterm]
+head_comment=%EMPTY%
+cycles=2
+lines=1
+comment0=jump to override label if control output < lower limit
+code0=bra %PREFIXU%_PTERM_CLAMP_MIN_OVERRIDE
+
 [anti_windup_min_options_override_bypass]
 head_comment=%EMPTY%
 cycles=2
@@ -1758,12 +1782,26 @@ lines=2
 comment0=jump to exit
 code0=bra %PREFIXU%_CLAMP_MIN_EXIT
 
+[anti_windup_min_options_override_bypass_pterm]
+head_comment=%EMPTY%
+cycles=2
+lines=2
+comment0=jump to exit
+code0=bra %PREFIXU%_PTERM_CLAMP_MIN_EXIT
+
 [anti_windup_min_options_override_start]
 head_comment=%EMPTY%
 cycles=2
 lines=1
 comment0=%EMPTY%
 code0=%PREFIXU%_CLAMP_MIN_OVERRIDE:
+
+[anti_windup_min_options_override_start_pterm]
+head_comment=%EMPTY%
+cycles=2
+lines=1
+comment0=%EMPTY%
+code0=%PREFIXU%_PTERM_CLAMP_MIN_OVERRIDE:
 
 [anti_windup_min_set_status_flag]
 head_comment=%EMPTY%
@@ -1793,7 +1831,12 @@ lines=1
 comment0=%EMPTY%
 code0=%PREFIXU%_CLAMP_MIN_EXIT:
 
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[anti_windup_min_options_end_pterm]
+head_comment=%EMPTY%
+cycles=0
+lines=1
+comment0=%EMPTY%
+code0=%PREFIXU%_PTERM_CLAMP_MIN_EXIT:
 
 [comp_read_input]
 head_comment=%SEPARATOR%; Read data from input source and calculate error input to transfer function
