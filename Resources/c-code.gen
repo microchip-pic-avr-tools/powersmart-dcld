@@ -89,7 +89,7 @@ count=37
 
 
 [library_header]
-count=174
+count=178
 line0=/* ********************************************************************************
 line1= * %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
 line2= * ********************************************************************************
@@ -208,62 +208,66 @@ line114=%IDENT%%IDENT%volatile int16_t normPreShift; // Normalization of ADC-res
 line115=%IDENT%%IDENT%volatile int16_t normPostShiftA; // Normalization of A-term control output to Q15 (R/W)
 line116=%IDENT%%IDENT%volatile int16_t normPostShiftB; // Normalization of B-term control output to Q15 (R/W)
 line117=%IDENT%%IDENT%volatile int16_t normPostScaler; // Control output normalization factor (Q15) (R/W)
-line118=%IDENT%} __attribute__((packed))Filter; // Filter parameters such as pointer to history and coefficient arrays and number scaling
-line119=%EMPTY%
-line120=%IDENT%// System clamping/Anti-windup
-line121=%IDENT%struct {
-line122=%IDENT%%IDENT%volatile int16_t MinOutput; // Minimum output value used for clamping (R/W)
-line123=%IDENT%%IDENT%volatile int16_t MaxOutput; // Maximum output value used for clamping (R/W)
-line124=%IDENT%%IDENT%volatile int16_t AltMinOutput; // Alternate minimum output value used for clamping (R/W)
-line125=%IDENT%%IDENT%volatile int16_t AltMaxOutput; // Alternate maximum output value used for clamping (R/W)
-line126=%IDENT%} __attribute__((packed))Limits; // Input and output clamping values
-line127=%EMPTY%
-line128=%IDENT%// Voltage/Average Current Mode Control Trigger handling
-line129=%IDENT%struct {
-line130=%IDENT%%IDENT%volatile uint16_t* ptrADCTriggerARegister; // Pointer to ADC trigger #1 register (e.g. TRIG1)
-line131=%IDENT%%IDENT%volatile uint16_t ADCTriggerAOffset; // ADC trigger #1 offset to compensate propagation delays 
-line132=%IDENT%%IDENT%volatile uint16_t* ptrADCTriggerBRegister; // Pointer to ADC trigger #2 register (e.g. TRIG2)
-line133=%IDENT%%IDENT%volatile uint16_t ADCTriggerBOffset; // ADC trigger #2 offset to compensate propagation delays 
-line134=%IDENT%} __attribute__((packed))ADCTriggerControl; // Automatic ADC trigger placement options for ADC Trigger A and B
-line135=%EMPTY%
-line136=%IDENT%// Data Provider Sources
-line137=%IDENT%struct {
-line138=%IDENT%%IDENT%volatile uint16_t* ptrDProvControlInput; // Pointer to external data buffer of most recent control input 
-line139=%IDENT%%IDENT%volatile uint16_t* ptrDProvControlError; // Pointer to external data buffer of most recent control error 
-line140=%IDENT%%IDENT%volatile uint16_t* ptrDProvControlOutput; // Pointer to external data buffer of most recent control output 
-line141=%IDENT%} __attribute__((packed))DataProviders; // Automated data sources pushing data points to user-defined variables
-line142=%EMPTY%
-line143=%IDENT%// Cascaded Function Call Parameters
-line144=%IDENT%struct {
-line145=%IDENT%%IDENT%volatile uint16_t ptrCascadedFunction; // Pointer to Function which should be called at the end of the control loop
-line146=%IDENT%%IDENT%volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
-line147=%IDENT%} __attribute__((packed))CascadeTrigger; // Cascade triggers with parameters for next function call
-line148=%EMPTY%
-line149=%IDENT%// Adaptive Gain Control Modulation
-line150=%IDENT%struct {
-line151=%IDENT%%IDENT%volatile uint16_t agcScaler; // Bit-shift scaler of Adaptive Gain Modulation factor
-line152=%IDENT%%IDENT%volatile fractional agcFactor; // Q15 value of Adaptive Gain Modulation factor
-line153=%IDENT%%IDENT%volatile fractional agcMedian; // Q15 value of Adaptive Gain Modulation nominal operating point
-line154=%IDENT%} __attribute__((packed))GainControl; // Parameter section for advanced control options
-line155=%EMPTY%
-line156=%IDENT%// User Data Space for Advanced Control Functions
-line157=%IDENT%struct {
-line158=%IDENT%%IDENT%volatile uint16_t advParam1; // generic 16-bit wide, user-defined parameter #1 for advanced control options
-line159=%IDENT%%IDENT%volatile uint16_t advParam2; // generic 16-bit wide, user-defined parameter #2 for advanced control options
-line160=%IDENT%%IDENT%volatile uint16_t advParam3; // generic 16-bit wide, user-defined parameter #3 for advanced control options
-line161=%IDENT%%IDENT%volatile uint16_t advParam4; // generic 16-bit wide, user-defined parameter #4 for advanced control options
-line162=%IDENT%} __attribute__((packed))Advanced; // Parameter section for advanced control options
-line163=%EMPTY%
-line164=} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output
-line165=%EMPTY%
-line166=/* ********************************************************************************/
-line167=#endif  // end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__ header file section
-line168=%EMPTY%
+line118=%EMPTY%
+line119=%IDENT%%IDENT%// P-Term Coefficients (for plant measurements only)
+line120=%IDENT%%IDENT%volatile int16_t PTermScaler; // Q15 P-Term Coefficient Bit-Shift Scaler (R/W)
+line121=%IDENT%%IDENT%volatile int16_t PTermFactor; // Q15 P-Term Coefficient Factor (R/W)
+line122=%IDENT%} __attribute__((packed))Filter; // Filter parameters such as pointer to history and coefficient arrays and number scaling
+line123=%EMPTY%
+line124=%IDENT%// System clamping/Anti-windup
+line125=%IDENT%struct {
+line126=%IDENT%%IDENT%volatile int16_t MinOutput; // Minimum output value used for clamping (R/W)
+line127=%IDENT%%IDENT%volatile int16_t MaxOutput; // Maximum output value used for clamping (R/W)
+line128=%IDENT%%IDENT%volatile int16_t AltMinOutput; // Alternate minimum output value used for clamping (R/W)
+line129=%IDENT%%IDENT%volatile int16_t AltMaxOutput; // Alternate maximum output value used for clamping (R/W)
+line130=%IDENT%} __attribute__((packed))Limits; // Input and output clamping values
+line131=%EMPTY%
+line132=%IDENT%// Voltage/Average Current Mode Control Trigger handling
+line133=%IDENT%struct {
+line134=%IDENT%%IDENT%volatile uint16_t* ptrADCTriggerARegister; // Pointer to ADC trigger #1 register (e.g. TRIG1)
+line135=%IDENT%%IDENT%volatile uint16_t ADCTriggerAOffset; // ADC trigger #1 offset to compensate propagation delays 
+line136=%IDENT%%IDENT%volatile uint16_t* ptrADCTriggerBRegister; // Pointer to ADC trigger #2 register (e.g. TRIG2)
+line137=%IDENT%%IDENT%volatile uint16_t ADCTriggerBOffset; // ADC trigger #2 offset to compensate propagation delays 
+line138=%IDENT%} __attribute__((packed))ADCTriggerControl; // Automatic ADC trigger placement options for ADC Trigger A and B
+line139=%EMPTY%
+line140=%IDENT%// Data Provider Sources
+line141=%IDENT%struct {
+line142=%IDENT%%IDENT%volatile uint16_t* ptrDProvControlInput; // Pointer to external data buffer of most recent control input 
+line143=%IDENT%%IDENT%volatile uint16_t* ptrDProvControlError; // Pointer to external data buffer of most recent control error 
+line144=%IDENT%%IDENT%volatile uint16_t* ptrDProvControlOutput; // Pointer to external data buffer of most recent control output 
+line145=%IDENT%} __attribute__((packed))DataProviders; // Automated data sources pushing data points to user-defined variables
+line146=%EMPTY%
+line147=%IDENT%// Cascaded Function Call Parameters
+line148=%IDENT%struct {
+line149=%IDENT%%IDENT%volatile uint16_t ptrCascadedFunction; // Pointer to Function which should be called at the end of the control loop
+line150=%IDENT%%IDENT%volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
+line151=%IDENT%} __attribute__((packed))CascadeTrigger; // Cascade triggers with parameters for next function call
+line152=%EMPTY%
+line153=%IDENT%// Adaptive Gain Control Modulation
+line154=%IDENT%struct {
+line155=%IDENT%%IDENT%volatile uint16_t agcScaler; // Bit-shift scaler of Adaptive Gain Modulation factor
+line156=%IDENT%%IDENT%volatile fractional agcFactor; // Q15 value of Adaptive Gain Modulation factor
+line157=%IDENT%%IDENT%volatile fractional agcMedian; // Q15 value of Adaptive Gain Modulation nominal operating point
+line158=%IDENT%} __attribute__((packed))GainControl; // Parameter section for advanced control options
+line159=%EMPTY%
+line160=%IDENT%// User Data Space for Advanced Control Functions
+line161=%IDENT%struct {
+line162=%IDENT%%IDENT%volatile uint16_t advParam1; // generic 16-bit wide, user-defined parameter #1 for advanced control options
+line163=%IDENT%%IDENT%volatile uint16_t advParam2; // generic 16-bit wide, user-defined parameter #2 for advanced control options
+line164=%IDENT%%IDENT%volatile uint16_t advParam3; // generic 16-bit wide, user-defined parameter #3 for advanced control options
+line165=%IDENT%%IDENT%volatile uint16_t advParam4; // generic 16-bit wide, user-defined parameter #4 for advanced control options
+line166=%IDENT%} __attribute__((packed))Advanced; // Parameter section for advanced control options
+line167=%EMPTY%
+line168=} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output
 line169=%EMPTY%
-line170=//**********************************************************************************
-line171=// Download latest version of this tool here: %TOOL_HOME_URL%
-line172=//**********************************************************************************
+line170=/* ********************************************************************************/
+line171=#endif  // end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__ header file section
+line172=%EMPTY%
 line173=%EMPTY%
+line174=//**********************************************************************************
+line175=// Download latest version of this tool here: %TOOL_HOME_URL%
+line176=//**********************************************************************************
+line177=%EMPTY%
 
 
 [comp_header]
@@ -372,7 +376,7 @@ line100=%EMPTY%
 
 
 [comp_source_head]
-count=76
+count=80
 line0=      /* **********************************************************************************
 line1=%SPACE%* %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
 line2=%SPACE%* **********************************************************************************
@@ -444,11 +448,15 @@ line67=volatile int16_t %PREFIX%pre_scaler = %PRESCALER%;
 line68=volatile int16_t %PREFIX%post_shift_A = %POSTSHIFT_A%;
 line69=volatile int16_t %PREFIX%post_shift_B = %POSTSHIFT_B%;
 line70=volatile fractional %PREFIX%post_scaler = %POSTSCALER%;
-line71=%EMPTY%
-line72=volatile %STRUCTURE_LABEL% %FILENAME_PATTERN%; // user-controller data object
-line73=%EMPTY%
-line74=     /* ********************************************************************************/
+line71=%{(1209)}%%EMPTY%
+line72=%{(1209)}%// P-Term Coefficient for Plant Measurements
+line73=%{(1209)}%volatile int16_t %PREFIX%pterm_factor = %PTERMFACTOR%;
+line74=%{(1209)}%volatile int16_t %PREFIX%pterm_scaler = %PTERMSCALER%;
 line75=%EMPTY%
+line76=volatile %STRUCTURE_LABEL% %FILENAME_PATTERN%; // user-controller data object
+line77=%EMPTY%
+line78=     /* ********************************************************************************/
+line79=%EMPTY%
 
 
 [comp_source_functions]
@@ -457,7 +465,7 @@ function0=comp_source_init
 
 
 [comp_source_init]
-count=67
+count=71
 line0=      /*!%FILENAME_PATTERN%_Init()
 line1=%SPACE%* *********************************************************************************
 line2=%SPACE%* Summary: Initializes controller coefficient arrays and normalization
@@ -516,15 +524,19 @@ line54=%IDENT%}
 line55=%EMPTY%
 line56=%IDENT%// Clear error and control histories of the 3P3Z controller
 line57=%IDENT%%FILENAME_PATTERN%_Reset(&%FILENAME_PATTERN%);
-line58=%IDENT%
-line59=%IDENT%return(1);
-line60=}
-line61=%EMPTY%
-line62=%EMPTY%
-line63=//**********************************************************************************
-line64=// Download latest version of this tool here: %TOOL_HOME_URL%
-line65=//**********************************************************************************
+line58=%{(1209)}%%IDENT%
+line59=%{(1209)}%%IDENT%// Load P-Term factor and scaler into data structure
+line60=%{(1209)}%%IDENT%controller->Filter.PTermFactor = %PREFIX%pterm_factor;;
+line61=%{(1209)}%%IDENT%controller->Filter.PTermScaler = %PREFIX%pterm_scaler;
+line62=%IDENT%
+line63=%IDENT%return(1);
+line64=}
+line65=%EMPTY%
 line66=%EMPTY%
+line67=//**********************************************************************************
+line68=// Download latest version of this tool here: %TOOL_HOME_URL%
+line69=//**********************************************************************************
+line70=%EMPTY%
 
 
 ___________________________________________________
