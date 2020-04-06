@@ -133,6 +133,15 @@ namespace dcld
             set { _VDivR2 = value; refreshVoltageDivider(); return; }
         }
 
+        private double _VDivGain = 1.000;
+        internal double VoltageDividerFeedbackGain
+        {
+            get { 
+                _VDivGain = _VDivGamp * (_VDivR2 / (_VDivR1 + _VDivR2)); 
+                return (_VDivGain); 
+            }
+        }
+
         private double _VDivGamp = 1.000;
         internal double VoltageDividerAmplifierGain
         {
@@ -140,19 +149,37 @@ namespace dcld
             set { _VDivGamp = value; refreshVoltageDivider(); return; }
         }
 
-        private double _VDVin = 1.000;
+        private double _VDVinMax = 1.000;
         internal double VoltageDividerSourceMaximum
         {
-            get { return (_VDVin); }
+            get { return (_VDVinMax); }
         }
+
+        private double _VDVin = 0.0;
+        internal double VoltageDividerSenseVoltage
+        {
+            get { return (_VDVin); }
+            set { _VDVin = value; refreshVoltageDivider(); return; }
+        }
+
+        private double _VDVfb = 1.000;
+        internal double VoltageDividerFeedbackVoltage
+        {
+            get { _VDVfb = _VDVin * VoltageDividerFeedbackGain; return (_VDVfb); }
+        }
+        
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         private void refreshVoltageDivider()
         {
             // Amplifer Gain * (lower resistance / (upper resistance + lower resistance))
             _FeedbackGain = _VDivGamp * (_VDivR2 / (_VDivR1 + _VDivR2));
 
-            if (!_ADCIsDiff) _VDVin = _ADCRef / _FeedbackGain;
-            else _VDVin = 0.5 * _ADCRef / _FeedbackGain;
+            if (!_ADCIsDiff) _VDVinMax = _ADCRef / _FeedbackGain;
+            else _VDVinMax = 0.5 * _ADCRef / _FeedbackGain;
+
+            _VDVfb = _VDVin * _FeedbackGain;
+            if (_ADCGran != 0.0)
+                _FeedbackValue = Convert.ToInt32(Math.Ceiling(_VDVfb / _ADCGran));
 
             return;
         }
@@ -173,19 +200,47 @@ namespace dcld
             set { _CSGamp = value; refreshCurrentSense();  return; }
         }
 
-        private double _CSIin = 1.000;
+        private double _CSGain = 1.000;
+        internal double CurrentSenseFeedbackGain
+        {
+            get
+            {
+                _CSGain = _CSRshunt * _CSGamp;
+                return (_CSGain);
+            }
+        }
+
+        private double _CSIinMax = 1.000;
         internal double CurrentSenseSourceMaximum
         {
-            get { return (_CSIin); }
+            get { return (_CSIinMax); }
         }
+
+        private double _CSIin = 0.0;
+        internal double CurrentSenseSenseCurrent
+        {
+            get { return (_CSIin); }
+            set { _CSIin = value; refreshCurrentSense(); return; }
+        }
+
+        private double _CSVfb = 1.000;
+        internal double CurrentSenseFeedbackVoltage
+        {
+            get { _CSVfb = _CSIin * CurrentSenseFeedbackGain; return (_CSVfb); }
+        }
+        
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         private void refreshCurrentSense()
         {
             // Shunt Resistance * Amplifier Gain
             _FeedbackGain = _CSRshunt * _CSGamp; 
 
-            if (!_ADCIsDiff) _CSIin = _ADCRef / _FeedbackGain;
-            else _CSIin = 0.5 * _ADCRef / _FeedbackGain;
+            if (!_ADCIsDiff) _CSIinMax = _ADCRef / _FeedbackGain;
+            else _CSIinMax = 0.5 * _ADCRef / _FeedbackGain;
+
+            _CSVfb = _CSIin * _FeedbackGain;
+            if (_ADCGran != 0.0)
+                _FeedbackValue = Convert.ToInt32(Math.Ceiling(_CSVfb / _ADCGran));
 
             return;
         }
@@ -205,19 +260,49 @@ namespace dcld
             get { return (_CTWR); }
             set { _CTWR = value; refreshCurrentTransformer(); return; }
         }
-        private double _CTIin = 1.000;
+
+        private double _CTGain = 1.000;
+        internal double CurrentTransformerFeedbackGain
+        {
+            get
+            {
+                _CTGain = (1.0 / _CTWR) * _CTRB;
+                return (_CTGain);
+            }
+        }
+
+        private double _CTIinMax = 1.000;
         internal double CurrentTransformerSourceMaximum
         {
-            get { return (_CTIin); }
+            get { return (_CTIinMax); }
         }
+
+        private double _CTIin = 0.0;
+        internal double CurrentTransformerSenseCurrent
+        {
+            get { return (_CTIin); }
+            set { _CTIin = value; refreshCurrentTransformer(); return; }
+        }
+
+        private double _CTVfb = 1.000;
+        internal double CurrentTransformerFeedbackVoltage
+        {
+            get { _CTVfb = _CTIin * CurrentTransformerFeedbackGain; return (_CSVfb); }
+        }
+
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         private void refreshCurrentTransformer()
         {
             // 1/[secondary windings] * R_burden
             _FeedbackGain = (1.0 / _CTWR) * _CTRB; 
 
-            if (!_ADCIsDiff) _CTIin = _ADCRef / _FeedbackGain;
-            else _CTIin = 0.5 * _ADCRef / _FeedbackGain;
+            if (!_ADCIsDiff) _CTIinMax = _ADCRef / _FeedbackGain;
+            else _CTIinMax = 0.5 * _ADCRef / _FeedbackGain;
+
+            _CTVfb = _CTIin * _FeedbackGain;
+            if (_ADCGran != 0.0)
+                _FeedbackValue = Convert.ToInt32(Math.Ceiling(_CTVfb / _ADCGran));
+
 
             return;
         }
@@ -230,10 +315,17 @@ namespace dcld
             get { return (_DSres); }
             set { _DSres = value; refreshDigitalSource(); return; }
         }
-        private double _DSIn = 1.000;
+        private double _DSInMax = 1.000;
         internal double DigitalSourceSourceMaximum
         {
+            get { return (_DSInMax); }
+        }
+
+        private double _DSIn = 1.000;
+        internal double DigitalSourceValue
+        {
             get { return (_DSIn); }
+            set { _DSIn = value;  return; }
         }
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -247,7 +339,9 @@ namespace dcld
             _FeedbackGain = (_ADCRes / _DSres);
 
             // Calculate maximum input value
-            _DSIn = (Math.Pow(2.0, _ADCRes) - 1) / gdiv;
+            _DSInMax = (Math.Pow(2.0, _ADCRes) - 1) / gdiv;
+
+            _FeedbackValue = Convert.ToInt32(_DSIn);
         }
         // Digital Source End ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -260,6 +354,14 @@ namespace dcld
         }
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        // Feedback Value ~~~~~~~~~~~~~~~~~~~~~~~~~
+        private int _FeedbackValue = 4095;
+        internal int FeedbackValue
+        {
+            get { return (_FeedbackValue); }
+            set { _FeedbackValue = value; return; }
+        }
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         // METHODS =====================================
 

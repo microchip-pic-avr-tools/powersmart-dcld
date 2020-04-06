@@ -1578,10 +1578,15 @@ namespace dcld
                 ProjectFile.WriteKey("FeedbackDeclaration", "VDR1", feedback.VoltageDividerR1.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("FeedbackDeclaration", "VDR2", feedback.VoltageDividerR2.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("FeedbackDeclaration", "VDGA", feedback.VoltageDividerAmplifierGain.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "CSNomValue", feedback.VoltageDividerSenseVoltage.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("FeedbackDeclaration", "CSRS", feedback.CurrentSenseRshunt.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("FeedbackDeclaration", "CSGA", feedback.CurrentSenseAmplifierGain.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "CSNomValue", feedback.CurrentSenseSenseCurrent.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("FeedbackDeclaration", "CTRB", feedback.CurrentTransformerBurdenResistance.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("FeedbackDeclaration", "CTWR", feedback.CurrentTransformerWindingRatio.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "CTNomValue", feedback.CurrentTransformerSenseCurrent.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "DSRES", feedback.DigitalSourceResolution.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "DSNomValue", feedback.DigitalSourceValue.ToString(CultureInfo.InvariantCulture));
 
                 // Ouptput Definition
                 ProjectFile.WriteKey("OutputDeclaration", "Type", Convert.ToInt32(ctrl_output.OutputType).ToString());
@@ -1785,10 +1790,16 @@ namespace dcld
                 feedback.VoltageDividerR1 = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "VDR1", "12000"));
                 feedback.VoltageDividerR2 = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "VDR2", "2200"));
                 feedback.VoltageDividerAmplifierGain = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "VDGA", "1.0"));
+                feedback.VoltageDividerSenseVoltage = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "VDNomVal", "5.0"));
                 feedback.CurrentSenseRshunt = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CSRS", "0.010"));
                 feedback.CurrentSenseAmplifierGain = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CSGA", "20"));
+                feedback.CurrentSenseSenseCurrent = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CSNomVal", "5.0"));
                 feedback.CurrentTransformerBurdenResistance = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CTRB", "10"));
                 feedback.CurrentTransformerWindingRatio = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CTWR", "50"));
+                feedback.CurrentTransformerSenseCurrent = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CTNomVal", "5.0"));
+                feedback.DigitalSourceResolution = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "DSRES", "12.0"));
+                feedback.DigitalSourceValue = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "DSNomValue", "2048.0"));
+
 
                 // Ouptput Definition
                 int_dum = Convert.ToInt32(ProjectFile.ReadKey("OutputDeclaration", "Type", "1"));
