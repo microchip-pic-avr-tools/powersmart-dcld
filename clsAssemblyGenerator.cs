@@ -13,7 +13,14 @@ namespace dcld
         internal clsINIFileHandler GeneratorScript
         {
             get { return (_GenScript); }
-            set { _GenScript = value; return; }
+            set
+            {
+                _GenScript = value;
+                if (_tokens == null)
+                    _tokens = new clsConditionalCode();
+                _tokens.GetTokenList(_GenScript);
+                return;
+            }
         }
 
         private bool _SaveRestoreContext = true;
@@ -357,12 +364,22 @@ namespace dcld
             private set { _WREGUsage = value.ToLower().Trim(); return; }
         }
 
-        private string _CustomComment = "";
+        private string _custom_comment = "";
         internal string CustomComment
         {
-            get { return (_CustomComment); }
-            set { _CustomComment = value; return; }
+            get { return (_custom_comment); }
+            set { _custom_comment = value; return; }
         }
+
+        /* Code Generation Options */
+
+        private clsConditionalCode _tokens;
+        internal clsConditionalCode Tokens
+        {
+            get { return (_tokens); }
+            set { _tokens = value; return; }
+        }
+
 
         //----------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------
@@ -377,6 +394,39 @@ namespace dcld
 
         //----------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------
+
+        // This function reads all Token-IDs and Token Keys from the code generator script
+        private bool GetConditionalCodeTokenList()
+        {
+            bool fres = false;
+            int _i = 0, _token_count = 0;
+            string text_line = "";
+
+            try
+            {
+                _token_count = Convert.ToInt32(_GenScript.ReadKey("option_ids", "count", "0"));
+
+                for (_i = 0; _i < _token_count; _i++)
+                {
+                    text_line = _GenScript.ReadKey("option_ids", (_i.ToString()), "");
+                    if (_tokens == null)
+                        _tokens = new clsConditionalCode();
+                    fres = _tokens.Add(text_line);
+                    if (!fres) break;
+                }
+
+                return (fres);
+            }
+            catch
+            { return (false); }
+
+        }
+
+        //----------------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------------
+
+
+
         private string ReplaceTokens(string user_string)
         {
             string str_dum = "";
@@ -397,6 +447,9 @@ namespace dcld
             str_dum = str_dum.Replace("%POSTFIXU%", _Postfix.ToUpper().Trim());
             str_dum = str_dum.Replace("%POSTFIXL%", _Postfix.ToLower().Trim());
 
+            // Check for Option Tokens
+            str_dum = _tokens.GetTokenResult(str_dum).CodeLine;
+
             return (str_dum);
         }
 
@@ -406,12 +459,12 @@ namespace dcld
             int block_count = 0, i = 0;
             int _addr_offset_coeff = 0;
             int _addr_offset_data = 0;
-            bool bool_dummy = false;
+            //bool bool_dummy = false;
             string str_dum = "", command = "";
             StringBuilder body = new StringBuilder();
             StringBuilder header = new StringBuilder();
 
-            try 
+            //try 
             {
 
                 _Postfix = _GenScript.ReadKey("filter_block_scaling_modes", _ScalingMethod.ToString(), "");
@@ -420,8 +473,8 @@ namespace dcld
                 block_count = Convert.ToInt32(_GenScript.ReadKey("blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "count", "0"));
                 if (block_count == 0) return ("; (no code template available)");
 
-                AccumulatorUsage = _GenScript.ReadKey("blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "accu_usage", "ab");
-                WREGUsage = _GenScript.ReadKey("blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "wreg_usage", "4,6,8,10");
+                _AccumulatorUsage = _GenScript.ReadKey("blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "accu_usage", "ab");
+                _WREGUsage = _GenScript.ReadKey("blockset_" + _Postfix + "_" + _CodeOptimizationLevel, "wreg_usage", "4,6,8,10");
 
                 _addr_offset_coeff = Convert.ToInt16(_GenScript.ReadKey("filter_block_array_addressing_coeff", "addr_offset_" + _Postfix, "4"));
                 _addr_offset_data = Convert.ToInt16(_GenScript.ReadKey("filter_block_array_addressing_data", "addr_offset_" + _Postfix, "2"));
@@ -434,323 +487,336 @@ namespace dcld
 
                 for (i = 0; i < block_count; i++)
                 {
-                    // Print recent execution step for debugging purposes
-                    //body.Append("\r\n;execute block #" + i.ToString() + "\t" + ReadConfigString(_TemplateFile, "blockset_" + _Postfix + "_" + _CodeOptimizationLevel, i.ToString(), "(not found)") + "\r\n");
-
+                    // clear string buffer and read next command set
                     str_dum = "";
                     command = ReplaceTokens(_GenScript.ReadKey("blockset_" + _Postfix + "_" + _CodeOptimizationLevel, i.ToString(), "(not found)"));
+
+                    // Parse command set option tokens to add/skip command
+                    if (!_GenScript.KeyExists(command, "lines") && (command.Length>0))
+                    { // If command cannot be found of token parsing failed, print error message
+                        str_dum = command;  
+                    }
+                    else 
+                    { // if command is an empty line or script request returned "(not found)", add line to code
                     
-                    switch (command.ToLower().Trim())
-                    {
-                        case "(not found)":
-                            str_dum = "\r\n\t#error: label '" + "blockset_" + _Postfix + "_" + _CodeOptimizationLevel + "[" + i.ToString() + "]' could not be found\r\n";
-                            break;
+                        switch (command.ToLower().Trim())
+                        {
+                            case "(not found)":
+                                str_dum = "\r\n\t#error: label '" + "blockset_" + _Postfix + "_" + _CodeOptimizationLevel + "[" + i.ToString() + "]' could not be found\r\n";
+                                break;
 
-                        case "disclaimer":
-                            str_dum = BuildCodeBlock(command);
-                            str_dum = str_dum + _CustomComment;
-                            break;
-
-                        case "exec_function_head":
-                            str_dum = BuildCodeBlock(command);
-                            _CycleCountEnable = true; // Setting flag starting cycle count of main loop
-                            break;
-
-                        case "return":
-                            str_dum = BuildCodeBlock(command);
-                            _CycleCountEnable = false; // Clearing flag ending cycle count of main loop
-                            break;
-
-                        case "context_save":
-                            if (_SaveRestoreContext) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "context_save_shadow":
-                            if (_SaveRestoreShadowRegisters) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "context_save_mac_registers":
-                            if (_SaveRestoreMACRegisters) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "fscl_context_save_mac_registers":
-                            if (_SaveRestoreMACRegisters) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "context_save_status_word_wreg":
-                            if (((_AddAntiWindup) && ((_AntiWindupClampMaxWithStatusFlag) || (_AntiWindupClampMinWithStatusFlag))) || (_AddEnableDisableFeature))
-                            { str_dum = BuildCodeBlock(command); }
-                            break;
-
-                        case "context_save_accumulator_a":
-                            if ((_SaveRestoreAccumulatorA) && (_AccumulatorUsage.Contains("a"))) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "context_save_accumulator_b":
-                            if ((_SaveRestoreAccumulatorB) && (_AccumulatorUsage.Contains("b"))) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "context_save_core_config":
-                            if (_SaveRestoreCoreConfig) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "context_save_core_status":
-                            if (_SaveRestoreCoreStatusRegister) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "context_restore":
-                            if (_SaveRestoreContext) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "context_restore_shadow":
-                            if (_SaveRestoreShadowRegisters) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "context_restore_mac_registers":
-                            if (_SaveRestoreMACRegisters) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "fscl_context_restore_mac_registers":
-                            if (_SaveRestoreMACRegisters) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "context_restore_status_word_wreg":
-                            if (((_AddAntiWindup) && ((_AntiWindupClampMaxWithStatusFlag) || (_AntiWindupClampMinWithStatusFlag))) || (_AddEnableDisableFeature))
-                            { str_dum = BuildCodeBlock(command); }
-                            break;
-
-                        case "context_restore_accumulator_a":
-                            if ((_SaveRestoreAccumulatorA) && (_AccumulatorUsage.Contains("a"))) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "context_restore_accumulator_b":
-                            if ((_SaveRestoreAccumulatorB) && (_AccumulatorUsage.Contains("b"))) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "context_restore_core_config":
-                            if (_SaveRestoreCoreConfig) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "context_restore_core_status":
-                            if (_SaveRestoreCoreStatusRegister) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "enable_disable_start":
-                            if (_AddEnableDisableFeature) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "enable_disable_end":
-                            if ((_AddEnableDisableFeature) && (!_AddDisableDummyReadFeature)) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "enable_disable_end_dummy_read":
-                            if ((_AddEnableDisableFeature) && (_AddDisableDummyReadFeature))
-                            {
+                            case "disclaimer":
                                 str_dum = BuildCodeBlock(command);
-                                if (_CreateCopyOfMostRecentControlInput) str_dum = str_dum + BuildCodeBlock("shadow_copy_control_input");
-                            }
-                            break;
+                                str_dum = str_dum + _custom_comment;
+                                break;
 
-                        case "enable_disable_end_dummy_read_end":
-                            if ((_AddEnableDisableFeature) && (_AddDisableDummyReadFeature)) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "enable_disable_start_pterm":
-                            if (_AddEnableDisableFeature) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "enable_disable_end_pterm":
-                            if ((_AddEnableDisableFeature) && (!_AddDisableDummyReadFeature)) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "enable_disable_end_dummy_read_pterm":
-                            if ((_AddEnableDisableFeature) && (_AddDisableDummyReadFeature))
-                            {
+                            case "exec_function_head":
                                 str_dum = BuildCodeBlock(command);
-                                if (_CreateCopyOfMostRecentControlInput) str_dum = str_dum + BuildCodeBlock("shadow_copy_control_input");
-                            }
-                            break;
+                                _CycleCountEnable = true; // Setting flag starting instruction cycle count of main loop
+                                break;
 
-                        case "enable_disable_end_dummy_read_end_pterm":
-                            if ((_AddEnableDisableFeature) && (_AddDisableDummyReadFeature)) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "core_config":
-                            if (_AddCoreConfig) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "shadow_copy_control_input":
-                            if (_CreateCopyOfMostRecentControlInput) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "shadow_copy_error_input":
-                            if (_CreateCopyOfMostRecentErrorInput) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "shadow_copy_control_output":
-                            if (_CreateCopyOfMostRecentControlOutput) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "comp_zero_input":
-                            if (_BidirectionalFeedback) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "comp_invert_input":
-                            if (_FeedbackRectification) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "comp_mac_load32b_a":
-                            if (_StoreReloadAccLevel1) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "comp_mac_load32b_b":
-                            if (_StoreReloadAccLevel1) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "comp_mac_store32b_a":
-                            if (_StoreReloadAccLevel1) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "comp_mac_store32b_b":
-                            if (_StoreReloadAccLevel1) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "comp_writeback":
-                            if (_SpreadSpectrumModulation) { command = command + "_ssm"; }
-                            if (_AddAlternateTarget) { command = command + "_with_alt_target_switch"; }
-                            str_dum = BuildCodeBlock(command);
-                            if (_CycleCountEnable) _CycleCountToWriteback = _CycleCountTotal;  // Capture value from most recent cycle count
-                            break;
-
-                        case "comp_read_input":
-                            if (_AddAlternateSource) { command = command + "_with_alt_source_switch"; }
-                            str_dum = BuildCodeBlock(command);
-                            if (_CycleCountEnable) _CycleCountToDataCapture = _CycleCountTotal;  // Capture value from most recent cycle count
-                            break;
-
-                        case "comp_norm_error":
-                            if (_AddErrorInputNormalization) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "agc_factor_multiply_start":
-                            if (_AdaptiveGainModulationEnable) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "agc_factor_multiply_enable_start":
-                            if (_AdaptiveGainModulationAddEnableSwitch) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "agc_factor_multiply_enable_end":
-                            if (_AdaptiveGainModulationAddEnableSwitch) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "agc_factor_multiply_get_factor_call":
-                            if (_AdaptiveGainModulationAddFunctionCall) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "agc_factor_multiply_scaled":
-                            if (_AdaptiveGainModulationEnable) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "anti_windup":
-                            if (_AddAntiWindup) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "anti_windup_max":
-                            if (_AntiWindupClampMax)
-                            {
-                                bool needs_bypass = false;
-
-                                bool_dummy = ((_AntiWindupClampMaxWithStatusFlag) || (_AntiWindupSoftDesaturationFlag));    // elements added when output is overwritten (IF-statement)
-                                needs_bypass = (_AntiWindupClampMaxWithStatusFlag); // elements added when output is overwritten (ELSE-statement)
-
-                                str_dum = BuildCodeBlock("anti_windup_max_start");
-                                if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_start");
-                                if (_AntiWindupClampMaxWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_max_clear_status_flag");
-                                if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_override_bypass");
-                                if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_override_start");
-                                str_dum = str_dum + BuildCodeBlock("anti_windup_max_override");
-                                if (_AntiWindupSoftDesaturationFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_soft_desaturation");
-                                if (_AntiWindupClampMaxWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_max_set_status_flag");
-                                if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_end");
-
-                            }
-                            break;
-
-                        case "anti_windup_min":
-                            if (_AntiWindupClampMin)
-                            {
-
-                                bool needs_bypass = false;
-
-                                bool_dummy = ((_AntiWindupClampMinWithStatusFlag) || (_AntiWindupSoftDesaturationFlag));    // elements added when output is overwritten (IF-statement)
-                                needs_bypass = (_AntiWindupClampMinWithStatusFlag); // elements added when output is overwritten (ELSE-statement)
-
-                                str_dum = BuildCodeBlock("anti_windup_min_start");
-                                if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_start");
-                                if (_AntiWindupClampMinWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_min_clear_status_flag");
-                                if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_override_bypass");
-                                if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_override_start");
-                                str_dum = str_dum + BuildCodeBlock("anti_windup_min_override");
-                                if (_AntiWindupSoftDesaturationFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_soft_desaturation");
-                                if (_AntiWindupClampMinWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_min_set_status_flag");
-                                if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_end");
-
-                            }
-                            break;
-
-                        case "adc_trigger_a_placement":
-                            if (_AddADCTriggerAPlacement)
-                            {
-                                if (_SpreadSpectrumModulation) { command = command + "_ssm"; }
+                            case "return":
                                 str_dum = BuildCodeBlock(command);
-                            }
-                            break;
+                                _CycleCountEnable = false; // Clearing flag ending instruction cycle count of main loop
+                                break;
 
-                        case "adc_trigger_b_placement":
-                            if (_AddADCTriggerBPlacement)
-                            {
-                                if (_SpreadSpectrumModulation) { command = command + "_ssm"; }
+                            //case "context_save":
+                            //    if (_SaveRestoreContext) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "context_save_shadow":
+                            //    if (_SaveRestoreShadowRegisters) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "context_save_mac_registers":
+                            //    if (_SaveRestoreMACRegisters) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "fscl_context_save_mac_registers":
+                            //    if (_SaveRestoreMACRegisters) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "context_save_status_word_wreg":
+                            //    if (((_AddAntiWindup) && ((_AntiWindupClampMaxWithStatusFlag) || (_AntiWindupClampMinWithStatusFlag))) || (_AddEnableDisableFeature))
+                            //    { str_dum = BuildCodeBlock(command); }
+                            //    break;
+
+                            //case "context_save_accumulator_a":
+                            //    if ((_SaveRestoreAccumulatorA) && (_AccumulatorUsage.Contains("a"))) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "context_save_accumulator_b":
+                            //    if ((_SaveRestoreAccumulatorB) && (_AccumulatorUsage.Contains("b"))) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "context_save_core_config":
+                            //    if (_SaveRestoreCoreConfig) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "context_save_core_status":
+                            //    if (_SaveRestoreCoreStatusRegister) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "context_restore":
+                            //    if (_SaveRestoreContext) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "context_restore_shadow":
+                            //    if (_SaveRestoreShadowRegisters) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "context_restore_mac_registers":
+                            //    if (_SaveRestoreMACRegisters) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "fscl_context_restore_mac_registers":
+                            //    if (_SaveRestoreMACRegisters) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "context_restore_status_word_wreg":
+                            //    if (((_AddAntiWindup) && ((_AntiWindupClampMaxWithStatusFlag) || (_AntiWindupClampMinWithStatusFlag))) || (_AddEnableDisableFeature))
+                            //    { str_dum = BuildCodeBlock(command); }
+                            //    break;
+
+                            //case "context_restore_accumulator_a":
+                            //    if ((_SaveRestoreAccumulatorA) && (_AccumulatorUsage.Contains("a"))) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "context_restore_accumulator_b":
+                            //    if ((_SaveRestoreAccumulatorB) && (_AccumulatorUsage.Contains("b"))) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "context_restore_core_config":
+                            //    if (_SaveRestoreCoreConfig) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "context_restore_core_status":
+                            //    if (_SaveRestoreCoreStatusRegister) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "enable_disable_start":
+                            //    if (_AddEnableDisableFeature) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "enable_disable_end":
+                            //    if ((_AddEnableDisableFeature) && (!_AddDisableDummyReadFeature)) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "enable_disable_end_dummy_read":
+                            //    if ((_AddEnableDisableFeature) && (_AddDisableDummyReadFeature))
+                            //    {
+                            //        str_dum = BuildCodeBlock(command);
+                            //        if (_CreateCopyOfMostRecentControlInput) str_dum = str_dum + BuildCodeBlock("shadow_copy_control_input");
+                            //    }
+                            //    break;
+
+                            //case "enable_disable_end_dummy_read_end":
+                            //    if ((_AddEnableDisableFeature) && (_AddDisableDummyReadFeature)) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "enable_disable_start_pterm":
+                            //    if (_AddEnableDisableFeature) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "enable_disable_end_pterm":
+                            //    if ((_AddEnableDisableFeature) && (!_AddDisableDummyReadFeature)) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "enable_disable_end_dummy_read_pterm":
+                            //    if ((_AddEnableDisableFeature) && (_AddDisableDummyReadFeature))
+                            //    {
+                            //        str_dum = BuildCodeBlock(command);
+                            //        if (_CreateCopyOfMostRecentControlInput) str_dum = str_dum + BuildCodeBlock("shadow_copy_control_input");
+                            //    }
+                            //    break;
+
+                            //case "enable_disable_end_dummy_read_end_pterm":
+                            //    if ((_AddEnableDisableFeature) && (_AddDisableDummyReadFeature)) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "core_config":
+                            //    if (_AddCoreConfig) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "shadow_copy_control_input":
+                            //    if (_CreateCopyOfMostRecentControlInput) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "shadow_copy_error_input":
+                            //    if (_CreateCopyOfMostRecentErrorInput) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "shadow_copy_control_output":
+                            //    if (_CreateCopyOfMostRecentControlOutput) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "comp_zero_input":
+                            //    if (_BidirectionalFeedback) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "comp_invert_input":
+                            //    if (_FeedbackRectification) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "comp_mac_load32b_a":
+                            //    if (_StoreReloadAccLevel1) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "comp_mac_load32b_b":
+                            //    if (_StoreReloadAccLevel1) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "comp_mac_store32b_a":
+                            //    if (_StoreReloadAccLevel1) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "comp_mac_store32b_b":
+                            //    if (_StoreReloadAccLevel1) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "comp_writeback":
+                            //    if (_SpreadSpectrumModulation) { command = command + "_ssm"; }
+                            //    if (_AddAlternateTarget) { command = command + "_with_alt_target_switch"; }
+                            //    str_dum = BuildCodeBlock(command);
+                            //    if (_CycleCountEnable) _CycleCountToWriteback = _CycleCountTotal;  // Capture value from most recent cycle count
+                            //    break;
+
+                            //case "comp_read_input":
+                            //    if (_AddAlternateSource) { command = command + "_with_alt_source_switch"; }
+                            //    str_dum = BuildCodeBlock(command);
+                            //    if (_CycleCountEnable) _CycleCountToDataCapture = _CycleCountTotal;  // Capture value from most recent cycle count
+                            //    break;
+
+                            //case "comp_norm_error":
+                            //    if (_AddErrorInputNormalization) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "agc_factor_multiply_start":
+                            //    if (_AdaptiveGainModulationEnable) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "agc_factor_multiply_enable_start":
+                            //    if (_AdaptiveGainModulationAddEnableSwitch) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "agc_factor_multiply_enable_end":
+                            //    if (_AdaptiveGainModulationAddEnableSwitch) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "agc_factor_multiply_get_factor_call":
+                            //    if (_AdaptiveGainModulationAddFunctionCall) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "agc_factor_multiply_scaled":
+                            //    if (_AdaptiveGainModulationEnable) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "anti_windup":
+                            //    if (_AddAntiWindup) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "anti_windup_max":
+                            //    if (_AntiWindupClampMax)
+                            //    {
+                            //        bool needs_bypass = false;
+
+                            //        bool_dummy = ((_AntiWindupClampMaxWithStatusFlag) || (_AntiWindupSoftDesaturationFlag));    // elements added when output is overwritten (IF-statement)
+                            //        needs_bypass = (_AntiWindupClampMaxWithStatusFlag); // elements added when output is overwritten (ELSE-statement)
+
+                            //        str_dum = BuildCodeBlock("anti_windup_max_start");
+                            //        if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_start");
+                            //        if (_AntiWindupClampMaxWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_max_clear_status_flag");
+                            //        if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_override_bypass");
+                            //        if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_override_start");
+                            //        str_dum = str_dum + BuildCodeBlock("anti_windup_max_override");
+                            //        if (_AntiWindupSoftDesaturationFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_soft_desaturation");
+                            //        if (_AntiWindupClampMaxWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_max_set_status_flag");
+                            //        if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_max_options_end");
+
+                            //    }
+                            //    break;
+
+                            //case "anti_windup_min":
+                            //    if (_AntiWindupClampMin)
+                            //    {
+
+                            //        bool needs_bypass = false;
+
+                            //        bool_dummy = ((_AntiWindupClampMinWithStatusFlag) || (_AntiWindupSoftDesaturationFlag));    // elements added when output is overwritten (IF-statement)
+                            //        needs_bypass = (_AntiWindupClampMinWithStatusFlag); // elements added when output is overwritten (ELSE-statement)
+
+                            //        str_dum = BuildCodeBlock("anti_windup_min_start");
+                            //        if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_start");
+                            //        if (_AntiWindupClampMinWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_min_clear_status_flag");
+                            //        if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_override_bypass");
+                            //        if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_override_start");
+                            //        str_dum = str_dum + BuildCodeBlock("anti_windup_min_override");
+                            //        if (_AntiWindupSoftDesaturationFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_soft_desaturation");
+                            //        if (_AntiWindupClampMinWithStatusFlag) str_dum = str_dum + BuildCodeBlock("anti_windup_min_set_status_flag");
+                            //        if (bool_dummy) str_dum = str_dum + BuildCodeBlock("anti_windup_min_options_end");
+
+                            //    }
+                            //    break;
+
+                            //case "adc_trigger_a_placement":
+                            //    if (_AddADCTriggerAPlacement)
+                            //    {
+                            //        if (_SpreadSpectrumModulation) { command = command + "_ssm"; }
+                            //        str_dum = BuildCodeBlock(command);
+                            //    }
+                            //    break;
+
+                            //case "adc_trigger_b_placement":
+                            //    if (_AddADCTriggerBPlacement)
+                            //    {
+                            //        if (_SpreadSpectrumModulation) { command = command + "_ssm"; }
+                            //        str_dum = BuildCodeBlock(command);
+                            //    }
+                            //    break;
+
+                            //case "cascaded_function_call":
+                            //    if (_AddCascadedFunctionCall) str_dum = BuildCodeBlock(command);
+                            //    break;
+
+                            //case "update_status_bitfield":
+                            //    if ((_AddAntiWindup) && ((_AntiWindupClampMaxWithStatusFlag) || (_AntiWindupClampMinWithStatusFlag))) str_dum = BuildCodeBlock(command); 
+                            //    break;
+
+                            default:
                                 str_dum = BuildCodeBlock(command);
-                            }
-                            break;
+                                break;
+                        }
 
-                        case "cascaded_function_call":
-                            if (_AddCascadedFunctionCall) str_dum = BuildCodeBlock(command);
-                            break;
-
-                        case "update_status_bitfield":
-                            if ((_AddAntiWindup) && ((_AntiWindupClampMaxWithStatusFlag) || (_AntiWindupClampMinWithStatusFlag))) str_dum = BuildCodeBlock(command); 
-                            break;
-
-                        default:
-                            str_dum = BuildCodeBlock(command);
-                            break;
                     }
 
+                    // format line ending, set instruction line ident
                     if (str_dum.Trim().Length > 0)
                     {
-                        str_dum = str_dum.Replace("\r\n", "\r\n\t");
-                        str_dum = str_dum.Replace("\t;", ";");
+                        str_dum = str_dum.Replace("\r\n", "\r\n\t"); // at every lime end, set ident of following line
+                        str_dum = str_dum.Replace("\t;", ";"); // if no line ending, set ident of comment line
 
-                        // Move labels to the outer lefft of the line
+                        // Move labels to the outer left of the line (no ident)
                         if (str_dum.Contains(":") && str_dum.Contains("_"))
-                        {
                             str_dum = str_dum.Replace("\t_", "_");
-                        }
+
+                        // Remove accidential doubble idents
                         str_dum = str_dum.Replace("\t\t", "\t");
 
-                        
+                        // Add code line to code
                         body.Append(str_dum);
                     }
                 
                 }
 
+                // return code line
                 return (body.ToString());
             
             }
-            catch { return ("(error while executing code body generation of command '" + command + "')"); }
+            // catch { return ("(error while executing code body generation of command '" + command + "')"); }
         }
+
+        /* *********************************************************************************************
+         * ********************************************************************************************/
 
         private string BuildCodeBlock(string block_name)
         {
@@ -856,7 +922,8 @@ namespace dcld
             return (code_block.ToString());
         }
 
-
+        /* *********************************************************************************************
+         * ********************************************************************************************/
 
         private string BuildCodeBlockLine(string block_name, int line_index, int loop_index = -1)
         {
@@ -1002,4 +1069,6 @@ namespace dcld
             return (code_block.ToString());
         }
     }
+
+
 }
