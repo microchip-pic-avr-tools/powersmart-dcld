@@ -2014,18 +2014,6 @@ namespace dcld
             txtCHeaderPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_head_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
             txtCLibPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_lib_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
 
-
-            //asm_source_buf = ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXProjectDirectory);
-            //c_cource_buf = ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXProjectDirectory);
-            //c_head_buf = ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXProjectDirectory);
-            //c_lib_buf = ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXProjectDirectory);
-
-            //// Make file locations relative
-            //txtASMSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(asm_source_buf, MPLABXProject.MPLABXProjectDirectory));
-            //txtCSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_cource_buf, MPLABXProject.MPLABXProjectDirectory));
-            //txtCHeaderPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_head_buf, MPLABXProject.MPLABXProjectDirectory));
-            //txtCLibPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_lib_buf, MPLABXProject.MPLABXProjectDirectory));
-
             return;
 
         }
@@ -4994,6 +4982,7 @@ namespace dcld
         {
             txtInputGain.Enabled = chkNormalizeInputGain.Checked;
             lblInputGain.Enabled = chkNormalizeInputGain.Checked;
+            cmdGetInputGain.Enabled = chkNormalizeInputGain.Checked;
             UpdateTransferFunction(sender, e);
         }
 
@@ -5111,9 +5100,10 @@ namespace dcld
             { frm.dcldControllerNameLabel = txtControllerNameLabel.Text.Trim(); }
             else { frm.dcldControllerNameLabel = ""; }
 
-            // 
+            // Set option if window should be shown at startup by default
             frm.ShowWinAtStartup = showMPLABXconfigWindowAtStartup;
 
+            // Open Window...
             if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 MPLABXProject = frm.MPLABXProject;
@@ -5167,6 +5157,7 @@ namespace dcld
         {
             OpenProjectConfigWindow();
         }
+
 
         private void picInfo_MouseHover(object sender, EventArgs e)
         {
