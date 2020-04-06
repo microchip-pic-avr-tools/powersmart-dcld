@@ -154,6 +154,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="clsConditionalCode.cs" />
     <Compile Include="clsGlobals.cs" />
     <Compile Include="clsFilePathHandler.cs" />
     <Compile Include="clsMPLABXHandler.cs" />

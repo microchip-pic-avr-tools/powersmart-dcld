@@ -157,32 +157,11 @@
             this.splitContainerContents = new System.Windows.Forms.SplitContainer();
             this.tabConfig = new System.Windows.Forms.TabControl();
             this.tabController = new System.Windows.Forms.TabPage();
-            this.pnlCompensator = new System.Windows.Forms.Panel();
-            this.grpDevelopmentTools = new System.Windows.Forms.GroupBox();
-            this.cmdConfigurePTermControl = new System.Windows.Forms.Button();
-            this.chkEnableDevelopmentTools = new System.Windows.Forms.CheckBox();
-            this.picInfoPTermController = new System.Windows.Forms.PictureBox();
-            this.chkAddPTermLoop = new System.Windows.Forms.CheckBox();
             this.grpAdaptiveGainControl = new System.Windows.Forms.GroupBox();
             this.chkAGCAddGetModFactorFunCall = new System.Windows.Forms.CheckBox();
             this.chkAGCAddEnable = new System.Windows.Forms.CheckBox();
             this.picInfoAGC = new System.Windows.Forms.PictureBox();
             this.chkEnableAdaptiveGainControl = new System.Windows.Forms.CheckBox();
-            this.grpOutputDataNormalization = new System.Windows.Forms.GroupBox();
-            this.cmdGetOutputGain = new System.Windows.Forms.Button();
-            this.chkNormalizeOutputGain = new System.Windows.Forms.CheckBox();
-            this.txtOutputGain = new System.Windows.Forms.TextBox();
-            this.lblOutputGain = new System.Windows.Forms.Label();
-            this.grpInputDataSpecifications = new System.Windows.Forms.GroupBox();
-            this.cmdGetInputGain = new System.Windows.Forms.Button();
-            this.chkFeedbackRectification = new System.Windows.Forms.CheckBox();
-            this.chkBiDirectionalFeedback = new System.Windows.Forms.CheckBox();
-            this.chkNormalizeInputGain = new System.Windows.Forms.CheckBox();
-            this.txtInputDataResolution = new System.Windows.Forms.TextBox();
-            this.txtInputGain = new System.Windows.Forms.TextBox();
-            this.lblInputResolutionUnit = new System.Windows.Forms.Label();
-            this.lblInputGain = new System.Windows.Forms.Label();
-            this.lblInputResolution = new System.Windows.Forms.Label();
             this.grpPolesZeros = new System.Windows.Forms.GroupBox();
             this.txtSamplingFrequency = new System.Windows.Forms.TextBox();
             this.lblFZ1Unit = new System.Windows.Forms.Label();
@@ -220,6 +199,21 @@
             this.lblFZ2 = new System.Windows.Forms.Label();
             this.lblFP0Unit = new System.Windows.Forms.Label();
             this.txtFP2 = new System.Windows.Forms.TextBox();
+            this.grpOutputDataNormalization = new System.Windows.Forms.GroupBox();
+            this.cmdGetOutputGain = new System.Windows.Forms.Button();
+            this.chkNormalizeOutputGain = new System.Windows.Forms.CheckBox();
+            this.txtOutputGain = new System.Windows.Forms.TextBox();
+            this.lblOutputGain = new System.Windows.Forms.Label();
+            this.grpInputDataSpecifications = new System.Windows.Forms.GroupBox();
+            this.cmdGetInputGain = new System.Windows.Forms.Button();
+            this.chkFeedbackRectification = new System.Windows.Forms.CheckBox();
+            this.chkBiDirectionalFeedback = new System.Windows.Forms.CheckBox();
+            this.chkNormalizeInputGain = new System.Windows.Forms.CheckBox();
+            this.txtInputDataResolution = new System.Windows.Forms.TextBox();
+            this.txtInputGain = new System.Windows.Forms.TextBox();
+            this.lblInputResolutionUnit = new System.Windows.Forms.Label();
+            this.lblInputGain = new System.Windows.Forms.Label();
+            this.lblInputResolution = new System.Windows.Forms.Label();
             this.grpControllerSelection = new System.Windows.Forms.GroupBox();
             this.cmbCompType = new System.Windows.Forms.ComboBox();
             this.lblController = new System.Windows.Forms.Label();
@@ -228,7 +222,6 @@
             this.cmbQFormat = new System.Windows.Forms.ComboBox();
             this.lblQFormat = new System.Windows.Forms.Label();
             this.tabSourceCodeConfig = new System.Windows.Forms.TabPage();
-            this.pnlCodeGeneratorOptions = new System.Windows.Forms.Panel();
             this.grpAntiWindup = new System.Windows.Forms.GroupBox();
             this.chkAntiWindupSoftDesaturationFlag = new System.Windows.Forms.CheckBox();
             this.chkAntiWindupMinStatusFlag = new System.Windows.Forms.CheckBox();
@@ -274,6 +267,11 @@
             this.txtControllerNameLabel = new System.Windows.Forms.TextBox();
             this.lblFinalNamePrefixOutput = new System.Windows.Forms.Label();
             this.lblFinalNamePrefix = new System.Windows.Forms.Label();
+            this.tabAdvanced = new System.Windows.Forms.TabPage();
+            this.grpDevelopmentTools = new System.Windows.Forms.GroupBox();
+            this.cmdConfigurePTermControl = new System.Windows.Forms.Button();
+            this.picInfoPTermController = new System.Windows.Forms.PictureBox();
+            this.chkAddPTermLoop = new System.Windows.Forms.CheckBox();
             this.tabAnalysis = new System.Windows.Forms.TabControl();
             this.tabPageBode = new System.Windows.Forms.TabPage();
             this.splitContainerCoefficients = new System.Windows.Forms.SplitContainer();
@@ -510,17 +508,13 @@
             this.splitContainerContents.SuspendLayout();
             this.tabConfig.SuspendLayout();
             this.tabController.SuspendLayout();
-            this.pnlCompensator.SuspendLayout();
-            this.grpDevelopmentTools.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picInfoPTermController)).BeginInit();
             this.grpAdaptiveGainControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).BeginInit();
+            this.grpPolesZeros.SuspendLayout();
             this.grpOutputDataNormalization.SuspendLayout();
             this.grpInputDataSpecifications.SuspendLayout();
-            this.grpPolesZeros.SuspendLayout();
             this.grpControllerSelection.SuspendLayout();
             this.tabSourceCodeConfig.SuspendLayout();
-            this.pnlCodeGeneratorOptions.SuspendLayout();
             this.grpAntiWindup.SuspendLayout();
             this.grpDataProviderSources.SuspendLayout();
             this.grpCodeFeatureDataIO.SuspendLayout();
@@ -531,6 +525,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.picInfoDSPConfig)).BeginInit();
             this.grpContextManagement.SuspendLayout();
             this.grpFunctionLabel.SuspendLayout();
+            this.tabAdvanced.SuspendLayout();
+            this.grpDevelopmentTools.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoPTermController)).BeginInit();
             this.tabAnalysis.SuspendLayout();
             this.tabPageBode.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerCoefficients)).BeginInit();
@@ -1054,6 +1051,7 @@
             // 
             this.tabConfig.Controls.Add(this.tabController);
             this.tabConfig.Controls.Add(this.tabSourceCodeConfig);
+            this.tabConfig.Controls.Add(this.tabAdvanced);
             this.tabConfig.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabConfig.Location = new System.Drawing.Point(0, 0);
             this.tabConfig.Name = "tabConfig";
@@ -1063,7 +1061,12 @@
             // 
             // tabController
             // 
-            this.tabController.Controls.Add(this.pnlCompensator);
+            this.tabController.AutoScroll = true;
+            this.tabController.Controls.Add(this.grpAdaptiveGainControl);
+            this.tabController.Controls.Add(this.grpPolesZeros);
+            this.tabController.Controls.Add(this.grpOutputDataNormalization);
+            this.tabController.Controls.Add(this.grpInputDataSpecifications);
+            this.tabController.Controls.Add(this.grpControllerSelection);
             this.tabController.Location = new System.Drawing.Point(4, 24);
             this.tabController.Name = "tabController";
             this.tabController.Padding = new System.Windows.Forms.Padding(3);
@@ -1072,80 +1075,6 @@
             this.tabController.Text = "Controller";
             this.tabController.UseVisualStyleBackColor = true;
             // 
-            // pnlCompensator
-            // 
-            this.pnlCompensator.AutoScroll = true;
-            this.pnlCompensator.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pnlCompensator.Controls.Add(this.grpDevelopmentTools);
-            this.pnlCompensator.Controls.Add(this.grpAdaptiveGainControl);
-            this.pnlCompensator.Controls.Add(this.grpOutputDataNormalization);
-            this.pnlCompensator.Controls.Add(this.grpInputDataSpecifications);
-            this.pnlCompensator.Controls.Add(this.grpPolesZeros);
-            this.pnlCompensator.Controls.Add(this.grpControllerSelection);
-            this.pnlCompensator.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlCompensator.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pnlCompensator.Location = new System.Drawing.Point(3, 3);
-            this.pnlCompensator.Name = "pnlCompensator";
-            this.pnlCompensator.Size = new System.Drawing.Size(422, 737);
-            this.pnlCompensator.TabIndex = 18;
-            // 
-            // grpDevelopmentTools
-            // 
-            this.grpDevelopmentTools.Controls.Add(this.cmdConfigurePTermControl);
-            this.grpDevelopmentTools.Controls.Add(this.chkEnableDevelopmentTools);
-            this.grpDevelopmentTools.Controls.Add(this.picInfoPTermController);
-            this.grpDevelopmentTools.Controls.Add(this.chkAddPTermLoop);
-            this.grpDevelopmentTools.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpDevelopmentTools.Location = new System.Drawing.Point(0, 689);
-            this.grpDevelopmentTools.Name = "grpDevelopmentTools";
-            this.grpDevelopmentTools.Size = new System.Drawing.Size(405, 96);
-            this.grpDevelopmentTools.TabIndex = 10;
-            this.grpDevelopmentTools.TabStop = false;
-            // 
-            // cmdConfigurePTermControl
-            // 
-            this.cmdConfigurePTermControl.Location = new System.Drawing.Point(251, 57);
-            this.cmdConfigurePTermControl.Name = "cmdConfigurePTermControl";
-            this.cmdConfigurePTermControl.Size = new System.Drawing.Size(80, 23);
-            this.cmdConfigurePTermControl.TabIndex = 75;
-            this.cmdConfigurePTermControl.Text = "&Configure...";
-            this.cmdConfigurePTermControl.UseVisualStyleBackColor = true;
-            // 
-            // chkEnableDevelopmentTools
-            // 
-            this.chkEnableDevelopmentTools.AutoSize = true;
-            this.chkEnableDevelopmentTools.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkEnableDevelopmentTools.Location = new System.Drawing.Point(10, 0);
-            this.chkEnableDevelopmentTools.Name = "chkEnableDevelopmentTools";
-            this.chkEnableDevelopmentTools.Size = new System.Drawing.Size(199, 19);
-            this.chkEnableDevelopmentTools.TabIndex = 74;
-            this.chkEnableDevelopmentTools.Text = "Enable Development Extensions";
-            this.chkEnableDevelopmentTools.UseVisualStyleBackColor = true;
-            // 
-            // picInfoPTermController
-            // 
-            this.picInfoPTermController.Image = ((System.Drawing.Image)(resources.GetObject("picInfoPTermController.Image")));
-            this.picInfoPTermController.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoPTermController.InitialImage")));
-            this.picInfoPTermController.Location = new System.Drawing.Point(346, 31);
-            this.picInfoPTermController.Name = "picInfoPTermController";
-            this.picInfoPTermController.Size = new System.Drawing.Size(16, 16);
-            this.picInfoPTermController.TabIndex = 73;
-            this.picInfoPTermController.TabStop = false;
-            this.picInfoPTermController.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
-            // 
-            // chkAddPTermLoop
-            // 
-            this.chkAddPTermLoop.AutoSize = true;
-            this.chkAddPTermLoop.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddPTermLoop.Location = new System.Drawing.Point(30, 31);
-            this.chkAddPTermLoop.Name = "chkAddPTermLoop";
-            this.chkAddPTermLoop.Size = new System.Drawing.Size(309, 19);
-            this.chkAddPTermLoop.TabIndex = 10;
-            this.chkAddPTermLoop.Tag = "pterm_enable";
-            this.chkAddPTermLoop.Text = "Use P-Term Loop Controller for Plant Measurements";
-            this.chkAddPTermLoop.UseVisualStyleBackColor = true;
-            this.chkAddPTermLoop.CheckedChanged += new System.EventHandler(this.chkAddPTermLoop_CheckedChanged);
-            // 
             // grpAdaptiveGainControl
             // 
             this.grpAdaptiveGainControl.Controls.Add(this.chkAGCAddGetModFactorFunCall);
@@ -1153,9 +1082,9 @@
             this.grpAdaptiveGainControl.Controls.Add(this.picInfoAGC);
             this.grpAdaptiveGainControl.Controls.Add(this.chkEnableAdaptiveGainControl);
             this.grpAdaptiveGainControl.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpAdaptiveGainControl.Location = new System.Drawing.Point(0, 610);
+            this.grpAdaptiveGainControl.Location = new System.Drawing.Point(3, 613);
             this.grpAdaptiveGainControl.Name = "grpAdaptiveGainControl";
-            this.grpAdaptiveGainControl.Size = new System.Drawing.Size(405, 79);
+            this.grpAdaptiveGainControl.Size = new System.Drawing.Size(422, 79);
             this.grpAdaptiveGainControl.TabIndex = 9;
             this.grpAdaptiveGainControl.TabStop = false;
             // 
@@ -1167,6 +1096,7 @@
             this.chkAGCAddGetModFactorFunCall.Name = "chkAGCAddGetModFactorFunCall";
             this.chkAGCAddGetModFactorFunCall.Size = new System.Drawing.Size(254, 19);
             this.chkAGCAddGetModFactorFunCall.TabIndex = 10;
+            this.chkAGCAddGetModFactorFunCall.Tag = "agc_get_factor_function_call\r\n";
             this.chkAGCAddGetModFactorFunCall.Text = "Add \'Get Modulation Factor\' Function Call";
             this.chkAGCAddGetModFactorFunCall.UseVisualStyleBackColor = true;
             this.chkAGCAddGetModFactorFunCall.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -1177,9 +1107,10 @@
             this.chkAGCAddEnable.Enabled = false;
             this.chkAGCAddEnable.Location = new System.Drawing.Point(36, 25);
             this.chkAGCAddEnable.Name = "chkAGCAddEnable";
-            this.chkAGCAddEnable.Size = new System.Drawing.Size(178, 19);
+            this.chkAGCAddEnable.Size = new System.Drawing.Size(257, 19);
             this.chkAGCAddEnable.TabIndex = 9;
-            this.chkAGCAddEnable.Text = "Add Enable/Disable Control";
+            this.chkAGCAddEnable.Tag = "agc_enable_switch\r\n";
+            this.chkAGCAddEnable.Text = "Add Enable/Disable Adaptive Gain Control";
             this.chkAGCAddEnable.UseVisualStyleBackColor = true;
             this.chkAGCAddEnable.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
@@ -1202,200 +1133,10 @@
             this.chkEnableAdaptiveGainControl.Name = "chkEnableAdaptiveGainControl";
             this.chkEnableAdaptiveGainControl.Size = new System.Drawing.Size(188, 19);
             this.chkEnableAdaptiveGainControl.TabIndex = 8;
+            this.chkEnableAdaptiveGainControl.Tag = "agc_enable";
             this.chkEnableAdaptiveGainControl.Text = "Enable Loop &Gain Modulation";
             this.chkEnableAdaptiveGainControl.UseVisualStyleBackColor = false;
             this.chkEnableAdaptiveGainControl.CheckedChanged += new System.EventHandler(this.chkEnableAdaptiveGainControl_CheckedChanged);
-            // 
-            // grpOutputDataNormalization
-            // 
-            this.grpOutputDataNormalization.Controls.Add(this.cmdGetOutputGain);
-            this.grpOutputDataNormalization.Controls.Add(this.chkNormalizeOutputGain);
-            this.grpOutputDataNormalization.Controls.Add(this.txtOutputGain);
-            this.grpOutputDataNormalization.Controls.Add(this.lblOutputGain);
-            this.grpOutputDataNormalization.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpOutputDataNormalization.Enabled = false;
-            this.grpOutputDataNormalization.Location = new System.Drawing.Point(0, 537);
-            this.grpOutputDataNormalization.Name = "grpOutputDataNormalization";
-            this.grpOutputDataNormalization.Size = new System.Drawing.Size(405, 73);
-            this.grpOutputDataNormalization.TabIndex = 3;
-            this.grpOutputDataNormalization.TabStop = false;
-            this.grpOutputDataNormalization.Visible = false;
-            // 
-            // cmdGetOutputGain
-            // 
-            this.cmdGetOutputGain.Enabled = false;
-            this.cmdGetOutputGain.Image = global::dcld.Properties.Resources.calculate;
-            this.cmdGetOutputGain.Location = new System.Drawing.Point(379, 25);
-            this.cmdGetOutputGain.Name = "cmdGetOutputGain";
-            this.cmdGetOutputGain.Size = new System.Drawing.Size(24, 24);
-            this.cmdGetOutputGain.TabIndex = 3;
-            this.cmdGetOutputGain.UseVisualStyleBackColor = true;
-            this.cmdGetOutputGain.Click += new System.EventHandler(this.cmdGetOutputGain_Click);
-            // 
-            // chkNormalizeOutputGain
-            // 
-            this.chkNormalizeOutputGain.AutoSize = true;
-            this.chkNormalizeOutputGain.BackColor = System.Drawing.SystemColors.Window;
-            this.chkNormalizeOutputGain.Enabled = false;
-            this.chkNormalizeOutputGain.Location = new System.Drawing.Point(10, 0);
-            this.chkNormalizeOutputGain.Name = "chkNormalizeOutputGain";
-            this.chkNormalizeOutputGain.Size = new System.Drawing.Size(152, 19);
-            this.chkNormalizeOutputGain.TabIndex = 0;
-            this.chkNormalizeOutputGain.Text = "&Normalize Output Gain";
-            this.chkNormalizeOutputGain.UseVisualStyleBackColor = false;
-            this.chkNormalizeOutputGain.CheckedChanged += new System.EventHandler(this.chkNormalizeOutputGain_CheckedChanged);
-            // 
-            // txtOutputGain
-            // 
-            this.txtOutputGain.Enabled = false;
-            this.txtOutputGain.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtOutputGain.Location = new System.Drawing.Point(233, 26);
-            this.txtOutputGain.Name = "txtOutputGain";
-            this.txtOutputGain.Size = new System.Drawing.Size(144, 22);
-            this.txtOutputGain.TabIndex = 2;
-            this.txtOutputGain.Text = "1.000";
-            this.txtOutputGain.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtOutputGain.WordWrap = false;
-            this.txtOutputGain.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
-            this.txtOutputGain.Enter += new System.EventHandler(this.NumberTextBox_Enter);
-            this.txtOutputGain.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
-            // 
-            // lblOutputGain
-            // 
-            this.lblOutputGain.AutoSize = true;
-            this.lblOutputGain.Enabled = false;
-            this.lblOutputGain.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblOutputGain.Location = new System.Drawing.Point(150, 29);
-            this.lblOutputGain.Name = "lblOutputGain";
-            this.lblOutputGain.Size = new System.Drawing.Size(77, 15);
-            this.lblOutputGain.TabIndex = 1;
-            this.lblOutputGain.Text = "Output Gain:";
-            this.lblOutputGain.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // grpInputDataSpecifications
-            // 
-            this.grpInputDataSpecifications.Controls.Add(this.cmdGetInputGain);
-            this.grpInputDataSpecifications.Controls.Add(this.chkFeedbackRectification);
-            this.grpInputDataSpecifications.Controls.Add(this.chkBiDirectionalFeedback);
-            this.grpInputDataSpecifications.Controls.Add(this.chkNormalizeInputGain);
-            this.grpInputDataSpecifications.Controls.Add(this.txtInputDataResolution);
-            this.grpInputDataSpecifications.Controls.Add(this.txtInputGain);
-            this.grpInputDataSpecifications.Controls.Add(this.lblInputResolutionUnit);
-            this.grpInputDataSpecifications.Controls.Add(this.lblInputGain);
-            this.grpInputDataSpecifications.Controls.Add(this.lblInputResolution);
-            this.grpInputDataSpecifications.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpInputDataSpecifications.Location = new System.Drawing.Point(0, 388);
-            this.grpInputDataSpecifications.Name = "grpInputDataSpecifications";
-            this.grpInputDataSpecifications.Size = new System.Drawing.Size(405, 149);
-            this.grpInputDataSpecifications.TabIndex = 2;
-            this.grpInputDataSpecifications.TabStop = false;
-            // 
-            // cmdGetInputGain
-            // 
-            this.cmdGetInputGain.Image = global::dcld.Properties.Resources.calculate;
-            this.cmdGetInputGain.Location = new System.Drawing.Point(379, 49);
-            this.cmdGetInputGain.Name = "cmdGetInputGain";
-            this.cmdGetInputGain.Size = new System.Drawing.Size(24, 24);
-            this.cmdGetInputGain.TabIndex = 5;
-            this.cmdGetInputGain.UseVisualStyleBackColor = true;
-            this.cmdGetInputGain.Click += new System.EventHandler(this.cmdGetInputGain_Click);
-            // 
-            // chkFeedbackRectification
-            // 
-            this.chkFeedbackRectification.AutoSize = true;
-            this.chkFeedbackRectification.Enabled = false;
-            this.chkFeedbackRectification.Location = new System.Drawing.Point(42, 114);
-            this.chkFeedbackRectification.Name = "chkFeedbackRectification";
-            this.chkFeedbackRectification.Size = new System.Drawing.Size(214, 19);
-            this.chkFeedbackRectification.TabIndex = 48;
-            this.chkFeedbackRectification.Text = "Enable Singal &Rectification Control";
-            this.chkFeedbackRectification.UseVisualStyleBackColor = true;
-            this.chkFeedbackRectification.CheckedChanged += new System.EventHandler(this.UpdateTransferFunction);
-            // 
-            // chkBiDirectionalFeedback
-            // 
-            this.chkBiDirectionalFeedback.AutoSize = true;
-            this.chkBiDirectionalFeedback.Location = new System.Drawing.Point(25, 89);
-            this.chkBiDirectionalFeedback.Name = "chkBiDirectionalFeedback";
-            this.chkBiDirectionalFeedback.Size = new System.Drawing.Size(331, 19);
-            this.chkBiDirectionalFeedback.TabIndex = 6;
-            this.chkBiDirectionalFeedback.Text = "Feedback Offset Compensation/&Bi-directional Feedback ";
-            this.chkBiDirectionalFeedback.UseVisualStyleBackColor = true;
-            this.chkBiDirectionalFeedback.CheckedChanged += new System.EventHandler(this.chkBiDirectionalFeedback_CheckedChanged);
-            // 
-            // chkNormalizeInputGain
-            // 
-            this.chkNormalizeInputGain.AutoSize = true;
-            this.chkNormalizeInputGain.BackColor = System.Drawing.SystemColors.Window;
-            this.chkNormalizeInputGain.Checked = true;
-            this.chkNormalizeInputGain.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkNormalizeInputGain.Location = new System.Drawing.Point(10, 0);
-            this.chkNormalizeInputGain.Name = "chkNormalizeInputGain";
-            this.chkNormalizeInputGain.Size = new System.Drawing.Size(143, 19);
-            this.chkNormalizeInputGain.TabIndex = 0;
-            this.chkNormalizeInputGain.Text = "&Normalize Input Gain";
-            this.chkNormalizeInputGain.UseVisualStyleBackColor = false;
-            this.chkNormalizeInputGain.CheckedChanged += new System.EventHandler(this.chkNormalizeInputGain_CheckedChanged);
-            // 
-            // txtInputDataResolution
-            // 
-            this.txtInputDataResolution.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtInputDataResolution.Location = new System.Drawing.Point(233, 22);
-            this.txtInputDataResolution.Name = "txtInputDataResolution";
-            this.txtInputDataResolution.Size = new System.Drawing.Size(144, 22);
-            this.txtInputDataResolution.TabIndex = 2;
-            this.txtInputDataResolution.Text = "12";
-            this.txtInputDataResolution.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtInputDataResolution.WordWrap = false;
-            this.txtInputDataResolution.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
-            this.txtInputDataResolution.Enter += new System.EventHandler(this.NumberTextBox_Enter);
-            this.txtInputDataResolution.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
-            // 
-            // txtInputGain
-            // 
-            this.txtInputGain.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtInputGain.Location = new System.Drawing.Point(233, 50);
-            this.txtInputGain.Name = "txtInputGain";
-            this.txtInputGain.Size = new System.Drawing.Size(144, 22);
-            this.txtInputGain.TabIndex = 4;
-            this.txtInputGain.Text = "1.000";
-            this.txtInputGain.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtInputGain.WordWrap = false;
-            this.txtInputGain.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
-            this.txtInputGain.Enter += new System.EventHandler(this.NumberTextBox_Enter);
-            this.txtInputGain.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
-            // 
-            // lblInputResolutionUnit
-            // 
-            this.lblInputResolutionUnit.AutoSize = true;
-            this.lblInputResolutionUnit.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInputResolutionUnit.Location = new System.Drawing.Point(381, 25);
-            this.lblInputResolutionUnit.Name = "lblInputResolutionUnit";
-            this.lblInputResolutionUnit.Size = new System.Drawing.Size(22, 15);
-            this.lblInputResolutionUnit.TabIndex = 41;
-            this.lblInputResolutionUnit.Text = "Bit";
-            // 
-            // lblInputGain
-            // 
-            this.lblInputGain.AutoSize = true;
-            this.lblInputGain.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInputGain.Location = new System.Drawing.Point(122, 50);
-            this.lblInputGain.Name = "lblInputGain";
-            this.lblInputGain.Size = new System.Drawing.Size(105, 15);
-            this.lblInputGain.TabIndex = 3;
-            this.lblInputGain.Text = "Input Signal Gain:";
-            this.lblInputGain.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // lblInputResolution
-            // 
-            this.lblInputResolution.AutoSize = true;
-            this.lblInputResolution.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInputResolution.Location = new System.Drawing.Point(22, 25);
-            this.lblInputResolution.Name = "lblInputResolution";
-            this.lblInputResolution.Size = new System.Drawing.Size(205, 15);
-            this.lblInputResolution.TabIndex = 1;
-            this.lblInputResolution.Text = "Total Input Data Length (Resolution):";
-            this.lblInputResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // grpPolesZeros
             // 
@@ -1436,9 +1177,9 @@
             this.grpPolesZeros.Controls.Add(this.lblFP0Unit);
             this.grpPolesZeros.Controls.Add(this.txtFP2);
             this.grpPolesZeros.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpPolesZeros.Location = new System.Drawing.Point(0, 126);
+            this.grpPolesZeros.Location = new System.Drawing.Point(3, 351);
             this.grpPolesZeros.Name = "grpPolesZeros";
-            this.grpPolesZeros.Size = new System.Drawing.Size(405, 262);
+            this.grpPolesZeros.Size = new System.Drawing.Size(422, 262);
             this.grpPolesZeros.TabIndex = 4;
             this.grpPolesZeros.TabStop = false;
             this.grpPolesZeros.Text = "Compensation Settings";
@@ -1863,6 +1604,200 @@
             this.txtFP2.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtFP2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
+            // grpOutputDataNormalization
+            // 
+            this.grpOutputDataNormalization.Controls.Add(this.cmdGetOutputGain);
+            this.grpOutputDataNormalization.Controls.Add(this.chkNormalizeOutputGain);
+            this.grpOutputDataNormalization.Controls.Add(this.txtOutputGain);
+            this.grpOutputDataNormalization.Controls.Add(this.lblOutputGain);
+            this.grpOutputDataNormalization.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpOutputDataNormalization.Enabled = false;
+            this.grpOutputDataNormalization.Location = new System.Drawing.Point(3, 278);
+            this.grpOutputDataNormalization.Name = "grpOutputDataNormalization";
+            this.grpOutputDataNormalization.Size = new System.Drawing.Size(422, 73);
+            this.grpOutputDataNormalization.TabIndex = 3;
+            this.grpOutputDataNormalization.TabStop = false;
+            this.grpOutputDataNormalization.Visible = false;
+            // 
+            // cmdGetOutputGain
+            // 
+            this.cmdGetOutputGain.Enabled = false;
+            this.cmdGetOutputGain.Image = global::dcld.Properties.Resources.calculate;
+            this.cmdGetOutputGain.Location = new System.Drawing.Point(379, 25);
+            this.cmdGetOutputGain.Name = "cmdGetOutputGain";
+            this.cmdGetOutputGain.Size = new System.Drawing.Size(24, 24);
+            this.cmdGetOutputGain.TabIndex = 3;
+            this.cmdGetOutputGain.UseVisualStyleBackColor = true;
+            this.cmdGetOutputGain.Click += new System.EventHandler(this.cmdGetOutputGain_Click);
+            // 
+            // chkNormalizeOutputGain
+            // 
+            this.chkNormalizeOutputGain.AutoSize = true;
+            this.chkNormalizeOutputGain.BackColor = System.Drawing.SystemColors.Window;
+            this.chkNormalizeOutputGain.Enabled = false;
+            this.chkNormalizeOutputGain.Location = new System.Drawing.Point(10, 0);
+            this.chkNormalizeOutputGain.Name = "chkNormalizeOutputGain";
+            this.chkNormalizeOutputGain.Size = new System.Drawing.Size(152, 19);
+            this.chkNormalizeOutputGain.TabIndex = 0;
+            this.chkNormalizeOutputGain.Text = "&Normalize Output Gain";
+            this.chkNormalizeOutputGain.UseVisualStyleBackColor = false;
+            this.chkNormalizeOutputGain.CheckedChanged += new System.EventHandler(this.chkNormalizeOutputGain_CheckedChanged);
+            // 
+            // txtOutputGain
+            // 
+            this.txtOutputGain.Enabled = false;
+            this.txtOutputGain.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtOutputGain.Location = new System.Drawing.Point(233, 26);
+            this.txtOutputGain.Name = "txtOutputGain";
+            this.txtOutputGain.Size = new System.Drawing.Size(144, 22);
+            this.txtOutputGain.TabIndex = 2;
+            this.txtOutputGain.Text = "1.000";
+            this.txtOutputGain.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtOutputGain.WordWrap = false;
+            this.txtOutputGain.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtOutputGain.Enter += new System.EventHandler(this.NumberTextBox_Enter);
+            this.txtOutputGain.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
+            // 
+            // lblOutputGain
+            // 
+            this.lblOutputGain.AutoSize = true;
+            this.lblOutputGain.Enabled = false;
+            this.lblOutputGain.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOutputGain.Location = new System.Drawing.Point(150, 29);
+            this.lblOutputGain.Name = "lblOutputGain";
+            this.lblOutputGain.Size = new System.Drawing.Size(77, 15);
+            this.lblOutputGain.TabIndex = 1;
+            this.lblOutputGain.Text = "Output Gain:";
+            this.lblOutputGain.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // grpInputDataSpecifications
+            // 
+            this.grpInputDataSpecifications.Controls.Add(this.cmdGetInputGain);
+            this.grpInputDataSpecifications.Controls.Add(this.chkFeedbackRectification);
+            this.grpInputDataSpecifications.Controls.Add(this.chkBiDirectionalFeedback);
+            this.grpInputDataSpecifications.Controls.Add(this.chkNormalizeInputGain);
+            this.grpInputDataSpecifications.Controls.Add(this.txtInputDataResolution);
+            this.grpInputDataSpecifications.Controls.Add(this.txtInputGain);
+            this.grpInputDataSpecifications.Controls.Add(this.lblInputResolutionUnit);
+            this.grpInputDataSpecifications.Controls.Add(this.lblInputGain);
+            this.grpInputDataSpecifications.Controls.Add(this.lblInputResolution);
+            this.grpInputDataSpecifications.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpInputDataSpecifications.Location = new System.Drawing.Point(3, 129);
+            this.grpInputDataSpecifications.Name = "grpInputDataSpecifications";
+            this.grpInputDataSpecifications.Size = new System.Drawing.Size(422, 149);
+            this.grpInputDataSpecifications.TabIndex = 2;
+            this.grpInputDataSpecifications.TabStop = false;
+            // 
+            // cmdGetInputGain
+            // 
+            this.cmdGetInputGain.Image = global::dcld.Properties.Resources.calculate;
+            this.cmdGetInputGain.Location = new System.Drawing.Point(379, 49);
+            this.cmdGetInputGain.Name = "cmdGetInputGain";
+            this.cmdGetInputGain.Size = new System.Drawing.Size(24, 24);
+            this.cmdGetInputGain.TabIndex = 5;
+            this.cmdGetInputGain.UseVisualStyleBackColor = true;
+            this.cmdGetInputGain.Click += new System.EventHandler(this.cmdGetInputGain_Click);
+            // 
+            // chkFeedbackRectification
+            // 
+            this.chkFeedbackRectification.AutoSize = true;
+            this.chkFeedbackRectification.Enabled = false;
+            this.chkFeedbackRectification.Location = new System.Drawing.Point(42, 114);
+            this.chkFeedbackRectification.Name = "chkFeedbackRectification";
+            this.chkFeedbackRectification.Size = new System.Drawing.Size(214, 19);
+            this.chkFeedbackRectification.TabIndex = 48;
+            this.chkFeedbackRectification.Tag = "bi_directional_feedback_flag";
+            this.chkFeedbackRectification.Text = "Enable Singal &Rectification Control";
+            this.chkFeedbackRectification.UseVisualStyleBackColor = true;
+            this.chkFeedbackRectification.CheckedChanged += new System.EventHandler(this.UpdateTransferFunction);
+            // 
+            // chkBiDirectionalFeedback
+            // 
+            this.chkBiDirectionalFeedback.AutoSize = true;
+            this.chkBiDirectionalFeedback.Location = new System.Drawing.Point(25, 89);
+            this.chkBiDirectionalFeedback.Name = "chkBiDirectionalFeedback";
+            this.chkBiDirectionalFeedback.Size = new System.Drawing.Size(331, 19);
+            this.chkBiDirectionalFeedback.TabIndex = 6;
+            this.chkBiDirectionalFeedback.Tag = "feedback_offset_compensation";
+            this.chkBiDirectionalFeedback.Text = "Feedback Offset Compensation/&Bi-directional Feedback ";
+            this.chkBiDirectionalFeedback.UseVisualStyleBackColor = true;
+            this.chkBiDirectionalFeedback.CheckedChanged += new System.EventHandler(this.chkBiDirectionalFeedback_CheckedChanged);
+            // 
+            // chkNormalizeInputGain
+            // 
+            this.chkNormalizeInputGain.AutoSize = true;
+            this.chkNormalizeInputGain.BackColor = System.Drawing.SystemColors.Window;
+            this.chkNormalizeInputGain.Checked = true;
+            this.chkNormalizeInputGain.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkNormalizeInputGain.Location = new System.Drawing.Point(10, 0);
+            this.chkNormalizeInputGain.Name = "chkNormalizeInputGain";
+            this.chkNormalizeInputGain.Size = new System.Drawing.Size(143, 19);
+            this.chkNormalizeInputGain.TabIndex = 0;
+            this.chkNormalizeInputGain.Tag = "feedback_conditioning_enable";
+            this.chkNormalizeInputGain.Text = "&Normalize Input Gain";
+            this.chkNormalizeInputGain.UseVisualStyleBackColor = false;
+            this.chkNormalizeInputGain.CheckedChanged += new System.EventHandler(this.chkNormalizeInputGain_CheckedChanged);
+            // 
+            // txtInputDataResolution
+            // 
+            this.txtInputDataResolution.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtInputDataResolution.Location = new System.Drawing.Point(233, 22);
+            this.txtInputDataResolution.Name = "txtInputDataResolution";
+            this.txtInputDataResolution.Size = new System.Drawing.Size(144, 22);
+            this.txtInputDataResolution.TabIndex = 2;
+            this.txtInputDataResolution.Text = "12";
+            this.txtInputDataResolution.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtInputDataResolution.WordWrap = false;
+            this.txtInputDataResolution.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtInputDataResolution.Enter += new System.EventHandler(this.NumberTextBox_Enter);
+            this.txtInputDataResolution.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
+            // 
+            // txtInputGain
+            // 
+            this.txtInputGain.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtInputGain.Location = new System.Drawing.Point(233, 50);
+            this.txtInputGain.Name = "txtInputGain";
+            this.txtInputGain.Size = new System.Drawing.Size(144, 22);
+            this.txtInputGain.TabIndex = 4;
+            this.txtInputGain.Text = "1.000";
+            this.txtInputGain.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtInputGain.WordWrap = false;
+            this.txtInputGain.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtInputGain.Enter += new System.EventHandler(this.NumberTextBox_Enter);
+            this.txtInputGain.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
+            // 
+            // lblInputResolutionUnit
+            // 
+            this.lblInputResolutionUnit.AutoSize = true;
+            this.lblInputResolutionUnit.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblInputResolutionUnit.Location = new System.Drawing.Point(381, 25);
+            this.lblInputResolutionUnit.Name = "lblInputResolutionUnit";
+            this.lblInputResolutionUnit.Size = new System.Drawing.Size(22, 15);
+            this.lblInputResolutionUnit.TabIndex = 41;
+            this.lblInputResolutionUnit.Text = "Bit";
+            // 
+            // lblInputGain
+            // 
+            this.lblInputGain.AutoSize = true;
+            this.lblInputGain.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblInputGain.Location = new System.Drawing.Point(122, 50);
+            this.lblInputGain.Name = "lblInputGain";
+            this.lblInputGain.Size = new System.Drawing.Size(105, 15);
+            this.lblInputGain.TabIndex = 3;
+            this.lblInputGain.Text = "Input Signal Gain:";
+            this.lblInputGain.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lblInputResolution
+            // 
+            this.lblInputResolution.AutoSize = true;
+            this.lblInputResolution.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblInputResolution.Location = new System.Drawing.Point(22, 25);
+            this.lblInputResolution.Name = "lblInputResolution";
+            this.lblInputResolution.Size = new System.Drawing.Size(205, 15);
+            this.lblInputResolution.TabIndex = 1;
+            this.lblInputResolution.Text = "Total Input Data Length (Resolution):";
+            this.lblInputResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // grpControllerSelection
             // 
             this.grpControllerSelection.Controls.Add(this.cmbCompType);
@@ -1872,9 +1807,9 @@
             this.grpControllerSelection.Controls.Add(this.cmbQFormat);
             this.grpControllerSelection.Controls.Add(this.lblQFormat);
             this.grpControllerSelection.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpControllerSelection.Location = new System.Drawing.Point(0, 0);
+            this.grpControllerSelection.Location = new System.Drawing.Point(3, 3);
             this.grpControllerSelection.Name = "grpControllerSelection";
-            this.grpControllerSelection.Size = new System.Drawing.Size(405, 126);
+            this.grpControllerSelection.Size = new System.Drawing.Size(422, 126);
             this.grpControllerSelection.TabIndex = 1;
             this.grpControllerSelection.TabStop = false;
             this.grpControllerSelection.Text = "Controller Selection";
@@ -1967,31 +1902,20 @@
             // 
             // tabSourceCodeConfig
             // 
-            this.tabSourceCodeConfig.Controls.Add(this.pnlCodeGeneratorOptions);
-            this.tabSourceCodeConfig.Location = new System.Drawing.Point(4, 22);
+            this.tabSourceCodeConfig.AutoScroll = true;
+            this.tabSourceCodeConfig.Controls.Add(this.grpAntiWindup);
+            this.tabSourceCodeConfig.Controls.Add(this.grpDataProviderSources);
+            this.tabSourceCodeConfig.Controls.Add(this.grpCodeFeatureDataIO);
+            this.tabSourceCodeConfig.Controls.Add(this.grpCodeFeatureOptions);
+            this.tabSourceCodeConfig.Controls.Add(this.grpContextManagement);
+            this.tabSourceCodeConfig.Controls.Add(this.grpFunctionLabel);
+            this.tabSourceCodeConfig.Location = new System.Drawing.Point(4, 24);
             this.tabSourceCodeConfig.Name = "tabSourceCodeConfig";
             this.tabSourceCodeConfig.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 745);
+            this.tabSourceCodeConfig.Size = new System.Drawing.Size(428, 743);
             this.tabSourceCodeConfig.TabIndex = 1;
             this.tabSourceCodeConfig.Text = "Source Code Configuration";
             this.tabSourceCodeConfig.UseVisualStyleBackColor = true;
-            // 
-            // pnlCodeGeneratorOptions
-            // 
-            this.pnlCodeGeneratorOptions.AutoScroll = true;
-            this.pnlCodeGeneratorOptions.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pnlCodeGeneratorOptions.Controls.Add(this.grpAntiWindup);
-            this.pnlCodeGeneratorOptions.Controls.Add(this.grpDataProviderSources);
-            this.pnlCodeGeneratorOptions.Controls.Add(this.grpCodeFeatureDataIO);
-            this.pnlCodeGeneratorOptions.Controls.Add(this.grpCodeFeatureOptions);
-            this.pnlCodeGeneratorOptions.Controls.Add(this.grpContextManagement);
-            this.pnlCodeGeneratorOptions.Controls.Add(this.grpFunctionLabel);
-            this.pnlCodeGeneratorOptions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlCodeGeneratorOptions.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pnlCodeGeneratorOptions.Location = new System.Drawing.Point(3, 3);
-            this.pnlCodeGeneratorOptions.Name = "pnlCodeGeneratorOptions";
-            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 739);
-            this.pnlCodeGeneratorOptions.TabIndex = 19;
             // 
             // grpAntiWindup
             // 
@@ -2001,7 +1925,8 @@
             this.grpAntiWindup.Controls.Add(this.chkAntiWindupClampMin);
             this.grpAntiWindup.Controls.Add(this.chkAntiWindupClampMax);
             this.grpAntiWindup.Controls.Add(this.chkAntiWindup);
-            this.grpAntiWindup.Location = new System.Drawing.Point(6, 200);
+            this.grpAntiWindup.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpAntiWindup.Location = new System.Drawing.Point(3, 735);
             this.grpAntiWindup.Name = "grpAntiWindup";
             this.grpAntiWindup.Size = new System.Drawing.Size(405, 157);
             this.grpAntiWindup.TabIndex = 6;
@@ -2015,6 +1940,7 @@
             this.chkAntiWindupSoftDesaturationFlag.Name = "chkAntiWindupSoftDesaturationFlag";
             this.chkAntiWindupSoftDesaturationFlag.Size = new System.Drawing.Size(227, 19);
             this.chkAntiWindupSoftDesaturationFlag.TabIndex = 5;
+            this.chkAntiWindupSoftDesaturationFlag.Tag = "anti_windup_soft_desat_flag";
             this.chkAntiWindupSoftDesaturationFlag.Text = "Use S&oft Desaturation (experimental)";
             this.chkAntiWindupSoftDesaturationFlag.UseVisualStyleBackColor = true;
             this.chkAntiWindupSoftDesaturationFlag.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2027,6 +1953,7 @@
             this.chkAntiWindupMinStatusFlag.Name = "chkAntiWindupMinStatusFlag";
             this.chkAntiWindupMinStatusFlag.Size = new System.Drawing.Size(251, 19);
             this.chkAntiWindupMinStatusFlag.TabIndex = 4;
+            this.chkAntiWindupMinStatusFlag.Tag = "anti_windup_min_status_flag";
             this.chkAntiWindupMinStatusFlag.Text = "Generate &Lower Saturation Status Flag Bit";
             this.chkAntiWindupMinStatusFlag.UseVisualStyleBackColor = true;
             this.chkAntiWindupMinStatusFlag.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2039,6 +1966,7 @@
             this.chkAntiWindupMaxStatusFlag.Name = "chkAntiWindupMaxStatusFlag";
             this.chkAntiWindupMaxStatusFlag.Size = new System.Drawing.Size(252, 19);
             this.chkAntiWindupMaxStatusFlag.TabIndex = 2;
+            this.chkAntiWindupMaxStatusFlag.Tag = "anti_windup_max_status_flag";
             this.chkAntiWindupMaxStatusFlag.Text = "Generate &Upper Saturation Status Flag Bit";
             this.chkAntiWindupMaxStatusFlag.UseVisualStyleBackColor = true;
             this.chkAntiWindupMaxStatusFlag.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2053,6 +1981,7 @@
             this.chkAntiWindupClampMin.Name = "chkAntiWindupClampMin";
             this.chkAntiWindupClampMin.Size = new System.Drawing.Size(202, 19);
             this.chkAntiWindupClampMin.TabIndex = 3;
+            this.chkAntiWindupClampMin.Tag = "anti_windup_min";
             this.chkAntiWindupClampMin.Text = "Clamp Control &Output Minimum";
             this.chkAntiWindupClampMin.UseVisualStyleBackColor = true;
             this.chkAntiWindupClampMin.CheckedChanged += new System.EventHandler(this.chkClampControlOutputMinimum_CheckedChanged);
@@ -2067,6 +1996,7 @@
             this.chkAntiWindupClampMax.Name = "chkAntiWindupClampMax";
             this.chkAntiWindupClampMax.Size = new System.Drawing.Size(204, 19);
             this.chkAntiWindupClampMax.TabIndex = 1;
+            this.chkAntiWindupClampMax.Tag = "anti_windup_max";
             this.chkAntiWindupClampMax.Text = "Clamp Control &Output Maximum";
             this.chkAntiWindupClampMax.UseVisualStyleBackColor = true;
             this.chkAntiWindupClampMax.CheckedChanged += new System.EventHandler(this.chkClampControlOutputMaximum_CheckedChanged);
@@ -2082,6 +2012,7 @@
             this.chkAntiWindup.Name = "chkAntiWindup";
             this.chkAntiWindup.Size = new System.Drawing.Size(95, 19);
             this.chkAntiWindup.TabIndex = 0;
+            this.chkAntiWindup.Tag = "anti_windup_enable";
             this.chkAntiWindup.Text = "Anti-&Windup";
             this.chkAntiWindup.UseVisualStyleBackColor = false;
             this.chkAntiWindup.CheckedChanged += new System.EventHandler(this.FoldingBoxEnable_CheckChanged);
@@ -2092,7 +2023,8 @@
             this.grpDataProviderSources.Controls.Add(this.chkAddDataProviderControlInput);
             this.grpDataProviderSources.Controls.Add(this.chkAddDataProviderErrorInput);
             this.grpDataProviderSources.Controls.Add(this.chkAddDataProviderControlOutput);
-            this.grpDataProviderSources.Location = new System.Drawing.Point(6, 160);
+            this.grpDataProviderSources.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpDataProviderSources.Location = new System.Drawing.Point(3, 627);
             this.grpDataProviderSources.Name = "grpDataProviderSources";
             this.grpDataProviderSources.Size = new System.Drawing.Size(405, 108);
             this.grpDataProviderSources.TabIndex = 5;
@@ -2107,6 +2039,7 @@
             this.chkDataProviderSource.Name = "chkDataProviderSource";
             this.chkDataProviderSource.Size = new System.Drawing.Size(148, 19);
             this.chkDataProviderSource.TabIndex = 9;
+            this.chkDataProviderSource.Tag = "data_provider_enable";
             this.chkDataProviderSource.Text = "Data &Provider Sources";
             this.chkDataProviderSource.UseVisualStyleBackColor = false;
             this.chkDataProviderSource.CheckedChanged += new System.EventHandler(this.FoldingBoxEnable_CheckChanged);
@@ -2120,6 +2053,7 @@
             this.chkAddDataProviderControlInput.Name = "chkAddDataProviderControlInput";
             this.chkAddDataProviderControlInput.Size = new System.Drawing.Size(199, 19);
             this.chkAddDataProviderControlInput.TabIndex = 10;
+            this.chkAddDataProviderControlInput.Tag = "data_provider_control_input";
             this.chkAddDataProviderControlInput.Text = "Push Most Recent Control Input";
             this.chkAddDataProviderControlInput.UseVisualStyleBackColor = true;
             this.chkAddDataProviderControlInput.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2133,6 +2067,7 @@
             this.chkAddDataProviderErrorInput.Name = "chkAddDataProviderErrorInput";
             this.chkAddDataProviderErrorInput.Size = new System.Drawing.Size(186, 19);
             this.chkAddDataProviderErrorInput.TabIndex = 11;
+            this.chkAddDataProviderErrorInput.Tag = "data_provider_control_error";
             this.chkAddDataProviderErrorInput.Text = "Push Most Recent Error Input";
             this.chkAddDataProviderErrorInput.UseVisualStyleBackColor = true;
             this.chkAddDataProviderErrorInput.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2146,6 +2081,7 @@
             this.chkAddDataProviderControlOutput.Name = "chkAddDataProviderControlOutput";
             this.chkAddDataProviderControlOutput.Size = new System.Drawing.Size(208, 19);
             this.chkAddDataProviderControlOutput.TabIndex = 12;
+            this.chkAddDataProviderControlOutput.Tag = "data_provider_control_output";
             this.chkAddDataProviderControlOutput.Text = "Push Most Recent Control Output";
             this.chkAddDataProviderControlOutput.UseVisualStyleBackColor = true;
             this.chkAddDataProviderControlOutput.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2156,7 +2092,8 @@
             this.grpCodeFeatureDataIO.Controls.Add(this.chkAddAlternateTarget);
             this.grpCodeFeatureDataIO.Controls.Add(this.chkAddAlternateSource);
             this.grpCodeFeatureDataIO.Controls.Add(this.chkAutomatedDataInterface);
-            this.grpCodeFeatureDataIO.Location = new System.Drawing.Point(6, 120);
+            this.grpCodeFeatureDataIO.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpCodeFeatureDataIO.Location = new System.Drawing.Point(3, 542);
             this.grpCodeFeatureDataIO.Name = "grpCodeFeatureDataIO";
             this.grpCodeFeatureDataIO.Size = new System.Drawing.Size(405, 85);
             this.grpCodeFeatureDataIO.TabIndex = 4;
@@ -2182,6 +2119,7 @@
             this.chkAddAlternateTarget.Name = "chkAddAlternateTarget";
             this.chkAddAlternateTarget.Size = new System.Drawing.Size(177, 19);
             this.chkAddAlternateTarget.TabIndex = 3;
+            this.chkAddAlternateTarget.Tag = "data_interface_alt_output";
             this.chkAddAlternateTarget.Text = "Add Alternate Ouptut Target";
             this.chkAddAlternateTarget.UseVisualStyleBackColor = true;
             this.chkAddAlternateTarget.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2194,6 +2132,7 @@
             this.chkAddAlternateSource.Name = "chkAddAlternateSource";
             this.chkAddAlternateSource.Size = new System.Drawing.Size(172, 19);
             this.chkAddAlternateSource.TabIndex = 1;
+            this.chkAddAlternateSource.Tag = "data_interface_alt_input";
             this.chkAddAlternateSource.Text = "Add Alternate Input Source";
             this.chkAddAlternateSource.UseVisualStyleBackColor = true;
             this.chkAddAlternateSource.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2207,6 +2146,7 @@
             this.chkAutomatedDataInterface.Name = "chkAutomatedDataInterface";
             this.chkAutomatedDataInterface.Size = new System.Drawing.Size(166, 19);
             this.chkAutomatedDataInterface.TabIndex = 0;
+            this.chkAutomatedDataInterface.Tag = "data_interface_enable";
             this.chkAutomatedDataInterface.Text = "Automated Data &Interface";
             this.chkAutomatedDataInterface.UseVisualStyleBackColor = false;
             this.chkAutomatedDataInterface.CheckedChanged += new System.EventHandler(this.FoldingBoxEnable_CheckChanged);
@@ -2225,7 +2165,8 @@
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddADCTriggerAPlacement);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddEnableDisable);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddCoreConfig);
-            this.grpCodeFeatureOptions.Location = new System.Drawing.Point(6, 80);
+            this.grpCodeFeatureOptions.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpCodeFeatureOptions.Location = new System.Drawing.Point(3, 305);
             this.grpCodeFeatureOptions.Name = "grpCodeFeatureOptions";
             this.grpCodeFeatureOptions.Size = new System.Drawing.Size(405, 237);
             this.grpCodeFeatureOptions.TabIndex = 3;
@@ -2274,6 +2215,7 @@
             this.chkCodeFeatureOptions.Name = "chkCodeFeatureOptions";
             this.chkCodeFeatureOptions.Size = new System.Drawing.Size(162, 19);
             this.chkCodeFeatureOptions.TabIndex = 0;
+            this.chkCodeFeatureOptions.Tag = "option_enable";
             this.chkCodeFeatureOptions.Text = "&Basic Feature Extensions";
             this.chkCodeFeatureOptions.UseVisualStyleBackColor = false;
             this.chkCodeFeatureOptions.CheckedChanged += new System.EventHandler(this.FoldingBoxEnable_CheckChanged);
@@ -2286,6 +2228,7 @@
             this.chkAddCascadedFunctionCall.Name = "chkAddCascadedFunctionCall";
             this.chkAddCascadedFunctionCall.Size = new System.Drawing.Size(171, 19);
             this.chkAddCascadedFunctionCall.TabIndex = 9;
+            this.chkAddCascadedFunctionCall.Tag = "option_cascade_call";
             this.chkAddCascadedFunctionCall.Text = "Add Cascade Function Call";
             this.chkAddCascadedFunctionCall.UseVisualStyleBackColor = true;
             this.chkAddCascadedFunctionCall.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2298,6 +2241,7 @@
             this.chkAddADCTriggerBPlacement.Name = "chkAddADCTriggerBPlacement";
             this.chkAddADCTriggerBPlacement.Size = new System.Drawing.Size(314, 19);
             this.chkAddADCTriggerBPlacement.TabIndex = 7;
+            this.chkAddADCTriggerBPlacement.Tag = "option_adc_trigger_b_placement";
             this.chkAddADCTriggerBPlacement.Text = "Add Automatic Placement of Secondary ADC Trigger &B";
             this.chkAddADCTriggerBPlacement.UseVisualStyleBackColor = true;
             this.chkAddADCTriggerBPlacement.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2312,6 +2256,7 @@
             this.chkAddDisableDummyRead.Name = "chkAddDisableDummyRead";
             this.chkAddDisableDummyRead.Size = new System.Drawing.Size(245, 19);
             this.chkAddDisableDummyRead.TabIndex = 4;
+            this.chkAddDisableDummyRead.Tag = "option_enable_switch_always_read";
             this.chkAddDisableDummyRead.Text = "Always read from source when disabled";
             this.chkAddDisableDummyRead.UseVisualStyleBackColor = true;
             this.chkAddDisableDummyRead.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2326,6 +2271,7 @@
             this.chkAddErrorNormalization.Name = "chkAddErrorNormalization";
             this.chkAddErrorNormalization.Size = new System.Drawing.Size(159, 19);
             this.chkAddErrorNormalization.TabIndex = 5;
+            this.chkAddErrorNormalization.Tag = "option_error_normalization";
             this.chkAddErrorNormalization.Text = "Add Error Normali&zation";
             this.chkAddErrorNormalization.UseVisualStyleBackColor = true;
             this.chkAddErrorNormalization.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2339,6 +2285,7 @@
             this.chkStoreReloadAccLevel1.Name = "chkStoreReloadAccLevel1";
             this.chkStoreReloadAccLevel1.Size = new System.Drawing.Size(207, 19);
             this.chkStoreReloadAccLevel1.TabIndex = 1;
+            this.chkStoreReloadAccLevel1.Tag = "option_store_reload_acc";
             this.chkStoreReloadAccLevel1.Text = "Store/Reload Result Accumulator";
             this.chkStoreReloadAccLevel1.UseVisualStyleBackColor = true;
             this.chkStoreReloadAccLevel1.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2353,6 +2300,7 @@
             this.chkAddADCTriggerAPlacement.Name = "chkAddADCTriggerAPlacement";
             this.chkAddADCTriggerAPlacement.Size = new System.Drawing.Size(301, 19);
             this.chkAddADCTriggerAPlacement.TabIndex = 6;
+            this.chkAddADCTriggerAPlacement.Tag = "option_adc_trigger_a_placement";
             this.chkAddADCTriggerAPlacement.Text = "Add Automatic Placement of Primary ADC Trigger &A";
             this.chkAddADCTriggerAPlacement.UseVisualStyleBackColor = true;
             this.chkAddADCTriggerAPlacement.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2367,6 +2315,7 @@
             this.chkAddEnableDisable.Name = "chkAddEnableDisable";
             this.chkAddEnableDisable.Size = new System.Drawing.Size(178, 19);
             this.chkAddEnableDisable.TabIndex = 3;
+            this.chkAddEnableDisable.Tag = "option_enable_switch";
             this.chkAddEnableDisable.Text = "Add E&nable/Disable Feature";
             this.chkAddEnableDisable.UseVisualStyleBackColor = true;
             this.chkAddEnableDisable.CheckedChanged += new System.EventHandler(this.chkAddEnableDisable_CheckedChanged);
@@ -2381,6 +2330,7 @@
             this.chkAddCoreConfig.Name = "chkAddCoreConfig";
             this.chkAddCoreConfig.Size = new System.Drawing.Size(176, 19);
             this.chkAddCoreConfig.TabIndex = 2;
+            this.chkAddCoreConfig.Tag = "option_core_config";
             this.chkAddCoreConfig.Text = "A&dd DSP Core Configuration";
             this.chkAddCoreConfig.UseVisualStyleBackColor = true;
             this.chkAddCoreConfig.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2395,7 +2345,8 @@
             this.grpContextManagement.Controls.Add(this.chkSaveRestoreMACRegisters);
             this.grpContextManagement.Controls.Add(this.chkSaveRestoreShadowRegisters);
             this.grpContextManagement.Controls.Add(this.chkContextSaving);
-            this.grpContextManagement.Location = new System.Drawing.Point(6, 40);
+            this.grpContextManagement.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpContextManagement.Location = new System.Drawing.Point(3, 93);
             this.grpContextManagement.Name = "grpContextManagement";
             this.grpContextManagement.Size = new System.Drawing.Size(405, 212);
             this.grpContextManagement.TabIndex = 2;
@@ -2411,6 +2362,7 @@
             this.chkSaveRestoreAccumulatorB.Name = "chkSaveRestoreAccumulatorB";
             this.chkSaveRestoreAccumulatorB.Size = new System.Drawing.Size(180, 19);
             this.chkSaveRestoreAccumulatorB.TabIndex = 5;
+            this.chkSaveRestoreAccumulatorB.Tag = "context_acc_b";
             this.chkSaveRestoreAccumulatorB.Text = "&Save/Restore &Accumulator B";
             this.chkSaveRestoreAccumulatorB.UseVisualStyleBackColor = true;
             this.chkSaveRestoreAccumulatorB.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2425,6 +2377,7 @@
             this.chkSaveRestoreAccumulatorA.Name = "chkSaveRestoreAccumulatorA";
             this.chkSaveRestoreAccumulatorA.Size = new System.Drawing.Size(180, 19);
             this.chkSaveRestoreAccumulatorA.TabIndex = 4;
+            this.chkSaveRestoreAccumulatorA.Tag = "context_acc_a";
             this.chkSaveRestoreAccumulatorA.Text = "&Save/Restore &Accumulator A";
             this.chkSaveRestoreAccumulatorA.UseVisualStyleBackColor = true;
             this.chkSaveRestoreAccumulatorA.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2439,6 +2392,7 @@
             this.chkSaveRestoreCoreStatus.Name = "chkSaveRestoreCoreStatus";
             this.chkSaveRestoreCoreStatus.Size = new System.Drawing.Size(209, 19);
             this.chkSaveRestoreCoreStatus.TabIndex = 7;
+            this.chkSaveRestoreCoreStatus.Tag = "context_core_status";
             this.chkSaveRestoreCoreStatus.Text = "Save/Restore Core Status &Register";
             this.chkSaveRestoreCoreStatus.UseVisualStyleBackColor = true;
             this.chkSaveRestoreCoreStatus.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2453,6 +2407,7 @@
             this.chkSaveRestoreCoreConfig.Name = "chkSaveRestoreCoreConfig";
             this.chkSaveRestoreCoreConfig.Size = new System.Drawing.Size(226, 19);
             this.chkSaveRestoreCoreConfig.TabIndex = 6;
+            this.chkSaveRestoreCoreConfig.Tag = "context_core_config";
             this.chkSaveRestoreCoreConfig.Text = "Save/Restore DSP &Core Configuration";
             this.chkSaveRestoreCoreConfig.UseVisualStyleBackColor = true;
             this.chkSaveRestoreCoreConfig.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2467,6 +2422,7 @@
             this.chkSaveRestoreAccumulators.Name = "chkSaveRestoreAccumulators";
             this.chkSaveRestoreAccumulators.Size = new System.Drawing.Size(176, 19);
             this.chkSaveRestoreAccumulators.TabIndex = 3;
+            this.chkSaveRestoreAccumulators.Tag = "context_acc";
             this.chkSaveRestoreAccumulators.Text = "&Save/Restore &Accumulators";
             this.chkSaveRestoreAccumulators.UseVisualStyleBackColor = true;
             this.chkSaveRestoreAccumulators.CheckedChanged += new System.EventHandler(this.chkSaveRestoreAccumulators_CheckedChanged);
@@ -2481,6 +2437,7 @@
             this.chkSaveRestoreMACRegisters.Name = "chkSaveRestoreMACRegisters";
             this.chkSaveRestoreMACRegisters.Size = new System.Drawing.Size(227, 19);
             this.chkSaveRestoreMACRegisters.TabIndex = 2;
+            this.chkSaveRestoreMACRegisters.Tag = "context_mac_wreg";
             this.chkSaveRestoreMACRegisters.Text = "&Save/Restore &MAC Working Registers";
             this.chkSaveRestoreMACRegisters.UseVisualStyleBackColor = true;
             this.chkSaveRestoreMACRegisters.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2495,6 +2452,7 @@
             this.chkSaveRestoreShadowRegisters.Name = "chkSaveRestoreShadowRegisters";
             this.chkSaveRestoreShadowRegisters.Size = new System.Drawing.Size(196, 19);
             this.chkSaveRestoreShadowRegisters.TabIndex = 1;
+            this.chkSaveRestoreShadowRegisters.Tag = "context_shadow";
             this.chkSaveRestoreShadowRegisters.Text = "Save/Restore Shado&w Registers";
             this.chkSaveRestoreShadowRegisters.UseVisualStyleBackColor = true;
             this.chkSaveRestoreShadowRegisters.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2510,7 +2468,7 @@
             this.chkContextSaving.Name = "chkContextSaving";
             this.chkContextSaving.Size = new System.Drawing.Size(141, 19);
             this.chkContextSaving.TabIndex = 0;
-            this.chkContextSaving.Tag = "";
+            this.chkContextSaving.Tag = "context_management";
             this.chkContextSaving.Text = "Context &Management";
             this.chkContextSaving.UseVisualStyleBackColor = false;
             this.chkContextSaving.CheckedChanged += new System.EventHandler(this.FoldingBoxEnable_CheckChanged);
@@ -2522,7 +2480,8 @@
             this.grpFunctionLabel.Controls.Add(this.txtControllerNameLabel);
             this.grpFunctionLabel.Controls.Add(this.lblFinalNamePrefixOutput);
             this.grpFunctionLabel.Controls.Add(this.lblFinalNamePrefix);
-            this.grpFunctionLabel.Location = new System.Drawing.Point(6, 0);
+            this.grpFunctionLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpFunctionLabel.Location = new System.Drawing.Point(3, 3);
             this.grpFunctionLabel.Name = "grpFunctionLabel";
             this.grpFunctionLabel.Size = new System.Drawing.Size(405, 90);
             this.grpFunctionLabel.TabIndex = 1;
@@ -2586,6 +2545,62 @@
             this.lblFinalNamePrefix.Size = new System.Drawing.Size(87, 15);
             this.lblFinalNamePrefix.TabIndex = 29;
             this.lblFinalNamePrefix.Text = "Name Preview:";
+            // 
+            // tabAdvanced
+            // 
+            this.tabAdvanced.Controls.Add(this.grpDevelopmentTools);
+            this.tabAdvanced.Location = new System.Drawing.Point(4, 22);
+            this.tabAdvanced.Name = "tabAdvanced";
+            this.tabAdvanced.Size = new System.Drawing.Size(428, 745);
+            this.tabAdvanced.TabIndex = 2;
+            this.tabAdvanced.Text = "Advanced";
+            this.tabAdvanced.UseVisualStyleBackColor = true;
+            // 
+            // grpDevelopmentTools
+            // 
+            this.grpDevelopmentTools.Controls.Add(this.cmdConfigurePTermControl);
+            this.grpDevelopmentTools.Controls.Add(this.picInfoPTermController);
+            this.grpDevelopmentTools.Controls.Add(this.chkAddPTermLoop);
+            this.grpDevelopmentTools.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpDevelopmentTools.Location = new System.Drawing.Point(0, 0);
+            this.grpDevelopmentTools.Name = "grpDevelopmentTools";
+            this.grpDevelopmentTools.Size = new System.Drawing.Size(428, 104);
+            this.grpDevelopmentTools.TabIndex = 11;
+            this.grpDevelopmentTools.TabStop = false;
+            this.grpDevelopmentTools.Text = "Development Tools";
+            // 
+            // cmdConfigurePTermControl
+            // 
+            this.cmdConfigurePTermControl.Enabled = false;
+            this.cmdConfigurePTermControl.Location = new System.Drawing.Point(268, 56);
+            this.cmdConfigurePTermControl.Name = "cmdConfigurePTermControl";
+            this.cmdConfigurePTermControl.Size = new System.Drawing.Size(94, 31);
+            this.cmdConfigurePTermControl.TabIndex = 75;
+            this.cmdConfigurePTermControl.Text = "&Configure...";
+            this.cmdConfigurePTermControl.UseVisualStyleBackColor = true;
+            // 
+            // picInfoPTermController
+            // 
+            this.picInfoPTermController.Image = ((System.Drawing.Image)(resources.GetObject("picInfoPTermController.Image")));
+            this.picInfoPTermController.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoPTermController.InitialImage")));
+            this.picInfoPTermController.Location = new System.Drawing.Point(346, 31);
+            this.picInfoPTermController.Name = "picInfoPTermController";
+            this.picInfoPTermController.Size = new System.Drawing.Size(16, 16);
+            this.picInfoPTermController.TabIndex = 73;
+            this.picInfoPTermController.TabStop = false;
+            // 
+            // chkAddPTermLoop
+            // 
+            this.chkAddPTermLoop.AutoSize = true;
+            this.chkAddPTermLoop.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAddPTermLoop.Location = new System.Drawing.Point(30, 31);
+            this.chkAddPTermLoop.Name = "chkAddPTermLoop";
+            this.chkAddPTermLoop.Size = new System.Drawing.Size(309, 19);
+            this.chkAddPTermLoop.TabIndex = 10;
+            this.chkAddPTermLoop.Tag = "option_add_p-term";
+            this.chkAddPTermLoop.Text = "Use P-Term Loop Controller for Plant Measurements";
+            this.chkAddPTermLoop.UseVisualStyleBackColor = true;
+            this.chkAddPTermLoop.CheckedChanged += new System.EventHandler(this.chkAddPTermLoop_CheckedChanged);
             // 
             // tabAnalysis
             // 
@@ -5239,23 +5254,18 @@
             this.splitContainerContents.ResumeLayout(false);
             this.tabConfig.ResumeLayout(false);
             this.tabController.ResumeLayout(false);
-            this.pnlCompensator.ResumeLayout(false);
-            this.grpDevelopmentTools.ResumeLayout(false);
-            this.grpDevelopmentTools.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picInfoPTermController)).EndInit();
             this.grpAdaptiveGainControl.ResumeLayout(false);
             this.grpAdaptiveGainControl.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).EndInit();
+            this.grpPolesZeros.ResumeLayout(false);
+            this.grpPolesZeros.PerformLayout();
             this.grpOutputDataNormalization.ResumeLayout(false);
             this.grpOutputDataNormalization.PerformLayout();
             this.grpInputDataSpecifications.ResumeLayout(false);
             this.grpInputDataSpecifications.PerformLayout();
-            this.grpPolesZeros.ResumeLayout(false);
-            this.grpPolesZeros.PerformLayout();
             this.grpControllerSelection.ResumeLayout(false);
             this.grpControllerSelection.PerformLayout();
             this.tabSourceCodeConfig.ResumeLayout(false);
-            this.pnlCodeGeneratorOptions.ResumeLayout(false);
             this.grpAntiWindup.ResumeLayout(false);
             this.grpAntiWindup.PerformLayout();
             this.grpDataProviderSources.ResumeLayout(false);
@@ -5272,6 +5282,10 @@
             this.grpContextManagement.PerformLayout();
             this.grpFunctionLabel.ResumeLayout(false);
             this.grpFunctionLabel.PerformLayout();
+            this.tabAdvanced.ResumeLayout(false);
+            this.grpDevelopmentTools.ResumeLayout(false);
+            this.grpDevelopmentTools.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoPTermController)).EndInit();
             this.tabAnalysis.ResumeLayout(false);
             this.tabPageBode.ResumeLayout(false);
             this.splitContainerCoefficients.Panel1.ResumeLayout(false);
@@ -5455,7 +5469,6 @@
         private System.Windows.Forms.CheckBox chkSaveRestoreAccumulatorA;
         private System.Windows.Forms.CheckBox chkStoreReloadAccLevel1;
         private System.Windows.Forms.TabPage tabPageBode;
-        private System.Windows.Forms.Panel pnlCompensator;
         private System.Windows.Forms.GroupBox grpPolesZeros;
         private System.Windows.Forms.TextBox txtSamplingFrequency;
         private System.Windows.Forms.Label lblFZ1Unit;
@@ -5649,7 +5662,6 @@
         private System.Windows.Forms.ToolStrip tsbCodeGenUpdateWarningTiming;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
-        private System.Windows.Forms.Panel pnlCodeGeneratorOptions;
         private System.Windows.Forms.CheckBox chkAntiWindupSoftDesaturationFlag;
         private System.Windows.Forms.PictureBox picInfoTimingPWMFrequency;
         private System.Windows.Forms.CheckBox chkCSourceIncludePath;
@@ -5749,9 +5761,9 @@
         private System.Windows.Forms.CheckBox chkAGCAddEnable;
         private System.Windows.Forms.PictureBox picInfoAGC;
         private System.Windows.Forms.CheckBox chkEnableAdaptiveGainControl;
+        private System.Windows.Forms.TabPage tabAdvanced;
         private System.Windows.Forms.GroupBox grpDevelopmentTools;
         private System.Windows.Forms.Button cmdConfigurePTermControl;
-        private System.Windows.Forms.CheckBox chkEnableDevelopmentTools;
         private System.Windows.Forms.PictureBox picInfoPTermController;
         private System.Windows.Forms.CheckBox chkAddPTermLoop;
     }
