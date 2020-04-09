@@ -15,9 +15,10 @@ namespace dcld
     {
 
         // Private Variables
+        private bool WindowLoading = false;
         private bool ParameterUpdate = false;
         internal clsFeedbackDeclaration feedback = new clsFeedbackDeclaration();
-        internal bool AllowInputVoltageEdits = false;
+        internal bool EnableInputValueEdits = false;
 
 
         public frmCalculateInputGain()
@@ -27,7 +28,7 @@ namespace dcld
 
         private void cmdOK_Click(object sender, EventArgs e)
         {
-            feedback.FeedbackGain = Convert.ToDouble(lblInputGain.Text);
+            //feedback.FeedbackGain = Convert.ToDouble(lblInputGain.Text);
             this.Close();
         }
 
@@ -38,128 +39,163 @@ namespace dcld
 
         private void frmCalculateInputGain_Load(object sender, EventArgs e)
         {
+            // Set startup flag
+            WindowLoading = true;
 
+            // Load parameters
+            txtInputReference.Text = feedback.ADCReference.ToString(CultureInfo.CurrentCulture);
             txtInputResolution.Text = feedback.ADCResolution.ToString(CultureInfo.CurrentCulture);
+            txtInputMinimum.Text = feedback.ADCMinimum.ToString(CultureInfo.CurrentCulture);
+            txtInputMaximum.Text = feedback.ADCMaximum.ToString(CultureInfo.CurrentCulture);
+            chkInputSigned.Checked = feedback.ADCIsDifferential;
+
+            // Clear startup flag and update GUI values
+            WindowLoading = false;
+
+            // Selet tab and update values
+            switch (feedback.FeedbackType)
+            {
+                case clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER:
+                    tabFeedback.SelectedTab = tabVD;
+                    break;
+                case clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER:
+                    tabFeedback.SelectedTab = tabCS;
+                    break;
+                case clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER:
+                    tabFeedback.SelectedTab = tabCT;
+                    break;
+                case clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE:
+                    tabFeedback.SelectedTab = tabDS;
+                    break;
+            }
+
             tabFeedback_SelectedIndexChanged(sender, e);
+
+            // Set Window Startup Position
+            this.StartPosition = FormStartPosition.CenterParent;
             
+            // Enable Form Key Preview to enable Hot Keys
             this.KeyPreview = true;
         }
 
         private void tabFeedback_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // When window is loading a set of parameters, skip calculations
+            if (WindowLoading) return;
+            
             // Guarding condition start
             ParameterUpdate = true;
 
-            txtParam0.Enabled = AllowInputVoltageEdits;
+            txtParam0.Enabled = EnableInputValueEdits;
 
-            switch (tabFeedback.SelectedIndex)
-            {
-                case 0: // Voltage Divider
+            if (tabFeedback.SelectedTab == tabVD)
+            { // Voltage Divider
 
-                    feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER;
+                feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER;
 
-                    txtParam1.Text = feedback.VoltageDividerR1.ToString("#0.###", CultureInfo.CurrentCulture);
-                    txtParam2.Text = feedback.VoltageDividerR2.ToString("#0.###", CultureInfo.CurrentCulture);
-                    txtParam3.Text = feedback.VoltageDividerAmplifierGain.ToString("#0.0##", CultureInfo.CurrentCulture);
+                txtParam1.Text = feedback.VoltageDividerR1.ToString("#0.###", CultureInfo.CurrentCulture);
+                txtParam2.Text = feedback.VoltageDividerR2.ToString("#0.###", CultureInfo.CurrentCulture);
+                txtParam3.Text = feedback.VoltageDividerAmplifierGain.ToString("#0.0##", CultureInfo.CurrentCulture);
 
-                    if (!AllowInputVoltageEdits)
-                        txtParam0.Text = feedback.VoltageDividerSourceMaximum.ToString("#0.###", CultureInfo.CurrentCulture);
-                    else
-                        txtParam0.Text = feedback.VoltageDividerSenseVoltage.ToString("#0.###", CultureInfo.CurrentCulture);
+                if (!EnableInputValueEdits)
+                    txtParam0.Text = feedback.VoltageDividerSourceMaximum.ToString("#0.###", CultureInfo.CurrentCulture);
+                else
+                    txtParam0.Text = feedback.VoltageDividerSenseVoltage.ToString("#0.###", CultureInfo.CurrentCulture);
 
-                    lblInputResolution.Text = "ADC Resolution";
-                    lblInputResolution.Visible = true;
-                    lblInputReference.Text = "ADC Reference";
-                    txtInputReference.Visible = true;
-                    lblInputReference.Visible = true;
-                    lblInputReferenceUnit.Visible = true;
+                lblInputResolution.Text = "ADC Resolution";
+                lblInputResolution.Visible = true;
+                lblInputReference.Text = "ADC Reference";
+                txtInputReference.Visible = true;
+                lblInputReference.Visible = true;
+                lblInputReferenceUnit.Visible = true;
 
-                    if (AllowInputVoltageEdits)
-                        lblParam0Label.Text = "Nominal Sense Voltage:";
-                    else
-                        lblParam0Label.Text = "Maximum Sense Voltage:";
+                if (EnableInputValueEdits)
+                    lblParam0Label.Text = "Nominal Sense Voltage:";
+                else
+                    lblParam0Label.Text = "Maximum Sense Voltage:";
                     
-                    lblParam0Label.Enabled = AllowInputVoltageEdits;
-                    lblParam0Unit.Text = "V";
-                    lblParam0Unit.Font = this.Font;
-                    lblParam0Unit.Enabled = AllowInputVoltageEdits;
+                lblParam0Label.Enabled = EnableInputValueEdits;
+                lblParam0Unit.Text = "V";
+                lblParam0Unit.Font = this.Font;
+                lblParam0Unit.Enabled = EnableInputValueEdits;
 
-                    lblParam1Label.Text = "R1:";
-                    lblParam1Unit.Text = "W";
-                    lblParam1Unit.Font = new Font("Symbol", 10);
+                lblParam1Label.Text = "R1:";
+                lblParam1Unit.Text = "W";
+                lblParam1Unit.Font = new Font("Symbol", 10);
 
-                    lblParam2Label.Text = "R2:";
-                    lblParam2Unit.Text = "W";
-                    lblParam2Unit.Font = new Font("Symbol", 10);
+                lblParam2Label.Text = "R2:";
+                lblParam2Unit.Text = "W";
+                lblParam2Unit.Font = new Font("Symbol", 10);
 
-                    lblParam3Label.Text = "Amplifier Gain:";
-                    lblParam3Unit.Text = "V/V";
-                    lblParam3Unit.Font = this.Font;
+                lblParam3Label.Text = "Amplifier Gain:";
+                lblParam3Unit.Text = "V/V";
+                lblParam3Unit.Font = this.Font;
 
-                    txtParam2.Visible = true;
-                    lblParam2Label.Visible = true;
-                    lblParam2Unit.Visible = true;
+                txtParam2.Visible = true;
+                lblParam2Label.Visible = true;
+                lblParam2Unit.Visible = true;
 
-                    txtParam3.Visible = true;
-                    lblParam3Label.Visible = true;
-                    lblParam3Unit.Visible = true;
+                txtParam3.Visible = true;
+                lblParam3Label.Visible = true;
+                lblParam3Unit.Visible = true;
 
-                    lblInputGainUnit.Text = "V/V";
+                lblInputGainUnit.Text = "V/V";
+            }
 
-                    break;
+            else if (tabFeedback.SelectedTab == tabCS)                
+            { // Shunt Amplifier
 
-                case 1: // Shunt Amplifier
+                feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER;
 
-                    feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER;
+                if (!EnableInputValueEdits)
+                    txtParam0.Text = feedback.CurrentSenseSourceMaximum.ToString("#0.###", CultureInfo.CurrentCulture);
+                else
+                    txtParam0.Text = feedback.CurrentSenseSenseCurrent.ToString("#0.###", CultureInfo.CurrentCulture);
 
-                    if (!AllowInputVoltageEdits)
-                        txtParam0.Text = feedback.CurrentSenseSourceMaximum.ToString("#0.###", CultureInfo.CurrentCulture);
-                    else
-                        txtParam0.Text = feedback.CurrentSenseSenseCurrent.ToString("#0.###", CultureInfo.CurrentCulture);
+                txtParam1.Text = feedback.CurrentSenseRshunt.ToString("#0.0##", CultureInfo.CurrentCulture);
+                txtParam2.Text = feedback.CurrentSenseAmplifierGain.ToString("#0.0##", CultureInfo.CurrentCulture);
 
-                    txtParam1.Text = feedback.CurrentSenseRshunt.ToString("#0.0##", CultureInfo.CurrentCulture);
-                    txtParam2.Text = feedback.CurrentSenseAmplifierGain.ToString("#0.0##", CultureInfo.CurrentCulture);
+                lblInputResolution.Text = "ADC Resolution";
+                lblInputResolution.Visible = true;
+                lblInputReference.Text = "ADC Reference";
+                txtInputReference.Visible = true;
+                lblInputReference.Visible = true;
+                lblInputReferenceUnit.Visible = true;
 
-                    lblInputResolution.Text = "ADC Resolution";
-                    lblInputResolution.Visible = true;
-                    lblInputReference.Text = "ADC Reference";
-                    txtInputReference.Visible = true;
-                    lblInputReference.Visible = true;
-                    lblInputReferenceUnit.Visible = true;
+                if (EnableInputValueEdits)
+                    lblParam0Label.Text = "Nominal Sense Current:";
+                else
+                    lblParam0Label.Text = "Maximum Sense Current:";
 
-                    if (AllowInputVoltageEdits)
-                        lblParam0Label.Text = "Nominal Sense Current:";
-                    else
-                        lblParam0Label.Text = "Maximum Sense Current:";
+                lblParam0Unit.Text = "A";
+                lblParam0Unit.Font = this.Font;
 
-                    lblParam0Unit.Text = "A";
-                    lblParam0Unit.Font = this.Font;
+                lblParam1Label.Text = "Shunt Resistance:";
+                lblParam1Unit.Text = "W";
+                lblParam1Unit.Font = new Font("Symbol", 10);
 
-                    lblParam1Label.Text = "Shunt Resistance:";
-                    lblParam1Unit.Text = "W";
-                    lblParam1Unit.Font = new Font("Symbol", 10);
+                lblParam2Label.Text = "Amplifier Gain:";
+                lblParam2Unit.Text = "V/V";
+                lblParam2Unit.Font = this.Font;
 
-                    lblParam2Label.Text = "Amplifier Gain:";
-                    lblParam2Unit.Text = "V/V";
-                    lblParam2Unit.Font = this.Font;
+                txtParam2.Visible = true;
+                lblParam2Label.Visible = true;
+                lblParam2Unit.Visible = true;
 
-                    txtParam2.Visible = true;
-                    lblParam2Label.Visible = true;
-                    lblParam2Unit.Visible = true;
-
-                    txtParam3.Visible = false;
-                    lblParam3Label.Visible = false;
-                    lblParam3Unit.Visible = false;
+                txtParam3.Visible = false;
+                lblParam3Label.Visible = false;
+                lblParam3Unit.Visible = false;
                     
-                    lblInputGainUnit.Text = "V/A";
+                lblInputGainUnit.Text = "V/A";
 
-                    break;
+            }
 
-                case 2: // Current Sense Transformer
+            else if (tabFeedback.SelectedTab == tabCT)                
+            { // Current Sense Transformer
 
                     feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER;
 
-                    if (!AllowInputVoltageEdits)
+                    if (!EnableInputValueEdits)
                         txtParam0.Text = feedback.CurrentTransformerSourceMaximum.ToString("#0.###", CultureInfo.CurrentCulture);
                     else
                         txtParam0.Text = feedback.CurrentTransformerSenseCurrent.ToString("#0.###", CultureInfo.CurrentCulture);
@@ -174,7 +210,7 @@ namespace dcld
                     lblInputReference.Visible = true;
                     lblInputReferenceUnit.Visible = true;
 
-                    if (AllowInputVoltageEdits)
+                    if (EnableInputValueEdits)
                         lblParam0Label.Text = "Nominal Sense Current:";
                     else
                         lblParam0Label.Text = "Maximum Sense Current:";
@@ -200,13 +236,14 @@ namespace dcld
                     
                     lblInputGainUnit.Text = "V/A";
 
-                    break;
+            }
 
-                case 3: // Digital Soruce
+            else if (tabFeedback.SelectedTab == tabDS)                
+            { // Digital Soruce
 
                     feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE;
 
-                    if (!AllowInputVoltageEdits)
+                    if (!EnableInputValueEdits)
                         txtParam0.Text = feedback.DigitalSourceSourceMaximum.ToString("#0.###", CultureInfo.CurrentCulture);
                     else
                         txtParam0.Text = feedback.DigitalSourceValue.ToString("#0.###", CultureInfo.CurrentCulture);
@@ -220,7 +257,7 @@ namespace dcld
                     lblInputReference.Visible = false;
                     lblInputReferenceUnit.Visible = false;
 
-                    if (AllowInputVoltageEdits)
+                    if (EnableInputValueEdits)
                         lblParam0Label.Text = "Nominal Value:";
                     else
                         lblParam0Label.Text = "Maximum value:";
@@ -246,12 +283,11 @@ namespace dcld
 
                     lblInputGainUnit.Text = "tick/tick";
 
-                    break;
+            }
 
-                default:
-
-                    feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_UNDEFINED;
-                    break;
+            else 
+            {
+                feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_UNDEFINED;
             }
 
             // Adjust label positions
@@ -269,7 +305,7 @@ namespace dcld
             lblParam3Unit.Left = lblParam1Unit.Left;
 
             // Format Test Box values
-            if (tabFeedback.SelectedIndex != 3)
+            if (tabFeedback.SelectedTab != tabDS)
             { 
                 NumberTextBox_ToString(txtParam0);
                 NumberTextBox_ToString(txtParam1);
@@ -292,6 +328,7 @@ namespace dcld
             System.Windows.Forms.TextBox tBox = new TextBox();
 
             // Guarding condition start
+            if (WindowLoading) return;
             if (ParameterUpdate) return;
             ParameterUpdate = true;
 
@@ -310,67 +347,73 @@ namespace dcld
                 feedback.ADCResolution = Convert.ToDouble(txtInputResolution.Text);
 
                 // Set Parameters
-                switch (tabFeedback.SelectedIndex)
-                {
-                    case 0: // Voltage Divider
+                if (tabFeedback.SelectedTab == tabVD)                
+                { // Voltage Divider
 
-                        feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER;
+                    feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER;
 
-                        feedback.VoltageDividerR1 = NumberTextBox_ToDouble(txtParam1);
-                        feedback.VoltageDividerR2 = NumberTextBox_ToDouble(txtParam2);
-                        feedback.VoltageDividerAmplifierGain = NumberTextBox_ToDouble(txtParam3);
+                    feedback.VoltageDividerR1 = NumberTextBox_ToDouble(txtParam1);
+                    feedback.VoltageDividerR2 = NumberTextBox_ToDouble(txtParam2);
+                    feedback.VoltageDividerAmplifierGain = NumberTextBox_ToDouble(txtParam3);
 
-                        // Update Sense Voltage Value
-                        if (!AllowInputVoltageEdits)
-                            txtParam0.Text = feedback.VoltageDividerSourceMaximum.ToString("#0.###", CultureInfo.CurrentCulture);
-                        else
-                            txtParam0.Text = feedback.VoltageDividerSenseVoltage.ToString("#0.###", CultureInfo.CurrentCulture);
-                        break;
+                    // Update Sense Voltage Value
+                    if (!EnableInputValueEdits)
+                        txtParam0.Text = feedback.VoltageDividerSourceMaximum.ToString("#0.###", CultureInfo.CurrentCulture);
+                    else
+                        txtParam0.Text = feedback.VoltageDividerSenseVoltage.ToString("#0.###", CultureInfo.CurrentCulture);
 
-                    case 1: // Shunt Amplifier
+                }
 
-                        feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER;
+                else if (tabFeedback.SelectedTab == tabCS)                
+                { // Shunt Amplifier
 
-                        feedback.CurrentSenseRshunt = NumberTextBox_ToDouble(txtParam1);
-                        feedback.CurrentSenseAmplifierGain = NumberTextBox_ToDouble(txtParam2);
+                    feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER;
 
-                        // Update Maximum Value
-                        if (!AllowInputVoltageEdits)
-                            txtParam0.Text = feedback.CurrentSenseSourceMaximum.ToString("#0.0##", CultureInfo.CurrentCulture);
-                        else
-                            txtParam0.Text = feedback.CurrentSenseSenseCurrent.ToString("#0.0##", CultureInfo.CurrentCulture);
-                        break;
+                    feedback.CurrentSenseRshunt = NumberTextBox_ToDouble(txtParam1);
+                    feedback.CurrentSenseAmplifierGain = NumberTextBox_ToDouble(txtParam2);
 
-                    case 2: // Current Sense Transformer
+                    // Update Maximum Value
+                    if (!EnableInputValueEdits)
+                        txtParam0.Text = feedback.CurrentSenseSourceMaximum.ToString("#0.0##", CultureInfo.CurrentCulture);
+                    else
+                        txtParam0.Text = feedback.CurrentSenseSenseCurrent.ToString("#0.0##", CultureInfo.CurrentCulture);
+                        
+                }
 
-                        feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER;
+                else if (tabFeedback.SelectedTab == tabCT)                
+                { // Current Sense Transformer
 
-                        feedback.CurrentTransformerBurdenResistance = NumberTextBox_ToDouble(txtParam1);
-                        feedback.CurrentTransformerWindingRatio = NumberTextBox_ToDouble(txtParam2);
+                    feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER;
 
-                        // Update Maximum Value
-                        if (!AllowInputVoltageEdits)
-                            txtParam0.Text = feedback.CurrentTransformerSourceMaximum.ToString("#0.0##", CultureInfo.CurrentCulture);
-                        else
-                            txtParam0.Text = feedback.CurrentTransformerSenseCurrent.ToString("#0.0##", CultureInfo.CurrentCulture);
-                        break;
+                    feedback.CurrentTransformerBurdenResistance = NumberTextBox_ToDouble(txtParam1);
+                    feedback.CurrentTransformerWindingRatio = NumberTextBox_ToDouble(txtParam2);
 
-                    case 3: // Digital Source
+                    // Update Maximum Value
+                    if (!EnableInputValueEdits)
+                        txtParam0.Text = feedback.CurrentTransformerSourceMaximum.ToString("#0.0##", CultureInfo.CurrentCulture);
+                    else
+                        txtParam0.Text = feedback.CurrentTransformerSenseCurrent.ToString("#0.0##", CultureInfo.CurrentCulture);
 
-                        feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE;
+                }
 
-                        feedback.DigitalSourceResolution = NumberTextBox_ToDouble(txtParam1);
+                else if (tabFeedback.SelectedTab == tabDS)                
+                { // Digital Source
 
-                        // Update Maximum Value
-                        if (!AllowInputVoltageEdits)
-                            txtParam0.Text = feedback.DigitalSourceSourceMaximum.ToString("#0.0##", CultureInfo.CurrentCulture);
-                        else
-                            txtParam0.Text = feedback.DigitalSourceValue.ToString("#0.0##", CultureInfo.CurrentCulture);
+                    feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE;
 
-                        break;
+                    feedback.DigitalSourceResolution = NumberTextBox_ToDouble(txtParam1);
 
-                    default: // Undefined
-                        return;
+                    // Update Maximum Value
+                    if (!EnableInputValueEdits)
+                        txtParam0.Text = feedback.DigitalSourceSourceMaximum.ToString("#0.0##", CultureInfo.CurrentCulture);
+                    else
+                        txtParam0.Text = feedback.DigitalSourceValue.ToString("#0.0##", CultureInfo.CurrentCulture);
+
+                }
+
+                else 
+                { // Undefined
+                    return;
                 }
 
                 // Format Text Box in standard color
@@ -546,27 +589,33 @@ namespace dcld
 
             try
             {
-                switch (tabFeedback.SelectedIndex)
-                {
-                    case 0: // Voltage Divider
-                        feedback.VoltageDividerSenseVoltage = Convert.ToDouble(txtParam0.Text);
-                        _sanity_check = (bool)(feedback.VoltageDividerSenseVoltage <= feedback.VoltageDividerSourceMaximum);
-                        break;
 
-                    case 1: // Shunt Amplifier
+                if (tabFeedback.SelectedTab == tabVD)                
+                { // Voltage Divider
+                    if (EnableInputValueEdits)
+                        feedback.VoltageDividerSenseVoltage = Convert.ToDouble(txtParam0.Text); 
+                    _sanity_check = (bool)(feedback.VoltageDividerFeedbackVoltage <= feedback.ADCReference);
+                }
+
+                else if (tabFeedback.SelectedTab == tabCS)                
+                { // Shunt Amplifier
+                    if (EnableInputValueEdits) 
                         feedback.CurrentSenseSenseCurrent = Convert.ToDouble(txtParam0.Text);
-                        _sanity_check = (bool)(feedback.CurrentSenseSenseCurrent <= feedback.CurrentSenseSourceMaximum);
-                        break;
+                    _sanity_check = (bool)(feedback.CurrentSenseFeedbackVoltage <= feedback.ADCReference);
+                }
 
-                    case 2: // Current Sense Transformer
+                else if (tabFeedback.SelectedTab == tabCT)                
+                { // Current Sense Transformer
+                    if (EnableInputValueEdits) 
                         feedback.CurrentTransformerSenseCurrent = Convert.ToDouble(txtParam0.Text);
-                        _sanity_check = (bool)(feedback.CurrentTransformerSenseCurrent <= feedback.CurrentTransformerSourceMaximum);
-                        break;
+                    _sanity_check = (bool)(feedback.CurrentTransformerFeedbackVoltage <= feedback.ADCReference);
+                }
 
-                    case 3: // Digital Source
+                else if (tabFeedback.SelectedTab == tabDS)
+                { // Digital Source
+                    if (EnableInputValueEdits)
                         feedback.DigitalSourceValue = Convert.ToDouble(txtParam0.Text);
-                        _sanity_check = (bool)(feedback.DigitalSourceValue <= feedback.DigitalSourceSourceMaximum);
-                        break;
+                    _sanity_check = (bool)(feedback.DigitalSourceValue <= feedback.DigitalSourceSourceMaximum);
                 }
 
             }
@@ -575,12 +624,18 @@ namespace dcld
                 _sanity_check = false;
             }
 
-        
-            
-            if ((_sanity_check) || (!txtParam0.Enabled))
+
+            // Check if settings are OK or user-edits of sense value are disabled
+            if ((_sanity_check) || (!txtParam0.Enabled)){
                 txtParam0.BackColor = SystemColors.Window;  // Set background color to 'normal'
+                cmdOK.Enabled = true;                       // Enable OK button
+            }
+            //If settings are physically impossible, set error and prevent user from applying these values
             else
+            {
                 txtParam0.BackColor = Color.LightCoral;     // Set background color to 'error'
+                cmdOK.Enabled = false;                      // Disable OK button
+            }
         
         }
 
