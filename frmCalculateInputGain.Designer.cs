@@ -610,6 +610,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmCalculateInputGain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Input Gain";
             this.Load += new System.EventHandler(this.frmCalculateInputGain_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmCalculateInputGain_KeyDown);
