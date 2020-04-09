@@ -794,7 +794,7 @@ namespace dcld
         private void UpdatePTermController(object sender, EventArgs e)
         {
             cNPNZ.PTermNominalFeedback = Convert.ToInt32(txtPTermNominalFeedback.Text);
-            cNPNZ.PTermNominalControlOutput = Convert.ToInt32(txtPTermNominalOutput.Text);
+            cNPNZ.PTermNominalControlOutput = Convert.ToInt32(Convert.ToDouble(txtPTermNominalOutput.Text));
             txtPTermFactor.Text = NumberBaseConverter.Dec2Fractional(cNPNZ.PTermFactor, Q_format).ToString(CultureInfo.CurrentCulture);
             txtPTermScaler.Text = cNPNZ.PTermScaler.ToString(CultureInfo.CurrentCulture);
         }
@@ -1098,7 +1098,6 @@ namespace dcld
 
                         lvCoefficients.Items["OutSclFct"].SubItems["scalerOSF"].Text = cNPNZ.OutputScalingFactor.QScaler.ToString();
                     }      
-
 
                 }
                 else
@@ -1593,6 +1592,10 @@ namespace dcld
                 ProjectFile.WriteKey("OutputDeclaration", "PCLK", ctrl_output.PWMClock.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("OutputDeclaration", "PCLKDIV", ctrl_output.PWMClockDivider.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("OutputDeclaration", "PWMFREQ", ctrl_output.PWMFrequency.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("OutputDeclaration", "NomVin", ctrl_output.NominalInputVoltage.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("OutputDeclaration", "NomVout", ctrl_output.NominalOutputVoltage.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("OutputDeclaration", "WindingRatioPrimary", ctrl_output.WindingRatioPrimary.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("OutputDeclaration", "WindingRatioSecondary", ctrl_output.WindingRatioSecondary.ToString(CultureInfo.InvariantCulture));
 
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 30;
@@ -1807,6 +1810,10 @@ namespace dcld
                 ctrl_output.PWMClock = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "PCLK", "4000000000"));
                 ctrl_output.PWMClockDivider = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "PCLKDIV", "1.0"));
                 ctrl_output.PWMFrequency = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "PWMFREQ", "250000.0"));
+                ctrl_output.NominalInputVoltage = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "NomVin", "0.0"));
+                ctrl_output.NominalOutputVoltage = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "NomVout", "0.0"));
+                ctrl_output.WindingRatioPrimary = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "WindingRatioPrimary", "1.0"));
+                ctrl_output.WindingRatioSecondary = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "WindingRatioSecondary", "1.0"));
 
                 // Code Generator Tab
                 txtControllerNamePrefix.Text = ProjectFile.ReadKey("AssemblyGenerator", "UserPrefix1", "");
@@ -3360,7 +3367,7 @@ namespace dcld
             if (ProjectFileLoadActive) return;  // If settings are loaded from a file, suppress all updates
             if (cNPNZ.QFormat != 15) return;    // Q15-Format supported only
 
-            //try
+            try
             {
 
 
@@ -3485,7 +3492,7 @@ namespace dcld
                 stbProgressBar.Visible = false;
                 stbProgressBarLabel.Visible = false;
             }
-            //catch 
+            catch 
             {
                 if (!ApplicationShutDown) 
                 {
@@ -3701,7 +3708,6 @@ namespace dcld
             double[] pwm_data_time;
             double[] pwm_data_level;
             double nan = Double.NaN;
-
 
             try 
             { 
@@ -4951,19 +4957,26 @@ namespace dcld
             // Show the settings form
             if (ctrl_output.OutputType == clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_UNDEFINED)
                 ctrl_output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_FIXED_FREQUENCY;
+
             frm.output = ctrl_output;
-            frm.PWMFrequency = (Convert.ToDouble(this.txtPWMFrequency.Text) * 1000.0);
-            frm.PWMClock = (4e+9);
-            frm.PWMClockDivider = 1.0;
+
+            frm.output.SetDeviceType(_targetDeviceType);
+            //frm.output.PWMFrequency = (Convert.ToDouble(this.txtPWMFrequency.Text) * 1000.0);
+            //frm.output.PWMClock = (4e+9);
+            //frm.output.PWMClockDivider = 1.0;
+
+            frm.EnableNominalControlEdits = true;
 
             if(frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 double outgain = 0.0;
                 string str_outgain = "";
-                outgain = frm.OutputGain;
+
+                outgain = frm.output.Gain;
                 str_outgain = outgain.ToString("#0.000000", CultureInfo.CurrentCulture);
                 txtOutputGain.Text = str_outgain;
-                txtPWMFrequency.Text = (frm.PWMFrequency / 1000.0).ToString(CultureInfo.CurrentCulture);
+                txtPWMFrequency.Text = (frm.output.PWMFrequency / 1000.0).ToString(CultureInfo.CurrentCulture);
+
                 ctrl_output = frm.output;
             }
         }
@@ -4994,12 +5007,15 @@ namespace dcld
             // Show the settings form
             frm.feedback = feedback;
             frm.feedback.ADCResolution = cNPNZ.InputDataResolution;
-            frm.feedback.FeedbackGain = cNPNZ.InputGain;
+            //frm.feedback.FeedbackGain = cNPNZ.InputGain;
 
             if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 txtInputGain.Text = frm.feedback.FeedbackGain.ToString("#0.000000", CultureInfo.CurrentCulture); ;
                 txtInputDataResolution.Text = frm.feedback.ADCResolution.ToString("#0.#", CultureInfo.CurrentCulture);
+
+                txtPTermNominalFeedback.Text = frm.feedback.FeedbackValue.ToString(CultureInfo.CurrentCulture);
+
                 feedback = frm.feedback;
             }
 
@@ -5012,23 +5028,44 @@ namespace dcld
 
             // Show the settings form
             frm.feedback = feedback;
-            if (frm.feedback.ADCResolution != cNPNZ.InputDataResolution) frm.feedback.ADCResolution = cNPNZ.InputDataResolution;
-            if (frm.feedback.FeedbackGain != cNPNZ.InputGain) frm.feedback.FeedbackGain = cNPNZ.InputGain;
-            frm.feedback.VoltageDividerSenseVoltage = (Convert.ToDouble(txtPTermNominalFeedback.Text) * feedback.ADCGranulatiry) / feedback.VoltageDividerFeedbackGain;
-            frm.AllowInputVoltageEdits = true;
+
+            if (frm.feedback.ADCResolution != cNPNZ.InputDataResolution) feedback.ADCResolution = cNPNZ.InputDataResolution;
+
+            if (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER)
+                frm.feedback.VoltageDividerSenseVoltage = (Convert.ToDouble(txtPTermNominalFeedback.Text) * frm.feedback.ADCGranularity) / frm.feedback.VoltageDividerFeedbackGain;
+            else if (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER)
+                frm.feedback.CurrentSenseSenseCurrent = (Convert.ToDouble(txtPTermNominalFeedback.Text) * frm.feedback.ADCGranularity) / frm.feedback.CurrentSenseFeedbackGain;
+            else if (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER)
+                frm.feedback.CurrentTransformerSenseCurrent = (Convert.ToDouble(txtPTermNominalFeedback.Text) * frm.feedback.ADCGranularity) / frm.feedback.CurrentTransformerFeedbackGain;
+            else if (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE)
+                frm.feedback.DigitalSourceValue = (Convert.ToDouble(txtPTermNominalFeedback.Text));
+
+            frm.EnableInputValueEdits = true;
+
 
             if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 // Set maximum feedback error value
                 txtPTermNominalFeedback.Text = frm.feedback.FeedbackValue.ToString(CultureInfo.CurrentCulture);
 
-                // Keep Input Gain and INput Resolution in Sync
+                // Keep Input Gain and Input Resolution in Sync
                 if (chkNormalizeInputGain.Checked)
                 { 
                     txtInputGain.Text = frm.feedback.FeedbackGain.ToString("#0.000000", CultureInfo.CurrentCulture); ;
                     txtInputDataResolution.Text = frm.feedback.ADCResolution.ToString("#0.#", CultureInfo.CurrentCulture);
                     feedback = frm.feedback;
                 }
+
+                // Sync settings across output and input objects
+                if ((frm.feedback.VoltageDividerSenseVoltage != ctrl_output.NominalOutputVoltage) && 
+                    (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER))
+                {
+                    ctrl_output.NominalOutputVoltage = frm.feedback.VoltageDividerSenseVoltage;
+                    txtPTermNominalOutput.Text = Math.Round(ctrl_output.NominalOutput, 0).ToString(CultureInfo.CurrentCulture);
+                }
+                    
+
+
 
                 CodeGeneratorOptions_CheckedChanged(chkAddPTermLoop, e);
             }
@@ -5041,30 +5078,42 @@ namespace dcld
             // Create a new instance of the form class
             frmCalculateOutputGain frm = new frmCalculateOutputGain();
 
+            // Show the settings form
+            if (ctrl_output.OutputType == clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_UNDEFINED)
+                ctrl_output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_FIXED_FREQUENCY;
+
+            // Sync Parameters across application
+            if ((Convert.ToDouble(txtPWMFrequency.Text) * 1000) != ctrl_output.PWMFrequency)
+                ctrl_output.PWMFrequency = (Convert.ToDouble(txtPWMFrequency.Text) * 1000);
+            
+            // Set frm objects
+            frm.output = ctrl_output;
+            frm.output.SetDeviceType(_targetDeviceType);
+            frm.EnableNominalControlEdits = true;
+
             if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
+                // Update control output object
+                txtPTermNominalOutput.Text = Math.Round(frm.output.NominalOutput, 0).ToString(CultureInfo.CurrentCulture);
 
+                // Sync settings across output and input objects
+                if ((feedback.VoltageDividerSenseVoltage != ctrl_output.NominalOutputVoltage) &&
+                    (feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER))
+                {
+                    feedback.VoltageDividerSenseVoltage = frm.output.NominalOutputVoltage;
+                    txtPTermNominalFeedback.Text = feedback.FeedbackValue.ToString(CultureInfo.CurrentCulture);
+                }
+                  
+                // Capture output configuration
+                ctrl_output = frm.output;
+
+                // Update Timing Graph parameters
+                txtPWMFrequency.Text = (ctrl_output.PWMFrequency / 1000.0).ToString(CultureInfo.CurrentCulture);
+                txtPWMDutyCycle.Text = Math.Round((100.0 * ctrl_output.PWMDutyCycle), 1).ToString(CultureInfo.CurrentCulture);
+
+                // Update code output
+                CodeGeneratorOptions_CheckedChanged(cmdGetPTermNominalOutput, e);
             }
-
-        }
-
-
-        private void ToolTip_Show(object sender, EventArgs e, string tool_tip_text)
-        {
-            // guarding condition...
-            if (sender.GetType().ToString() != "System.Windows.Forms.PictureBox")
-                return;
-
-            PictureBox TTpic = (PictureBox)sender;
-            frmToolTip TTip = new frmToolTip();
-
-            TTip.BackColor = SystemColors.Info;
-            TTip.ToolTipText = tool_tip_text;
-            TTip.StartPosition = FormStartPosition.Manual;
-            TTip.WinPos = TTpic.PointToScreen(Point.Empty); ;
-            TTip.Show(this);
-
-            return;
 
         }
 
@@ -5073,6 +5122,12 @@ namespace dcld
             chkAGCAddGetModFactorFunCall.Enabled = chkEnableAdaptiveGainControl.Checked;
             chkAGCAddEnable.Enabled = chkEnableAdaptiveGainControl.Checked;
             CodeGeneratorOptions_CheckedChanged(sender, e);
+        }
+
+
+        private void toolStripButtonConfig_Click(object sender, EventArgs e)
+        {
+            OpenProjectConfigWindow();
         }
 
         private void OpenProjectConfigWindow()
@@ -5120,7 +5175,14 @@ namespace dcld
 
                 // capture selected target device
                 _targetDevice = MPLABXProject.MPLABXConfiguration[MPLABXProject.ActiveConfiguration].TargetDevice;
-                if (_targetDevice.Length >= 5) _targetDeviceType = _targetDevice.Substring(0, 5);
+                if (_targetDevice.Length >= 7)
+                { 
+                    if (_targetDevice.Substring(5, 1) == "C")
+                        _targetDeviceType = _targetDevice.Substring(0, 6);
+                    else
+                        _targetDeviceType = _targetDevice.Substring(0, 7);
+
+                }
                 ProjectFile.WriteKey("ControlSetup", "TargetDevice", _targetDevice);
 
                 // If both objects have been set, update path information
@@ -5153,11 +5215,24 @@ namespace dcld
 
         }
 
-        private void toolStripButtonConfig_Click(object sender, EventArgs e)
+        private void ToolTip_Show(object sender, EventArgs e, string tool_tip_text)
         {
-            OpenProjectConfigWindow();
-        }
+            // guarding condition...
+            if (sender.GetType().ToString() != "System.Windows.Forms.PictureBox")
+                return;
 
+            PictureBox TTpic = (PictureBox)sender;
+            frmToolTip TTip = new frmToolTip();
+
+            TTip.BackColor = SystemColors.Info;
+            TTip.ToolTipText = tool_tip_text;
+            TTip.StartPosition = FormStartPosition.Manual;
+            TTip.WinPos = TTpic.PointToScreen(Point.Empty); ;
+            TTip.Show(this);
+
+            return;
+
+        }
 
         private void picInfo_MouseHover(object sender, EventArgs e)
         {
@@ -5210,11 +5285,11 @@ namespace dcld
                       "and this statics should be used for estimations only.";
 
             else if (pic.Name == picInfoDSPConfig.Name)
-                msg = this.Text + " uses a specific DSP core configuration to execute control loops at optimal performance.\r\n" +
+                msg = Application.ProductName + " uses a specific DSP core configuration to execute control loops at optimal performance.\r\n" +
                       "\r\n" +
                       "Enable this option if the DSP core is also used by other software instances with a different configuration." + "\r\n" +
                       "\r\n" +
-                      "If the DSP is only used to execute control loop generated by " + this.Text + ", it is recommended " +
+                      "If the DSP is only used to execute control loop generated by " + Application.ProductName + ", it is recommended " +
                       "to configure the DSP in a separated routine (e.g. during device initialization) and disable this option";
 
             else if (pic.Name == picInfoErrNorm.Name)
