@@ -78,8 +78,8 @@ count=37
 32=%{(1601)}%;feedback_offset_compensation
 33=%{(1602)}%;bi_directional_feedback_flag
 34=%{(1800)}%;agc_enable
-35=%{(1802)}%;agc_enable_switch
-36=%{(1803)}%;agc_get_factor_function_call
+35=%{(1801)}%;agc_enable_switch
+36=%{(1802)}%;agc_get_factor_function_call
 
 
 [labels]
