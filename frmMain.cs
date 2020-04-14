@@ -4128,13 +4128,8 @@ namespace dcld
 
         private void chkSaveRestoreAccumulators_CheckedChanged(object sender, EventArgs e)
         {
-            bool ACCBIsValid = false;
-
-            ACCBIsValid = (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT) || 
-                          (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT);
-
             chkSaveRestoreAccumulatorA.Enabled = chkSaveRestoreAccumulators.Checked;
-            chkSaveRestoreAccumulatorB.Enabled = chkSaveRestoreAccumulators.Checked && ACCBIsValid;
+            chkSaveRestoreAccumulatorB.Enabled = chkSaveRestoreAccumulators.Checked;
 
             CodeGeneratorOptions_CheckedChanged(sender, e);
             return;
