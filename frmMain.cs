@@ -1156,6 +1156,9 @@ namespace dcld
             FilterTypeChanged = false;
             ScalingChanged = false;
             UpdateComplete = true;
+
+            stbProgressBar.Value = 100;
+            Application.DoEvents();
             stbProgressBar.Visible = false;
             stbProgressBarLabel.Visible = false;
 
@@ -2000,6 +2003,8 @@ namespace dcld
                 // Clear Project File
                 ProjectFile.Clear();
 
+                stbProgressBar.Value = 100;
+                Application.DoEvents();
                 stbProgressBarLabel.Visible = false;
                 stbProgressBar.Visible = false;
                 return (false);
@@ -2307,6 +2312,9 @@ namespace dcld
             }
 
             ofdlg.Dispose();
+
+            stbProgressBar.Value = 100;
+            Application.DoEvents();
             stbProgressBar.Visible = false;
             stbProgressBarLabel.Visible = false;
 
@@ -2676,6 +2684,8 @@ namespace dcld
             }
 
 
+            stbProgressBar.Value = 100;
+            Application.DoEvents();
             stbProgressBar.Visible = false;
             stbProgressBarLabel.Visible = false;
             return;
@@ -3369,8 +3379,6 @@ namespace dcld
 
             try
             {
-
-
                 stbProgressBarLabel.Text = "Generating Source Code:";
                 stbProgressBarLabel.Visible = true;
                 stbProgressBar.Visible = true;
