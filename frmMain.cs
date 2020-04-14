@@ -3423,6 +3423,10 @@ namespace dcld
                 //Control parent = new Control();
                 CheckBox check = new CheckBox();
 
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                // Get Code Generation Option Tokens
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
                 for (_i = 0; _i < cGen.Tokens.Items.Count(); _i++)
                 {
                     foreach (Control _tab in tabConfig.Controls)
@@ -3443,6 +3447,7 @@ namespace dcld
                                         {
                                             check = (CheckBox)item;
                                             cGen.Tokens.Items[_i].Enabled = (bool)(check.Checked && check.Enabled);
+
                                             break;
                                         }
                                     }
@@ -3451,6 +3456,7 @@ namespace dcld
                         }
                     }
                 }
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
                 // Generate C-Source incorporating coefficients
 

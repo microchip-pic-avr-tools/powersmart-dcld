@@ -30,17 +30,17 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.LegendItem legendItem1 = new System.Windows.Forms.DataVisualization.Charting.LegendItem();
-            System.Windows.Forms.DataVisualization.Charting.LegendItem legendItem2 = new System.Windows.Forms.DataVisualization.Charting.LegendItem();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("A-Coefficients", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("B-Coefficients", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.LegendItem legendItem5 = new System.Windows.Forms.DataVisualization.Charting.LegendItem();
+            System.Windows.Forms.DataVisualization.Charting.LegendItem legendItem6 = new System.Windows.Forms.DataVisualization.Charting.LegendItem();
+            System.Windows.Forms.DataVisualization.Charting.Series series15 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series16 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series17 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series18 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("A-Coefficients", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("B-Coefficients", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewItem listViewItem23 = new System.Windows.Forms.ListViewItem(new string[] {
             "A1",
             "1",
             "0",
@@ -50,60 +50,60 @@
             "0",
             "0x0000",
             "00000000 00000000"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem24 = new System.Windows.Forms.ListViewItem(new string[] {
             "A2",
             "1"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem25 = new System.Windows.Forms.ListViewItem(new string[] {
             "A3",
             "1"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("A4");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("A5");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("B0");
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem26 = new System.Windows.Forms.ListViewItem("A4");
+            System.Windows.Forms.ListViewItem listViewItem27 = new System.Windows.Forms.ListViewItem("A5");
+            System.Windows.Forms.ListViewItem listViewItem28 = new System.Windows.Forms.ListViewItem("B0");
+            System.Windows.Forms.ListViewItem listViewItem29 = new System.Windows.Forms.ListViewItem(new string[] {
             "B1",
             "1"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem30 = new System.Windows.Forms.ListViewItem(new string[] {
             "B2",
             "1"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("B3");
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("B4");
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("B5");
-            System.Windows.Forms.DataVisualization.Charting.VerticalLineAnnotation verticalLineAnnotation1 = new System.Windows.Forms.DataVisualization.Charting.VerticalLineAnnotation();
-            System.Windows.Forms.DataVisualization.Charting.VerticalLineAnnotation verticalLineAnnotation2 = new System.Windows.Forms.DataVisualization.Charting.VerticalLineAnnotation();
-            System.Windows.Forms.DataVisualization.Charting.VerticalLineAnnotation verticalLineAnnotation3 = new System.Windows.Forms.DataVisualization.Charting.VerticalLineAnnotation();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(-200D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(800D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint5 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(800D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint6 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(2000D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint7 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(2000D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint8 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(2200D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint9 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(-200D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint10 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(400D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint11 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(400D, 0.9D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint12 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(700D, 0.9D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint13 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(700D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint14 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(2200D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint15 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(-200D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint16 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(525D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint17 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(525D, 0.8D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint18 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1300D, 0.8D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint19 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1300D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint20 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(2200D, 0D);
-            ActiproSoftware.SyntaxEditor.Document document1 = new ActiproSoftware.SyntaxEditor.Document();
-            ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer visualStudio2005SyntaxEditorRenderer1 = new ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer();
-            ActiproSoftware.SyntaxEditor.Document document2 = new ActiproSoftware.SyntaxEditor.Document();
-            ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer visualStudio2005SyntaxEditorRenderer2 = new ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer();
-            ActiproSoftware.SyntaxEditor.Document document3 = new ActiproSoftware.SyntaxEditor.Document();
-            ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer visualStudio2005SyntaxEditorRenderer3 = new ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer();
-            ActiproSoftware.SyntaxEditor.Document document4 = new ActiproSoftware.SyntaxEditor.Document();
-            ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer visualStudio2005SyntaxEditorRenderer4 = new ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer();
+            System.Windows.Forms.ListViewItem listViewItem31 = new System.Windows.Forms.ListViewItem("B3");
+            System.Windows.Forms.ListViewItem listViewItem32 = new System.Windows.Forms.ListViewItem("B4");
+            System.Windows.Forms.ListViewItem listViewItem33 = new System.Windows.Forms.ListViewItem("B5");
+            System.Windows.Forms.DataVisualization.Charting.VerticalLineAnnotation verticalLineAnnotation7 = new System.Windows.Forms.DataVisualization.Charting.VerticalLineAnnotation();
+            System.Windows.Forms.DataVisualization.Charting.VerticalLineAnnotation verticalLineAnnotation8 = new System.Windows.Forms.DataVisualization.Charting.VerticalLineAnnotation();
+            System.Windows.Forms.DataVisualization.Charting.VerticalLineAnnotation verticalLineAnnotation9 = new System.Windows.Forms.DataVisualization.Charting.VerticalLineAnnotation();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series19 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint41 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(-200D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint42 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint43 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint44 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(800D, 1D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint45 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(800D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint46 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(2000D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint47 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(2000D, 1D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint48 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(2200D, 1D);
+            System.Windows.Forms.DataVisualization.Charting.Series series20 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint49 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(-200D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint50 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(400D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint51 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(400D, 0.9D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint52 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(700D, 0.9D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint53 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(700D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint54 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(2200D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.Series series21 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint55 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(-200D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint56 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(525D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint57 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(525D, 0.8D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint58 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1300D, 0.8D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint59 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(1300D, 0D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint60 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(2200D, 0D);
+            ActiproSoftware.SyntaxEditor.Document document9 = new ActiproSoftware.SyntaxEditor.Document();
+            ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer visualStudio2005SyntaxEditorRenderer9 = new ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer();
+            ActiproSoftware.SyntaxEditor.Document document10 = new ActiproSoftware.SyntaxEditor.Document();
+            ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer visualStudio2005SyntaxEditorRenderer10 = new ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer();
+            ActiproSoftware.SyntaxEditor.Document document11 = new ActiproSoftware.SyntaxEditor.Document();
+            ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer visualStudio2005SyntaxEditorRenderer11 = new ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer();
+            ActiproSoftware.SyntaxEditor.Document document12 = new ActiproSoftware.SyntaxEditor.Document();
+            ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer visualStudio2005SyntaxEditorRenderer12 = new ActiproSoftware.SyntaxEditor.VisualStudio2005SyntaxEditorRenderer();
             this.mnuMain = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -157,11 +157,6 @@
             this.splitContainerContents = new System.Windows.Forms.SplitContainer();
             this.tabConfig = new System.Windows.Forms.TabControl();
             this.tabController = new System.Windows.Forms.TabPage();
-            this.grpAdaptiveGainControl = new System.Windows.Forms.GroupBox();
-            this.chkAGCAddGetModFactorFunCall = new System.Windows.Forms.CheckBox();
-            this.chkAGCAddEnable = new System.Windows.Forms.CheckBox();
-            this.picInfoAGC = new System.Windows.Forms.PictureBox();
-            this.chkEnableAdaptiveGainControl = new System.Windows.Forms.CheckBox();
             this.grpPolesZeros = new System.Windows.Forms.GroupBox();
             this.txtSamplingFrequency = new System.Windows.Forms.TextBox();
             this.lblFZ1Unit = new System.Windows.Forms.Label();
@@ -268,6 +263,11 @@
             this.lblFinalNamePrefixOutput = new System.Windows.Forms.Label();
             this.lblFinalNamePrefix = new System.Windows.Forms.Label();
             this.tabAdvanced = new System.Windows.Forms.TabPage();
+            this.grpAdaptiveGainControl = new System.Windows.Forms.GroupBox();
+            this.chkAGCAddGetModFactorFunCall = new System.Windows.Forms.CheckBox();
+            this.picInfoAGC = new System.Windows.Forms.PictureBox();
+            this.chkEnableAdaptiveGainControl = new System.Windows.Forms.CheckBox();
+            this.chkAGCAddEnable = new System.Windows.Forms.CheckBox();
             this.grpDevelopmentTools = new System.Windows.Forms.GroupBox();
             this.cmdGetPTermNominalOutput = new System.Windows.Forms.Button();
             this.cmdGetPTermNominalFeedback = new System.Windows.Forms.Button();
@@ -517,8 +517,6 @@
             this.splitContainerContents.SuspendLayout();
             this.tabConfig.SuspendLayout();
             this.tabController.SuspendLayout();
-            this.grpAdaptiveGainControl.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).BeginInit();
             this.grpPolesZeros.SuspendLayout();
             this.grpOutputDataNormalization.SuspendLayout();
             this.grpInputDataSpecifications.SuspendLayout();
@@ -535,6 +533,8 @@
             this.grpContextManagement.SuspendLayout();
             this.grpFunctionLabel.SuspendLayout();
             this.tabAdvanced.SuspendLayout();
+            this.grpAdaptiveGainControl.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).BeginInit();
             this.grpDevelopmentTools.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoPTermController)).BeginInit();
             this.tabAnalysis.SuspendLayout();
@@ -973,7 +973,7 @@
             // stbProgressBar
             // 
             this.stbProgressBar.Name = "stbProgressBar";
-            this.stbProgressBar.Size = new System.Drawing.Size(100, 22);
+            this.stbProgressBar.Size = new System.Drawing.Size(100, 20);
             this.stbProgressBar.Visible = false;
             // 
             // stbMainProgressTime
@@ -1071,7 +1071,6 @@
             // tabController
             // 
             this.tabController.AutoScroll = true;
-            this.tabController.Controls.Add(this.grpAdaptiveGainControl);
             this.tabController.Controls.Add(this.grpPolesZeros);
             this.tabController.Controls.Add(this.grpOutputDataNormalization);
             this.tabController.Controls.Add(this.grpInputDataSpecifications);
@@ -1083,69 +1082,6 @@
             this.tabController.TabIndex = 0;
             this.tabController.Text = "Controller";
             this.tabController.UseVisualStyleBackColor = true;
-            // 
-            // grpAdaptiveGainControl
-            // 
-            this.grpAdaptiveGainControl.Controls.Add(this.chkAGCAddGetModFactorFunCall);
-            this.grpAdaptiveGainControl.Controls.Add(this.chkAGCAddEnable);
-            this.grpAdaptiveGainControl.Controls.Add(this.picInfoAGC);
-            this.grpAdaptiveGainControl.Controls.Add(this.chkEnableAdaptiveGainControl);
-            this.grpAdaptiveGainControl.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpAdaptiveGainControl.Location = new System.Drawing.Point(3, 613);
-            this.grpAdaptiveGainControl.Name = "grpAdaptiveGainControl";
-            this.grpAdaptiveGainControl.Size = new System.Drawing.Size(422, 79);
-            this.grpAdaptiveGainControl.TabIndex = 9;
-            this.grpAdaptiveGainControl.TabStop = false;
-            // 
-            // chkAGCAddGetModFactorFunCall
-            // 
-            this.chkAGCAddGetModFactorFunCall.AutoSize = true;
-            this.chkAGCAddGetModFactorFunCall.Enabled = false;
-            this.chkAGCAddGetModFactorFunCall.Location = new System.Drawing.Point(36, 50);
-            this.chkAGCAddGetModFactorFunCall.Name = "chkAGCAddGetModFactorFunCall";
-            this.chkAGCAddGetModFactorFunCall.Size = new System.Drawing.Size(254, 19);
-            this.chkAGCAddGetModFactorFunCall.TabIndex = 10;
-            this.chkAGCAddGetModFactorFunCall.Tag = "agc_get_factor_function_call\r\n";
-            this.chkAGCAddGetModFactorFunCall.Text = "Add \'Get Modulation Factor\' Function Call";
-            this.chkAGCAddGetModFactorFunCall.UseVisualStyleBackColor = true;
-            this.chkAGCAddGetModFactorFunCall.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
-            // 
-            // chkAGCAddEnable
-            // 
-            this.chkAGCAddEnable.AutoSize = true;
-            this.chkAGCAddEnable.Enabled = false;
-            this.chkAGCAddEnable.Location = new System.Drawing.Point(36, 25);
-            this.chkAGCAddEnable.Name = "chkAGCAddEnable";
-            this.chkAGCAddEnable.Size = new System.Drawing.Size(257, 19);
-            this.chkAGCAddEnable.TabIndex = 9;
-            this.chkAGCAddEnable.Tag = "agc_enable_switch\r\n";
-            this.chkAGCAddEnable.Text = "Add Enable/Disable Adaptive Gain Control";
-            this.chkAGCAddEnable.UseVisualStyleBackColor = true;
-            this.chkAGCAddEnable.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
-            // 
-            // picInfoAGC
-            // 
-            this.picInfoAGC.Image = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.Image")));
-            this.picInfoAGC.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.InitialImage")));
-            this.picInfoAGC.Location = new System.Drawing.Point(202, 1);
-            this.picInfoAGC.Name = "picInfoAGC";
-            this.picInfoAGC.Size = new System.Drawing.Size(16, 16);
-            this.picInfoAGC.TabIndex = 72;
-            this.picInfoAGC.TabStop = false;
-            // 
-            // chkEnableAdaptiveGainControl
-            // 
-            this.chkEnableAdaptiveGainControl.AutoSize = true;
-            this.chkEnableAdaptiveGainControl.BackColor = System.Drawing.SystemColors.Window;
-            this.chkEnableAdaptiveGainControl.Enabled = false;
-            this.chkEnableAdaptiveGainControl.Location = new System.Drawing.Point(10, 0);
-            this.chkEnableAdaptiveGainControl.Name = "chkEnableAdaptiveGainControl";
-            this.chkEnableAdaptiveGainControl.Size = new System.Drawing.Size(188, 19);
-            this.chkEnableAdaptiveGainControl.TabIndex = 8;
-            this.chkEnableAdaptiveGainControl.Tag = "agc_enable";
-            this.chkEnableAdaptiveGainControl.Text = "Enable Loop &Gain Modulation";
-            this.chkEnableAdaptiveGainControl.UseVisualStyleBackColor = false;
-            this.chkEnableAdaptiveGainControl.CheckedChanged += new System.EventHandler(this.chkEnableAdaptiveGainControl_CheckedChanged);
             // 
             // grpPolesZeros
             // 
@@ -2557,13 +2493,76 @@
             // 
             // tabAdvanced
             // 
+            this.tabAdvanced.Controls.Add(this.grpAdaptiveGainControl);
             this.tabAdvanced.Controls.Add(this.grpDevelopmentTools);
-            this.tabAdvanced.Location = new System.Drawing.Point(4, 22);
+            this.tabAdvanced.Location = new System.Drawing.Point(4, 24);
             this.tabAdvanced.Name = "tabAdvanced";
-            this.tabAdvanced.Size = new System.Drawing.Size(428, 745);
+            this.tabAdvanced.Size = new System.Drawing.Size(428, 743);
             this.tabAdvanced.TabIndex = 2;
             this.tabAdvanced.Text = "Advanced";
             this.tabAdvanced.UseVisualStyleBackColor = true;
+            // 
+            // grpAdaptiveGainControl
+            // 
+            this.grpAdaptiveGainControl.Controls.Add(this.chkAGCAddGetModFactorFunCall);
+            this.grpAdaptiveGainControl.Controls.Add(this.picInfoAGC);
+            this.grpAdaptiveGainControl.Controls.Add(this.chkEnableAdaptiveGainControl);
+            this.grpAdaptiveGainControl.Controls.Add(this.chkAGCAddEnable);
+            this.grpAdaptiveGainControl.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpAdaptiveGainControl.Location = new System.Drawing.Point(0, 210);
+            this.grpAdaptiveGainControl.Name = "grpAdaptiveGainControl";
+            this.grpAdaptiveGainControl.Size = new System.Drawing.Size(428, 79);
+            this.grpAdaptiveGainControl.TabIndex = 10;
+            this.grpAdaptiveGainControl.TabStop = false;
+            // 
+            // chkAGCAddGetModFactorFunCall
+            // 
+            this.chkAGCAddGetModFactorFunCall.AutoSize = true;
+            this.chkAGCAddGetModFactorFunCall.Enabled = false;
+            this.chkAGCAddGetModFactorFunCall.Location = new System.Drawing.Point(28, 50);
+            this.chkAGCAddGetModFactorFunCall.Name = "chkAGCAddGetModFactorFunCall";
+            this.chkAGCAddGetModFactorFunCall.Size = new System.Drawing.Size(254, 19);
+            this.chkAGCAddGetModFactorFunCall.TabIndex = 10;
+            this.chkAGCAddGetModFactorFunCall.Tag = "agc_get_factor_function_call";
+            this.chkAGCAddGetModFactorFunCall.Text = "Add \'Get Modulation Factor\' Function Call";
+            this.chkAGCAddGetModFactorFunCall.UseVisualStyleBackColor = true;
+            this.chkAGCAddGetModFactorFunCall.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            // 
+            // picInfoAGC
+            // 
+            this.picInfoAGC.Image = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.Image")));
+            this.picInfoAGC.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.InitialImage")));
+            this.picInfoAGC.Location = new System.Drawing.Point(202, 1);
+            this.picInfoAGC.Name = "picInfoAGC";
+            this.picInfoAGC.Size = new System.Drawing.Size(16, 16);
+            this.picInfoAGC.TabIndex = 72;
+            this.picInfoAGC.TabStop = false;
+            // 
+            // chkEnableAdaptiveGainControl
+            // 
+            this.chkEnableAdaptiveGainControl.AutoSize = true;
+            this.chkEnableAdaptiveGainControl.BackColor = System.Drawing.SystemColors.Window;
+            this.chkEnableAdaptiveGainControl.Location = new System.Drawing.Point(10, 0);
+            this.chkEnableAdaptiveGainControl.Name = "chkEnableAdaptiveGainControl";
+            this.chkEnableAdaptiveGainControl.Size = new System.Drawing.Size(188, 19);
+            this.chkEnableAdaptiveGainControl.TabIndex = 8;
+            this.chkEnableAdaptiveGainControl.Tag = "agc_enable";
+            this.chkEnableAdaptiveGainControl.Text = "Enable Loop &Gain Modulation";
+            this.chkEnableAdaptiveGainControl.UseVisualStyleBackColor = false;
+            this.chkEnableAdaptiveGainControl.CheckedChanged += new System.EventHandler(this.chkEnableAdaptiveGainControl_CheckedChanged);
+            // 
+            // chkAGCAddEnable
+            // 
+            this.chkAGCAddEnable.AutoSize = true;
+            this.chkAGCAddEnable.Enabled = false;
+            this.chkAGCAddEnable.Location = new System.Drawing.Point(28, 25);
+            this.chkAGCAddEnable.Name = "chkAGCAddEnable";
+            this.chkAGCAddEnable.Size = new System.Drawing.Size(257, 19);
+            this.chkAGCAddEnable.TabIndex = 9;
+            this.chkAGCAddEnable.Tag = "agc_enable_switch";
+            this.chkAGCAddEnable.Text = "Add Enable/Disable Adaptive Gain Control";
+            this.chkAGCAddEnable.UseVisualStyleBackColor = true;
+            this.chkAGCAddEnable.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
             // grpDevelopmentTools
             // 
@@ -2591,7 +2590,7 @@
             // 
             this.cmdGetPTermNominalOutput.Enabled = false;
             this.cmdGetPTermNominalOutput.Image = global::dcld.Properties.Resources.calculate;
-            this.cmdGetPTermNominalOutput.Location = new System.Drawing.Point(392, 101);
+            this.cmdGetPTermNominalOutput.Location = new System.Drawing.Point(357, 87);
             this.cmdGetPTermNominalOutput.Name = "cmdGetPTermNominalOutput";
             this.cmdGetPTermNominalOutput.Size = new System.Drawing.Size(24, 24);
             this.cmdGetPTermNominalOutput.TabIndex = 6;
@@ -2602,7 +2601,7 @@
             // 
             this.cmdGetPTermNominalFeedback.Enabled = false;
             this.cmdGetPTermNominalFeedback.Image = global::dcld.Properties.Resources.calculate;
-            this.cmdGetPTermNominalFeedback.Location = new System.Drawing.Point(392, 72);
+            this.cmdGetPTermNominalFeedback.Location = new System.Drawing.Point(357, 58);
             this.cmdGetPTermNominalFeedback.Name = "cmdGetPTermNominalFeedback";
             this.cmdGetPTermNominalFeedback.Size = new System.Drawing.Size(24, 24);
             this.cmdGetPTermNominalFeedback.TabIndex = 4;
@@ -2613,7 +2612,7 @@
             // 
             this.lblPTermScaler.AutoSize = true;
             this.lblPTermScaler.Enabled = false;
-            this.lblPTermScaler.Location = new System.Drawing.Point(189, 162);
+            this.lblPTermScaler.Location = new System.Drawing.Point(154, 148);
             this.lblPTermScaler.Name = "lblPTermScaler";
             this.lblPTermScaler.Size = new System.Drawing.Size(44, 15);
             this.lblPTermScaler.TabIndex = 84;
@@ -2623,7 +2622,7 @@
             // 
             this.lblPTermFactor.AutoSize = true;
             this.lblPTermFactor.Enabled = false;
-            this.lblPTermFactor.Location = new System.Drawing.Point(167, 133);
+            this.lblPTermFactor.Location = new System.Drawing.Point(132, 119);
             this.lblPTermFactor.Name = "lblPTermFactor";
             this.lblPTermFactor.Size = new System.Drawing.Size(66, 15);
             this.lblPTermFactor.TabIndex = 83;
@@ -2633,7 +2632,7 @@
             // 
             this.lblPTermNominalOutput.AutoSize = true;
             this.lblPTermNominalOutput.Enabled = false;
-            this.lblPTermNominalOutput.Location = new System.Drawing.Point(92, 104);
+            this.lblPTermNominalOutput.Location = new System.Drawing.Point(57, 90);
             this.lblPTermNominalOutput.Name = "lblPTermNominalOutput";
             this.lblPTermNominalOutput.Size = new System.Drawing.Size(142, 15);
             this.lblPTermNominalOutput.TabIndex = 82;
@@ -2643,7 +2642,7 @@
             // 
             this.lblPTermNominalFeedback.AutoSize = true;
             this.lblPTermNominalFeedback.Enabled = false;
-            this.lblPTermNominalFeedback.Location = new System.Drawing.Point(92, 75);
+            this.lblPTermNominalFeedback.Location = new System.Drawing.Point(57, 61);
             this.lblPTermNominalFeedback.Name = "lblPTermNominalFeedback";
             this.lblPTermNominalFeedback.Size = new System.Drawing.Size(141, 15);
             this.lblPTermNominalFeedback.TabIndex = 81;
@@ -2652,7 +2651,7 @@
             // txtPTermNominalOutput
             // 
             this.txtPTermNominalOutput.Enabled = false;
-            this.txtPTermNominalOutput.Location = new System.Drawing.Point(240, 101);
+            this.txtPTermNominalOutput.Location = new System.Drawing.Point(205, 87);
             this.txtPTermNominalOutput.Name = "txtPTermNominalOutput";
             this.txtPTermNominalOutput.Size = new System.Drawing.Size(146, 23);
             this.txtPTermNominalOutput.TabIndex = 5;
@@ -2663,7 +2662,7 @@
             // txtPTermNominalFeedback
             // 
             this.txtPTermNominalFeedback.Enabled = false;
-            this.txtPTermNominalFeedback.Location = new System.Drawing.Point(239, 72);
+            this.txtPTermNominalFeedback.Location = new System.Drawing.Point(204, 58);
             this.txtPTermNominalFeedback.Name = "txtPTermNominalFeedback";
             this.txtPTermNominalFeedback.Size = new System.Drawing.Size(147, 23);
             this.txtPTermNominalFeedback.TabIndex = 3;
@@ -2674,7 +2673,7 @@
             // txtPTermScaler
             // 
             this.txtPTermScaler.Enabled = false;
-            this.txtPTermScaler.Location = new System.Drawing.Point(239, 159);
+            this.txtPTermScaler.Location = new System.Drawing.Point(204, 145);
             this.txtPTermScaler.Name = "txtPTermScaler";
             this.txtPTermScaler.Size = new System.Drawing.Size(147, 23);
             this.txtPTermScaler.TabIndex = 8;
@@ -2684,7 +2683,7 @@
             // txtPTermFactor
             // 
             this.txtPTermFactor.Enabled = false;
-            this.txtPTermFactor.Location = new System.Drawing.Point(239, 130);
+            this.txtPTermFactor.Location = new System.Drawing.Point(204, 116);
             this.txtPTermFactor.Name = "txtPTermFactor";
             this.txtPTermFactor.Size = new System.Drawing.Size(147, 23);
             this.txtPTermFactor.TabIndex = 7;
@@ -2695,7 +2694,7 @@
             // 
             this.picInfoPTermController.Image = ((System.Drawing.Image)(resources.GetObject("picInfoPTermController.Image")));
             this.picInfoPTermController.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoPTermController.InitialImage")));
-            this.picInfoPTermController.Location = new System.Drawing.Point(346, 31);
+            this.picInfoPTermController.Location = new System.Drawing.Point(325, 32);
             this.picInfoPTermController.Name = "picInfoPTermController";
             this.picInfoPTermController.Size = new System.Drawing.Size(16, 16);
             this.picInfoPTermController.TabIndex = 73;
@@ -2705,7 +2704,7 @@
             // 
             this.chkAddPTermLoop.AutoSize = true;
             this.chkAddPTermLoop.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkAddPTermLoop.Location = new System.Drawing.Point(30, 31);
+            this.chkAddPTermLoop.Location = new System.Drawing.Point(10, 29);
             this.chkAddPTermLoop.Name = "chkAddPTermLoop";
             this.chkAddPTermLoop.Size = new System.Drawing.Size(309, 19);
             this.chkAddPTermLoop.TabIndex = 2;
@@ -2765,115 +2764,115 @@
             // chartBode
             // 
             this.chartBode.BorderSkin.BorderColor = System.Drawing.Color.Gray;
-            chartArea1.AxisX.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.True;
-            chartArea1.AxisX.Interval = 1D;
-            chartArea1.AxisX.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.AxisX.IsStartedFromZero = false;
-            chartArea1.AxisX.MajorGrid.Interval = 1D;
-            chartArea1.AxisX.MajorGrid.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.AxisX.MajorGrid.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.Gray;
-            chartArea1.AxisX.MajorTickMark.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.AxisX.MajorTickMark.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.AxisX.MajorTickMark.LineColor = System.Drawing.Color.Silver;
-            chartArea1.AxisX.Maximum = 100000D;
-            chartArea1.AxisX.Minimum = 100D;
-            chartArea1.AxisX.MinorGrid.Enabled = true;
-            chartArea1.AxisX.MinorGrid.Interval = 1D;
-            chartArea1.AxisX.MinorGrid.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.AxisX.MinorGrid.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.AxisX.MinorGrid.LineColor = System.Drawing.Color.Silver;
-            chartArea1.AxisX.MinorTickMark.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.AxisX.MinorTickMark.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.AxisX.MinorTickMark.LineColor = System.Drawing.Color.Silver;
-            chartArea1.AxisX.TextOrientation = System.Windows.Forms.DataVisualization.Charting.TextOrientation.Horizontal;
-            chartArea1.AxisX.Title = "Frequency [Hz]";
-            chartArea1.AxisX.TitleFont = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            chartArea1.AxisY.Interval = 10D;
-            chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.Gray;
-            chartArea1.AxisY.MajorTickMark.LineColor = System.Drawing.Color.Silver;
-            chartArea1.AxisY.Maximum = 60D;
-            chartArea1.AxisY.Minimum = -60D;
-            chartArea1.AxisY.TextOrientation = System.Windows.Forms.DataVisualization.Charting.TextOrientation.Rotated270;
-            chartArea1.AxisY.Title = "Magnitude/Gain [dB]";
-            chartArea1.AxisY.TitleFont = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            chartArea1.AxisY2.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.True;
-            chartArea1.AxisY2.Interval = 30D;
-            chartArea1.AxisY2.MajorGrid.LineColor = System.Drawing.Color.Gray;
-            chartArea1.AxisY2.MajorTickMark.LineColor = System.Drawing.Color.Silver;
-            chartArea1.AxisY2.Maximum = 180D;
-            chartArea1.AxisY2.Minimum = -180D;
-            chartArea1.AxisY2.TextOrientation = System.Windows.Forms.DataVisualization.Charting.TextOrientation.Rotated270;
-            chartArea1.AxisY2.Title = "Phase [°]";
-            chartArea1.AxisY2.TitleFont = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            chartArea1.CursorX.Interval = 0.001D;
-            chartArea1.CursorX.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.CursorX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.CursorX.LineColor = System.Drawing.Color.Black;
-            chartArea1.CursorX.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
-            chartArea1.CursorY.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.CursorY.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea1.CursorY.LineColor = System.Drawing.Color.Black;
-            chartArea1.IsSameFontSizeForAllAxes = true;
-            chartArea1.Name = "GainPhase";
-            this.chartBode.ChartAreas.Add(chartArea1);
+            chartArea5.AxisX.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.True;
+            chartArea5.AxisX.Interval = 1D;
+            chartArea5.AxisX.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.AxisX.IsStartedFromZero = false;
+            chartArea5.AxisX.MajorGrid.Interval = 1D;
+            chartArea5.AxisX.MajorGrid.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.AxisX.MajorGrid.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.AxisX.MajorGrid.LineColor = System.Drawing.Color.Gray;
+            chartArea5.AxisX.MajorTickMark.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.AxisX.MajorTickMark.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.AxisX.MajorTickMark.LineColor = System.Drawing.Color.Silver;
+            chartArea5.AxisX.Maximum = 100000D;
+            chartArea5.AxisX.Minimum = 100D;
+            chartArea5.AxisX.MinorGrid.Enabled = true;
+            chartArea5.AxisX.MinorGrid.Interval = 1D;
+            chartArea5.AxisX.MinorGrid.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.AxisX.MinorGrid.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.AxisX.MinorGrid.LineColor = System.Drawing.Color.Silver;
+            chartArea5.AxisX.MinorTickMark.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.AxisX.MinorTickMark.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.AxisX.MinorTickMark.LineColor = System.Drawing.Color.Silver;
+            chartArea5.AxisX.TextOrientation = System.Windows.Forms.DataVisualization.Charting.TextOrientation.Horizontal;
+            chartArea5.AxisX.Title = "Frequency [Hz]";
+            chartArea5.AxisX.TitleFont = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea5.AxisY.Interval = 10D;
+            chartArea5.AxisY.MajorGrid.LineColor = System.Drawing.Color.Gray;
+            chartArea5.AxisY.MajorTickMark.LineColor = System.Drawing.Color.Silver;
+            chartArea5.AxisY.Maximum = 60D;
+            chartArea5.AxisY.Minimum = -60D;
+            chartArea5.AxisY.TextOrientation = System.Windows.Forms.DataVisualization.Charting.TextOrientation.Rotated270;
+            chartArea5.AxisY.Title = "Magnitude/Gain [dB]";
+            chartArea5.AxisY.TitleFont = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea5.AxisY2.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.True;
+            chartArea5.AxisY2.Interval = 30D;
+            chartArea5.AxisY2.MajorGrid.LineColor = System.Drawing.Color.Gray;
+            chartArea5.AxisY2.MajorTickMark.LineColor = System.Drawing.Color.Silver;
+            chartArea5.AxisY2.Maximum = 180D;
+            chartArea5.AxisY2.Minimum = -180D;
+            chartArea5.AxisY2.TextOrientation = System.Windows.Forms.DataVisualization.Charting.TextOrientation.Rotated270;
+            chartArea5.AxisY2.Title = "Phase [°]";
+            chartArea5.AxisY2.TitleFont = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea5.CursorX.Interval = 0.001D;
+            chartArea5.CursorX.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.CursorX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.CursorX.LineColor = System.Drawing.Color.Black;
+            chartArea5.CursorX.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
+            chartArea5.CursorY.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.CursorY.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea5.CursorY.LineColor = System.Drawing.Color.Black;
+            chartArea5.IsSameFontSizeForAllAxes = true;
+            chartArea5.Name = "GainPhase";
+            this.chartBode.ChartAreas.Add(chartArea5);
             this.chartBode.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Alignment = System.Drawing.StringAlignment.Center;
-            legend1.AutoFitMinFontSize = 10;
-            legendItem1.BorderWidth = 2;
-            legendItem1.Color = System.Drawing.Color.Teal;
-            legendItem1.ImageStyle = System.Windows.Forms.DataVisualization.Charting.LegendImageStyle.Line;
-            legendItem1.MarkerColor = System.Drawing.Color.White;
-            legendItem1.Name = "Pole Locations";
-            legendItem2.BorderWidth = 2;
-            legendItem2.Color = System.Drawing.Color.Green;
-            legendItem2.ImageStyle = System.Windows.Forms.DataVisualization.Charting.LegendImageStyle.Line;
-            legendItem2.Name = "Zero Locations";
-            legend1.CustomItems.Add(legendItem1);
-            legend1.CustomItems.Add(legendItem2);
-            legend1.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            legend1.IsTextAutoFit = false;
-            legend1.Name = "chartLegendDataSeries";
-            legend1.TitleFont = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chartBode.Legends.Add(legend1);
+            legend5.Alignment = System.Drawing.StringAlignment.Center;
+            legend5.AutoFitMinFontSize = 10;
+            legendItem5.BorderWidth = 2;
+            legendItem5.Color = System.Drawing.Color.Teal;
+            legendItem5.ImageStyle = System.Windows.Forms.DataVisualization.Charting.LegendImageStyle.Line;
+            legendItem5.MarkerColor = System.Drawing.Color.White;
+            legendItem5.Name = "Pole Locations";
+            legendItem6.BorderWidth = 2;
+            legendItem6.Color = System.Drawing.Color.Green;
+            legendItem6.ImageStyle = System.Windows.Forms.DataVisualization.Charting.LegendImageStyle.Line;
+            legendItem6.Name = "Zero Locations";
+            legend5.CustomItems.Add(legendItem5);
+            legend5.CustomItems.Add(legendItem6);
+            legend5.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            legend5.IsTextAutoFit = false;
+            legend5.Name = "chartLegendDataSeries";
+            legend5.TitleFont = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chartBode.Legends.Add(legend5);
             this.chartBode.Location = new System.Drawing.Point(0, 25);
             this.chartBode.Name = "chartBode";
-            series1.BorderWidth = 2;
-            series1.ChartArea = "GainPhase";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.Color = System.Drawing.Color.Red;
-            series1.Legend = "chartLegendDataSeries";
-            series1.Name = "Gain (z)";
-            series2.BorderWidth = 2;
-            series2.ChartArea = "GainPhase";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Color = System.Drawing.Color.Blue;
-            series2.Legend = "chartLegendDataSeries";
-            series2.Name = "Phase (z)";
-            series2.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
-            series3.BackImageAlignment = System.Windows.Forms.DataVisualization.Charting.ChartImageAlignmentStyle.Top;
-            series3.BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
-            series3.ChartArea = "GainPhase";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series3.Color = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            series3.Legend = "chartLegendDataSeries";
-            series3.Name = "Gain (s)";
-            series3.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
-            series3.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
-            series4.BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
-            series4.ChartArea = "GainPhase";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series4.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            series4.Legend = "chartLegendDataSeries";
-            series4.Name = "Phase (s)";
-            series4.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
-            series4.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
-            series4.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
-            this.chartBode.Series.Add(series1);
-            this.chartBode.Series.Add(series2);
-            this.chartBode.Series.Add(series3);
-            this.chartBode.Series.Add(series4);
+            series15.BorderWidth = 2;
+            series15.ChartArea = "GainPhase";
+            series15.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series15.Color = System.Drawing.Color.Red;
+            series15.Legend = "chartLegendDataSeries";
+            series15.Name = "Gain (z)";
+            series16.BorderWidth = 2;
+            series16.ChartArea = "GainPhase";
+            series16.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series16.Color = System.Drawing.Color.Blue;
+            series16.Legend = "chartLegendDataSeries";
+            series16.Name = "Phase (z)";
+            series16.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
+            series17.BackImageAlignment = System.Windows.Forms.DataVisualization.Charting.ChartImageAlignmentStyle.Top;
+            series17.BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
+            series17.ChartArea = "GainPhase";
+            series17.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series17.Color = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            series17.Legend = "chartLegendDataSeries";
+            series17.Name = "Gain (s)";
+            series17.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
+            series17.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
+            series18.BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
+            series18.ChartArea = "GainPhase";
+            series18.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series18.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            series18.Legend = "chartLegendDataSeries";
+            series18.Name = "Phase (s)";
+            series18.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
+            series18.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
+            series18.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
+            this.chartBode.Series.Add(series15);
+            this.chartBode.Series.Add(series16);
+            this.chartBode.Series.Add(series17);
+            this.chartBode.Series.Add(series18);
             this.chartBode.Size = new System.Drawing.Size(916, 352);
             this.chartBode.TabIndex = 4;
             this.chartBode.Text = "Compensation Transfer Function";
@@ -3116,36 +3115,36 @@
             this.lvCoefficients.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lvCoefficients.FullRowSelect = true;
             this.lvCoefficients.GridLines = true;
-            listViewGroup1.Header = "A-Coefficients";
-            listViewGroup1.Name = "lgrpA";
-            listViewGroup2.Header = "B-Coefficients";
-            listViewGroup2.Name = "lrgpB";
+            listViewGroup5.Header = "A-Coefficients";
+            listViewGroup5.Name = "lgrpA";
+            listViewGroup6.Header = "B-Coefficients";
+            listViewGroup6.Name = "lrgpB";
             this.lvCoefficients.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2});
-            listViewItem1.Group = listViewGroup1;
-            listViewItem2.Group = listViewGroup1;
-            listViewItem3.Group = listViewGroup1;
-            listViewItem4.Group = listViewGroup1;
-            listViewItem5.Group = listViewGroup1;
-            listViewItem6.Group = listViewGroup2;
-            listViewItem7.Group = listViewGroup2;
-            listViewItem8.Group = listViewGroup2;
-            listViewItem9.Group = listViewGroup2;
-            listViewItem10.Group = listViewGroup2;
-            listViewItem11.Group = listViewGroup2;
+            listViewGroup5,
+            listViewGroup6});
+            listViewItem23.Group = listViewGroup5;
+            listViewItem24.Group = listViewGroup5;
+            listViewItem25.Group = listViewGroup5;
+            listViewItem26.Group = listViewGroup5;
+            listViewItem27.Group = listViewGroup5;
+            listViewItem28.Group = listViewGroup6;
+            listViewItem29.Group = listViewGroup6;
+            listViewItem30.Group = listViewGroup6;
+            listViewItem31.Group = listViewGroup6;
+            listViewItem32.Group = listViewGroup6;
+            listViewItem33.Group = listViewGroup6;
             this.lvCoefficients.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6,
-            listViewItem7,
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11});
+            listViewItem23,
+            listViewItem24,
+            listViewItem25,
+            listViewItem26,
+            listViewItem27,
+            listViewItem28,
+            listViewItem29,
+            listViewItem30,
+            listViewItem31,
+            listViewItem32,
+            listViewItem33});
             this.lvCoefficients.LabelWrap = false;
             this.lvCoefficients.Location = new System.Drawing.Point(3, 3);
             this.lvCoefficients.MultiSelect = false;
@@ -3490,125 +3489,125 @@
             // 
             // chartTiming
             // 
-            verticalLineAnnotation1.AllowMoving = true;
-            verticalLineAnnotation1.AnchorX = 400D;
-            verticalLineAnnotation1.AxisXName = "ControlTiming\\rX";
-            verticalLineAnnotation1.ClipToChartArea = "ControlTiming";
-            verticalLineAnnotation1.IsInfinitive = true;
-            verticalLineAnnotation1.LineColor = System.Drawing.Color.Red;
-            verticalLineAnnotation1.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.DashDot;
-            verticalLineAnnotation1.Name = "annADCTrigger";
-            verticalLineAnnotation1.ToolTip = "ADC Trigger";
-            verticalLineAnnotation2.AnchorX = 900D;
-            verticalLineAnnotation2.AxisXName = "ControlTiming\\rX";
-            verticalLineAnnotation2.ClipToChartArea = "ControlTiming";
-            verticalLineAnnotation2.IsInfinitive = true;
-            verticalLineAnnotation2.LineColor = System.Drawing.Color.Red;
-            verticalLineAnnotation2.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.DashDot;
-            verticalLineAnnotation2.Name = "annDataCapture";
-            verticalLineAnnotation2.ToolTip = "Control Data Read Event";
-            verticalLineAnnotation3.AnchorX = 1200D;
-            verticalLineAnnotation3.AxisXName = "ControlTiming\\rX";
-            verticalLineAnnotation3.ClipToChartArea = "ControlTiming";
-            verticalLineAnnotation3.IsInfinitive = true;
-            verticalLineAnnotation3.LineColor = System.Drawing.Color.Red;
-            verticalLineAnnotation3.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.DashDot;
-            verticalLineAnnotation3.Name = "annDataWriteBack";
-            verticalLineAnnotation3.ToolTip = "Control Write Back Event";
-            verticalLineAnnotation3.YAxisName = "ControlTiming\\rY";
-            this.chartTiming.Annotations.Add(verticalLineAnnotation1);
-            this.chartTiming.Annotations.Add(verticalLineAnnotation2);
-            this.chartTiming.Annotations.Add(verticalLineAnnotation3);
-            chartArea2.AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            chartArea2.AxisX.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
-            chartArea2.AxisX.MinorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea2.AxisX.MinorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
-            chartArea2.AxisX.Title = "Time [nsec]";
-            chartArea2.AxisX.TitleFont = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            chartArea2.AxisX2.TitleFont = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            chartArea2.AxisY.MajorGrid.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea2.AxisY.MajorGrid.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea2.AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
-            chartArea2.AxisY.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
-            chartArea2.AxisY.MinorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea2.AxisY.MinorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
-            chartArea2.AxisY.Title = "Signal Level [1]";
-            chartArea2.AxisY.TitleFont = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            chartArea2.AxisY2.TitleFont = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            chartArea2.CursorX.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea2.CursorX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chartArea2.CursorX.IsUserEnabled = true;
-            chartArea2.CursorX.LineColor = System.Drawing.Color.LimeGreen;
-            chartArea2.CursorX.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.DashDotDot;
-            chartArea2.CursorY.Interval = 0.001D;
-            chartArea2.CursorY.IsUserEnabled = true;
-            chartArea2.CursorY.LineColor = System.Drawing.Color.LimeGreen;
-            chartArea2.CursorY.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.DashDotDot;
-            chartArea2.IsSameFontSizeForAllAxes = true;
-            chartArea2.Name = "ControlTiming";
-            this.chartTiming.ChartAreas.Add(chartArea2);
+            verticalLineAnnotation7.AllowMoving = true;
+            verticalLineAnnotation7.AnchorX = 400D;
+            verticalLineAnnotation7.AxisXName = "ControlTiming\\rX";
+            verticalLineAnnotation7.ClipToChartArea = "ControlTiming";
+            verticalLineAnnotation7.IsInfinitive = true;
+            verticalLineAnnotation7.LineColor = System.Drawing.Color.Red;
+            verticalLineAnnotation7.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.DashDot;
+            verticalLineAnnotation7.Name = "annADCTrigger";
+            verticalLineAnnotation7.ToolTip = "ADC Trigger";
+            verticalLineAnnotation8.AnchorX = 900D;
+            verticalLineAnnotation8.AxisXName = "ControlTiming\\rX";
+            verticalLineAnnotation8.ClipToChartArea = "ControlTiming";
+            verticalLineAnnotation8.IsInfinitive = true;
+            verticalLineAnnotation8.LineColor = System.Drawing.Color.Red;
+            verticalLineAnnotation8.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.DashDot;
+            verticalLineAnnotation8.Name = "annDataCapture";
+            verticalLineAnnotation8.ToolTip = "Control Data Read Event";
+            verticalLineAnnotation9.AnchorX = 1200D;
+            verticalLineAnnotation9.AxisXName = "ControlTiming\\rX";
+            verticalLineAnnotation9.ClipToChartArea = "ControlTiming";
+            verticalLineAnnotation9.IsInfinitive = true;
+            verticalLineAnnotation9.LineColor = System.Drawing.Color.Red;
+            verticalLineAnnotation9.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.DashDot;
+            verticalLineAnnotation9.Name = "annDataWriteBack";
+            verticalLineAnnotation9.ToolTip = "Control Write Back Event";
+            verticalLineAnnotation9.YAxisName = "ControlTiming\\rY";
+            this.chartTiming.Annotations.Add(verticalLineAnnotation7);
+            this.chartTiming.Annotations.Add(verticalLineAnnotation8);
+            this.chartTiming.Annotations.Add(verticalLineAnnotation9);
+            chartArea6.AxisX.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            chartArea6.AxisX.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
+            chartArea6.AxisX.MinorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea6.AxisX.MinorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
+            chartArea6.AxisX.Title = "Time [nsec]";
+            chartArea6.AxisX.TitleFont = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea6.AxisX2.TitleFont = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea6.AxisY.MajorGrid.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea6.AxisY.MajorGrid.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea6.AxisY.MajorGrid.LineColor = System.Drawing.Color.Silver;
+            chartArea6.AxisY.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
+            chartArea6.AxisY.MinorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea6.AxisY.MinorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
+            chartArea6.AxisY.Title = "Signal Level [1]";
+            chartArea6.AxisY.TitleFont = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea6.AxisY2.TitleFont = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea6.CursorX.IntervalOffsetType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea6.CursorX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chartArea6.CursorX.IsUserEnabled = true;
+            chartArea6.CursorX.LineColor = System.Drawing.Color.LimeGreen;
+            chartArea6.CursorX.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.DashDotDot;
+            chartArea6.CursorY.Interval = 0.001D;
+            chartArea6.CursorY.IsUserEnabled = true;
+            chartArea6.CursorY.LineColor = System.Drawing.Color.LimeGreen;
+            chartArea6.CursorY.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.DashDotDot;
+            chartArea6.IsSameFontSizeForAllAxes = true;
+            chartArea6.Name = "ControlTiming";
+            this.chartTiming.ChartAreas.Add(chartArea6);
             this.chartTiming.Cursor = System.Windows.Forms.Cursors.Default;
             this.chartTiming.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Alignment = System.Drawing.StringAlignment.Center;
-            legend2.AutoFitMinFontSize = 9;
-            legend2.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            legend2.IsTextAutoFit = false;
-            legend2.Name = "Legend1";
-            this.chartTiming.Legends.Add(legend2);
+            legend6.Alignment = System.Drawing.StringAlignment.Center;
+            legend6.AutoFitMinFontSize = 9;
+            legend6.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            legend6.IsTextAutoFit = false;
+            legend6.Name = "Legend1";
+            this.chartTiming.Legends.Add(legend6);
             this.chartTiming.Location = new System.Drawing.Point(0, 27);
             this.chartTiming.Name = "chartTiming";
             this.chartTiming.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Light;
-            series5.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.VerticalCenter;
-            series5.BorderColor = System.Drawing.Color.SteelBlue;
-            series5.BorderWidth = 2;
-            series5.ChartArea = "ControlTiming";
-            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Area;
-            series5.Legend = "Legend1";
-            series5.Name = "PWM";
-            dataPoint1.BorderWidth = 2;
-            dataPoint2.BorderWidth = 2;
-            dataPoint3.BorderWidth = 2;
-            dataPoint4.BorderWidth = 2;
-            dataPoint5.BorderWidth = 2;
-            dataPoint7.BorderWidth = 2;
-            series5.Points.Add(dataPoint1);
-            series5.Points.Add(dataPoint2);
-            series5.Points.Add(dataPoint3);
-            series5.Points.Add(dataPoint4);
-            series5.Points.Add(dataPoint5);
-            series5.Points.Add(dataPoint6);
-            series5.Points.Add(dataPoint7);
-            series5.Points.Add(dataPoint8);
-            series5.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
-            series6.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.VerticalCenter;
-            series6.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            series6.BorderWidth = 2;
-            series6.ChartArea = "ControlTiming";
-            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Area;
-            series6.Legend = "Legend1";
-            series6.Name = "ADC";
-            series6.Points.Add(dataPoint9);
-            series6.Points.Add(dataPoint10);
-            series6.Points.Add(dataPoint11);
-            series6.Points.Add(dataPoint12);
-            series6.Points.Add(dataPoint13);
-            series6.Points.Add(dataPoint14);
-            series7.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.VerticalCenter;
-            series7.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            series7.BorderWidth = 2;
-            series7.ChartArea = "ControlTiming";
-            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Area;
-            series7.Legend = "Legend1";
-            series7.Name = "Control";
-            series7.Points.Add(dataPoint15);
-            series7.Points.Add(dataPoint16);
-            series7.Points.Add(dataPoint17);
-            series7.Points.Add(dataPoint18);
-            series7.Points.Add(dataPoint19);
-            series7.Points.Add(dataPoint20);
-            this.chartTiming.Series.Add(series5);
-            this.chartTiming.Series.Add(series6);
-            this.chartTiming.Series.Add(series7);
+            series19.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.VerticalCenter;
+            series19.BorderColor = System.Drawing.Color.SteelBlue;
+            series19.BorderWidth = 2;
+            series19.ChartArea = "ControlTiming";
+            series19.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Area;
+            series19.Legend = "Legend1";
+            series19.Name = "PWM";
+            dataPoint41.BorderWidth = 2;
+            dataPoint42.BorderWidth = 2;
+            dataPoint43.BorderWidth = 2;
+            dataPoint44.BorderWidth = 2;
+            dataPoint45.BorderWidth = 2;
+            dataPoint47.BorderWidth = 2;
+            series19.Points.Add(dataPoint41);
+            series19.Points.Add(dataPoint42);
+            series19.Points.Add(dataPoint43);
+            series19.Points.Add(dataPoint44);
+            series19.Points.Add(dataPoint45);
+            series19.Points.Add(dataPoint46);
+            series19.Points.Add(dataPoint47);
+            series19.Points.Add(dataPoint48);
+            series19.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
+            series20.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.VerticalCenter;
+            series20.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            series20.BorderWidth = 2;
+            series20.ChartArea = "ControlTiming";
+            series20.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Area;
+            series20.Legend = "Legend1";
+            series20.Name = "ADC";
+            series20.Points.Add(dataPoint49);
+            series20.Points.Add(dataPoint50);
+            series20.Points.Add(dataPoint51);
+            series20.Points.Add(dataPoint52);
+            series20.Points.Add(dataPoint53);
+            series20.Points.Add(dataPoint54);
+            series21.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.VerticalCenter;
+            series21.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            series21.BorderWidth = 2;
+            series21.ChartArea = "ControlTiming";
+            series21.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Area;
+            series21.Legend = "Legend1";
+            series21.Name = "Control";
+            series21.Points.Add(dataPoint55);
+            series21.Points.Add(dataPoint56);
+            series21.Points.Add(dataPoint57);
+            series21.Points.Add(dataPoint58);
+            series21.Points.Add(dataPoint59);
+            series21.Points.Add(dataPoint60);
+            this.chartTiming.Series.Add(series19);
+            this.chartTiming.Series.Add(series20);
+            this.chartTiming.Series.Add(series21);
             this.chartTiming.Size = new System.Drawing.Size(916, 452);
             this.chartTiming.TabIndex = 2;
             this.chartTiming.Text = "Control Timing";
@@ -4663,14 +4662,14 @@
             this.txtSyntaxEditorAssembly.BracketHighlightingVisible = true;
             this.txtSyntaxEditorAssembly.CurrentLineHighlightingVisible = true;
             this.txtSyntaxEditorAssembly.Dock = System.Windows.Forms.DockStyle.Fill;
-            document1.Filename = "";
-            document1.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
-            this.txtSyntaxEditorAssembly.Document = document1;
+            document9.Filename = "";
+            document9.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
+            this.txtSyntaxEditorAssembly.Document = document9;
             this.txtSyntaxEditorAssembly.LineNumberMarginVisible = true;
             this.txtSyntaxEditorAssembly.Location = new System.Drawing.Point(3, 72);
             this.txtSyntaxEditorAssembly.Name = "txtSyntaxEditorAssembly";
-            visualStudio2005SyntaxEditorRenderer1.ResetAllPropertiesOnSystemColorChange = false;
-            this.txtSyntaxEditorAssembly.Renderer = visualStudio2005SyntaxEditorRenderer1;
+            visualStudio2005SyntaxEditorRenderer9.ResetAllPropertiesOnSystemColorChange = false;
+            this.txtSyntaxEditorAssembly.Renderer = visualStudio2005SyntaxEditorRenderer9;
             this.txtSyntaxEditorAssembly.SelectionMovesOnRightClick = false;
             this.txtSyntaxEditorAssembly.Size = new System.Drawing.Size(904, 636);
             this.txtSyntaxEditorAssembly.TabIndex = 0;
@@ -4779,14 +4778,14 @@
             this.txtSyntaxEditorCSource.BracketHighlightingVisible = true;
             this.txtSyntaxEditorCSource.CurrentLineHighlightingVisible = true;
             this.txtSyntaxEditorCSource.Dock = System.Windows.Forms.DockStyle.Fill;
-            document2.Filename = "";
-            document2.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
-            this.txtSyntaxEditorCSource.Document = document2;
+            document10.Filename = "";
+            document10.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
+            this.txtSyntaxEditorCSource.Document = document10;
             this.txtSyntaxEditorCSource.LineNumberMarginVisible = true;
             this.txtSyntaxEditorCSource.Location = new System.Drawing.Point(3, 72);
             this.txtSyntaxEditorCSource.Name = "txtSyntaxEditorCSource";
-            visualStudio2005SyntaxEditorRenderer2.ResetAllPropertiesOnSystemColorChange = false;
-            this.txtSyntaxEditorCSource.Renderer = visualStudio2005SyntaxEditorRenderer2;
+            visualStudio2005SyntaxEditorRenderer10.ResetAllPropertiesOnSystemColorChange = false;
+            this.txtSyntaxEditorCSource.Renderer = visualStudio2005SyntaxEditorRenderer10;
             this.txtSyntaxEditorCSource.SelectionMovesOnRightClick = false;
             this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(904, 638);
             this.txtSyntaxEditorCSource.TabIndex = 5;
@@ -4895,14 +4894,14 @@
             this.txtSyntaxEditorCHeader.BracketHighlightingVisible = true;
             this.txtSyntaxEditorCHeader.CurrentLineHighlightingVisible = true;
             this.txtSyntaxEditorCHeader.Dock = System.Windows.Forms.DockStyle.Fill;
-            document3.Filename = "";
-            document3.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
-            this.txtSyntaxEditorCHeader.Document = document3;
+            document11.Filename = "";
+            document11.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
+            this.txtSyntaxEditorCHeader.Document = document11;
             this.txtSyntaxEditorCHeader.LineNumberMarginVisible = true;
             this.txtSyntaxEditorCHeader.Location = new System.Drawing.Point(3, 72);
             this.txtSyntaxEditorCHeader.Name = "txtSyntaxEditorCHeader";
-            visualStudio2005SyntaxEditorRenderer3.ResetAllPropertiesOnSystemColorChange = false;
-            this.txtSyntaxEditorCHeader.Renderer = visualStudio2005SyntaxEditorRenderer3;
+            visualStudio2005SyntaxEditorRenderer11.ResetAllPropertiesOnSystemColorChange = false;
+            this.txtSyntaxEditorCHeader.Renderer = visualStudio2005SyntaxEditorRenderer11;
             this.txtSyntaxEditorCHeader.SelectionMovesOnRightClick = false;
             this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(904, 638);
             this.txtSyntaxEditorCHeader.TabIndex = 5;
@@ -5011,14 +5010,14 @@
             this.txtSyntaxEditorCLibHeader.BracketHighlightingVisible = true;
             this.txtSyntaxEditorCLibHeader.CurrentLineHighlightingVisible = true;
             this.txtSyntaxEditorCLibHeader.Dock = System.Windows.Forms.DockStyle.Fill;
-            document4.Filename = "";
-            document4.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
-            this.txtSyntaxEditorCLibHeader.Document = document4;
+            document12.Filename = "";
+            document12.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
+            this.txtSyntaxEditorCLibHeader.Document = document12;
             this.txtSyntaxEditorCLibHeader.LineNumberMarginVisible = true;
             this.txtSyntaxEditorCLibHeader.Location = new System.Drawing.Point(3, 72);
             this.txtSyntaxEditorCLibHeader.Name = "txtSyntaxEditorCLibHeader";
-            visualStudio2005SyntaxEditorRenderer4.ResetAllPropertiesOnSystemColorChange = false;
-            this.txtSyntaxEditorCLibHeader.Renderer = visualStudio2005SyntaxEditorRenderer4;
+            visualStudio2005SyntaxEditorRenderer12.ResetAllPropertiesOnSystemColorChange = false;
+            this.txtSyntaxEditorCLibHeader.Renderer = visualStudio2005SyntaxEditorRenderer12;
             this.txtSyntaxEditorCLibHeader.SelectionMovesOnRightClick = false;
             this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(904, 638);
             this.txtSyntaxEditorCLibHeader.TabIndex = 6;
@@ -5366,9 +5365,6 @@
             this.splitContainerContents.ResumeLayout(false);
             this.tabConfig.ResumeLayout(false);
             this.tabController.ResumeLayout(false);
-            this.grpAdaptiveGainControl.ResumeLayout(false);
-            this.grpAdaptiveGainControl.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).EndInit();
             this.grpPolesZeros.ResumeLayout(false);
             this.grpPolesZeros.PerformLayout();
             this.grpOutputDataNormalization.ResumeLayout(false);
@@ -5395,6 +5391,9 @@
             this.grpFunctionLabel.ResumeLayout(false);
             this.grpFunctionLabel.PerformLayout();
             this.tabAdvanced.ResumeLayout(false);
+            this.grpAdaptiveGainControl.ResumeLayout(false);
+            this.grpAdaptiveGainControl.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).EndInit();
             this.grpDevelopmentTools.ResumeLayout(false);
             this.grpDevelopmentTools.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoPTermController)).EndInit();
@@ -5868,11 +5867,6 @@
         private System.Windows.Forms.PictureBox picInfoADCLatency;
         private System.Windows.Forms.PictureBox picInfoISRLatency;
         private System.Windows.Forms.PictureBox picInfoCycleStats;
-        private System.Windows.Forms.GroupBox grpAdaptiveGainControl;
-        private System.Windows.Forms.CheckBox chkAGCAddGetModFactorFunCall;
-        private System.Windows.Forms.CheckBox chkAGCAddEnable;
-        private System.Windows.Forms.PictureBox picInfoAGC;
-        private System.Windows.Forms.CheckBox chkEnableAdaptiveGainControl;
         private System.Windows.Forms.TabPage tabAdvanced;
         private System.Windows.Forms.GroupBox grpDevelopmentTools;
         private System.Windows.Forms.PictureBox picInfoPTermController;
@@ -5887,6 +5881,11 @@
         private System.Windows.Forms.TextBox txtPTermFactor;
         private System.Windows.Forms.Button cmdGetPTermNominalOutput;
         private System.Windows.Forms.Button cmdGetPTermNominalFeedback;
+        private System.Windows.Forms.GroupBox grpAdaptiveGainControl;
+        private System.Windows.Forms.CheckBox chkAGCAddGetModFactorFunCall;
+        private System.Windows.Forms.CheckBox chkAGCAddEnable;
+        private System.Windows.Forms.PictureBox picInfoAGC;
+        private System.Windows.Forms.CheckBox chkEnableAdaptiveGainControl;
     }
 }
 
