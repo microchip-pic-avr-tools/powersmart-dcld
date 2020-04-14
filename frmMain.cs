@@ -4141,14 +4141,6 @@ namespace dcld
             UpdateTransferFunction(sender, e);
             chkSaveRestoreAccumulators_CheckedChanged(sender, e);
 
-            chkEnableAdaptiveGainControl.Enabled = (cmbQScalingMethod.SelectedIndex == 2);
-
-            //chkEnableAdaptiveGainControl.Enabled = ((cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT) ||
-            //                                        (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_SINGLE_BIT_SHIFT) ||
-            //                                        (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_OUTPUT_SCALING_FACTOR)
-            //                                        );
-            chkAGCAddEnable.Enabled = (chkEnableAdaptiveGainControl.Enabled && chkEnableAdaptiveGainControl.Checked);
-            chkAGCAddGetModFactorFunCall.Enabled = (chkEnableAdaptiveGainControl.Enabled && chkEnableAdaptiveGainControl.Checked);
             return;
         }
 
@@ -5122,8 +5114,8 @@ namespace dcld
 
         private void chkEnableAdaptiveGainControl_CheckedChanged(object sender, EventArgs e)
         {
-            chkAGCAddGetModFactorFunCall.Enabled = chkEnableAdaptiveGainControl.Checked;
-            chkAGCAddEnable.Enabled = chkEnableAdaptiveGainControl.Checked;
+            chkAGCAddGetModFactorFunCall.Enabled = (chkEnableAdaptiveGainControl.Enabled && chkEnableAdaptiveGainControl.Checked);
+            chkAGCAddEnable.Enabled = (chkEnableAdaptiveGainControl.Enabled && chkEnableAdaptiveGainControl.Checked);
             CodeGeneratorOptions_CheckedChanged(sender, e);
         }
 
