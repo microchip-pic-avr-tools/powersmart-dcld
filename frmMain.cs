@@ -3794,8 +3794,11 @@ namespace dcld
             // add body from the body generator
             DebugOutput("generate code body...");
             code.Append(AssGen.BuildCode());
-            DebugOutput("done");
-            
+            DebugOutput("assembly code body generation complete");
+
+            // Print used resources to Context Management section of main window
+            lblContextMgmntResources.Text = "WREG " + AssGen.WREGUsage + "/ACC " + AssGen.AccumulatorUsage.ToUpper();
+
             DebugOutput("capture execution timing...");
 
             lblNumberOfInstructionCycles.Text = AssGen.CycleCountTotal.ToString();
