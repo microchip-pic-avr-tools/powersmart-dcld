@@ -2776,9 +2776,8 @@ namespace dcld
            SettingsFile.WriteKey("code_generator", "settings_splitter_pos", splitContainerContents.SplitterDistance.ToString());
            SettingsFile.WriteKey("code_generator", "timing_visible", Convert.ToUInt32(showSourceCodeTimingToolStripMenuItem.Checked).ToString());
            SettingsFile.WriteKey("code_generator", "timing_splitter_pos", splitContainerTiming.Panel2.Height.ToString());
-           SettingsFile.WriteKey("code_generator", "output_window", Convert.ToUInt32(showSourceCodeTimingToolStripMenuItem.Checked).ToString());
+           SettingsFile.WriteKey("code_generator", "output_window", Convert.ToUInt32(showOutputWindowToolStripMenuItem.Checked).ToString());
            SettingsFile.WriteKey("code_generator", "output_splitter_pos", splitDebug.SplitPosition.ToString(CultureInfo.InvariantCulture));
-            
 
         }
 
