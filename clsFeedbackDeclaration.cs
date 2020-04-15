@@ -368,10 +368,10 @@ namespace dcld
             else gdiv = 2.0;
 
             //_FeedbackGain = (_ADCRes / _DSres);
-            _DSGain = (_ADCRes / _DSres);
+            _DSGain = ((Math.Pow(2.0, _DSres) - 1) / (Math.Pow(2.0, _ADCRes) - 1));
 
             // Calculate maximum input value
-            _DSInMax = (Math.Pow(2.0, _ADCRes) - 1) / gdiv;
+            _DSInMax = (Math.Pow(2.0, _DSres) - 1);
 
             _DSFbValue = Convert.ToInt32(_DSIn);
         }
