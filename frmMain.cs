@@ -5383,27 +5383,39 @@ namespace dcld
 
             else if (pic.Name == picInfoAGC.Name)
                 msg = "This function adds a modulation factor to the control loop code allowing runtime tuning " +
-                      "of the loop gain. \r\n" +
+                      "of the feedback loop gain. \r\n" +
                       "\r\n" +
-                      "This option is only available for fast number scaling modes.\r\n" +
+                      "Please note:\r\n" +
+                      "When enabled, this option will automatically enable the Alternate Input Source port of this " +
+                      "contorller.\r\n" +
+                      "\r\n" +
                       "Please refer to the user guide for more details.";
 
             else if (pic.Name == picInfoAlternateInputSource.Name)
-                msg = "The NPNZ controller xupport up to two input ports. For common feedback loops only one port " +
+                msg = "A NPNZ controller support up to two input ports. For common feedback loops only one port " +
                       "is required. The second 'Alternate Source' port is provided to support enhanced functoins where " +
-                      "control inputs need to be swapped during runtime (e.g. bi-directional control loops). \r\n" +
-                      "Alternatively, a second input port is required for control modes where the controller result " +
-                      "has further dependencies. (e.g. Adaptive Gain Modulation) \r\n" +
+                      "control inputs need to be swapped during runtime (e.g. bi-directional control loops) or a second " +
+                      "data input is required for advanced control features (e.g. Adaptive Gain Control). \r\n" +
                       "\r\n" +
                       "Please note:\r\n" +
-                      "This option is locked when option\r\n'Adaptive Gain Control' is enabled.";
+                      "This option is locked when option 'Adaptive Gain Control' is enabled.";
 
             else if (pic.Name == picInfoCascadeFunctionCall.Name)
-                msg = "By enabling this function, you can specify a function pointer" + "\r\n" +
-                      "to an additional function which should be executed right after" + "\r\n" +
+                msg = "By enabling this function, you can specify a function pointer " +
+                      "to an additional function which should be executed right after " +
                       "the execution of this loop has been completed." + "\r\n" +
                       "\r\n" +
                       "Please refer to the user guide for more details.";
+
+            else if (pic.Name == picInfoContextManagement.Name)
+                msg = "Context switching is performed by the CPU everytime when the normal execution of instrucitons is interrupted. " +
+                      "Since the introduction of the dsPIC33EP product family, dsPIC devices support so-called Alternate Working Registers, " +
+                      "which is swapping the entire set of working registers in a single cycle operation. This feature is based on the " +
+                      "assignment of an Alternate Working Register set to a defined interrupt priority. This relation needs to be actively " +
+                      "configured and enabled in user code.\r\n\r\n(Please refer to the device data sheet for more information)\r\n\r\n" +
+                      "When an  Alternate Working Register set is assigned to this control loop, context management can safely been turned off. " +
+                      "If no Alternate Working Register set is available or is shared with other software instances, it's recommended " +
+                      "to enable context management only for the registers used by this control loop to minimize the impact on CPU load.";
 
             else if (pic.Name == picInfoCycleStats.Name)
                 msg = "The number of cycles and related timings shown in this statistics is provided by the code generator " +
@@ -5412,6 +5424,14 @@ namespace dcld
                       "\r\n" +
                       "Hence, the total number of cycles shown may therefore differ from the real number of executions " +
                       "and this statics should be used for estimations only.";
+
+            else if (pic.Name == picInfoDataProviders.Name)
+                msg = "The control loop is a self-sustained entity capturing data from and writing control output results to memory locations " +
+                      "without the need for further interaction with other software instances. In most applications, however, other software " +
+                      "instances, such as fault handlers or data monitors, require access to the most recent data consumed or produced by the " +
+                      "control loop. \r\n\r\n" +
+                      "By enabling Data Providers, code is added to the control loop routine which will push most recent data to user specified " + 
+                      "memory locations (e.g. user variables) thus providing insight in internal processes of the control loop at runtime.";
 
             else if (pic.Name == picInfoDSPConfig.Name)
                 msg = Application.ProductName + " uses a specific DSP core configuration to execute control loops at optimal performance.\r\n" +
@@ -5422,9 +5442,9 @@ namespace dcld
                       "to configure the DSP in a separated routine (e.g. during device initialization) and disable this option";
 
             else if (pic.Name == picInfoErrNorm.Name)
-                msg = "Error Normalization is required when data is read \r\n" +
-                      "in integer format from the source (e.g. ADC converter)\r\n" +
-                      "If the source is providing data in Q15 number format \r\n" +
+                msg = "Error Normalization is required when data is read " +
+                      "in integer format from the source (e.g. ADC converter) " +
+                      "If the source is providing data in Q15 number format  " +
                       "this option can be disabled.";
 
             else if (pic.Name == picInfoISRLatency.Name)
@@ -5435,6 +5455,13 @@ namespace dcld
                       "priorities." + "\r\n" +
                       "\r\n" +
                       "Please refer to the user guide for more details.";
+
+            else if (pic.Name == picInfoAlternateOutputSource.Name)
+                msg = "A NPNZ controller support up to two output ports. For common control loops only one port " +
+                      "is required. The second 'Alternate Target' port is provided to support enhanced functoins where " +
+                      "control outputs need to be swapped during runtime (e.g. bi-directional control loops) or a second " +
+                      "control output is required for advanced control features (PWM control signals shared across multiple " +
+                      "channels). \r\n";
 
             else if (pic.Name == picInfoTimingPWMFrequency.Name)
                 msg = "The switching frequency settingis only used to create the above waveform (blue) and does not " +
@@ -5448,10 +5475,10 @@ namespace dcld
                       "This setting is highly hardware dependent and would have to be determined for each design individually";
 
             else if (pic.Name == picInfoPTermController.Name)
-                msg = "This option enables the configuration of a simple proportional error controller (P-Term Controller). \r\n" +
-                      "This control loop serves the sole purpose of regulating the output voltage during plant measurements. \r\n\r\n" + 
-                      "Please note: \r\n" + 
-                      "This control loop is highly unstable and requires absolutely stable operating conditions to remain working. \r\n" +
+                msg = "This option enables the configuration of a simple proportional error controller (P-Term Controller). " +
+                      "This control loop serves the sole purpose of regulating the output voltage during plant measurements. \r\n\r\n" +
+                      "Please note: \r\n" +
+                      "This control loop is highly unstable and requires absolutely stable operating conditions to remain working. \r\n\r\n" +
                       "Do not use this controller for regulation under normal operating conditions!" +
                       "\r\n" +
                       "";
