@@ -1144,7 +1144,7 @@ namespace dcld
             }   // end of try
             catch(Exception ex)
             {
-                DebugOutput("UpdateTransferFunction() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message);
+                DebugOutput("UpdateTransferFunction() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
 
                 // show failure message in status bar
                 stbMainStatusLabel.Text = "Invalid number format detected - results may be corrupted";
@@ -1322,7 +1322,7 @@ namespace dcld
             }
             catch(Exception ex)
             {
-                DebugOutput("UpdateBodePlot(" + ForceAnnotationUpdate.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message);
+                DebugOutput("UpdateBodePlot(" + ForceAnnotationUpdate.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
             }
 
             return (true);
@@ -2007,7 +2007,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("open file exception (0x" + ex.HResult.ToString("X") + " " + ex.Message);
+                DebugOutput("open file exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
                 MessageBox.Show(
                     "Error (0x" + ex.HResult.ToString("X") + "): Could not read file from disk.\r\n" + 
                     "Original error: " + ex.Message, 
@@ -2894,7 +2894,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("chartBode_UpdateCursorMeasurement(" + ForceCursorPositionX.ToString() + ", " + ForceCursorPositionY.ToString() + ", " + CursorX.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message);
+                DebugOutput("chartBode_UpdateCursorMeasurement(" + ForceCursorPositionX.ToString() + ", " + ForceCursorPositionY.ToString() + ", " + CursorX.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
             }
 
             return;
@@ -2923,7 +2923,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("chartBode_ResetCursorMeasurement(" + HideCursor.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message);
+                DebugOutput("chartBode_ResetCursorMeasurement(" + HideCursor.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
             }
 
             return;
@@ -3212,7 +3212,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("chartBode_MouseMove() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message);
+                DebugOutput("chartBode_MouseMove() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
             }
 
 
@@ -3592,7 +3592,7 @@ namespace dcld
             {
                 if (!ApplicationShutDown) 
                 {
-                    DebugOutput("code generation exception (0x" + ex.HResult.ToString("X") + " " + ex.Message);
+                    DebugOutput("code generation exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
                     stbMainStatusLabel.Text = "Unexpected exception during code generation. The generated code may be incomplete or corrupted.";
                     stbMainStatusLabel.Image = dcld.Properties.Resources.icon_critical.ToBitmap();
                     stbMainStatusLabel.BackColor = stbMain.BackColor;
@@ -4053,7 +4053,7 @@ namespace dcld
                 return;
             }
             catch (Exception ex) {
-                DebugOutput("error (0x" + ex.HResult.ToString("X") + " " + ex.Message);
+                DebugOutput("error (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
                 DebugOutput("exit timing chart update");
                 return; 
             }
@@ -4455,7 +4455,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("chartBode_SetScales(" + XAxesLimitType.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message);
+                DebugOutput("chartBode_SetScales(" + XAxesLimitType.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
             }
             return;
         }
