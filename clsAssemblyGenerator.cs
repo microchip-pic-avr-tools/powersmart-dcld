@@ -138,7 +138,7 @@ namespace dcld
             private set { _AccumulatorUsage = value.ToLower().Trim(); return; }
         }
 
-        private string _WREGUsage = "4,5,8,10";
+        private string _WREGUsage = "n/a";
         internal string WREGUsage
         {
             get { return (_WREGUsage); }
