@@ -4178,18 +4178,9 @@ namespace dcld
 
                         // ~~~~~~~~~ Handle individual exceptions ~~~~~~~~~~~~~~~~~~
 
-                        // Context Management Box
-                        if (check.Name == chkSaveRestoreAccumulatorB.Name) 
-                        {
-                            bool ACCBIsValid = (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT) ||
-                                               (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT);
-
-                            check.Enabled = (chkContextSaving.Checked & ACCBIsValid);
-                        }
-
 
                         // ~~~~~~~~~
-                        else if (chkItem.Name != check.Name)
+                        if (chkItem.Name != check.Name)
                             chkItem.Enabled = check.Checked;
                         else
                         {  } // ??? //
