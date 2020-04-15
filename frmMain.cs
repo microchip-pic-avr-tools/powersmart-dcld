@@ -39,6 +39,7 @@ namespace dcld
         // Value table formating
         Color WarningBackground = Color.FromArgb(255, 255, 120);
         Color AlertBackground = Color.FromArgb(255, 200, 200);
+        Color[] DebugOutputMessageColor = new Color[5] { Color.Black, Color.DarkGray, Color.Goldenrod, Color.Blue, Color.Green };
 
         string Q7Format  = "{0:0.00000000}";
         string Q15Format = "{0:0.000000000000000}";
@@ -3583,7 +3584,7 @@ namespace dcld
                 Application.DoEvents();
                 stbProgressBar.Visible = false;
                 stbProgressBarLabel.Visible = false;
-                DebugOutput("code generation completed successfully");
+                DebugOutput("code generation completed successfully", 3);
                 DebugOutput("");
 
             }
@@ -3837,10 +3838,10 @@ namespace dcld
                     control_read = 1e+3 * Convert.ToDouble(lblNumberOfInstructionCyclesRead.Text) * (1.0 / cpu_clk);
                     control_write = 1e+3 * Convert.ToDouble(lblNumberOfInstructionCyclesResponse.Text) * (1.0 / cpu_clk);
 
-                    DebugOutput("CPU clock setting: " + cpu_clk.ToString());
-                    DebugOutput("control interrupt latency: " + control_latency.ToString());
-                    DebugOutput("READ delay: " + control_read.ToString());
-                    DebugOutput("WRITEBACK delay: " + control_write.ToString());
+                    DebugOutput("CPU clock setting: " + cpu_clk.ToString() + " MHz");
+                    DebugOutput("control interrupt latency: " + control_latency.ToString() + " ns");
+                    DebugOutput("READ delay: " + control_read.ToString() + " ns");
+                    DebugOutput("WRITEBACK delay: " + control_write.ToString() + " ns");
 
                 }
                 else {
@@ -5463,7 +5464,7 @@ namespace dcld
         }
 
 
-        public void DebugOutput(string debugString)
+        private void DebugOutput(string debugString, int color_index = 0)
         {
             int txt_start = 0, txt_stop = 0;
 
@@ -5475,9 +5476,20 @@ namespace dcld
                 txtDebugOutput.Text = ">..." + txtDebugOutput.Text.Substring(txt_start, txt_stop);
             }
 
+            txt_start = (txtDebugOutput.TextLength);
+            txt_stop = (debugString.Length)+1;
+
             // Add debug text
             if (debugString.Trim().Length > 0) debugString = ">" + debugString;
             txtDebugOutput.AppendText(debugString + "\r\n");
+
+//            txtDebugOutput.SelectionType = RichTextBoxSelectionTypes.Text;
+            if (color_index > (DebugOutputMessageColor.Length-1)) color_index = 0;
+            txtDebugOutput.SelectionStart = txt_start;
+            txtDebugOutput.SelectionLength = txt_stop;
+            txtDebugOutput.SelectionColor = DebugOutputMessageColor[color_index];
+            txtDebugOutput.SelectionStart = txtDebugOutput.TextLength;
+
             txtDebugOutput.ScrollToCaret();
         }
 
