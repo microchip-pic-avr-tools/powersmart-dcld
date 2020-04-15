@@ -39,7 +39,7 @@ namespace dcld
         // Value table formating
         Color WarningBackground = Color.FromArgb(255, 255, 120);
         Color AlertBackground = Color.FromArgb(255, 200, 200);
-        Color[] DebugOutputMessageColor = new Color[5] { Color.Black, Color.DarkGray, Color.Goldenrod, Color.Blue, Color.Green };
+        Color[] DebugOutputMessageColor = new Color[6] { Color.Black, Color.DarkGray, Color.Goldenrod, Color.Blue, Color.Green, Color.Red };
 
         string Q7Format  = "{0:0.00000000}";
         string Q15Format = "{0:0.000000000000000}";
@@ -1436,7 +1436,6 @@ namespace dcld
 
             // Prepare the status bar progress bar
             stbMainStatusLabel.Text = "Saving File:";
-            stbMainStatusLabel.Visible = true;
             stbProgressBar.Visible = true;
             stbProgressBar.Value = 10;
             Application.DoEvents();
@@ -1496,7 +1495,6 @@ namespace dcld
                                         );
                         // Restore output window
                         sfdlg.Dispose();
-                        stbMainStatusLabel.Visible = false;
                         stbProgressBar.Visible = false;
                         ProjectFile.Clear();
 
@@ -1508,7 +1506,6 @@ namespace dcld
                 {
                     // Restore output window
                     sfdlg.Dispose();
-                    stbMainStatusLabel.Visible = false;
                     stbProgressBar.Visible = false;
 
                     return (false);
@@ -1706,7 +1703,6 @@ namespace dcld
 
                 // Restore output window
                 sfdlg.Dispose();
-                stbMainStatusLabel.Visible = false;
                 stbProgressBar.Visible = false;
 
                 return (true);
@@ -1722,7 +1718,6 @@ namespace dcld
 
                 // Restore output window
                 sfdlg.Dispose();
-                stbMainStatusLabel.Visible = false;
                 stbProgressBar.Visible = false;
 
                 return (false);
