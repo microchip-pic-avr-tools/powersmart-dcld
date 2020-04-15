@@ -184,7 +184,7 @@ namespace dcld
         }
 
         private double _SamplingPeriod = 1.000;
-        internal double SamplingInterval   // Sampling period determed by sampling freq set
+        internal double SamplingPeriod   // Sampling period determed by sampling freq set
         {
             get { return _SamplingPeriod; }
             set { _SamplingPeriod = value; UpdateCoefficients(); return; }
@@ -403,7 +403,7 @@ namespace dcld
             
             _debugInfo.Append("UpdateCoefficients() => " +
                 "Filter Order = " + _FilterOrder.ToString() + "\r\n" +
-                "SamplingInterval = " + _Ts.ToString() + "\r\n" +
+                "Sampling Period = " + _Ts.ToString() + "\r\n" +
                 "Input Gain = " + _InputGain.ToString() + "\r\n" +
                 "Output Gain = " + _OutputGain.ToString() + "\r\n" +
                 "Zero-Pole (Hz/rad)= " + Pole[0].Frequency.ToString() + "/" + Pole[0].Radians.ToString() + "\r\n" +
