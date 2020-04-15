@@ -1679,6 +1679,7 @@ namespace dcld
                 ProjectFile.WriteKey("BodePlot", "XScale-SamplingFrequency", Convert.ToInt32(samplingFrequencyToolStripMenuItem.Checked).ToString());
                 ProjectFile.WriteKey("BodePlot", "XScale-FullScale", Convert.ToInt32(fullScaleToolStripMenuItem.Checked).ToString());
                 ProjectFile.WriteKey("BodePlot", "YScale-UnwrapPhase", Convert.ToInt32(unwrapPhaseToolStripMenuItem.Checked).ToString());
+                ProjectFile.WriteKey("BodePlot", "ShowSDomain", Convert.ToInt32(showSDomainTransferFunctionToolStripMenuItem.Checked).ToString());
                     
                 // Timing graph
                 ProjectFile.WriteKey("TimingGraph", "LoopTriggerOption", this.cmbLoopTriggerOption.SelectedIndex.ToString());
