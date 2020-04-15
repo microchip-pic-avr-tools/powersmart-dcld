@@ -98,19 +98,19 @@ namespace dcld
             set { _PreShift = value; return; }
         }
 
-        private string _CGS_Version = "n/a";
-        internal string CGS_Version
-        {
-            get { return(_CGS_Version); }
-            set { _CGS_Version = value; return; }
-        }
+        //private string _CGS_Version = "n/a";
+        //internal string CGS_Version
+        //{
+        //    get { return(_CGS_Version); }
+        //    set { _CGS_Version = value; return; }
+        //}
 
-        private string _CGS_VersionDate = "n/a";
-        internal string CGS_VersionDate
-        {
-            get { return (_CGS_VersionDate); }
-            set { _CGS_VersionDate = value; return; }
-        }
+        //private string _CGS_VersionDate = "n/a";
+        //internal string CGS_VersionDate
+        //{
+        //    get { return (_CGS_VersionDate); }
+        //    set { _CGS_VersionDate = value; return; }
+        //}
 
         /* Code Generation Options */
 
@@ -164,8 +164,8 @@ namespace dcld
                 sDum = sDum.Replace("%APP_PRODUCT_NAME%", Application.ProductName);
                 sDum = sDum.Replace("%APP_PRODUCT_VERSION%", Application.ProductVersion.ToString());
                 sDum = sDum.Replace("%APP_PRODUCT_VERSION_KEY%", dcldGlobals.APP_VERSION_KEY.ToString());
-                sDum = sDum.Replace("%CGS_VERSION%", _CGS_Version);
-                sDum = sDum.Replace("%CGS_VERSION_DATE%", _CGS_VersionDate);
+                sDum = sDum.Replace("%CGS_VERSION%", _GenScript.FileVersion); // _CGS_Version);
+                sDum = sDum.Replace("%CGS_VERSION_DATE%", _GenScript.FileVersionDate); // _CGS_VersionDate);
                 sDum = sDum.Replace("%COMP_TYPE_NAME%", _CompTypeName);
                 sDum = sDum.Replace("%SAMPLING_FREQUENCY%", compFilter.SamplingFrequency.ToString());
                 sDum = sDum.Replace("%Q_FORMAT%", compFilter.QFormat.ToString());
@@ -271,7 +271,7 @@ namespace dcld
             try
             {
                 // The coefficient format is unified to a 32-bit wide number. In normal Q15 bit-shift scaling modes
-                // the high-word is set = zero while the low-word holds the Q15 coefficient.
+                // the high-word is set to ZERO while the low-word holds the Q15 coefficient.
                 // In Fast Floating Point, the high-word holds the Q15 coefficient while the low-word holds the scaler.
                 switch (compFilter.ScalingMethod)
                 {
