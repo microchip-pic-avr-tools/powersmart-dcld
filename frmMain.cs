@@ -542,6 +542,11 @@ namespace dcld
             showSourceCodeTimingToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(SettingsFile.ReadKey("code_generator", "timing_visible", "1")));
             showSourceCodeTimingToolStripMenuItem_CheckedChanged(sender, e);
 
+            // reload output window status
+            showOutputWindowToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(SettingsFile.ReadKey("code_generator", "output_window", "1")));
+            showOutputWindowToolStripMenuItem_CheckedChanged(sender, e);
+            splitDebug.SplitPosition = Convert.ToInt32(SettingsFile.ReadKey("code_generator", "output_splitter_pos", "300"));
+
             // Set default options
             cmbQFormat.SelectedIndex = 1;   // Always select Q15 format as default
             cmbQScalingMethod.SelectedIndex = 0;   // Always select single bit-shift scaling as default
@@ -2731,8 +2736,10 @@ namespace dcld
 
             // save body generation and timing analysis window status
            SettingsFile.WriteKey("code_generator", "settings_splitter_pos", splitContainerContents.SplitterDistance.ToString());
-           SettingsFile.WriteKey("code_generator", "timing_visible", Convert.ToUInt16(showSourceCodeTimingToolStripMenuItem.Checked).ToString());
+           SettingsFile.WriteKey("code_generator", "timing_visible", Convert.ToUInt32(showSourceCodeTimingToolStripMenuItem.Checked).ToString());
            SettingsFile.WriteKey("code_generator", "timing_splitter_pos", splitContainerTiming.Panel2.Height.ToString());
+           SettingsFile.WriteKey("code_generator", "output_window", Convert.ToUInt32(showSourceCodeTimingToolStripMenuItem.Checked).ToString());
+           SettingsFile.WriteKey("code_generator", "output_splitter_pos", splitDebug.SplitPosition.ToString(CultureInfo.InvariantCulture));
             
 
         }
@@ -3210,6 +3217,19 @@ namespace dcld
             showSourceCodeTimingToolStripMenuItem.Checked = !showSourceCodeTimingToolStripMenuItem.Checked;
             return;
         }
+
+
+        private void showOutputWindowToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            txtDebugOutput.Visible = showOutputWindowToolStripMenuItem.Checked;
+            return;
+        }
+
+        private void showOutputWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showOutputWindowToolStripMenuItem.Checked = !showOutputWindowToolStripMenuItem.Checked;
+        }
+
 
         private void frmMain_ResizeEnd(object sender, EventArgs e)
         {
