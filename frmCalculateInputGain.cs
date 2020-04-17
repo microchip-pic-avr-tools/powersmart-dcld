@@ -17,7 +17,6 @@ namespace dcld
         // Private Variables
         private bool WindowLoading = false;
         private bool ParameterUpdate = false;
-        private bool SuppressGainCalculation = false;
         internal clsFeedbackDeclaration feedback = new clsFeedbackDeclaration();
         internal bool EnableInputValueEdits = false;
 
@@ -365,7 +364,6 @@ namespace dcld
             // Guarding condition start
             if (WindowLoading) return;
             if (ParameterUpdate) return;
-            if (SuppressGainCalculation) return;
             ParameterUpdate = true;
 
             // Capture calling control
@@ -464,9 +462,7 @@ namespace dcld
                     else if ((tBox.Name == txtParam0.Name) && (EnableInputValueEdits)) // User has modified the signal value
                     {
                         feedback.DigitalSourceValue = NumberTextBox_ToDouble(txtParam0);
-                        SuppressGainCalculation = true;
                         txtParam1.Text = feedback.DigitalSourceResolution.ToString("#0.0##", CultureInfo.CurrentCulture);
-                        SuppressGainCalculation = false;
                     }
 
                 }
