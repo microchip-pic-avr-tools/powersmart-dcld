@@ -503,7 +503,7 @@ namespace dcld
                 if (dbl_dum > 100.0) dbl_dum = 100.0;
                 if (dbl_dum < 0.0) dbl_dum = 0.0;
                 string _str_dum = dbl_dum.ToString(CultureInfo.CurrentCulture);
-                if (_str_dum.Length > 5)
+                if (_str_dum.Length > (Math.Round(dbl_dum, 3).ToString(CultureInfo.InvariantCulture).Length))
                 {
                     _str_dum = Math.Round(dbl_dum, 3).ToString(CultureInfo.CurrentCulture);
                     txtNominalOutputValue.Text = _str_dum; return; // This function will call itself here
