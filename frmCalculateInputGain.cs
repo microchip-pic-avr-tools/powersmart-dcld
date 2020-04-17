@@ -17,6 +17,7 @@ namespace dcld
         // Private Variables
         private bool WindowLoading = false;
         private bool ParameterUpdate = false;
+        private bool SuppressGainCalculation = false;
         internal clsFeedbackDeclaration feedback = new clsFeedbackDeclaration();
         internal bool EnableInputValueEdits = false;
 
@@ -322,7 +323,7 @@ namespace dcld
             }
 
             // Adjust label positions
-            lblInputReference.Left = (txtInputReference.Left - lblInputReference.Width-6);
+            lblInputReference.Left = (txtInputReference.Left - lblInputReference.Width - 6);
             lblInputResolution.Left = (txtInputResolution.Left - lblInputResolution.Width - 6);
 
             lblParam0Label.Left = (txtParam0.Left - lblParam0Label.Width - 6);
@@ -334,6 +335,9 @@ namespace dcld
             lblParam1Unit.Left = (txtParam1.Left + txtParam1.Width + 6);
             lblParam2Unit.Left = lblParam1Unit.Left;
             lblParam3Unit.Left = lblParam1Unit.Left;
+
+            lblInputGainUnit.Left = (grpInputGain.Width - lblInputGainUnit.Width - 12);
+            lblInputGain.Left = (lblInputGainUnit.Left - lblInputGain.Width - 6);
 
             // Format Test Box values
             if (tabFeedback.SelectedTab != tabDS)
@@ -361,6 +365,7 @@ namespace dcld
             // Guarding condition start
             if (WindowLoading) return;
             if (ParameterUpdate) return;
+            if (SuppressGainCalculation) return;
             ParameterUpdate = true;
 
             // Capture calling control
