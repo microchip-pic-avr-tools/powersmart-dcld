@@ -1812,7 +1812,7 @@ namespace dcld
                 feedback.CurrentTransformerWindingRatio = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CTWR", "50"));
                 feedback.CurrentTransformerSenseCurrent = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CTNomVal", "5.0"));
                 feedback.DigitalSourceResolution = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "DSRES", "12.0"));
-                feedback.DigitalSourceValue = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "DSNomValue", "2048.0"));
+                feedback.DigitalSourceValue = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "DSNomValue", "2047.0"));
 
 
                 // Ouptput Definition
@@ -5122,14 +5122,15 @@ namespace dcld
             // Show the settings form
             frm.feedback = feedback;
             frm.feedback.ADCResolution = cNPNZ.InputDataResolution;
-            //frm.feedback.FeedbackGain = cNPNZ.InputGain;
+            frm.Text = "Input Gain Calculator";
 
             if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 txtInputGain.Text = frm.feedback.FeedbackGain.ToString("#0.000000", CultureInfo.CurrentCulture); ;
                 txtInputDataResolution.Text = frm.feedback.ADCResolution.ToString("#0.#", CultureInfo.CurrentCulture);
 
-                txtPTermNominalFeedback.Text = frm.feedback.FeedbackValue.ToString(CultureInfo.CurrentCulture);
+                if (frm.feedback.FeedbackType != clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE)
+                    txtPTermNominalFeedback.Text = frm.feedback.FeedbackValue.ToString(CultureInfo.CurrentCulture);
 
                 feedback = frm.feedback;
             }
@@ -5140,6 +5141,7 @@ namespace dcld
         {
             // Create a new instance of the form class
             frmCalculateInputGain frm = new frmCalculateInputGain();
+            double dbl_DSRes = 0.0;    // Copies of Digital Source Max Value and Resolution
 
             // Show the settings form
             frm.feedback = feedback;
@@ -5155,32 +5157,38 @@ namespace dcld
             else if (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE)
                 frm.feedback.DigitalSourceValue = (Convert.ToDouble(txtPTermNominalFeedback.Text));
 
-            frm.EnableInputValueEdits = true;
-
+            dbl_DSRes = feedback.DigitalSourceResolution; // Backup signal resolution of digital source
+            frm.EnableInputValueEdits = true; // Allow user edits of value field
+            frm.Text = "Nominal Feedback Level Calculator";
 
             if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
-                // Set maximum feedback error value
+                // Restore original Digital Source Resolution
+                if (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE)
+                    frm.feedback.DigitalSourceResolution = dbl_DSRes;   // Restore original signal resolution
+                
+                // Set nominal feedback level
                 txtPTermNominalFeedback.Text = frm.feedback.FeedbackValue.ToString(CultureInfo.CurrentCulture);
 
                 // Keep Input Gain and Input Resolution in Sync
-                if (chkNormalizeInputGain.Checked)
+                if (frm.feedback.FeedbackType != clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE)
                 { 
-                    txtInputGain.Text = frm.feedback.FeedbackGain.ToString("#0.000000", CultureInfo.CurrentCulture); ;
-                    txtInputDataResolution.Text = frm.feedback.ADCResolution.ToString("#0.#", CultureInfo.CurrentCulture);
-                    feedback = frm.feedback;
+                    if (chkNormalizeInputGain.Checked)
+                    { 
+                        txtInputGain.Text = frm.feedback.FeedbackGain.ToString("#0.000000", CultureInfo.CurrentCulture); ;
+                        txtInputDataResolution.Text = frm.feedback.ADCResolution.ToString("#0.#", CultureInfo.CurrentCulture);
+                        feedback = frm.feedback;
+                    }
+
+                    // Sync settings across output and input objects
+                    if ((frm.feedback.VoltageDividerSenseVoltage != ctrl_output.NominalOutputVoltage) && 
+                        (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER))
+                    {
+                        ctrl_output.NominalOutputVoltage = frm.feedback.VoltageDividerSenseVoltage;
+                        txtPTermNominalOutput.Text = Math.Round(ctrl_output.NominalOutput, 0).ToString(CultureInfo.CurrentCulture);
+                    }
+
                 }
-
-                // Sync settings across output and input objects
-                if ((frm.feedback.VoltageDividerSenseVoltage != ctrl_output.NominalOutputVoltage) && 
-                    (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER))
-                {
-                    ctrl_output.NominalOutputVoltage = frm.feedback.VoltageDividerSenseVoltage;
-                    txtPTermNominalOutput.Text = Math.Round(ctrl_output.NominalOutput, 0).ToString(CultureInfo.CurrentCulture);
-                }
-                    
-
-
 
                 CodeGeneratorOptions_CheckedChanged(chkAddPTermLoop, e);
             }

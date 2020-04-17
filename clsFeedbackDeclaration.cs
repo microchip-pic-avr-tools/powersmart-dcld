@@ -103,7 +103,7 @@ namespace dcld
                         refreshCurrentTransformer();
                         break;
                     case dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE:
-                        refreshDigitalSource();
+                        refreshDigitalReference();
                         break;
                     case dcldFeedbackType.DCLD_FB_TYPE_UNDEFINED:
                         _FeedbackGain = 1.000;
@@ -115,6 +115,91 @@ namespace dcld
             return;
         }
         // ADC Properties End ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        // ADC Properties ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        private double _DRefRes = 16.0;
+        internal double DigitalReferenceResolution
+        {
+            get { return (_DRefRes); }
+            set { _DRefRes = value; refreshADC(); return; }
+        }
+
+        private double _DRefRef = 65535;
+        internal double DigitalReferenceReference
+        {
+            get { return (_DRefRef); }
+            set { _DRefRef = value; refreshDigitalReference(); return; }
+        }
+
+        private bool _DRefIsSigned = false;
+        internal bool DigitalReferenceIsSigned
+        {
+            get { return (_DRefIsSigned); }
+            set { _DRefIsSigned = value; refreshDigitalReference(); return; }
+        }
+
+        internal double DigitalReferenceGranularity
+        {
+            get
+            {
+                return (_DRefRef / Math.Pow(2, _DRefRes));
+            }
+        }
+
+        internal double DigitalReferenceMinimum
+        {
+            get
+            {
+                if (!_DRefIsSigned)
+                    return (0);
+                else
+                    return (-Math.Pow(2, (_DRefRes - 1)));
+            }
+        }
+
+        internal double DigitalReferenceMaximum
+        {
+            get
+            {
+                if (!_DRefIsSigned)
+                    return (Math.Pow(2, _DRefRes) - 1);
+                else
+                    return ((Math.Pow(2, _DRefRes - 1) - 1));
+            }
+        }
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        private void refreshDigitalReference()
+        {
+
+            // Update Feedback parameters
+            if (!ParameterUpdate) // Guarding condition to prevent recirsive calls
+            {
+                switch (_FeedbackType)
+                {
+                    case dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER:
+                        refreshADC();
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER:
+                        refreshADC();
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER:
+                        refreshADC();
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE:
+                        refreshDigitalSource();
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_UNDEFINED:
+                        _FeedbackGain = 1.000;
+                        break;
+                }
+
+            }
+
+            return;
+        }
+        // Digital Reference Properties End ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         // Voltage Divider ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         private double _VDivR1 = 12000;
@@ -327,12 +412,13 @@ namespace dcld
         // Current Sense Transformer End ~~~~~~~~~~~~~~~
 
         // Digital Source ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        private double _DSres = 12.0;
+        private double _DSres = 160;
         internal double DigitalSourceResolution
         {
             get { return (_DSres); }
             set { _DSres = value; refreshDigitalSource(); return; }
         }
+
         private double _DSInMax = 1.000;
         internal double DigitalSourceSourceMaximum
         {
@@ -343,7 +429,12 @@ namespace dcld
         internal double DigitalSourceValue
         {
             get { return (_DSIn); }
-            set { _DSIn = value;  return; }
+            set { 
+                _DSIn = value; 
+                _DSres = Math.Log((_DSIn + 1.0), 2.0);
+                refreshDigitalSource();
+                return; 
+            }
         }
 
         private double _DSGain = 1.000;
@@ -364,11 +455,11 @@ namespace dcld
         {
             double gdiv = 0.0;
 
-            if (!_ADCIsDiff) gdiv = 1.0;
-            else gdiv = 2.0;
-
             //_FeedbackGain = (_ADCRes / _DSres);
-            _DSGain = ((Math.Pow(2.0, _DSres) - 1) / (Math.Pow(2.0, _ADCRes) - 1));
+            if (_DRefIsSigned) 
+                _DSGain = (Math.Pow(2.0, _DSres) / Math.Pow(2.0, (_DRefRes-1)));
+            else 
+                _DSGain = (Math.Pow(2.0, _DSres) / Math.Pow(2.0, _DRefRes)); ;
 
             // Calculate maximum input value
             _DSInMax = (Math.Pow(2.0, _DSres) - 1);
@@ -403,27 +494,7 @@ namespace dcld
                 //_FeedbackGain = value;
                 return (_FeedbackGain); 
             }
-            //set { 
-            //    //switch(_FeedbackType)
-            //    //{
-            //    //    case dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER:
-            //    //        _FeedbackGain = _VDivGain;
-            //    //        break;
-            //    //    case dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER:
-            //    //        _FeedbackGain = _CSGain;
-            //    //        break;
-            //    //    case dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER:
-            //    //        _FeedbackGain = _CTGain;
-            //    //        break;
-            //    //    case dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE:
-            //    //        _FeedbackGain = _DSGain;
-            //    //        break;
-            //    //    default:
-            //    //        break;
-            //    //}
-            //    _FeedbackGain = value; 
-            //    return; 
-            //}
+
         }
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -452,7 +523,7 @@ namespace dcld
                 }
                 return (_FeedbackValue); 
             }
-//            set { _FeedbackValue = value; return; }
+
         }
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -42,12 +42,11 @@ namespace dcld
             // Set startup flag
             WindowLoading = true;
 
-            // Load parameters
-            txtInputReference.Text = feedback.ADCReference.ToString(CultureInfo.CurrentCulture);
-            txtInputResolution.Text = feedback.ADCResolution.ToString(CultureInfo.CurrentCulture);
-            txtInputMinimum.Text = feedback.ADCMinimum.ToString(CultureInfo.CurrentCulture);
-            txtInputMaximum.Text = feedback.ADCMaximum.ToString(CultureInfo.CurrentCulture);
-            chkInputSigned.Checked = feedback.ADCIsDifferential;
+            // Set Window Properties
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.ShowInTaskbar = false;
+            this.HelpButton = false;
 
             // Clear startup flag and update GUI values
             WindowLoading = false;
@@ -92,6 +91,13 @@ namespace dcld
             { // Voltage Divider
 
                 feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER;
+
+                // Set reference values
+                txtInputReference.Text = feedback.ADCReference.ToString("#0.###", CultureInfo.CurrentCulture);
+                txtInputResolution.Text = feedback.ADCResolution.ToString("#0.###", CultureInfo.CurrentCulture);
+                txtInputMinimum.Text = feedback.ADCMinimum.ToString(CultureInfo.CurrentCulture);
+                txtInputMaximum.Text = feedback.ADCMaximum.ToString(CultureInfo.CurrentCulture);
+                chkInputSigned.Checked = feedback.ADCIsDifferential;
 
                 txtParam1.Text = feedback.VoltageDividerR1.ToString("#0.###", CultureInfo.CurrentCulture);
                 txtParam2.Text = feedback.VoltageDividerR2.ToString("#0.###", CultureInfo.CurrentCulture);
@@ -147,6 +153,13 @@ namespace dcld
 
                 feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER;
 
+                // Set reference values
+                txtInputReference.Text = feedback.ADCReference.ToString("#0.###", CultureInfo.CurrentCulture);
+                txtInputResolution.Text = feedback.ADCResolution.ToString("#0.###", CultureInfo.CurrentCulture);
+                txtInputMinimum.Text = feedback.ADCMinimum.ToString(CultureInfo.CurrentCulture);
+                txtInputMaximum.Text = feedback.ADCMaximum.ToString(CultureInfo.CurrentCulture);
+                chkInputSigned.Checked = feedback.ADCIsDifferential;
+
                 if (!EnableInputValueEdits)
                     txtParam0.Text = feedback.CurrentSenseSourceMaximum.ToString("#0.###", CultureInfo.CurrentCulture);
                 else
@@ -193,95 +206,113 @@ namespace dcld
             else if (tabFeedback.SelectedTab == tabCT)                
             { // Current Sense Transformer
 
-                    feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER;
+                feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER;
 
-                    if (!EnableInputValueEdits)
-                        txtParam0.Text = feedback.CurrentTransformerSourceMaximum.ToString("#0.###", CultureInfo.CurrentCulture);
-                    else
-                        txtParam0.Text = feedback.CurrentTransformerSenseCurrent.ToString("#0.###", CultureInfo.CurrentCulture);
+                // Set reference values
+                txtInputReference.Text = feedback.ADCReference.ToString("#0.###", CultureInfo.CurrentCulture);
+                txtInputResolution.Text = feedback.ADCResolution.ToString("#0.###", CultureInfo.CurrentCulture);
+                txtInputMinimum.Text = feedback.ADCMinimum.ToString(CultureInfo.CurrentCulture);
+                txtInputMaximum.Text = feedback.ADCMaximum.ToString(CultureInfo.CurrentCulture);
+                chkInputSigned.Checked = feedback.ADCIsDifferential;
 
-                    txtParam1.Text = feedback.CurrentTransformerBurdenResistance.ToString("#0.0##", CultureInfo.CurrentCulture);
-                    txtParam2.Text = feedback.CurrentTransformerWindingRatio.ToString("#0.###", CultureInfo.CurrentCulture);
 
-                    lblInputResolution.Text = "ADC Resolution";
-                    lblInputResolution.Visible = true;
-                    lblInputReference.Text = "ADC Reference";
-                    txtInputReference.Visible = true;
-                    lblInputReference.Visible = true;
-                    lblInputReferenceUnit.Visible = true;
+                if (!EnableInputValueEdits)
+                    txtParam0.Text = feedback.CurrentTransformerSourceMaximum.ToString("#0.###", CultureInfo.CurrentCulture);
+                else
+                    txtParam0.Text = feedback.CurrentTransformerSenseCurrent.ToString("#0.###", CultureInfo.CurrentCulture);
 
-                    if (EnableInputValueEdits)
-                        lblParam0Label.Text = "Nominal Sense Current:";
-                    else
-                        lblParam0Label.Text = "Maximum Sense Current:";
+                txtParam1.Text = feedback.CurrentTransformerBurdenResistance.ToString("#0.0##", CultureInfo.CurrentCulture);
+                txtParam2.Text = feedback.CurrentTransformerWindingRatio.ToString("#0.###", CultureInfo.CurrentCulture);
 
-                    lblParam0Unit.Text = "A";
-                    lblParam0Unit.Font = this.Font;
+                lblInputResolution.Text = "ADC Resolution";
+                lblInputResolution.Visible = true;
+                lblInputReference.Text = "ADC Reference";
+                txtInputReference.Visible = true;
+                lblInputReference.Visible = true;
+                lblInputReferenceUnit.Visible = true;
 
-                    lblParam1Label.Text = "Burden Resistance:";
-                    lblParam1Unit.Text = "W";
-                    lblParam1Unit.Font = new Font("Symbol", 10);
+                if (EnableInputValueEdits)
+                    lblParam0Label.Text = "Nominal Sense Current:";
+                else
+                    lblParam0Label.Text = "Maximum Sense Current:";
 
-                    lblParam2Label.Text = "Winding Ratio [P/S] = 1:n";
-                    lblParam2Unit.Text = "";
-                    lblParam2Unit.Font = this.Font;
+                lblParam0Unit.Text = "A";
+                lblParam0Unit.Font = this.Font;
 
-                    txtParam2.Visible = true;
-                    lblParam2Label.Visible = true;
-                    lblParam2Unit.Visible = true;
+                lblParam1Label.Text = "Burden Resistance:";
+                lblParam1Unit.Text = "W";
+                lblParam1Unit.Font = new Font("Symbol", 10);
 
-                    txtParam3.Visible = false;
-                    lblParam3Label.Visible = false;
-                    lblParam3Unit.Visible = false;
+                lblParam2Label.Text = "Winding Ratio [P/S] = 1:n";
+                lblParam2Unit.Text = "";
+                lblParam2Unit.Font = this.Font;
+
+                txtParam2.Visible = true;
+                lblParam2Label.Visible = true;
+                lblParam2Unit.Visible = true;
+
+                txtParam3.Visible = false;
+                lblParam3Label.Visible = false;
+                lblParam3Unit.Visible = false;
                     
-                    lblInputGainUnit.Text = "V/A";
+                lblInputGainUnit.Text = "V/A";
 
             }
 
             else if (tabFeedback.SelectedTab == tabDS)                
             { // Digital Soruce
 
-                    feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE;
+                // Set feedback type
+                feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE;
 
-                    if (!EnableInputValueEdits)
-                        txtParam0.Text = feedback.DigitalSourceSourceMaximum.ToString("#0.###", CultureInfo.CurrentCulture);
-                    else
-                        txtParam0.Text = feedback.DigitalSourceValue.ToString("#0.###", CultureInfo.CurrentCulture);
+                // Set reference values
+                txtInputReference.Text = feedback.DigitalReferenceReference.ToString("#0.###", CultureInfo.CurrentCulture);
+                txtInputResolution.Text = feedback.DigitalReferenceResolution.ToString("#0.###", CultureInfo.CurrentCulture);
+                txtInputMinimum.Text = feedback.DigitalReferenceMinimum.ToString(CultureInfo.CurrentCulture);
+                txtInputMaximum.Text = feedback.DigitalReferenceMaximum.ToString(CultureInfo.CurrentCulture);
+                chkInputSigned.Checked = feedback.DigitalReferenceIsSigned;
 
-                    txtParam1.Text = feedback.DigitalSourceResolution.ToString("#0.0##", CultureInfo.CurrentCulture);
+                // Set feedback signal parameters
+                if (!EnableInputValueEdits)
+                    txtParam0.Text = feedback.DigitalSourceSourceMaximum.ToString("#0.###", CultureInfo.CurrentCulture);
+                else
+                    txtParam0.Text = feedback.DigitalSourceValue.ToString("#0.###", CultureInfo.CurrentCulture);
 
-                    lblInputResolution.Text = "Input Resolution";
-                    lblInputResolution.Visible = true;
-                    lblInputReference.Text = "Input Reference";
-                    txtInputReference.Visible = false;
-                    lblInputReference.Visible = false;
-                    lblInputReferenceUnit.Visible = false;
+                txtParam1.Text = feedback.DigitalSourceResolution.ToString("#0.0##", CultureInfo.CurrentCulture);
 
-                    if (EnableInputValueEdits)
-                        lblParam0Label.Text = "Nominal Value:";
-                    else
-                        lblParam0Label.Text = "Maximum value:";
+                // Set state of input controls
+                lblInputResolution.Text = "Input Resolution";
+                lblInputResolution.Visible = true;
+                lblInputReference.Text = "Input Reference";
+                txtInputReference.Visible = false;
+                lblInputReference.Visible = false;
+                lblInputReferenceUnit.Visible = false;
 
-                    lblParam0Unit.Text = "";
-                    lblParam0Unit.Font = this.Font;
+                if (EnableInputValueEdits)
+                    lblParam0Label.Text = "Nominal Value:";
+                else
+                    lblParam0Label.Text = "Maximum value:";
 
-                    lblParam1Label.Text = "Value Resolution:";
-                    lblParam1Unit.Text = "bit";
-                    lblParam1Unit.Font = this.Font;
+                lblParam0Unit.Text = "";
+                lblParam0Unit.Font = this.Font;
 
-                    lblParam2Label.Text = "Maximum Input Value:";
-                    lblParam2Unit.Text = "";
-                    lblParam2Unit.Font = this.Font;
+                lblParam1Label.Text = "Value Resolution:";
+                lblParam1Unit.Text = "bit";
+                lblParam1Unit.Font = this.Font;
 
-                    txtParam2.Visible = false;
-                    lblParam2Label.Visible = false;
-                    lblParam2Unit.Visible = false;
+                lblParam2Label.Text = "Maximum Input Value:";
+                lblParam2Unit.Text = "";
+                lblParam2Unit.Font = this.Font;
 
-                    txtParam3.Visible = false;
-                    lblParam3Label.Visible = false;
-                    lblParam3Unit.Visible = false;
+                txtParam2.Visible = false;
+                lblParam2Label.Visible = false;
+                lblParam2Unit.Visible = false;
 
-                    lblInputGainUnit.Text = "tick/tick";
+                txtParam3.Visible = false;
+                lblParam3Label.Visible = false;
+                lblParam3Unit.Visible = false;
+
+                lblInputGainUnit.Text = "tick/tick";
 
             }
 
@@ -341,17 +372,18 @@ namespace dcld
             try 
             {
 
-                // Calculate ADC/Input Resolution and Granularity
-                feedback.ADCIsDifferential = chkInputSigned.Checked;
-                feedback.ADCReference = Convert.ToDouble(txtInputReference.Text);
-                feedback.ADCResolution = Convert.ToDouble(txtInputResolution.Text);
-
                 // Set Parameters
                 if (tabFeedback.SelectedTab == tabVD)                
                 { // Voltage Divider
 
                     feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER;
 
+                    // Calculate ADC/Input Resolution and Granularity
+                    feedback.ADCIsDifferential = chkInputSigned.Checked;
+                    feedback.ADCReference = Convert.ToDouble(txtInputReference.Text);
+                    feedback.ADCResolution = Convert.ToDouble(txtInputResolution.Text);
+
+                    // Capture and calculate feedback gain
                     feedback.VoltageDividerR1 = NumberTextBox_ToDouble(txtParam1);
                     feedback.VoltageDividerR2 = NumberTextBox_ToDouble(txtParam2);
                     feedback.VoltageDividerAmplifierGain = NumberTextBox_ToDouble(txtParam3);
@@ -369,6 +401,12 @@ namespace dcld
 
                     feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER;
 
+                    // Calculate ADC/Input Resolution and Granularity
+                    feedback.ADCIsDifferential = chkInputSigned.Checked;
+                    feedback.ADCReference = Convert.ToDouble(txtInputReference.Text);
+                    feedback.ADCResolution = Convert.ToDouble(txtInputResolution.Text);
+
+                    // Capture and calculate feedback gain
                     feedback.CurrentSenseRshunt = NumberTextBox_ToDouble(txtParam1);
                     feedback.CurrentSenseAmplifierGain = NumberTextBox_ToDouble(txtParam2);
 
@@ -385,6 +423,12 @@ namespace dcld
 
                     feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER;
 
+                    // Calculate ADC/Input Resolution and Granularity
+                    feedback.ADCIsDifferential = chkInputSigned.Checked;
+                    feedback.ADCReference = Convert.ToDouble(txtInputReference.Text);
+                    feedback.ADCResolution = Convert.ToDouble(txtInputResolution.Text);
+
+                    // Capture and calculate feedback gain
                     feedback.CurrentTransformerBurdenResistance = NumberTextBox_ToDouble(txtParam1);
                     feedback.CurrentTransformerWindingRatio = NumberTextBox_ToDouble(txtParam2);
 
@@ -401,13 +445,24 @@ namespace dcld
 
                     feedback.FeedbackType = clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE;
 
-                    feedback.DigitalSourceResolution = NumberTextBox_ToDouble(txtParam1);
+                    // Calculate Reference Resolution and Granularity
+                    feedback.DigitalReferenceIsSigned = chkInputSigned.Checked;
+                    feedback.DigitalReferenceReference = Convert.ToDouble(txtInputReference.Text);
+                    feedback.DigitalReferenceResolution = Convert.ToDouble(txtInputResolution.Text);
 
-                    // Update Maximum Value
-                    if (!EnableInputValueEdits)
-                        txtParam0.Text = feedback.DigitalSourceSourceMaximum.ToString("#0.0##", CultureInfo.CurrentCulture);
-                    else
-                        txtParam0.Text = feedback.DigitalSourceValue.ToString("#0.0##", CultureInfo.CurrentCulture);
+                    // Capture and calculate feedback gain
+                    if (tBox.Name == txtParam1.Name) // User has modified the signal resolution
+                    {
+                        feedback.DigitalSourceResolution = NumberTextBox_ToDouble(txtParam1);
+                        txtParam0.Text = Math.Round(feedback.DigitalSourceSourceMaximum, 0).ToString("#0.0##", CultureInfo.CurrentCulture);
+                    }
+                    else if ((tBox.Name == txtParam0.Name) && (EnableInputValueEdits)) // User has modified the signal value
+                    {
+                        feedback.DigitalSourceValue = NumberTextBox_ToDouble(txtParam0);
+                        SuppressGainCalculation = true;
+                        txtParam1.Text = feedback.DigitalSourceResolution.ToString("#0.0##", CultureInfo.CurrentCulture);
+                        SuppressGainCalculation = false;
+                    }
 
                 }
 
@@ -429,11 +484,22 @@ namespace dcld
             }
 
             // Plot Input Number Range
-            txtInputMinimum.Text = feedback.ADCMinimum.ToString(CultureInfo.CurrentCulture);
-            txtInputMaximum.Text = feedback.ADCMaximum.ToString(CultureInfo.CurrentCulture);
+            if (feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE)
+            {
+                txtInputMinimum.Text = feedback.DigitalReferenceMinimum.ToString(CultureInfo.CurrentCulture);
+                txtInputMaximum.Text = feedback.DigitalReferenceMaximum.ToString(CultureInfo.CurrentCulture);
+            }
+            else
+            {
+                txtInputMinimum.Text = feedback.ADCMinimum.ToString(CultureInfo.CurrentCulture);
+                txtInputMaximum.Text = feedback.ADCMaximum.ToString(CultureInfo.CurrentCulture);
+            }
 
             // Set Input Gain Value
             lblInputGain.Text = ddum.ToString("#0.000000", CultureInfo.CurrentCulture);
+
+            // Sanitiy Check of results
+            ParameterSanityCheck(sender, e);
 
             // Guarding condition end
             ParameterUpdate = false;
@@ -583,9 +649,15 @@ namespace dcld
             return;
         }
 
-        private void txtParam0_TextChanged(object sender, EventArgs e)
+        private bool ParameterSanityCheck(object sender, EventArgs e)
         {
             bool _sanity_check = false;
+            TextBox tBox;
+
+            if (sender.GetType().ToString() != "System.Windows.Forms.TextBox")
+                return (true);
+            else
+                tBox = (TextBox)sender;
 
             try
             {
@@ -613,9 +685,8 @@ namespace dcld
 
                 else if (tabFeedback.SelectedTab == tabDS)
                 { // Digital Source
-                    if (EnableInputValueEdits)
-                        feedback.DigitalSourceValue = Convert.ToDouble(txtParam0.Text);
-                    _sanity_check = (bool)(feedback.DigitalSourceValue <= feedback.DigitalSourceSourceMaximum);
+                    feedback.DigitalSourceValue = Convert.ToDouble(txtParam0.Text);
+                    _sanity_check = (bool)(feedback.DigitalSourceValue <= (feedback.DigitalSourceSourceMaximum + 1.0));
                 }
 
             }
@@ -626,17 +697,43 @@ namespace dcld
 
 
             // Check if settings are OK or user-edits of sense value are disabled
-            if ((_sanity_check) || (!txtParam0.Enabled)){
-                txtParam0.BackColor = SystemColors.Window;  // Set background color to 'normal'
-                cmdOK.Enabled = true;                       // Enable OK button
+            foreach (Control c in this.Controls)
+            {
+                if (c.GetType().ToString() == "System.Windows.Forms.GroupBox")
+                {
+                    foreach (Control txt in c.Controls)
+                    {
+                        if (txt.GetType().ToString() == "System.Windows.Forms.TextBox")
+                            txt.BackColor = SystemColors.Window; // Set background color to 'normal'
+                    }
+            
+                }
+
             }
-            //If settings are physically impossible, set error and prevent user from applying these values
+            
+            // Indicate error at calling control
+            if ((!_sanity_check) && (tBox.Enabled)) 
+                tBox.BackColor = Color.LightCoral;   // Set background color to 'error'
+
+            cmdOK.Enabled = _sanity_check; // Enable/Disable OK button
+
+
+            return (_sanity_check);
+        
+        }
+
+        private void txtParam0_TextChanged(object sender, EventArgs e)
+        {
+
+            if (feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE)
+            {
+                if (EnableInputValueEdits)
+                    CalculateInputGain(sender, e);
+            }
             else
             {
-                txtParam0.BackColor = Color.LightCoral;     // Set background color to 'error'
-                cmdOK.Enabled = false;                      // Disable OK button
+                ParameterSanityCheck(sender, e);
             }
-        
         }
 
         
