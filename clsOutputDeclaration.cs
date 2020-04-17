@@ -181,6 +181,20 @@ namespace dcld
             set { _NominalOutputVoltage = value; refreshDutyCycle(); return; }
         }
 
+        private double _NominalEfficiency = 1.0;
+        internal double NominalEfficiency
+        {
+            get { return (_NominalEfficiency); }
+            set {
+                double dbl_dum = value;
+                if (dbl_dum > 1.0) dbl_dum = 1.0;
+                if (dbl_dum < 0.0) dbl_dum = 0.0;
+                _NominalEfficiency = dbl_dum; 
+                refreshDutyCycle(); 
+                return; 
+            }
+        }
+
         private double _WindingRatioPrimary = 1.0;
         internal double WindingRatioPrimary
         {
@@ -224,15 +238,15 @@ namespace dcld
             {
                 case clsOutputDeclaration.dcldConverterType.DCLD_CONVERTER_BUCK: // Buck/Forward type
                     _voutX = _NominalOutputVoltage / _wr;
-                    PWMDutyCycle = _voutX / _NominalInputVoltage;
+                    PWMDutyCycle = (_voutX / _NominalInputVoltage) / _NominalEfficiency;
                     break;
                 case clsOutputDeclaration.dcldConverterType.DCLD_CONVERTER_BOOST: // Boost type
                     _voutX = _NominalOutputVoltage / _wr;
-                    PWMDutyCycle = ((_voutX - _NominalInputVoltage) / _voutX); 
+                    PWMDutyCycle = ((_voutX - _NominalInputVoltage) / _voutX) / _NominalEfficiency; 
                     break;
                 case clsOutputDeclaration.dcldConverterType.DCLD_CONVERTER_BUCK_BOOST: // Buck/Boost type
                     _voutX = _NominalOutputVoltage / _wr;
-                    PWMDutyCycle = (_voutX) / (_voutX + _NominalInputVoltage);
+                    PWMDutyCycle = (_voutX / (_voutX + _NominalInputVoltage)) / _NominalEfficiency;
                     break;
                 default:
                     break;
