@@ -5213,6 +5213,7 @@ namespace dcld
             frm.output = ctrl_output;
             frm.output.SetDeviceType(_targetDeviceType);
             frm.EnableNominalControlEdits = true;
+            frm.Text = "Nominal Ouptut Level Calculator";
 
             if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
