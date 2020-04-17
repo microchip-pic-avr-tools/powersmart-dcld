@@ -963,10 +963,10 @@
             this.stbProgressBar,
             this.stbMainProgressTime,
             this.toolStripTableOptions});
-            this.stbMain.Location = new System.Drawing.Point(0, 829);
+            this.stbMain.Location = new System.Drawing.Point(0, 833);
             this.stbMain.Name = "stbMain";
             this.stbMain.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-            this.stbMain.Size = new System.Drawing.Size(1374, 26);
+            this.stbMain.Size = new System.Drawing.Size(1374, 22);
             this.stbMain.TabIndex = 13;
             this.stbMain.Text = "statusStrip1";
             // 
@@ -976,7 +976,7 @@
             this.stbMainStatusLabel.Image = ((System.Drawing.Image)(resources.GetObject("stbMainStatusLabel.Image")));
             this.stbMainStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.stbMainStatusLabel.Name = "stbMainStatusLabel";
-            this.stbMainStatusLabel.Size = new System.Drawing.Size(1007, 21);
+            this.stbMainStatusLabel.Size = new System.Drawing.Size(1140, 17);
             this.stbMainStatusLabel.Spring = true;
             this.stbMainStatusLabel.Text = "Status";
             this.stbMainStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -984,7 +984,7 @@
             // stbProgressBarLabel
             // 
             this.stbProgressBarLabel.Name = "stbProgressBarLabel";
-            this.stbProgressBarLabel.Size = new System.Drawing.Size(98, 21);
+            this.stbProgressBarLabel.Size = new System.Drawing.Size(98, 17);
             this.stbProgressBarLabel.Text = "Loading Settings:";
             // 
             // stbProgressBar
@@ -996,7 +996,7 @@
             // stbMainProgressTime
             // 
             this.stbMainProgressTime.Name = "stbMainProgressTime";
-            this.stbMainProgressTime.Size = new System.Drawing.Size(32, 21);
+            this.stbMainProgressTime.Size = new System.Drawing.Size(32, 17);
             this.stbMainProgressTime.Text = "0 ms";
             // 
             // toolStripTableOptions
@@ -1011,7 +1011,7 @@
             this.toolStripTableOptions.Image = ((System.Drawing.Image)(resources.GetObject("toolStripTableOptions.Image")));
             this.toolStripTableOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripTableOptions.Name = "toolStripTableOptions";
-            this.toolStripTableOptions.Size = new System.Drawing.Size(87, 24);
+            this.toolStripTableOptions.Size = new System.Drawing.Size(87, 20);
             this.toolStripTableOptions.Text = "Table Options";
             this.toolStripTableOptions.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolStripTableOptions.DropDownClosed += new System.EventHandler(this.UpdateTransferFunction);
@@ -1068,7 +1068,7 @@
             // splitContainerContents.Panel2
             // 
             this.splitContainerContents.Panel2.Controls.Add(this.tabAnalysis);
-            this.splitContainerContents.Size = new System.Drawing.Size(1374, 767);
+            this.splitContainerContents.Size = new System.Drawing.Size(1374, 771);
             this.splitContainerContents.SplitterDistance = 436;
             this.splitContainerContents.SplitterWidth = 6;
             this.splitContainerContents.TabIndex = 2;
@@ -1082,7 +1082,7 @@
             this.tabConfig.Location = new System.Drawing.Point(0, 0);
             this.tabConfig.Name = "tabConfig";
             this.tabConfig.SelectedIndex = 0;
-            this.tabConfig.Size = new System.Drawing.Size(436, 767);
+            this.tabConfig.Size = new System.Drawing.Size(436, 771);
             this.tabConfig.TabIndex = 0;
             // 
             // tabController
@@ -1095,7 +1095,7 @@
             this.tabController.Location = new System.Drawing.Point(4, 24);
             this.tabController.Name = "tabController";
             this.tabController.Padding = new System.Windows.Forms.Padding(3);
-            this.tabController.Size = new System.Drawing.Size(428, 739);
+            this.tabController.Size = new System.Drawing.Size(428, 743);
             this.tabController.TabIndex = 0;
             this.tabController.Text = "Controller";
             this.tabController.UseVisualStyleBackColor = true;
@@ -2798,7 +2798,7 @@
             this.tabAnalysis.Location = new System.Drawing.Point(0, 0);
             this.tabAnalysis.Name = "tabAnalysis";
             this.tabAnalysis.SelectedIndex = 0;
-            this.tabAnalysis.Size = new System.Drawing.Size(932, 767);
+            this.tabAnalysis.Size = new System.Drawing.Size(932, 771);
             this.tabAnalysis.TabIndex = 1;
             // 
             // tabPageBode
@@ -4636,10 +4636,10 @@
             this.tabPageCodeOutput.Controls.Add(this.tabSourceCode);
             this.tabPageCodeOutput.Controls.Add(this.splitDebug);
             this.tabPageCodeOutput.Controls.Add(this.txtDebugOutput);
-            this.tabPageCodeOutput.Location = new System.Drawing.Point(4, 24);
+            this.tabPageCodeOutput.Location = new System.Drawing.Point(4, 22);
             this.tabPageCodeOutput.Name = "tabPageCodeOutput";
             this.tabPageCodeOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCodeOutput.Size = new System.Drawing.Size(924, 739);
+            this.tabPageCodeOutput.Size = new System.Drawing.Size(924, 745);
             this.tabPageCodeOutput.TabIndex = 0;
             this.tabPageCodeOutput.Text = "Source Code Output";
             this.tabPageCodeOutput.UseVisualStyleBackColor = true;
@@ -4655,7 +4655,7 @@
             this.tabSourceCode.Location = new System.Drawing.Point(3, 3);
             this.tabSourceCode.Name = "tabSourceCode";
             this.tabSourceCode.SelectedIndex = 0;
-            this.tabSourceCode.Size = new System.Drawing.Size(918, 567);
+            this.tabSourceCode.Size = new System.Drawing.Size(918, 573);
             this.tabSourceCode.TabIndex = 1;
             // 
             // tabPageAssembly
@@ -4666,7 +4666,7 @@
             this.tabPageAssembly.Location = new System.Drawing.Point(4, 24);
             this.tabPageAssembly.Name = "tabPageAssembly";
             this.tabPageAssembly.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAssembly.Size = new System.Drawing.Size(910, 539);
+            this.tabPageAssembly.Size = new System.Drawing.Size(910, 545);
             this.tabPageAssembly.TabIndex = 0;
             this.tabPageAssembly.Text = "Assembly";
             this.tabPageAssembly.UseVisualStyleBackColor = true;
@@ -4687,7 +4687,7 @@
             visualStudio2005SyntaxEditorRenderer1.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorAssembly.Renderer = visualStudio2005SyntaxEditorRenderer1;
             this.txtSyntaxEditorAssembly.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorAssembly.Size = new System.Drawing.Size(904, 439);
+            this.txtSyntaxEditorAssembly.Size = new System.Drawing.Size(904, 445);
             this.txtSyntaxEditorAssembly.TabIndex = 0;
             // 
             // tsbCodeGenUpdateWarningAssembly
@@ -4782,7 +4782,7 @@
             this.tabPageCSource.Location = new System.Drawing.Point(4, 22);
             this.tabPageCSource.Name = "tabPageCSource";
             this.tabPageCSource.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCSource.Size = new System.Drawing.Size(910, 545);
+            this.tabPageCSource.Size = new System.Drawing.Size(910, 547);
             this.tabPageCSource.TabIndex = 2;
             this.tabPageCSource.Text = "C-Source";
             this.tabPageCSource.UseVisualStyleBackColor = true;
@@ -4832,7 +4832,7 @@
             visualStudio2005SyntaxEditorRenderer2.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCSource.Renderer = visualStudio2005SyntaxEditorRenderer2;
             this.txtSyntaxEditorCSource.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(904, 470);
+            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(904, 472);
             this.txtSyntaxEditorCSource.TabIndex = 5;
             // 
             // panelCSourcePath
@@ -4898,7 +4898,7 @@
             this.tabPageCHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageCHeader.Name = "tabPageCHeader";
             this.tabPageCHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCHeader.Size = new System.Drawing.Size(910, 545);
+            this.tabPageCHeader.Size = new System.Drawing.Size(910, 547);
             this.tabPageCHeader.TabIndex = 3;
             this.tabPageCHeader.Text = "C-Header";
             this.tabPageCHeader.UseVisualStyleBackColor = true;
@@ -4948,7 +4948,7 @@
             visualStudio2005SyntaxEditorRenderer3.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCHeader.Renderer = visualStudio2005SyntaxEditorRenderer3;
             this.txtSyntaxEditorCHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(904, 470);
+            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(904, 472);
             this.txtSyntaxEditorCHeader.TabIndex = 5;
             // 
             // panelCHeaderPath
@@ -5014,7 +5014,7 @@
             this.tabPageLibraryHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageLibraryHeader.Name = "tabPageLibraryHeader";
             this.tabPageLibraryHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLibraryHeader.Size = new System.Drawing.Size(910, 545);
+            this.tabPageLibraryHeader.Size = new System.Drawing.Size(910, 547);
             this.tabPageLibraryHeader.TabIndex = 6;
             this.tabPageLibraryHeader.Text = "Library Header";
             this.tabPageLibraryHeader.UseVisualStyleBackColor = true;
@@ -5064,7 +5064,7 @@
             visualStudio2005SyntaxEditorRenderer4.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCLibHeader.Renderer = visualStudio2005SyntaxEditorRenderer4;
             this.txtSyntaxEditorCLibHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(904, 470);
+            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(904, 472);
             this.txtSyntaxEditorCLibHeader.TabIndex = 6;
             // 
             // panelCLibPath
@@ -5127,7 +5127,7 @@
             this.tabPageInfo.Location = new System.Drawing.Point(4, 22);
             this.tabPageInfo.Name = "tabPageInfo";
             this.tabPageInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInfo.Size = new System.Drawing.Size(910, 545);
+            this.tabPageInfo.Size = new System.Drawing.Size(910, 547);
             this.tabPageInfo.TabIndex = 5;
             this.tabPageInfo.Text = "Info";
             this.tabPageInfo.UseVisualStyleBackColor = true;
@@ -5141,7 +5141,7 @@
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtOutput.Size = new System.Drawing.Size(904, 539);
+            this.txtOutput.Size = new System.Drawing.Size(904, 541);
             this.txtOutput.TabIndex = 0;
             this.txtOutput.WordWrap = false;
             // 
@@ -5150,7 +5150,7 @@
             this.splitDebug.BackColor = System.Drawing.SystemColors.Window;
             this.splitDebug.Cursor = System.Windows.Forms.Cursors.HSplit;
             this.splitDebug.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitDebug.Location = new System.Drawing.Point(3, 570);
+            this.splitDebug.Location = new System.Drawing.Point(3, 576);
             this.splitDebug.Name = "splitDebug";
             this.splitDebug.Size = new System.Drawing.Size(918, 6);
             this.splitDebug.TabIndex = 4;
@@ -5158,9 +5158,10 @@
             // 
             // txtDebugOutput
             // 
+            this.txtDebugOutput.BackColor = System.Drawing.SystemColors.ControlLight;
             this.txtDebugOutput.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.txtDebugOutput.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDebugOutput.Location = new System.Drawing.Point(3, 576);
+            this.txtDebugOutput.Location = new System.Drawing.Point(3, 582);
             this.txtDebugOutput.Name = "txtDebugOutput";
             this.txtDebugOutput.Size = new System.Drawing.Size(918, 160);
             this.txtDebugOutput.TabIndex = 5;

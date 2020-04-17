@@ -58,7 +58,7 @@
             this.lblParam0Unit = new System.Windows.Forms.Label();
             this.txtParam0 = new System.Windows.Forms.TextBox();
             this.lblParam0Label = new System.Windows.Forms.Label();
-            this.grmInputGain = new System.Windows.Forms.GroupBox();
+            this.grpInputGain = new System.Windows.Forms.GroupBox();
             this.lblInputGainUnit = new System.Windows.Forms.Label();
             this.txtInputMaximum = new System.Windows.Forms.TextBox();
             this.lblADCMaximum = new System.Windows.Forms.Label();
@@ -86,7 +86,7 @@
             this.grpDSCircuit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.grpVoltageDividerCalculation.SuspendLayout();
-            this.grmInputGain.SuspendLayout();
+            this.grpInputGain.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -370,7 +370,7 @@
             this.grpVoltageDividerCalculation.Controls.Add(this.lblParam0Unit);
             this.grpVoltageDividerCalculation.Controls.Add(this.txtParam0);
             this.grpVoltageDividerCalculation.Controls.Add(this.lblParam0Label);
-            this.grpVoltageDividerCalculation.Controls.Add(this.grmInputGain);
+            this.grpVoltageDividerCalculation.Controls.Add(this.grpInputGain);
             this.grpVoltageDividerCalculation.Controls.Add(this.txtParam1);
             this.grpVoltageDividerCalculation.Controls.Add(this.lblParam2Label);
             this.grpVoltageDividerCalculation.Controls.Add(this.lblParam1Label);
@@ -420,17 +420,17 @@
             this.lblParam0Label.Text = "Maximum Voltage:";
             this.lblParam0Label.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // grmInputGain
+            // grpInputGain
             // 
-            this.grmInputGain.Controls.Add(this.lblInputGain);
-            this.grmInputGain.Controls.Add(this.lblInputGainUnit);
-            this.grmInputGain.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grmInputGain.Location = new System.Drawing.Point(6, 145);
-            this.grmInputGain.Name = "grmInputGain";
-            this.grmInputGain.Size = new System.Drawing.Size(286, 48);
-            this.grmInputGain.TabIndex = 52;
-            this.grmInputGain.TabStop = false;
-            this.grmInputGain.Text = "Signal Gain:";
+            this.grpInputGain.Controls.Add(this.lblInputGain);
+            this.grpInputGain.Controls.Add(this.lblInputGainUnit);
+            this.grpInputGain.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpInputGain.Location = new System.Drawing.Point(6, 145);
+            this.grpInputGain.Name = "grpInputGain";
+            this.grpInputGain.Size = new System.Drawing.Size(286, 48);
+            this.grpInputGain.TabIndex = 52;
+            this.grpInputGain.TabStop = false;
+            this.grpInputGain.Text = "Signal Gain:";
             // 
             // lblInputGainUnit
             // 
@@ -609,7 +609,10 @@
             this.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmCalculateInputGain";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Input Gain";
             this.Load += new System.EventHandler(this.frmCalculateInputGain_Load);
@@ -629,8 +632,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.grpVoltageDividerCalculation.ResumeLayout(false);
             this.grpVoltageDividerCalculation.PerformLayout();
-            this.grmInputGain.ResumeLayout(false);
-            this.grmInputGain.PerformLayout();
+            this.grpInputGain.ResumeLayout(false);
+            this.grpInputGain.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -676,7 +679,7 @@
         private System.Windows.Forms.Label lblADCMaximum;
         private System.Windows.Forms.TextBox txtInputMinimum;
         private System.Windows.Forms.Label lblADCMinimum;
-        private System.Windows.Forms.GroupBox grmInputGain;
+        private System.Windows.Forms.GroupBox grpInputGain;
         private System.Windows.Forms.CheckBox chkInputSigned;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lblParam0Unit;
