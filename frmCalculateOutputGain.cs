@@ -79,6 +79,12 @@ namespace dcld
             tabPWMMode_SelectedIndexChanged(this, e);
             cmbDeviceType.SelectedIndex = (int)(output.DeviceType-1);
 
+            // Set Window Properties
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.ShowInTaskbar = false;
+            this.HelpButton = false;
+
             // Set Window Startup Position
             this.StartPosition = FormStartPosition.CenterParent;
 
