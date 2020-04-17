@@ -1605,6 +1605,7 @@ namespace dcld
                 ProjectFile.WriteKey("OutputDeclaration", "PWMFREQ", ctrl_output.PWMFrequency.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("OutputDeclaration", "NomVin", ctrl_output.NominalInputVoltage.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("OutputDeclaration", "NomVout", ctrl_output.NominalOutputVoltage.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("OutputDeclaration", "NomEfficiency", ctrl_output.NominalEfficiency.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("OutputDeclaration", "WindingRatioPrimary", ctrl_output.WindingRatioPrimary.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("OutputDeclaration", "WindingRatioSecondary", ctrl_output.WindingRatioSecondary.ToString(CultureInfo.InvariantCulture));
 
@@ -1823,6 +1824,7 @@ namespace dcld
                 ctrl_output.PWMFrequency = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "PWMFREQ", "250000.0"));
                 ctrl_output.NominalInputVoltage = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "NomVin", "0.0"));
                 ctrl_output.NominalOutputVoltage = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "NomVout", "0.0"));
+                ctrl_output.NominalEfficiency = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "NomEfficiency", "1.0"));
                 ctrl_output.WindingRatioPrimary = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "WindingRatioPrimary", "1.0"));
                 ctrl_output.WindingRatioSecondary = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "WindingRatioSecondary", "1.0"));
 
