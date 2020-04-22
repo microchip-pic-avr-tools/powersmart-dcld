@@ -5617,33 +5617,37 @@ namespace dcld
         {
             int txt_start = 0, txt_stop = 0;
 
-            // If no color is defined, set color to Default Color
-            if (color.IsEmpty)
-                color = DebugOutputMessageDefaultColor;
-
-            // cut debug window text if contents exceed buffer size
-            if ((txtDebugOutput.TextLength + debugString.Length) > txtDebugOutput.MaxLength)
+            try
             {
-                txt_start = (debugString.Length + 7);
-                txt_stop = (txtDebugOutput.TextLength - txt_start);
-                txtDebugOutput.Text = ">..." + txtDebugOutput.Text.Substring(txt_start, txt_stop);
+                // If no color is defined, set color to Default Color
+                if (color.IsEmpty)
+                    color = DebugOutputMessageDefaultColor;
+
+                // cut debug window text if contents exceed buffer size
+                if ((txtDebugOutput.TextLength + debugString.Length) > txtDebugOutput.MaxLength)
+                {
+                    txt_start = (debugString.Length + 7);
+                    txt_stop = (txtDebugOutput.TextLength - txt_start);
+                    txtDebugOutput.Text = ">..." + txtDebugOutput.Text.Substring(txt_start, txt_stop);
+                }
+
+                txt_start = (txtDebugOutput.TextLength);
+                txt_stop = (debugString.Length) + 1;
+
+                // Add debug text
+                if (debugString.Trim().Length > 0) debugString = ">" + debugString;
+                txtDebugOutput.AppendText(debugString + "\r\n");
+
+                //            txtDebugOutput.SelectionType = RichTextBoxSelectionTypes.Text;
+                //            if (color_index > (DebugOutputMessageColor.Length-1)) color_index = 0;
+                txtDebugOutput.SelectionStart = txt_start;
+                txtDebugOutput.SelectionLength = txt_stop;
+                txtDebugOutput.SelectionColor = color; //DebugOutputMessageColor[color_index];
+                txtDebugOutput.SelectionStart = txtDebugOutput.TextLength;
+
+                txtDebugOutput.ScrollToCaret();
             }
-
-            txt_start = (txtDebugOutput.TextLength);
-            txt_stop = (debugString.Length)+1;
-
-            // Add debug text
-            if (debugString.Trim().Length > 0) debugString = ">" + debugString;
-            txtDebugOutput.AppendText(debugString + "\r\n");
-
-//            txtDebugOutput.SelectionType = RichTextBoxSelectionTypes.Text;
-//            if (color_index > (DebugOutputMessageColor.Length-1)) color_index = 0;
-            txtDebugOutput.SelectionStart = txt_start;
-            txtDebugOutput.SelectionLength = txt_stop;
-            txtDebugOutput.SelectionColor = color; //DebugOutputMessageColor[color_index];
-            txtDebugOutput.SelectionStart = txtDebugOutput.TextLength;
-
-            txtDebugOutput.ScrollToCaret();
+            catch { /* do nothing */ }
         }
 
         public void DebugOutput_Clear()
