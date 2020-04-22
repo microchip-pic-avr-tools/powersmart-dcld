@@ -453,8 +453,6 @@ namespace dcld
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         private void refreshDigitalSource()
         {
-            double gdiv = 0.0;
-
             //_FeedbackGain = (_ADCRes / _DSres);
             if (_DRefIsSigned) 
                 _DSGain = (Math.Pow(2.0, _DSres) / Math.Pow(2.0, (_DRefRes-1)));
