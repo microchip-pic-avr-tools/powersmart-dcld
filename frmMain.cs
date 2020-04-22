@@ -101,6 +101,8 @@ namespace dcld
         clsINIFileHandler AsmGeneratorScript = new clsINIFileHandler();
         clsINIFileHandler CCodeGeneratorScript = new clsINIFileHandler();
 
+        clsRecentFileList RecentFileList = new clsRecentFileList();
+
         // GUI controls groups
         TextBox[] txtPole = null, txtZero = null;
         Label[] lblPole = null, lblZero = null;
@@ -433,6 +435,114 @@ namespace dcld
             return(f_res);
         }
 
+        private void LoadRecentFileList()
+        {
+            int _i = 0;
+            ToolStripItem tsi;
+
+            ToolStripMenuItem itm;
+
+            // Clear current File List Menu
+            for (_i = (recentFilesToolStripMenuItem.DropDownItems.Count - 1); _i > 0; _i--)
+            {
+                tsi = recentFilesToolStripMenuItem.DropDownItems[_i];
+                if (tsi.Name.Contains("file"))
+                    recentFilesToolStripMenuItem.DropDownItems.Remove(tsi);
+            }
+
+            // Clear Recent File List and set new source file
+            RecentFileList.SettingsFile = SettingsFile; // by setting the file, the Recent File List will get updated automatically
+
+            // Load Recent File List
+            for (_i = 0; _i < RecentFileList.Count; _i++)
+            {
+                itm = new ToolStripMenuItem();
+                itm.Text = ("&" + (_i + 1).ToString() + " " + RecentFileList.Items[_i].Path);
+                itm.Name = "file_" + _i.ToString();
+                itm.DisplayStyle = ToolStripItemDisplayStyle.Text;
+                itm.Click += new System.EventHandler(this.OpenFileFromRecentFileList);
+                recentFilesToolStripMenuItem.DropDownItems.Add(itm);
+            }
+
+            toolStripRecentFileListSeparator.Visible = (bool)(RecentFileList.Count > 0);
+
+            return;
+
+        }
+
+        private void ClearRecentFileList_Click(object sender, EventArgs e)
+        {
+            int _i = 0;
+            DialogResult dlgResult = 0;
+            ToolStripItem tsi;
+
+            if (RecentFileList.Count == 0) // Nothing to clear
+                return;
+
+            dlgResult = MessageBox.Show(this,
+                "Do you want to clear the list or recently opened files?\r\n" + 
+                "This action cannot be undone.", 
+                "Clear Recent File List", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+            if (dlgResult == System.Windows.Forms.DialogResult.Cancel)
+                return;
+
+            RecentFileList.Clear();
+
+            for (_i = (recentFilesToolStripMenuItem.DropDownItems.Count - 1); _i > 0; _i--)
+            {
+                tsi = recentFilesToolStripMenuItem.DropDownItems[_i];
+                if (tsi.Name.Contains("file"))
+                    recentFilesToolStripMenuItem.DropDownItems.Remove(tsi);
+            }
+
+            toolStripRecentFileListSeparator.Visible = false;
+
+        }
+
+        private void OpenFileFromRecentFileList(object sender, EventArgs e)
+        {
+            int file_index = 0;
+            string file_name = "";
+            ToolStripMenuItem itm;
+            DialogResult dlgResult;
+
+            if (sender.GetType().ToString() != "System.Windows.Forms.ToolStripMenuItem")
+                return;
+
+            itm = (ToolStripMenuItem)sender;
+            if (!itm.Name.Contains("file"))
+                return;
+
+            file_index = Convert.ToInt32(itm.Name.Replace("file_", ""));
+            file_name = RecentFileList.Items[file_index].Path;
+            if (file_name.Length == 0)
+                return;
+
+            if (!File.Exists(file_name))
+            {
+                dlgResult = MessageBox.Show(this,
+                    "File " +
+                    "'" + file_name + "'" +
+                    " could not be found and will be removed from the list of recetly opend files. \r\n\r\n" +
+                    "Would you like to search for this file?"
+                    , "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+
+                RecentFileList.Remove(file_name);
+                LoadRecentFileList();
+
+                if (dlgResult == DialogResult.OK)
+                    openToolStripMenuItem_Click(openToolStripMenuItem, e);
+            }
+            else
+            {
+                OpenFile(file_name);
+            }
+
+        }
+
+
+
         private void frmMain_Load(object sender, EventArgs e)
         {
             double[,] GainSeries = new double[2, 100];
@@ -568,6 +678,8 @@ namespace dcld
             this.txtCHeaderPath.Text = ""; // rootPath;
             this.txtCLibPath.Text = ""; // rootPath;
 
+            // Load list of previously opened files
+            LoadRecentFileList();
 
             // Refresh GUI
             ApplicationStartUp = false;
@@ -1698,6 +1810,10 @@ namespace dcld
 
                 // Parameter listing complete
 
+                // Update Recent File List
+                RecentFileList.AddNew(sfdlg.FileName);
+                LoadRecentFileList();
+
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 100;
                 Application.DoEvents();
@@ -1995,6 +2111,11 @@ namespace dcld
                 saveToolStripMenuItem.Enabled = false;
                 toolStripButtonSave.Enabled = saveToolStripMenuItem.Enabled;
 
+                // Update Recent File List
+                RecentFileList.AddNew(Filename);
+                LoadRecentFileList();
+
+                // Finish progress indication
                 stbProgressBar.Value = 100;
                 Application.DoEvents();
                 stbProgressBar.Visible = false;
