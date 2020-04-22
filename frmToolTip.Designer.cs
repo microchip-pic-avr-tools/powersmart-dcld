@@ -42,10 +42,10 @@
             // 
             this.lblToolTipText.BackColor = System.Drawing.Color.Transparent;
             this.lblToolTipText.Location = new System.Drawing.Point(12, 9);
-            this.lblToolTipText.MaximumSize = new System.Drawing.Size(560, 0);
+            this.lblToolTipText.MaximumSize = new System.Drawing.Size(410, 0);
             this.lblToolTipText.MinimumSize = new System.Drawing.Size(0, 15);
             this.lblToolTipText.Name = "lblToolTipText";
-            this.lblToolTipText.Size = new System.Drawing.Size(560, 15);
+            this.lblToolTipText.Size = new System.Drawing.Size(410, 15);
             this.lblToolTipText.TabIndex = 0;
             this.lblToolTipText.Text = "lblToolTipText";
             this.lblToolTipText.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmToolTip_KeepVisible);
@@ -54,13 +54,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 182);
+            this.ClientSize = new System.Drawing.Size(434, 182);
             this.ControlBox = false;
             this.Controls.Add(this.lblToolTipText);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(600, 300);
+            this.MaximumSize = new System.Drawing.Size(450, 400);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(240, 90);
             this.Name = "frmToolTip";

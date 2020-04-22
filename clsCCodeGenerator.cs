@@ -12,7 +12,13 @@ namespace dcld
         internal clsINIFileHandler GeneratorScript
         {
             get { return (_GenScript); }
-            set { _GenScript = value; return; }
+            set { 
+                _GenScript = value;
+                if (_tokens == null)
+                    _tokens = new clsConditionalCode();
+                _tokens.GetTokenList(_GenScript);
+                return; 
+            }
         }
 
         private clsINIFileHandler _dcldProjectFile = new clsINIFileHandler();
@@ -92,27 +98,36 @@ namespace dcld
             set { _PreShift = value; return; }
         }
 
-        private string _CGS_Version = "n/a";
-        internal string CGS_Version
-        {
-            get { return(_CGS_Version); }
-            set { _CGS_Version = value; return; }
-        }
+        //private string _CGS_Version = "n/a";
+        //internal string CGS_Version
+        //{
+        //    get { return(_CGS_Version); }
+        //    set { _CGS_Version = value; return; }
+        //}
 
-        private string _CGS_VersionDate = "n/a";
-        internal string CGS_VersionDate
-        {
-            get { return (_CGS_VersionDate); }
-            set { _CGS_VersionDate = value; return; }
-        }
+        //private string _CGS_VersionDate = "n/a";
+        //internal string CGS_VersionDate
+        //{
+        //    get { return (_CGS_VersionDate); }
+        //    set { _CGS_VersionDate = value; return; }
+        //}
 
-        /*  */
+        /* Code Generation Options */
+
+        private dcld.clsConditionalCode _tokens;
+        internal dcld.clsConditionalCode Tokens
+        {
+            get { return (_tokens); }
+            set { _tokens = value; return; }
+        }
 
 
         private string ReplaceConfigStringTokens(string text_line, clsCompensatorNPNZ compFilter)
         {
+
             string sDum = "";
             string _str_coeff_datatype = "", _str_hist_datatype = "", _str_struct_label = "";
+
 
             switch (compFilter.ScalingMethod)
             { 
@@ -133,8 +148,10 @@ namespace dcld
             }
 
             sDum = text_line.Trim();
+
             if (sDum.Length > 0)
-            { 
+            {
+                // Check for constant tokens to replace
                 sDum = sDum.Replace("\\n", "\r\n");
                 sDum = sDum.Replace("%PREFIX%", _PreFix.ToLower().Trim());
                 sDum = sDum.Replace("%PREFIXG%", "_" + _PreFix.Trim());
@@ -147,8 +164,8 @@ namespace dcld
                 sDum = sDum.Replace("%APP_PRODUCT_NAME%", Application.ProductName);
                 sDum = sDum.Replace("%APP_PRODUCT_VERSION%", Application.ProductVersion.ToString());
                 sDum = sDum.Replace("%APP_PRODUCT_VERSION_KEY%", dcldGlobals.APP_VERSION_KEY.ToString());
-                sDum = sDum.Replace("%CGS_VERSION%", _CGS_Version);
-                sDum = sDum.Replace("%CGS_VERSION_DATE%", _CGS_VersionDate);
+                sDum = sDum.Replace("%CGS_VERSION%", _GenScript.FileVersion); // _CGS_Version);
+                sDum = sDum.Replace("%CGS_VERSION_DATE%", _GenScript.FileVersionDate); // _CGS_VersionDate);
                 sDum = sDum.Replace("%COMP_TYPE_NAME%", _CompTypeName);
                 sDum = sDum.Replace("%SAMPLING_FREQUENCY%", compFilter.SamplingFrequency.ToString());
                 sDum = sDum.Replace("%Q_FORMAT%", compFilter.QFormat.ToString());
@@ -167,6 +184,10 @@ namespace dcld
                 sDum = sDum.Replace("%POSTSHIFT_A%", compFilter.PostShiftA.ToString());
                 sDum = sDum.Replace("%POSTSHIFT_B%", compFilter.PostShiftB.ToString());
                 sDum = sDum.Replace("%POSTSCALER%", NumberBaseConverter.Dec2Hex(compFilter.PostScaler, compFilter.QFormat, true, true));
+                sDum = sDum.Replace("%PTERMFACTOR%", NumberBaseConverter.Dec2Hex(compFilter.PTermFactor, compFilter.QFormat, true, true));
+                sDum = sDum.Replace("%PTERMSCALER%", NumberBaseConverter.Dec2Hex(compFilter.PTermScaler, compFilter.QFormat, true, true));
+                sDum = sDum.Replace("%AGCFACTOR%", NumberBaseConverter.Dec2Hex(compFilter.AgcFactor, compFilter.QFormat, true, true));
+                sDum = sDum.Replace("%AGCSCALER%", NumberBaseConverter.Dec2Hex(compFilter.AgcScaler, compFilter.QFormat, true, true));
                 sDum = sDum.Replace("%HISTORY_DATA_TYPE%", _str_hist_datatype);
                 sDum = sDum.Replace("%STRUCTURE_LABEL%", _str_struct_label);
                 sDum = sDum.Replace("%USER_NAME%", Environment.UserName);
@@ -175,6 +196,10 @@ namespace dcld
                 sDum = sDum.Replace("%VENDOR_URL%", _GenScript.ReadKey("labels", "%VENDOR_URL%", "").Trim());
                 sDum = sDum.Replace("%TOOL_HOME_URL%", _GenScript.ReadKey("labels", "%TOOL_HOME_URL%", "").Trim());
                 sDum = sDum + "\r\n";
+
+                // Check for Option Tokens
+                sDum = _tokens.GetTokenResult(sDum).CodeLine;
+
             }
 
             return (sDum);
@@ -195,14 +220,15 @@ namespace dcld
                 {
                     text_line = _GenScript.ReadKey(block_name, ("line" + i.ToString()), "");
                     text_line = ReplaceConfigStringTokens(text_line, compFilter);
-                    strBuffer.Append(text_line);
+                    if(text_line.Length > 0)
+                        strBuffer.Append(text_line);
                 }
                 
 
             }
             catch
             {
-                strBuffer.Append("\r\n\r\n#error [Invalid values detected during header body generation]\r\n\r\n");
+                strBuffer.Append("\r\n\r\n#error [Invalid tokens detected during header body generation]\r\n\r\n");
             }
 
             return (strBuffer);
@@ -229,7 +255,7 @@ namespace dcld
             }
             catch
             {
-                strBuffer.Append("\r\n\r\n#error [Invalid values detected during header body generation]\r\n\r\n");
+                strBuffer.Append("\r\n\r\n#error [Invalid tokens detected during header body generation]\r\n\r\n");
             }
 
             return (strBuffer);
@@ -247,7 +273,7 @@ namespace dcld
             try
             {
                 // The coefficient format is unified to a 32-bit wide number. In normal Q15 bit-shift scaling modes
-                // the high-word is set = zero while the low-word holds the Q15 coefficient.
+                // the high-word is set to ZERO while the low-word holds the Q15 coefficient.
                 // In Fast Floating Point, the high-word holds the Q15 coefficient while the low-word holds the scaler.
                 switch (compFilter.ScalingMethod)
                 {
@@ -350,7 +376,7 @@ namespace dcld
             }
             catch
             {
-                strBuffer.Append("\r\n\r\n#error [Invalid values detected during body generation]\r\n");
+                strBuffer.Append("\r\n\r\n#error [Invalid tokens detected during body generation]\r\n");
                 strBuffer.Append("       => error triggered by " + _GenScript.FileTitle + ", " + block_name + ", line " + i.ToString() + "\r\n\r\n");
             }
 

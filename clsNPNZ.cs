@@ -180,14 +180,14 @@ namespace dcld
         internal double SamplingFrequency   // Sampling freq determining the convolution ratio of the digital filter
         {
             get { return _SamplingFrequency; }
-            set { _SamplingFrequency = value; _SamplingInterval = (1 / _SamplingFrequency); UpdateCoefficients(); return; }
+            set { _SamplingFrequency = value; _SamplingPeriod = (1 / _SamplingFrequency); UpdateCoefficients(); return; }
         }
 
-        private double _SamplingInterval = 1.000;
-        internal double SamplingInterval   // Sampling interval determed by sampling freq set
+        private double _SamplingPeriod = 1.000;
+        internal double SamplingPeriod   // Sampling period determed by sampling freq set
         {
-            get { return _SamplingInterval; }
-            set { _SamplingInterval = value; UpdateCoefficients(); return; }
+            get { return _SamplingPeriod; }
+            set { _SamplingPeriod = value; UpdateCoefficients(); return; }
         }
 
         private double _PrimaryZOH = 0.500;
@@ -239,6 +239,73 @@ namespace dcld
         {
             get { return _OutputGainNormalization; }
             set { _OutputGainNormalization = value; UpdateCoefficients(); return; }
+        }
+
+        private int _PTermMaxError = 0x07FF;
+        internal int PTermNominalFeedback
+        {
+            get { return _PTermMaxError; }
+            set { 
+                _PTermMaxError = value;
+                PTermFactorUpdate();
+                return; 
+            }
+        }
+
+        private int _PTermNominalControlOutput = 0x3FFF;
+        internal int PTermNominalControlOutput
+        {
+            get { return _PTermNominalControlOutput; }
+            set { 
+                _PTermNominalControlOutput = value;
+                PTermFactorUpdate();
+                return; 
+            }
+        }
+
+        private int _PTermFactor = 0x7FFF;
+        internal int PTermFactor
+        {
+            get { return _PTermFactor; }
+            set { _PTermFactor = value; return; }
+        }
+
+        private int _PTermScaler = 0x0000;
+        internal int PTermScaler
+        {
+            get { return _PTermScaler; }
+            set { _PTermScaler = value; return; }
+        }
+
+        private int _AgcFactor = 0x7FFF;
+        internal int AgcFactor
+        {
+            get { return _AgcFactor; }
+            set { _AgcFactor = value; return; }
+        }
+
+        private int _AgcScaler = 0x0000;
+        internal int AgcScaler
+        {
+            get { return _AgcScaler; }
+            set { _AgcScaler = value; return; }
+        }
+
+        private void PTermFactorUpdate()
+        {
+            double _pfactor = 0.0;
+            try
+            {
+                _pfactor = (double)_PTermNominalControlOutput / (double)_PTermMaxError;
+                _PTermScaler = -(Convert.ToInt32(Math.Floor(Math.Log(_pfactor, 2.0))) + 1);
+                _PTermFactor = Convert.ToInt32((Math.Pow(2.0, 15.0) - 1.0) * _pfactor / Math.Pow(2.0, (double)(-_PTermScaler)));
+            }
+            catch
+            {
+                _PTermFactor = 0x7FFF;
+                _PTermScaler = 0;
+            }
+                
         }
 
         private void DebugInfoAppend(string debug_msg)
@@ -341,7 +408,7 @@ namespace dcld
 
             if (!_AutoUpdate) return (fres);
 
-            _Ts = _SamplingInterval;
+            _Ts = _SamplingPeriod;
 
             if (_InputGainNormalization)
             { _wp0s = (1.0 / _InputGain) * Pole[0].Radians; }
@@ -350,7 +417,7 @@ namespace dcld
             
             _debugInfo.Append("UpdateCoefficients() => " +
                 "Filter Order = " + _FilterOrder.ToString() + "\r\n" +
-                "SamplingInterval = " + _Ts.ToString() + "\r\n" +
+                "Sampling Period = " + _Ts.ToString() + "\r\n" +
                 "Input Gain = " + _InputGain.ToString() + "\r\n" +
                 "Output Gain = " + _OutputGain.ToString() + "\r\n" +
                 "Zero-Pole (Hz/rad)= " + Pole[0].Frequency.ToString() + "/" + Pole[0].Radians.ToString() + "\r\n" +

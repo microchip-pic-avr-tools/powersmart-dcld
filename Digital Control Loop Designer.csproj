@@ -154,6 +154,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="clsConditionalCode.cs" />
     <Compile Include="clsGlobals.cs" />
     <Compile Include="clsFilePathHandler.cs" />
     <Compile Include="clsMPLABXHandler.cs" />
@@ -166,6 +167,12 @@
     <Compile Include="clsNPNZ.cs" />
     <Compile Include="clsAssemblyGenerator.cs" />
     <Compile Include="clsCCodeGenerator.cs" />
+    <Compile Include="frmGetNominalControlOutput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmGetNominalControlOutput.Designer.cs">
+      <DependentUpon>frmGetNominalControlOutput.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmMPLABXProject.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -203,10 +210,10 @@
     <Content Include="Resources\c-code.gen">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\181026e_dcld_beta_user_guide.pdf">
+    <Content Include="Resources\readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\readme.txt">
+    <Content Include="Resources\181026f_dcld_beta_user_guide.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\VFreq.png" />
@@ -237,6 +244,9 @@
     <Content Include="Resources\ActiproSoftware.INIFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="frmGetNominalControlOutput.resx">
+      <DependentUpon>frmGetNominalControlOutput.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMPLABXProject.resx">
       <DependentUpon>frmMPLABXProject.cs</DependentUpon>
     </EmbeddedResource>

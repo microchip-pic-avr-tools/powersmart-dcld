@@ -75,6 +75,11 @@ namespace dcld
 
         private void frmToolTip_Load(object sender, EventArgs e)
         {
+            // Set Window Properties
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.ShowInTaskbar = false;
+            
             this.Text = "Help";
             _opacity = 1.0;
             timToolHelp.Interval = _visible_period;

@@ -15,34 +15,48 @@ namespace dcld
     {
         bool ParameterUpdate = false;
         internal clsOutputDeclaration output = new clsOutputDeclaration();
+        internal bool EnableNominalControlEdits = false;
 
-        internal double OutputGain
-        {
-            get { return (output.Gain); }
-        }
 
-        internal double PWMFrequency
-        {
-            get { return (output.PWMFrequency); }
-            set { output.PWMFrequency = value; return; }
-        }
+        //internal double OutputGain
+        //{
+        //    get { return (output.Gain); }
+        //}
 
-        internal double PWMClock
-        {
-            get { return (output.PWMClock); }
-            set { output.PWMClock = value; return; }
-        }
+        //internal string DeviceTypeName
+        //{
+        //    get { return (output.DeviceType); }
+        //    set { output.DeviceType = value; return; }
+        //}
+        
+        //internal double PWMFrequency
+        //{
+        //    get { return (output.PWMFrequency); }
+        //    set { output.PWMFrequency = value; return; }
+        //}
 
-        internal double PWMClockDivider
-        {
-            get { return (output.PWMClockDivider); }
-            set { output.PWMClockDivider = value; return; }
-        }
+        //internal double PWMDutyCycle
+        //{
+        //    get { return (output.PWMDutyCycle); }
+        //    set { output.PWMDutyCycle = value; return; }
+        //}
 
-        internal Int64 PWMCount
-        {
-            get { return (output.PWMCount); }
-        }
+        //internal double PWMClock
+        //{
+        //    get { return (output.PWMClock); }
+        //    set { output.PWMClock = value; return; }
+        //}
+
+        //internal double PWMClockDivider
+        //{
+        //    get { return (output.PWMClockDivider); }
+        //    set { output.PWMClockDivider = value; return; }
+        //}
+
+        //internal Int64 PWMCount
+        //{
+        //    get { return (output.PWMCount); }
+        //}
 
         public frmCalculateOutputGain()
         {
@@ -63,48 +77,76 @@ namespace dcld
         {
             // Initialize controls
             tabPWMMode_SelectedIndexChanged(this, e);
+            cmbDeviceType.SelectedIndex = (int)(output.DeviceType-1);
+
+            // Set Window Properties
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.ShowInTaskbar = false;
+            this.HelpButton = false;
+
+            // Set Window Startup Position
+            this.StartPosition = FormStartPosition.CenterParent;
+
+            // Enable Key Preview for Hot Key support
             this.KeyPreview = true;
         }
 
         private void tabPWMMode_SelectedIndexChanged(object sender, EventArgs e)
         {
+            
 
-            switch (tabPWMMode.SelectedIndex)
+            if (tabPWMMode.SelectedTab == tabFixedFrequency) 
             {
-                case 0:
 
-                    output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_FIXED_FREQUENCY;
+                output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_FIXED_FREQUENCY;
 
-                    lblParam1.Text = "PWM Frequency:";
-                    txtParam1.Text =output.PWMFrequency.ToString();
-                    NumberTextBox_ToString(txtParam1);
-                    lblUnit1.Text = "Hz";
+                lblNominalOutputValue.Text = "Nominal Duty Ratio:";
+                txtNominalOutputValue.Text = (100.0 * output.PWMDutyCycle).ToString(CultureInfo.CurrentCulture);
 
-                    lblParam2.Text = "PWM Period:";
-                    txtParam2.Text = output.PWMPeriod.ToString();
-                    NumberTextBox_ToString(txtParam2);
-                    lblUnit2.Text = "sec";
+                lblParam1.Text = "PWM Frequency:";
+                txtParam1.Text =output.PWMFrequency.ToString();
+                NumberTextBox_ToString(txtParam1);
+                lblUnit1.Text = "Hz";
 
-                    lblParam3.Text = "PWM Period Count:";
-                    txtParam3.Text = output.PWMCount.ToString(CultureInfo.CurrentCulture);
-                    lblUnit3.Text = "ticks";
+                lblParam2.Text = "PWM Period:";
+                txtParam2.Text = output.PWMPeriod.ToString();
+                NumberTextBox_ToString(txtParam2);
+                lblUnit2.Text = "sec";
 
-                    txtParam1.Enabled = true;
-                    txtParam2.Enabled = false;
-                    txtParam3.Enabled = false;
-                    txtParam4.Enabled = false;
+                lblParam3.Text = "PWM Period Count:";
+                txtParam3.Text = output.PWMPeriodCount.ToString(CultureInfo.CurrentCulture);
+                lblUnit3.Text = "ticks";
 
-                    txtParam1.Visible = true;
-                    txtParam2.Visible = true;
-                    txtParam3.Visible = true;
-                    txtParam4.Visible = true;
+                txtParam1.Enabled = true;
+                txtParam2.Enabled = false;
+                txtParam3.Enabled = false;
+                txtParam4.Enabled = false;
 
-                    break;
+                txtParam1.Visible = true;
+                txtParam2.Visible = true;
+                txtParam3.Visible = true;
+                txtParam4.Visible = true;
 
-                case 1:
+                // Show/Hide additional input field
+                lblNominalOutputValue.Enabled = EnableNominalControlEdits;
+                txtNominalOutputValue.Enabled = EnableNominalControlEdits;
+                lblNominalOutputValueUnit.Enabled = EnableNominalControlEdits;
+                lblNominalOutputValue.Visible = EnableNominalControlEdits;
+                txtNominalOutputValue.Visible = EnableNominalControlEdits;
+                lblNominalOutputValueUnit.Visible = EnableNominalControlEdits;
+                cmdGetPTermNominalOutput.Enabled = EnableNominalControlEdits;
+                cmdGetPTermNominalOutput.Visible = EnableNominalControlEdits;
+
+            }
+            else if (tabPWMMode.SelectedTab == tabPhaseShifted) 
+            {
 
                     output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_PHASE_SHIFTED_PWM;
 
+                    lblNominalOutputValue.Text = "Phase-Shift Ratio:";
+                    lblNominalOutputValueUnit.Text = "%";
+                    
                     lblParam1.Text = "PWM Frequency:";
                     txtParam1.Text = output.PWMFrequency.ToString();
                     NumberTextBox_ToString(txtParam1);
@@ -116,7 +158,7 @@ namespace dcld
                     lblUnit2.Text = "sec";
 
                     lblParam3.Text = "PWM Period Count:";
-                    txtParam3.Text = output.PWMCount.ToString(CultureInfo.CurrentCulture);
+                    txtParam3.Text = output.PWMPeriodCount.ToString(CultureInfo.CurrentCulture);
                     lblUnit3.Text = "ticks";
 
                     txtParam1.Enabled = true;
@@ -129,59 +171,86 @@ namespace dcld
                     txtParam3.Visible = true;
                     txtParam4.Visible = true;
 
-                    break;
+                    // Show/Hide additional input field
+                    lblNominalOutputValue.Enabled = EnableNominalControlEdits;
+                    txtNominalOutputValue.Enabled = EnableNominalControlEdits;
+                    lblNominalOutputValueUnit.Enabled = EnableNominalControlEdits;
+                    lblNominalOutputValue.Visible = EnableNominalControlEdits;
+                    txtNominalOutputValue.Visible = EnableNominalControlEdits;
+                    lblNominalOutputValueUnit.Visible = EnableNominalControlEdits;
+                    cmdGetPTermNominalOutput.Enabled = false;
+                    cmdGetPTermNominalOutput.Visible = false;
 
-                case 2:
-
-                    output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_VARIABLE_FREQUENCY;
-
-                    lblParam1.Text = "PWM Frequency:";
-                    txtParam1.Text = output.PWMFrequency.ToString();
-                    NumberTextBox_ToString(txtParam1);
-                    lblUnit1.Text = "Hz";
-
-                    lblParam2.Text = "PWM Period:";
-                    txtParam2.Text = output.PWMPeriod.ToString();
-                    NumberTextBox_ToString(txtParam2);
-                    lblUnit2.Text = "sec";
-
-                    lblParam3.Text = "PWM Period Count:";
-                    txtParam3.Text = output.PWMCount.ToString(CultureInfo.CurrentCulture);
-                    lblUnit3.Text = "ticks";
-
-                    txtParam1.Enabled = true;
-                    txtParam2.Enabled = false;
-                    txtParam3.Enabled = false;
-                    txtParam4.Enabled = false;
-
-                    txtParam1.Visible = true;
-                    txtParam2.Visible = true;
-                    txtParam3.Visible = true;
-                    txtParam4.Visible = true;
-
-                    break;
-
-                case 3:
-
-                    output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_UNDEFINED;
-
-                    lblParam1.Text = "Feedback Resolution:";
-                    txtParam1.Text = "12";
-                    lblUnit1.Text = "bit";
-
-                    txtParam1.Visible = true;
-                    txtParam2.Visible = false;
-                    txtParam3.Visible = false;
-                    txtParam4.Visible = true;
-
-                    break;
+            }
             
+            else if (tabPWMMode.SelectedTab == tabVariableFrequency) 
+            {
+
+                output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_VARIABLE_FREQUENCY;
+
+                lblNominalOutputValue.Text = "Load Ratio:";
+                lblNominalOutputValueUnit.Text = "%";
+
+                if (!EnableNominalControlEdits)
+                    lblParam1.Text = "Min. PWM Frequency:";
+                else
+                    lblParam1.Text = "Nominal PWM Frequency:";
+
+                txtParam1.Text = output.PWMFrequency.ToString();
+                NumberTextBox_ToString(txtParam1);
+                lblUnit1.Text = "Hz";
+
+                lblParam2.Text = "PWM Period:";
+                txtParam2.Text = output.PWMPeriod.ToString();
+                NumberTextBox_ToString(txtParam2);
+                lblUnit2.Text = "sec";
+
+                lblParam3.Text = "PWM Period Count:";
+                txtParam3.Text = output.PWMPeriodCount.ToString(CultureInfo.CurrentCulture);
+                lblUnit3.Text = "ticks";
+
+                txtParam1.Enabled = true;
+                txtParam2.Enabled = false;
+                txtParam3.Enabled = false;
+                txtParam4.Enabled = false;
+
+                txtParam1.Visible = true;
+                txtParam2.Visible = true;
+                txtParam3.Visible = true;
+                txtParam4.Visible = true;
+
+                // Show/Hide additional input field
+                lblNominalOutputValue.Enabled = false;
+                txtNominalOutputValue.Enabled = false;
+                lblNominalOutputValueUnit.Enabled = false;
+                lblNominalOutputValue.Visible = false;
+                txtNominalOutputValue.Visible = false;
+                lblNominalOutputValueUnit.Visible = false;
+                cmdGetPTermNominalOutput.Enabled = false;
+                cmdGetPTermNominalOutput.Visible = false;
+
             }
 
-            lblParam1.Left = (txtParam1.Left - lblParam1.Width - 4);
-            lblParam2.Left = (txtParam2.Left - lblParam2.Width - 4);
-            lblParam3.Left = (txtParam3.Left - lblParam3.Width - 4);
-            lblParam4.Left = (txtParam4.Left - lblParam4.Width - 4);
+            else 
+            {
+                output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_UNDEFINED;
+
+                lblParam1.Text = "Feedback Resolution:";
+                txtParam1.Text = "12";
+                lblUnit1.Text = "bit";
+
+                txtParam1.Visible = true;
+                txtParam2.Visible = false;
+                txtParam3.Visible = false;
+                txtParam4.Visible = true;
+
+            }
+
+            lblParam1.Left = (txtParam1.Left - lblParam1.Width - 6);
+            lblParam2.Left = (txtParam2.Left - lblParam2.Width - 6);
+            lblParam3.Left = (txtParam3.Left - lblParam3.Width - 6);
+            lblParam4.Left = (txtParam4.Left - lblParam4.Width - 6);
+            lblNominalOutputValue.Left = (txtNominalOutputValue.Left - lblNominalOutputValue.Width - 6);
 
             lblParam1.Enabled = txtParam1.Enabled;
             lblParam2.Enabled = txtParam2.Enabled;
@@ -229,41 +298,41 @@ namespace dcld
                 txtResolution.Text = output.PWMResolution.ToString(CultureInfo.CurrentCulture);
                 NumberTextBox_ToString(txtResolution);
                 txtMaximum.Text = (Math.Pow(2.0, output.PWMBitResolution)-1).ToString(CultureInfo.CurrentCulture);
-                //NumberTextBox_ToString(txtMaximum);
 
-                switch (tabPWMMode.SelectedIndex)
+
+                if (tabPWMMode.SelectedTab == tabFixedFrequency)
                 {
-                    case 0:
-                        output.PWMFrequency = NumberTextBox_ToDouble(txtParam1);
-                        txtParam2.Text = output.PWMPeriod.ToString(CultureInfo.CurrentCulture);
-                        NumberTextBox_ToString(txtParam2);
-
-                        lblOutputGain.Text = ddum.ToString("#0.000000", CultureInfo.CurrentCulture);
-
-                        break;
-
-                    case 1:
-                        output.PWMFrequency = NumberTextBox_ToDouble(txtParam1);
-                        txtParam2.Text = output.PWMPeriod.ToString(CultureInfo.CurrentCulture);
-                        NumberTextBox_ToString(txtParam2);
-                        break;
-
-                    case 2:
-                        txtParam1.Text = output.PWMFrequency.ToString(CultureInfo.CurrentCulture);
-                        NumberTextBox_ToString(txtParam1);
-                        txtParam2.Text = output.PWMPeriod.ToString(CultureInfo.CurrentCulture);
-                        NumberTextBox_ToString(txtParam2);
-                        break;
-
-                    default:
-                        output.PWMFrequency = NumberTextBox_ToDouble(txtParam1);
-                        break;
-
+                    output.PWMFrequency = NumberTextBox_ToDouble(txtParam1);
                 }
-                        
 
-                txtParam3.Text = output.PWMCount.ToString(CultureInfo.CurrentCulture);
-                txtParam4.Text = Math.Log(output.PWMCount, 2.0).ToString("#0.00#", CultureInfo.CurrentCulture);
+                else if (tabPWMMode.SelectedTab == tabPhaseShifted)
+                {
+                    output.PWMFrequency = NumberTextBox_ToDouble(txtParam1);
+                }
+
+                else if (tabPWMMode.SelectedTab == tabVariableFrequency)
+                {
+                    if (!EnableNominalControlEdits)
+                    { // always calcualte maximum period/minimum frequency
+                        txtParam1.Text = (1.0 / (output.PWMResolution * Math.Pow(2.0, output.PWMBitResolution) * output.PWMClockDivider)).ToString(CultureInfo.CurrentCulture);
+                        NumberTextBox_ToString(txtParam1);
+                    }
+
+                    // Update period
+                    output.PWMFrequency = NumberTextBox_ToDouble(txtParam1);
+                }
+
+                else
+                { output.PWMFrequency = NumberTextBox_ToDouble(txtParam1); }
+
+                // Update period, period count and effective resolution
+                txtParam2.Text = output.PWMPeriod.ToString(CultureInfo.CurrentCulture);
+                txtParam3.Text = output.PWMPeriodCount.ToString(CultureInfo.CurrentCulture);
+                txtParam4.Text = Math.Log(output.PWMPeriodCount, 2.0).ToString("#0.00#", CultureInfo.CurrentCulture);
+
+                NumberTextBox_ToString(txtParam2);
+                NumberTextBox_ToString(txtParam3);
+                NumberTextBox_ToString(txtParam4);
 
                 // Format Text Box in standard color
                 tBox.BackColor = SystemColors.Window;
@@ -422,6 +491,88 @@ namespace dcld
             if (e.KeyData == Keys.Escape)
                 this.Close();
             return;
+        }
+
+        private void txtNominalOutputValue_TextChanged(object sender, EventArgs e)
+        {
+            double dbl_dum = 0.0;
+
+            try
+            {
+                dbl_dum = Convert.ToDouble(txtNominalOutputValue.Text);
+                if (dbl_dum > 100.0) dbl_dum = 100.0;
+                if (dbl_dum < 0.0) dbl_dum = 0.0;
+                string _str_dum = dbl_dum.ToString(CultureInfo.CurrentCulture);
+                if (_str_dum.Length > (Math.Round(dbl_dum, 3).ToString(CultureInfo.InvariantCulture).Length))
+                {
+                    _str_dum = Math.Round(dbl_dum, 3).ToString(CultureInfo.CurrentCulture);
+                    txtNominalOutputValue.Text = _str_dum; return; // This function will call itself here
+                }
+
+                output.PWMDutyCycle = (dbl_dum / 100.0);
+                txtNominalOutputValue.BackColor = SystemColors.Window;
+            }
+            catch
+            {
+                txtNominalOutputValue.BackColor = Color.LightCoral;
+            }
+            
+        }
+
+        private void cmdGetPTermNominalOutput_Click(object sender, EventArgs e)
+        {
+            double _dbl_output = 0.0;
+            string _str_dum = "";
+
+            // Create a new instance of the form class
+            frmGetNominalControlOutput frm = new frmGetNominalControlOutput();
+
+            frm.output = output;
+
+            if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+
+                switch(output.OutputType)
+                {
+                    case clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_FIXED_FREQUENCY: 
+                    // In fixed frequency converters the Duty Cycle is the control value
+                    
+                        if (((!Double.IsNaN(frm.output.PWMDutyCycle)) && (!Double.IsInfinity(frm.output.PWMDutyCycle))))
+                            _dbl_output = (frm.output.PWMDutyCycle * 100.0);
+                        else
+                            _dbl_output = Double.NaN;
+                        break;
+
+                    case clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_VARIABLE_FREQUENCY:
+                        // In variable frequency converters the Period is the control value
+
+                        if (((!Double.IsNaN(frm.output.PWMPeriodCount)) && (!Double.IsInfinity(frm.output.PWMPeriodCount))))
+                            _dbl_output = frm.output.PWMPeriodCount;
+                        else
+                            _dbl_output = Double.NaN;
+                        break;
+                
+                }
+
+                _str_dum = _dbl_output.ToString(CultureInfo.CurrentCulture);
+                if (_str_dum.Length > 6) _str_dum = Math.Round(_dbl_output, 6).ToString(CultureInfo.CurrentCulture);
+                txtNominalOutputValue.Text = _str_dum;
+
+                // If result is not valid, mark back color
+                if (Double.IsNaN(frm.output.NominalOutput))
+                {
+                    txtNominalOutputValue.BackColor = Color.LightCoral;
+                }
+
+                else
+                {
+                    output = frm.output;
+                    txtNominalOutputValue.BackColor = SystemColors.Window;
+                }
+                    
+
+            }
+
         }
         
     }

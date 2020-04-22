@@ -37,6 +37,7 @@
             this.cmbActiveConfig = new System.Windows.Forms.ComboBox();
             this.lblActiveConfig = new System.Windows.Forms.Label();
             this.grpProjectDirectories = new System.Windows.Forms.GroupBox();
+            this.chkMakefileIncludeDirectory = new System.Windows.Forms.CheckBox();
             this.cmbIncludeDirectories = new System.Windows.Forms.ComboBox();
             this.lblIncludeDirectories = new System.Windows.Forms.Label();
             this.txtASMIncludeDir = new System.Windows.Forms.TextBox();
@@ -79,7 +80,7 @@
             // 
             this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cmdCancel.Location = new System.Drawing.Point(569, 596);
+            this.cmdCancel.Location = new System.Drawing.Point(569, 620);
             this.cmdCancel.Name = "cmdCancel";
             this.cmdCancel.Size = new System.Drawing.Size(96, 35);
             this.cmdCancel.TabIndex = 2;
@@ -91,7 +92,7 @@
             this.cmdOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cmdOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.cmdOK.Enabled = false;
-            this.cmdOK.Location = new System.Drawing.Point(467, 596);
+            this.cmdOK.Location = new System.Drawing.Point(467, 620);
             this.cmdOK.Name = "cmdOK";
             this.cmdOK.Size = new System.Drawing.Size(96, 35);
             this.cmdOK.TabIndex = 1;
@@ -139,7 +140,7 @@
             this.cmbActiveConfig.Location = new System.Drawing.Point(199, 51);
             this.cmbActiveConfig.Name = "cmbActiveConfig";
             this.cmbActiveConfig.Size = new System.Drawing.Size(359, 23);
-            this.cmbActiveConfig.TabIndex = 11;
+            this.cmbActiveConfig.TabIndex = 4;
             this.cmbActiveConfig.SelectedIndexChanged += new System.EventHandler(this.LoadActiveProjectConfig);
             // 
             // lblActiveConfig
@@ -155,6 +156,7 @@
             // grpProjectDirectories
             // 
             this.grpProjectDirectories.BackColor = System.Drawing.Color.Transparent;
+            this.grpProjectDirectories.Controls.Add(this.chkMakefileIncludeDirectory);
             this.grpProjectDirectories.Controls.Add(this.cmbIncludeDirectories);
             this.grpProjectDirectories.Controls.Add(this.lblIncludeDirectories);
             this.grpProjectDirectories.Controls.Add(this.txtASMIncludeDir);
@@ -175,10 +177,21 @@
             this.grpProjectDirectories.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpProjectDirectories.Location = new System.Drawing.Point(3, 3);
             this.grpProjectDirectories.Name = "grpProjectDirectories";
-            this.grpProjectDirectories.Size = new System.Drawing.Size(646, 276);
+            this.grpProjectDirectories.Size = new System.Drawing.Size(646, 299);
             this.grpProjectDirectories.TabIndex = 1;
             this.grpProjectDirectories.TabStop = false;
             this.grpProjectDirectories.Text = "MPLAB X® Project Directories";
+            // 
+            // chkMakefileIncludeDirectory
+            // 
+            this.chkMakefileIncludeDirectory.AutoSize = true;
+            this.chkMakefileIncludeDirectory.Enabled = false;
+            this.chkMakefileIncludeDirectory.Location = new System.Drawing.Point(252, 109);
+            this.chkMakefileIncludeDirectory.Name = "chkMakefileIncludeDirectory";
+            this.chkMakefileIncludeDirectory.Size = new System.Drawing.Size(269, 19);
+            this.chkMakefileIncludeDirectory.TabIndex = 6;
+            this.chkMakefileIncludeDirectory.Text = "&Reference include paths to Makefile location";
+            this.chkMakefileIncludeDirectory.UseVisualStyleBackColor = true;
             // 
             // cmbIncludeDirectories
             // 
@@ -186,7 +199,7 @@
             this.cmbIncludeDirectories.Location = new System.Drawing.Point(199, 80);
             this.cmbIncludeDirectories.Name = "cmbIncludeDirectories";
             this.cmbIncludeDirectories.Size = new System.Drawing.Size(358, 23);
-            this.cmbIncludeDirectories.TabIndex = 25;
+            this.cmbIncludeDirectories.TabIndex = 5;
             this.cmbIncludeDirectories.SelectedIndexChanged += new System.EventHandler(this.cmbIncludeDirectories_SelectedIndexChanged);
             // 
             // lblIncludeDirectories
@@ -205,10 +218,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtASMIncludeDir.Enabled = false;
             this.txtASMIncludeDir.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtASMIncludeDir.Location = new System.Drawing.Point(372, 238);
+            this.txtASMIncludeDir.Location = new System.Drawing.Point(372, 260);
             this.txtASMIncludeDir.Name = "txtASMIncludeDir";
             this.txtASMIncludeDir.Size = new System.Drawing.Size(186, 23);
-            this.txtASMIncludeDir.TabIndex = 10;
+            this.txtASMIncludeDir.TabIndex = 11;
             // 
             // txtSpecialIncludeDir
             // 
@@ -216,10 +229,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSpecialIncludeDir.Enabled = false;
             this.txtSpecialIncludeDir.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSpecialIncludeDir.Location = new System.Drawing.Point(372, 209);
+            this.txtSpecialIncludeDir.Location = new System.Drawing.Point(372, 231);
             this.txtSpecialIncludeDir.Name = "txtSpecialIncludeDir";
             this.txtSpecialIncludeDir.Size = new System.Drawing.Size(186, 23);
-            this.txtSpecialIncludeDir.TabIndex = 9;
+            this.txtSpecialIncludeDir.TabIndex = 10;
             // 
             // txtCommonIncludeDir
             // 
@@ -227,16 +240,16 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCommonIncludeDir.Enabled = false;
             this.txtCommonIncludeDir.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCommonIncludeDir.Location = new System.Drawing.Point(372, 180);
+            this.txtCommonIncludeDir.Location = new System.Drawing.Point(372, 202);
             this.txtCommonIncludeDir.Name = "txtCommonIncludeDir";
             this.txtCommonIncludeDir.Size = new System.Drawing.Size(186, 23);
-            this.txtCommonIncludeDir.TabIndex = 8;
+            this.txtCommonIncludeDir.TabIndex = 9;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(87, 125);
+            this.label1.Location = new System.Drawing.Point(87, 147);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(106, 15);
             this.label1.TabIndex = 19;
@@ -248,10 +261,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMakefileLocation.Enabled = false;
             this.txtMakefileLocation.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtMakefileLocation.Location = new System.Drawing.Point(199, 122);
+            this.txtMakefileLocation.Location = new System.Drawing.Point(199, 144);
             this.txtMakefileLocation.Name = "txtMakefileLocation";
             this.txtMakefileLocation.Size = new System.Drawing.Size(359, 23);
-            this.txtMakefileLocation.TabIndex = 6;
+            this.txtMakefileLocation.TabIndex = 7;
             // 
             // txtActiveTargetDevice
             // 
@@ -259,10 +272,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtActiveTargetDevice.Enabled = false;
             this.txtActiveTargetDevice.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtActiveTargetDevice.Location = new System.Drawing.Point(372, 151);
+            this.txtActiveTargetDevice.Location = new System.Drawing.Point(372, 173);
             this.txtActiveTargetDevice.Name = "txtActiveTargetDevice";
             this.txtActiveTargetDevice.Size = new System.Drawing.Size(186, 23);
-            this.txtActiveTargetDevice.TabIndex = 7;
+            this.txtActiveTargetDevice.TabIndex = 8;
             this.txtActiveTargetDevice.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtActiveTargetDevice.TextChanged += new System.EventHandler(this.txtActiveTargetDevice_TextChanged);
             // 
@@ -270,7 +283,7 @@
             // 
             this.lblCommonIncludeDir.AutoSize = true;
             this.lblCommonIncludeDir.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCommonIncludeDir.Location = new System.Drawing.Point(238, 183);
+            this.lblCommonIncludeDir.Location = new System.Drawing.Point(238, 205);
             this.lblCommonIncludeDir.Name = "lblCommonIncludeDir";
             this.lblCommonIncludeDir.Size = new System.Drawing.Size(130, 15);
             this.lblCommonIncludeDir.TabIndex = 14;
@@ -280,7 +293,7 @@
             // 
             this.lblSpecialIncludeDir.AutoSize = true;
             this.lblSpecialIncludeDir.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSpecialIncludeDir.Location = new System.Drawing.Point(246, 212);
+            this.lblSpecialIncludeDir.Location = new System.Drawing.Point(246, 234);
             this.lblSpecialIncludeDir.Name = "lblSpecialIncludeDir";
             this.lblSpecialIncludeDir.Size = new System.Drawing.Size(122, 15);
             this.lblSpecialIncludeDir.TabIndex = 15;
@@ -290,7 +303,7 @@
             // 
             this.lblActiveTargetDevice.AutoSize = true;
             this.lblActiveTargetDevice.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblActiveTargetDevice.Location = new System.Drawing.Point(249, 154);
+            this.lblActiveTargetDevice.Location = new System.Drawing.Point(249, 176);
             this.lblActiveTargetDevice.Name = "lblActiveTargetDevice";
             this.lblActiveTargetDevice.Size = new System.Drawing.Size(117, 15);
             this.lblActiveTargetDevice.TabIndex = 13;
@@ -300,7 +313,7 @@
             // 
             this.lblASMIncludeDir.AutoSize = true;
             this.lblASMIncludeDir.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblASMIncludeDir.Location = new System.Drawing.Point(229, 241);
+            this.lblASMIncludeDir.Location = new System.Drawing.Point(229, 263);
             this.lblASMIncludeDir.Name = "lblASMIncludeDir";
             this.lblASMIncludeDir.Size = new System.Drawing.Size(139, 15);
             this.lblASMIncludeDir.TabIndex = 18;
@@ -339,10 +352,10 @@
             this.grpDCLDConfiguration.Controls.Add(this.cmdDCLDProjectBrowse);
             this.grpDCLDConfiguration.Controls.Add(this.txtDCLDProjectDir);
             this.grpDCLDConfiguration.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpDCLDConfiguration.Location = new System.Drawing.Point(3, 279);
+            this.grpDCLDConfiguration.Location = new System.Drawing.Point(3, 302);
             this.grpDCLDConfiguration.Name = "grpDCLDConfiguration";
             this.grpDCLDConfiguration.Size = new System.Drawing.Size(646, 113);
-            this.grpDCLDConfiguration.TabIndex = 11;
+            this.grpDCLDConfiguration.TabIndex = 12;
             this.grpDCLDConfiguration.TabStop = false;
             this.grpDCLDConfiguration.Text = "DCLD Project Configuration";
             // 
@@ -365,7 +378,7 @@
             this.txtControllerNamePrefix.MaxLength = 255;
             this.txtControllerNamePrefix.Name = "txtControllerNamePrefix";
             this.txtControllerNamePrefix.Size = new System.Drawing.Size(97, 23);
-            this.txtControllerNamePrefix.TabIndex = 14;
+            this.txtControllerNamePrefix.TabIndex = 15;
             this.txtControllerNamePrefix.TextChanged += new System.EventHandler(this.txtControllerNamePrefix_TextChanged);
             // 
             // txtControllerNameLabel
@@ -376,7 +389,7 @@
             this.txtControllerNameLabel.MaxLength = 255;
             this.txtControllerNameLabel.Name = "txtControllerNameLabel";
             this.txtControllerNameLabel.Size = new System.Drawing.Size(97, 23);
-            this.txtControllerNameLabel.TabIndex = 15;
+            this.txtControllerNameLabel.TabIndex = 16;
             this.txtControllerNameLabel.TextChanged += new System.EventHandler(this.txtControllerNameLabel_TextChanged);
             // 
             // lblFinalNamePrefixOutput
@@ -419,7 +432,7 @@
             this.cmdDCLDProjectBrowse.Location = new System.Drawing.Point(556, 22);
             this.cmdDCLDProjectBrowse.Name = "cmdDCLDProjectBrowse";
             this.cmdDCLDProjectBrowse.Size = new System.Drawing.Size(57, 25);
-            this.cmdDCLDProjectBrowse.TabIndex = 13;
+            this.cmdDCLDProjectBrowse.TabIndex = 14;
             this.cmdDCLDProjectBrowse.Text = "&Browse";
             this.cmdDCLDProjectBrowse.UseVisualStyleBackColor = true;
             this.cmdDCLDProjectBrowse.Click += new System.EventHandler(this.cmdDCLDProjectBrowse_Click);
@@ -432,7 +445,7 @@
             this.txtDCLDProjectDir.Location = new System.Drawing.Point(199, 23);
             this.txtDCLDProjectDir.Name = "txtDCLDProjectDir";
             this.txtDCLDProjectDir.Size = new System.Drawing.Size(359, 23);
-            this.txtDCLDProjectDir.TabIndex = 12;
+            this.txtDCLDProjectDir.TabIndex = 13;
             this.txtDCLDProjectDir.TextChanged += new System.EventHandler(this.CheckProjectPathsValid);
             // 
             // picMPLABXLogo
@@ -452,7 +465,7 @@
             this.chkShowatStartup.AutoSize = true;
             this.chkShowatStartup.Checked = true;
             this.chkShowatStartup.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowatStartup.Location = new System.Drawing.Point(24, 605);
+            this.chkShowatStartup.Location = new System.Drawing.Point(24, 629);
             this.chkShowatStartup.Name = "chkShowatStartup";
             this.chkShowatStartup.Size = new System.Drawing.Size(361, 19);
             this.chkShowatStartup.TabIndex = 3;
@@ -489,7 +502,7 @@
             this.tabProjectDirectories.Location = new System.Drawing.Point(12, 164);
             this.tabProjectDirectories.Name = "tabProjectDirectories";
             this.tabProjectDirectories.SelectedIndex = 0;
-            this.tabProjectDirectories.Size = new System.Drawing.Size(660, 426);
+            this.tabProjectDirectories.Size = new System.Drawing.Size(660, 450);
             this.tabProjectDirectories.TabIndex = 0;
             // 
             // tabRefDir
@@ -499,7 +512,7 @@
             this.tabRefDir.Location = new System.Drawing.Point(4, 24);
             this.tabRefDir.Name = "tabRefDir";
             this.tabRefDir.Padding = new System.Windows.Forms.Padding(3);
-            this.tabRefDir.Size = new System.Drawing.Size(652, 398);
+            this.tabRefDir.Size = new System.Drawing.Size(652, 422);
             this.tabRefDir.TabIndex = 0;
             this.tabRefDir.Text = "Directory References";
             this.tabRefDir.UseVisualStyleBackColor = true;
@@ -511,7 +524,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.CancelButton = this.cmdCancel;
-            this.ClientSize = new System.Drawing.Size(684, 641);
+            this.ClientSize = new System.Drawing.Size(684, 665);
             this.Controls.Add(this.picConfigFailure);
             this.Controls.Add(this.picConfigSuccess);
             this.Controls.Add(this.chkShowatStartup);
@@ -524,7 +537,7 @@
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(700, 680);
+            this.MinimumSize = new System.Drawing.Size(700, 704);
             this.Name = "frmMPLABXProject";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -585,5 +598,6 @@
         private System.Windows.Forms.TabPage tabRefDir;
         private System.Windows.Forms.ComboBox cmbIncludeDirectories;
         private System.Windows.Forms.Label lblIncludeDirectories;
+        private System.Windows.Forms.CheckBox chkMakefileIncludeDirectory;
     }
 }

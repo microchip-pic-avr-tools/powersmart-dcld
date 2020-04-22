@@ -58,14 +58,28 @@ namespace dcld
         internal string MPLABXIncludeDirectory
         {
             get { return (_mplabx_include_dir); }
-            set { _mplabx_include_dir = value; return; }
+            set {
+                string _str = "";
+                _str = value.Trim();
+                if ((_str.Length > 0) &&
+                    (_str.Substring(0, 1 + _adsp.Length) != "." + _adsp) &&
+                    (_str.Substring(0, 2 + _adsp.Length) != ".." + _adsp) && 
+                    (!System.IO.Path.IsPathRooted(_str))
+                    )
+                    _str = "./" + _str;
+                _mplabx_include_dir = _str;
+                return; 
+            }
         }
 
         private string _mplabx_include_dir_abs = "";
         internal string MPLABXIncludeDirectoryAbsolute
         {
-            get { return (_mplabx_include_dir_abs); }
-            set { _mplabx_include_dir_abs = value; return; }
+            get {
+                _mplabx_include_dir_abs = ConvertFilePath.ToAbsoluteFilePath(_mplabx_include_dir, _mplabx_project_dir);
+                return (_mplabx_include_dir_abs); 
+            }
+//            set { _mplabx_include_dir_abs = value; return; }
         }
 
         private clsMPLABXConfiguration[] _mplabx_configuration;
@@ -259,10 +273,13 @@ namespace dcld
             // Read XC16 C include directory from MPLAB X project files
             if (ParseMPLABXProjectFiles(_mplabx_nbproject_dir))
             {
-                if (_mplabx_configuration[0].CommonIncludeDirectories[0] != null)
-                    _mplabx_include_dir = _mplabx_configuration[0].CommonIncludeDirectories[0]; // This is the user-defined include path
-                else 
-                    _mplabx_include_dir = System.IO.Directory.GetParent(_mplabx_makefile_path).FullName; // this is where the Makefile is located
+                // foreach (string _str in _mplabx_configuration[0])
+                if (_mplabx_configuration[_active_configuration].CommonIncludeDirectories.Length > 0) //[0] != null)
+                    MPLABXIncludeDirectory = _mplabx_configuration[_active_configuration].CommonIncludeDirectories[0]; // This is the user-defined common include path
+                else if (_mplabx_configuration[_active_configuration].ExtraIncludeDirectories.Length > 0) //[0] != null)
+                    MPLABXIncludeDirectory = _mplabx_configuration[_active_configuration].ExtraIncludeDirectories[0]; // This is the user-defined C-include path
+                else
+                    MPLABXIncludeDirectory = System.IO.Directory.GetParent(_mplabx_makefile_path).FullName; // this is where the Makefile is located
 
                 // Capture absolute path of MPLAB include path
                 _mplabx_include_dir_abs = ConvertFilePath.ToAbsoluteFilePath(_mplabx_include_dir, _mplabx_project_dir);

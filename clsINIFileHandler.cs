@@ -69,6 +69,18 @@ namespace dcld
             get { return (_file_extension); }
         }
 
+        private string _file_version = "";
+        public string FileVersion
+        {
+            get { return (_file_version); }
+        }
+
+        private string _file_version_date = "";
+        public string FileVersionDate
+        {
+            get { return (_file_version_date); }
+        }
+
         // ========================================================================================
         // File operation handling functions
         // ========================================================================================
@@ -97,6 +109,10 @@ namespace dcld
                     _filename = _fi.FullName; // FileName.Replace("." + _dsp, Application.StartupPath + _dsp).Trim();
                     _file_title = _fi.Name; // GetFileTitle(FileName);
                     _file_extension = _fi.Extension; // GetFileExtension(FileName);
+
+                    _file_version = ReadKey("generic", "Version", "n/a");
+                    _file_version_date = ReadKey("generic", "Date", "n/a");
+
                     b_res = true;
                 }
                 else { b_res = false; }

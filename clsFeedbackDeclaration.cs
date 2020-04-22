@@ -54,41 +54,39 @@ namespace dcld
             set { _ADCIsDiff = value; refreshADC(); return; }
         }
 
-        private double _ADCGran = 0.0;
-        internal double ADCGranulatiry
+        internal double ADCGranularity
         {
-            get { return (_ADCGran); }
+            get {
+                if (!_ADCIsDiff)
+                    return (_ADCRef / Math.Pow(2, _ADCRes));
+                else
+                    return (_ADCRef / Math.Pow(2, _ADCRes));
+            }
         }
 
-        private double _ADCMin = 0.0;
         internal double ADCMinimum
         {
-            get { return (_ADCMin); }
+            get {
+                if (!_ADCIsDiff)
+                    return (0);
+                else
+                    return (-Math.Pow(2, (_ADCRes - 1)));
+            }
         }
 
-        private double _ADCMax = 0.0;
         internal double ADCMaximum
         {
-            get { return (_ADCMax); }
+            get {
+                if (!_ADCIsDiff)
+                    return (Math.Pow(2, _ADCRes) - 1);
+                else
+                    return ((Math.Pow(2, _ADCRes - 1) - 1)); 
+            }
         }
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         private void refreshADC()
         {
-
-            // Update ADC parameters
-            if (!_ADCIsDiff)
-            {
-                _ADCMin = 0;
-                _ADCMax = (Math.Pow(2, _ADCRes) - 1);
-                _ADCGran = _ADCRef / Math.Pow(2, _ADCRes);
-            }
-            else
-            {
-                _ADCMin = (-Math.Pow(2, (_ADCRes - 1)));
-                _ADCMax = (Math.Pow(2, _ADCRes - 1) - 1);
-                _ADCGran = _ADCRef / Math.Pow(2, _ADCRes);
-            }
 
             // Update Feedback parameters
             if (!ParameterUpdate) // Guarding condition to prevent recirsive calls
@@ -105,7 +103,7 @@ namespace dcld
                         refreshCurrentTransformer();
                         break;
                     case dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE:
-                        refreshDigitalSource();
+                        refreshDigitalReference();
                         break;
                     case dcldFeedbackType.DCLD_FB_TYPE_UNDEFINED:
                         _FeedbackGain = 1.000;
@@ -117,6 +115,91 @@ namespace dcld
             return;
         }
         // ADC Properties End ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        // ADC Properties ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        private double _DRefRes = 16.0;
+        internal double DigitalReferenceResolution
+        {
+            get { return (_DRefRes); }
+            set { _DRefRes = value; refreshADC(); return; }
+        }
+
+        private double _DRefRef = 65535;
+        internal double DigitalReferenceReference
+        {
+            get { return (_DRefRef); }
+            set { _DRefRef = value; refreshDigitalReference(); return; }
+        }
+
+        private bool _DRefIsSigned = false;
+        internal bool DigitalReferenceIsSigned
+        {
+            get { return (_DRefIsSigned); }
+            set { _DRefIsSigned = value; refreshDigitalReference(); return; }
+        }
+
+        internal double DigitalReferenceGranularity
+        {
+            get
+            {
+                return (_DRefRef / Math.Pow(2, _DRefRes));
+            }
+        }
+
+        internal double DigitalReferenceMinimum
+        {
+            get
+            {
+                if (!_DRefIsSigned)
+                    return (0);
+                else
+                    return (-Math.Pow(2, (_DRefRes - 1)));
+            }
+        }
+
+        internal double DigitalReferenceMaximum
+        {
+            get
+            {
+                if (!_DRefIsSigned)
+                    return (Math.Pow(2, _DRefRes) - 1);
+                else
+                    return ((Math.Pow(2, _DRefRes - 1) - 1));
+            }
+        }
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        private void refreshDigitalReference()
+        {
+
+            // Update Feedback parameters
+            if (!ParameterUpdate) // Guarding condition to prevent recirsive calls
+            {
+                switch (_FeedbackType)
+                {
+                    case dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER:
+                        refreshADC();
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER:
+                        refreshADC();
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER:
+                        refreshADC();
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE:
+                        refreshDigitalSource();
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_UNDEFINED:
+                        _FeedbackGain = 1.000;
+                        break;
+                }
+
+            }
+
+            return;
+        }
+        // Digital Reference Properties End ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         // Voltage Divider ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         private double _VDivR1 = 12000;
@@ -133,6 +216,15 @@ namespace dcld
             set { _VDivR2 = value; refreshVoltageDivider(); return; }
         }
 
+        private double _VDivGain = 1.000;
+        internal double VoltageDividerFeedbackGain
+        {
+            get { 
+                _VDivGain = _VDivGamp * (_VDivR2 / (_VDivR1 + _VDivR2)); 
+                return (_VDivGain); 
+            }
+        }
+
         private double _VDivGamp = 1.000;
         internal double VoltageDividerAmplifierGain
         {
@@ -140,19 +232,44 @@ namespace dcld
             set { _VDivGamp = value; refreshVoltageDivider(); return; }
         }
 
-        private double _VDVin = 1.000;
+        private double _VDVinMax = 1.000;
         internal double VoltageDividerSourceMaximum
         {
-            get { return (_VDVin); }
+            get { return (_VDVinMax); }
         }
+
+        private double _VDVin = 0.0;
+        internal double VoltageDividerSenseVoltage
+        {
+            get { return (_VDVin); }
+            set { _VDVin = value; refreshVoltageDivider(); return; }
+        }
+
+        private double _VDVfb = 1.000;
+        internal double VoltageDividerFeedbackVoltage
+        {
+            get { _VDVfb = _VDVin * VoltageDividerFeedbackGain; return (_VDVfb); }
+        }
+
+        private int _VDFbValue = 0;
+        internal int VoltageDividerFeedbackValue
+        {
+            get { return (_VDFbValue); }
+        }
+
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         private void refreshVoltageDivider()
         {
             // Amplifer Gain * (lower resistance / (upper resistance + lower resistance))
-            _FeedbackGain = _VDivGamp * (_VDivR2 / (_VDivR1 + _VDivR2));
+            // _FeedbackGain = _VDivGamp * (_VDivR2 / (_VDivR1 + _VDivR2));
+            _VDivGain = _VDivGamp * (_VDivR2 / (_VDivR1 + _VDivR2));
 
-            if (!_ADCIsDiff) _VDVin = _ADCRef / _FeedbackGain;
-            else _VDVin = 0.5 * _ADCRef / _FeedbackGain;
+            if (!_ADCIsDiff) _VDVinMax = _ADCRef / _VDivGain;
+            else _VDVinMax = 0.5 * _ADCRef / _VDivGain;
+
+            _VDVfb = _VDVin * _VDivGain;
+            if (ADCGranularity != 0.0)
+                _VDFbValue = Convert.ToInt32(Math.Ceiling(_VDVfb / ADCGranularity));
 
             return;
         }
@@ -173,19 +290,54 @@ namespace dcld
             set { _CSGamp = value; refreshCurrentSense();  return; }
         }
 
-        private double _CSIin = 1.000;
+        private double _CSGain = 1.000;
+        internal double CurrentSenseFeedbackGain
+        {
+            get
+            {
+                _CSGain = _CSRshunt * _CSGamp;
+                return (_CSGain);
+            }
+        }
+
+        private double _CSIinMax = 1.000;
         internal double CurrentSenseSourceMaximum
         {
-            get { return (_CSIin); }
+            get { return (_CSIinMax); }
         }
+
+        private double _CSIin = 0.0;
+        internal double CurrentSenseSenseCurrent
+        {
+            get { return (_CSIin); }
+            set { _CSIin = value; refreshCurrentSense(); return; }
+        }
+
+        private double _CSVfb = 1.000;
+        internal double CurrentSenseFeedbackVoltage
+        {
+            get { _CSVfb = _CSIin * CurrentSenseFeedbackGain; return (_CSVfb); }
+        }
+
+        private int _CSFbValue = 0;
+        internal int CurrentSenseFeedbackValue
+        {
+            get { return (_CSFbValue); }
+        }
+
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         private void refreshCurrentSense()
         {
             // Shunt Resistance * Amplifier Gain
-            _FeedbackGain = _CSRshunt * _CSGamp; 
+            //_FeedbackGain = _CSRshunt * _CSGamp; 
+            _CSGain = _CSRshunt * _CSGamp;
 
-            if (!_ADCIsDiff) _CSIin = _ADCRef / _FeedbackGain;
-            else _CSIin = 0.5 * _ADCRef / _FeedbackGain;
+            if (!_ADCIsDiff) _CSIinMax = _ADCRef / _CSGain;
+            else _CSIinMax = 0.5 * _ADCRef / _CSGain;
+
+            _CSVfb = _CSIin * _CSGain;
+            if (ADCGranularity != 0.0)
+                _CSFbValue = Convert.ToInt32(Math.Ceiling(_CSVfb / ADCGranularity));
 
             return;
         }
@@ -205,49 +357,112 @@ namespace dcld
             get { return (_CTWR); }
             set { _CTWR = value; refreshCurrentTransformer(); return; }
         }
-        private double _CTIin = 1.000;
+
+        private double _CTGain = 1.000;
+        internal double CurrentTransformerFeedbackGain
+        {
+            get
+            {
+                _CTGain = (1.0 / _CTWR) * _CTRB;
+                return (_CTGain);
+            }
+        }
+
+        private double _CTIinMax = 1.000;
         internal double CurrentTransformerSourceMaximum
         {
-            get { return (_CTIin); }
+            get { return (_CTIinMax); }
         }
+
+        private double _CTIin = 0.0;
+        internal double CurrentTransformerSenseCurrent
+        {
+            get { return (_CTIin); }
+            set { _CTIin = value; refreshCurrentTransformer(); return; }
+        }
+
+        private double _CTVfb = 1.000;
+        internal double CurrentTransformerFeedbackVoltage
+        {
+            get { _CTVfb = _CTIin * CurrentTransformerFeedbackGain; return (_CSVfb); }
+        }
+
+        private int _CTFbValue = 0;
+        internal int CurrentTransformerFeedbackValue
+        {
+            get { return (_CTFbValue); }
+        }
+
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         private void refreshCurrentTransformer()
         {
             // 1/[secondary windings] * R_burden
-            _FeedbackGain = (1.0 / _CTWR) * _CTRB; 
+            _CTGain = (1.0 / _CTWR) * _CTRB;
 
-            if (!_ADCIsDiff) _CTIin = _ADCRef / _FeedbackGain;
-            else _CTIin = 0.5 * _ADCRef / _FeedbackGain;
+            if (!_ADCIsDiff) _CTIinMax = _ADCRef / _CTGain;
+            else _CTIinMax = 0.5 * _ADCRef / _CTGain;
+
+            _CTVfb = _CTIin * _CTGain;
+            if (ADCGranularity != 0.0)
+                _CTFbValue = Convert.ToInt32(Math.Ceiling(_CTVfb / ADCGranularity));
+
 
             return;
         }
         // Current Sense Transformer End ~~~~~~~~~~~~~~~
 
         // Digital Source ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        private double _DSres = 12.0;
+        private double _DSres = 160;
         internal double DigitalSourceResolution
         {
             get { return (_DSres); }
             set { _DSres = value; refreshDigitalSource(); return; }
         }
-        private double _DSIn = 1.000;
+
+        private double _DSInMax = 1.000;
         internal double DigitalSourceSourceMaximum
         {
+            get { return (_DSInMax); }
+        }
+
+        private double _DSIn = 1.000;
+        internal double DigitalSourceValue
+        {
             get { return (_DSIn); }
+            set { 
+                _DSIn = value; 
+                _DSres = Math.Log((_DSIn + 1.0), 2.0);
+                refreshDigitalSource();
+                return; 
+            }
+        }
+
+        private double _DSGain = 1.000;
+        internal double DigitalSourceFeedbackGain
+        {
+            get { return (_DSGain); }
+            set { _DSGain = value; return; }
+        }
+
+        private int _DSFbValue = 0;
+        internal int DigitalSourceFeedbackValue
+        {
+            get { return (_DSFbValue); }
         }
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         private void refreshDigitalSource()
         {
-            double gdiv = 0.0;
-
-            if (!_ADCIsDiff) gdiv = 1.0;
-            else gdiv = 2.0;
-
-            _FeedbackGain = (_ADCRes / _DSres);
+            //_FeedbackGain = (_ADCRes / _DSres);
+            if (_DRefIsSigned) 
+                _DSGain = (Math.Pow(2.0, _DSres) / Math.Pow(2.0, (_DRefRes-1)));
+            else 
+                _DSGain = (Math.Pow(2.0, _DSres) / Math.Pow(2.0, _DRefRes)); ;
 
             // Calculate maximum input value
-            _DSIn = (Math.Pow(2.0, _ADCRes) - 1) / gdiv;
+            _DSInMax = (Math.Pow(2.0, _DSres) - 1);
+
+            _DSFbValue = Convert.ToInt32(_DSIn);
         }
         // Digital Source End ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -255,11 +470,60 @@ namespace dcld
         private double _FeedbackGain = 1.000;
         internal double FeedbackGain
         {
-            get { return (_FeedbackGain); }
-            set { _FeedbackGain = value; return; }
+            get {
+                switch (_FeedbackType)
+                {
+                    case dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER:
+                        _FeedbackGain = _VDivGain;
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER:
+                        _FeedbackGain = _CSGain;
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER:
+                        _FeedbackGain = _CTGain;
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE:
+                        _FeedbackGain = _DSGain;
+                        break;
+                    default:
+                        _FeedbackGain = 1.0;
+                        break;
+                }
+                //_FeedbackGain = value;
+                return (_FeedbackGain); 
+            }
+
         }
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        // Feedback Value ~~~~~~~~~~~~~~~~~~~~~~~~~
+        private int _FeedbackValue = 4095;
+        internal int FeedbackValue
+        {
+            get {
+                switch (_FeedbackType)
+                {
+                    case dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER:
+                        _FeedbackValue = _VDFbValue;
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER:
+                        _FeedbackValue = _CSFbValue;
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER:
+                        _FeedbackValue = _CTFbValue;
+                        break;
+                    case dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE:
+                        _FeedbackValue = _DSFbValue;
+                        break;
+                    default:
+                        _FeedbackValue = 0;
+                        break;
+                }
+                return (_FeedbackValue); 
+            }
+
+        }
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         // METHODS =====================================
 

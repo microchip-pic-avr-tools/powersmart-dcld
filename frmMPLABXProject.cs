@@ -58,6 +58,11 @@ namespace dcld
 
         private void frmMPLABXProject_Load(object sender, EventArgs e)
         {
+            // Set Window Properties
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.ShowInTaskbar = false;
+            
             chkShowatStartup.Checked = ShowWinAtStartup;
             LoadMPLABXProjectFile(sender, e);
             this.KeyPreview = true;

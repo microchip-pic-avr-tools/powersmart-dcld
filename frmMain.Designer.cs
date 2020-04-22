@@ -114,6 +114,7 @@
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showCoeffficientDataTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showSourceCodeTimingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showOutputWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.showSDomainTransferFunctionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
@@ -157,7 +158,6 @@
             this.splitContainerContents = new System.Windows.Forms.SplitContainer();
             this.tabConfig = new System.Windows.Forms.TabControl();
             this.tabController = new System.Windows.Forms.TabPage();
-            this.pnlCompensator = new System.Windows.Forms.Panel();
             this.grpPolesZeros = new System.Windows.Forms.GroupBox();
             this.txtSamplingFrequency = new System.Windows.Forms.TextBox();
             this.lblFZ1Unit = new System.Windows.Forms.Label();
@@ -202,11 +202,6 @@
             this.lblOutputGain = new System.Windows.Forms.Label();
             this.grpInputDataSpecifications = new System.Windows.Forms.GroupBox();
             this.cmdGetInputGain = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.chkAGCAddGetModFactorFunCall = new System.Windows.Forms.CheckBox();
-            this.chkAGCAddEnable = new System.Windows.Forms.CheckBox();
-            this.picInfoAGC = new System.Windows.Forms.PictureBox();
-            this.chkEnableAdaptiveGainControl = new System.Windows.Forms.CheckBox();
             this.chkFeedbackRectification = new System.Windows.Forms.CheckBox();
             this.chkBiDirectionalFeedback = new System.Windows.Forms.CheckBox();
             this.chkNormalizeInputGain = new System.Windows.Forms.CheckBox();
@@ -223,7 +218,6 @@
             this.cmbQFormat = new System.Windows.Forms.ComboBox();
             this.lblQFormat = new System.Windows.Forms.Label();
             this.tabSourceCodeConfig = new System.Windows.Forms.TabPage();
-            this.pnlCodeGeneratorOptions = new System.Windows.Forms.Panel();
             this.grpAntiWindup = new System.Windows.Forms.GroupBox();
             this.chkAntiWindupSoftDesaturationFlag = new System.Windows.Forms.CheckBox();
             this.chkAntiWindupMinStatusFlag = new System.Windows.Forms.CheckBox();
@@ -232,11 +226,13 @@
             this.chkAntiWindupClampMax = new System.Windows.Forms.CheckBox();
             this.chkAntiWindup = new System.Windows.Forms.CheckBox();
             this.grpDataProviderSources = new System.Windows.Forms.GroupBox();
+            this.picInfoDataProviders = new System.Windows.Forms.PictureBox();
             this.chkDataProviderSource = new System.Windows.Forms.CheckBox();
             this.chkAddDataProviderControlInput = new System.Windows.Forms.CheckBox();
             this.chkAddDataProviderErrorInput = new System.Windows.Forms.CheckBox();
             this.chkAddDataProviderControlOutput = new System.Windows.Forms.CheckBox();
             this.grpCodeFeatureDataIO = new System.Windows.Forms.GroupBox();
+            this.picInfoAlternateOutputSource = new System.Windows.Forms.PictureBox();
             this.picInfoAlternateInputSource = new System.Windows.Forms.PictureBox();
             this.chkAddAlternateTarget = new System.Windows.Forms.CheckBox();
             this.chkAddAlternateSource = new System.Windows.Forms.CheckBox();
@@ -254,7 +250,10 @@
             this.chkAddADCTriggerAPlacement = new System.Windows.Forms.CheckBox();
             this.chkAddEnableDisable = new System.Windows.Forms.CheckBox();
             this.chkAddCoreConfig = new System.Windows.Forms.CheckBox();
-            this.grpContextSaving = new System.Windows.Forms.GroupBox();
+            this.grpContextManagement = new System.Windows.Forms.GroupBox();
+            this.lblContextMgmntResourcesTitle = new System.Windows.Forms.Label();
+            this.lblContextMgmntResources = new System.Windows.Forms.Label();
+            this.picInfoContextManagement = new System.Windows.Forms.PictureBox();
             this.chkSaveRestoreAccumulatorB = new System.Windows.Forms.CheckBox();
             this.chkSaveRestoreAccumulatorA = new System.Windows.Forms.CheckBox();
             this.chkSaveRestoreCoreStatus = new System.Windows.Forms.CheckBox();
@@ -269,6 +268,25 @@
             this.txtControllerNameLabel = new System.Windows.Forms.TextBox();
             this.lblFinalNamePrefixOutput = new System.Windows.Forms.Label();
             this.lblFinalNamePrefix = new System.Windows.Forms.Label();
+            this.tabAdvanced = new System.Windows.Forms.TabPage();
+            this.grpAdaptiveGainControl = new System.Windows.Forms.GroupBox();
+            this.chkAGCAddGetModFactorFunCall = new System.Windows.Forms.CheckBox();
+            this.picInfoAGC = new System.Windows.Forms.PictureBox();
+            this.chkEnableAdaptiveGainControl = new System.Windows.Forms.CheckBox();
+            this.chkAGCAddEnable = new System.Windows.Forms.CheckBox();
+            this.grpDevelopmentTools = new System.Windows.Forms.GroupBox();
+            this.cmdGetPTermNominalOutput = new System.Windows.Forms.Button();
+            this.cmdGetPTermNominalFeedback = new System.Windows.Forms.Button();
+            this.lblPTermScaler = new System.Windows.Forms.Label();
+            this.lblPTermFactor = new System.Windows.Forms.Label();
+            this.lblPTermNominalOutput = new System.Windows.Forms.Label();
+            this.lblPTermNominalFeedback = new System.Windows.Forms.Label();
+            this.txtPTermNominalOutput = new System.Windows.Forms.TextBox();
+            this.txtPTermNominalFeedback = new System.Windows.Forms.TextBox();
+            this.txtPTermScaler = new System.Windows.Forms.TextBox();
+            this.txtPTermFactor = new System.Windows.Forms.TextBox();
+            this.picInfoPTermController = new System.Windows.Forms.PictureBox();
+            this.chkAddPTermLoop = new System.Windows.Forms.CheckBox();
             this.tabAnalysis = new System.Windows.Forms.TabControl();
             this.tabPageBode = new System.Windows.Forms.TabPage();
             this.splitContainerCoefficients = new System.Windows.Forms.SplitContainer();
@@ -323,9 +341,6 @@
             this.ctxCoeffSetSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.ctxCoeffSetRename = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxCoeffSetDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPageTiming = new System.Windows.Forms.TabPage();
             this.splitContainerTiming = new System.Windows.Forms.SplitContainer();
             this.pnlTimingChart = new System.Windows.Forms.Panel();
@@ -430,10 +445,10 @@
             this.tabPageCodeOutput = new System.Windows.Forms.TabPage();
             this.tabSourceCode = new System.Windows.Forms.TabControl();
             this.tabPageAssembly = new System.Windows.Forms.TabPage();
+            this.txtSyntaxEditorAssembly = new ActiproSoftware.SyntaxEditor.SyntaxEditor();
             this.tsbCodeGenUpdateWarningAssembly = new System.Windows.Forms.ToolStrip();
             this.lblCodeGenUpdateAssembly = new System.Windows.Forms.ToolStripLabel();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.txtSyntaxEditorAssembly = new ActiproSoftware.SyntaxEditor.SyntaxEditor();
             this.panelASMSource = new System.Windows.Forms.Panel();
             this.chkASMIncludePath = new System.Windows.Forms.CheckBox();
             this.txtASMSourcePath = new System.Windows.Forms.TextBox();
@@ -471,6 +486,8 @@
             this.cmdCLibPath = new System.Windows.Forms.Button();
             this.tabPageInfo = new System.Windows.Forms.TabPage();
             this.txtOutput = new System.Windows.Forms.TextBox();
+            this.splitDebug = new System.Windows.Forms.Splitter();
+            this.txtDebugOutput = new System.Windows.Forms.RichTextBox();
             this.timRefresh = new System.Windows.Forms.Timer(this.components);
             this.tsbMain = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonConfig = new System.Windows.Forms.ToolStripButton();
@@ -505,25 +522,29 @@
             this.splitContainerContents.SuspendLayout();
             this.tabConfig.SuspendLayout();
             this.tabController.SuspendLayout();
-            this.pnlCompensator.SuspendLayout();
             this.grpPolesZeros.SuspendLayout();
             this.grpOutputDataNormalization.SuspendLayout();
             this.grpInputDataSpecifications.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).BeginInit();
             this.grpControllerSelection.SuspendLayout();
             this.tabSourceCodeConfig.SuspendLayout();
-            this.pnlCodeGeneratorOptions.SuspendLayout();
             this.grpAntiWindup.SuspendLayout();
             this.grpDataProviderSources.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoDataProviders)).BeginInit();
             this.grpCodeFeatureDataIO.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAlternateOutputSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoAlternateInputSource)).BeginInit();
             this.grpCodeFeatureOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoErrNorm)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoCascadeFunctionCall)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoDSPConfig)).BeginInit();
-            this.grpContextSaving.SuspendLayout();
+            this.grpContextManagement.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoContextManagement)).BeginInit();
             this.grpFunctionLabel.SuspendLayout();
+            this.tabAdvanced.SuspendLayout();
+            this.grpAdaptiveGainControl.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).BeginInit();
+            this.grpDevelopmentTools.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoPTermController)).BeginInit();
             this.tabAnalysis.SuspendLayout();
             this.tabPageBode.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerCoefficients)).BeginInit();
@@ -536,7 +557,6 @@
             this.tabCoefficientTable.SuspendLayout();
             this.tabCoefficientsHistory.SuspendLayout();
             this.ctxCoefficientsHistory.SuspendLayout();
-            this.tabControl1.SuspendLayout();
             this.tabPageTiming.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTiming)).BeginInit();
             this.splitContainerTiming.Panel1.SuspendLayout();
@@ -593,7 +613,7 @@
             this.mnuMain.Location = new System.Drawing.Point(0, 0);
             this.mnuMain.Name = "mnuMain";
             this.mnuMain.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-            this.mnuMain.Size = new System.Drawing.Size(1408, 24);
+            this.mnuMain.Size = new System.Drawing.Size(1374, 24);
             this.mnuMain.TabIndex = 0;
             this.mnuMain.Text = "menuStrip1";
             // 
@@ -652,6 +672,7 @@
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showCoeffficientDataTableToolStripMenuItem,
             this.showSourceCodeTimingToolStripMenuItem,
+            this.showOutputWindowToolStripMenuItem,
             this.toolStripSeparator2,
             this.showSDomainTransferFunctionToolStripMenuItem,
             this.toolStripSeparator23,
@@ -682,6 +703,17 @@
             this.showSourceCodeTimingToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showSourceCodeTimingToolStripMenuItem_CheckedChanged);
             this.showSourceCodeTimingToolStripMenuItem.Click += new System.EventHandler(this.showSourceCodeTimingToolStripMenuItem_Click);
             // 
+            // showOutputWindowToolStripMenuItem
+            // 
+            this.showOutputWindowToolStripMenuItem.Checked = true;
+            this.showOutputWindowToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showOutputWindowToolStripMenuItem.Name = "showOutputWindowToolStripMenuItem";
+            this.showOutputWindowToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
+            this.showOutputWindowToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.showOutputWindowToolStripMenuItem.Text = "Show Output Window";
+            this.showOutputWindowToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showOutputWindowToolStripMenuItem_CheckedChanged);
+            this.showOutputWindowToolStripMenuItem.Click += new System.EventHandler(this.showOutputWindowToolStripMenuItem_Click);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -689,8 +721,6 @@
             // 
             // showSDomainTransferFunctionToolStripMenuItem
             // 
-            this.showSDomainTransferFunctionToolStripMenuItem.Checked = true;
-            this.showSDomainTransferFunctionToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showSDomainTransferFunctionToolStripMenuItem.Name = "showSDomainTransferFunctionToolStripMenuItem";
             this.showSDomainTransferFunctionToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.showSDomainTransferFunctionToolStripMenuItem.Text = "Show s-DomainTransfer Function";
@@ -936,7 +966,7 @@
             this.stbMain.Location = new System.Drawing.Point(0, 833);
             this.stbMain.Name = "stbMain";
             this.stbMain.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-            this.stbMain.Size = new System.Drawing.Size(1408, 22);
+            this.stbMain.Size = new System.Drawing.Size(1374, 22);
             this.stbMain.TabIndex = 13;
             this.stbMain.Text = "statusStrip1";
             // 
@@ -946,7 +976,7 @@
             this.stbMainStatusLabel.Image = ((System.Drawing.Image)(resources.GetObject("stbMainStatusLabel.Image")));
             this.stbMainStatusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.stbMainStatusLabel.Name = "stbMainStatusLabel";
-            this.stbMainStatusLabel.Size = new System.Drawing.Size(1174, 17);
+            this.stbMainStatusLabel.Size = new System.Drawing.Size(1140, 17);
             this.stbMainStatusLabel.Spring = true;
             this.stbMainStatusLabel.Text = "Status";
             this.stbMainStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -960,7 +990,7 @@
             // stbProgressBar
             // 
             this.stbProgressBar.Name = "stbProgressBar";
-            this.stbProgressBar.Size = new System.Drawing.Size(100, 22);
+            this.stbProgressBar.Size = new System.Drawing.Size(100, 20);
             this.stbProgressBar.Visible = false;
             // 
             // stbMainProgressTime
@@ -1038,7 +1068,7 @@
             // splitContainerContents.Panel2
             // 
             this.splitContainerContents.Panel2.Controls.Add(this.tabAnalysis);
-            this.splitContainerContents.Size = new System.Drawing.Size(1408, 771);
+            this.splitContainerContents.Size = new System.Drawing.Size(1374, 771);
             this.splitContainerContents.SplitterDistance = 436;
             this.splitContainerContents.SplitterWidth = 6;
             this.splitContainerContents.TabIndex = 2;
@@ -1047,6 +1077,7 @@
             // 
             this.tabConfig.Controls.Add(this.tabController);
             this.tabConfig.Controls.Add(this.tabSourceCodeConfig);
+            this.tabConfig.Controls.Add(this.tabAdvanced);
             this.tabConfig.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabConfig.Location = new System.Drawing.Point(0, 0);
             this.tabConfig.Name = "tabConfig";
@@ -1056,7 +1087,11 @@
             // 
             // tabController
             // 
-            this.tabController.Controls.Add(this.pnlCompensator);
+            this.tabController.AutoScroll = true;
+            this.tabController.Controls.Add(this.grpPolesZeros);
+            this.tabController.Controls.Add(this.grpOutputDataNormalization);
+            this.tabController.Controls.Add(this.grpInputDataSpecifications);
+            this.tabController.Controls.Add(this.grpControllerSelection);
             this.tabController.Location = new System.Drawing.Point(4, 24);
             this.tabController.Name = "tabController";
             this.tabController.Padding = new System.Windows.Forms.Padding(3);
@@ -1064,21 +1099,6 @@
             this.tabController.TabIndex = 0;
             this.tabController.Text = "Controller";
             this.tabController.UseVisualStyleBackColor = true;
-            // 
-            // pnlCompensator
-            // 
-            this.pnlCompensator.AutoScroll = true;
-            this.pnlCompensator.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pnlCompensator.Controls.Add(this.grpPolesZeros);
-            this.pnlCompensator.Controls.Add(this.grpOutputDataNormalization);
-            this.pnlCompensator.Controls.Add(this.grpInputDataSpecifications);
-            this.pnlCompensator.Controls.Add(this.grpControllerSelection);
-            this.pnlCompensator.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlCompensator.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pnlCompensator.Location = new System.Drawing.Point(3, 3);
-            this.pnlCompensator.Name = "pnlCompensator";
-            this.pnlCompensator.Size = new System.Drawing.Size(422, 737);
-            this.pnlCompensator.TabIndex = 18;
             // 
             // grpPolesZeros
             // 
@@ -1119,7 +1139,7 @@
             this.grpPolesZeros.Controls.Add(this.lblFP0Unit);
             this.grpPolesZeros.Controls.Add(this.txtFP2);
             this.grpPolesZeros.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpPolesZeros.Location = new System.Drawing.Point(0, 422);
+            this.grpPolesZeros.Location = new System.Drawing.Point(3, 351);
             this.grpPolesZeros.Name = "grpPolesZeros";
             this.grpPolesZeros.Size = new System.Drawing.Size(422, 262);
             this.grpPolesZeros.TabIndex = 4;
@@ -1554,7 +1574,7 @@
             this.grpOutputDataNormalization.Controls.Add(this.lblOutputGain);
             this.grpOutputDataNormalization.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpOutputDataNormalization.Enabled = false;
-            this.grpOutputDataNormalization.Location = new System.Drawing.Point(0, 349);
+            this.grpOutputDataNormalization.Location = new System.Drawing.Point(3, 278);
             this.grpOutputDataNormalization.Name = "grpOutputDataNormalization";
             this.grpOutputDataNormalization.Size = new System.Drawing.Size(422, 73);
             this.grpOutputDataNormalization.TabIndex = 3;
@@ -1615,7 +1635,6 @@
             // grpInputDataSpecifications
             // 
             this.grpInputDataSpecifications.Controls.Add(this.cmdGetInputGain);
-            this.grpInputDataSpecifications.Controls.Add(this.groupBox1);
             this.grpInputDataSpecifications.Controls.Add(this.chkFeedbackRectification);
             this.grpInputDataSpecifications.Controls.Add(this.chkBiDirectionalFeedback);
             this.grpInputDataSpecifications.Controls.Add(this.chkNormalizeInputGain);
@@ -1625,9 +1644,9 @@
             this.grpInputDataSpecifications.Controls.Add(this.lblInputGain);
             this.grpInputDataSpecifications.Controls.Add(this.lblInputResolution);
             this.grpInputDataSpecifications.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpInputDataSpecifications.Location = new System.Drawing.Point(0, 126);
+            this.grpInputDataSpecifications.Location = new System.Drawing.Point(3, 129);
             this.grpInputDataSpecifications.Name = "grpInputDataSpecifications";
-            this.grpInputDataSpecifications.Size = new System.Drawing.Size(422, 223);
+            this.grpInputDataSpecifications.Size = new System.Drawing.Size(422, 149);
             this.grpInputDataSpecifications.TabIndex = 2;
             this.grpInputDataSpecifications.TabStop = false;
             // 
@@ -1641,74 +1660,15 @@
             this.cmdGetInputGain.UseVisualStyleBackColor = true;
             this.cmdGetInputGain.Click += new System.EventHandler(this.cmdGetInputGain_Click);
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.chkAGCAddGetModFactorFunCall);
-            this.groupBox1.Controls.Add(this.chkAGCAddEnable);
-            this.groupBox1.Controls.Add(this.picInfoAGC);
-            this.groupBox1.Controls.Add(this.chkEnableAdaptiveGainControl);
-            this.groupBox1.Location = new System.Drawing.Point(10, 124);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(403, 79);
-            this.groupBox1.TabIndex = 7;
-            this.groupBox1.TabStop = false;
-            // 
-            // chkAGCAddGetModFactorFunCall
-            // 
-            this.chkAGCAddGetModFactorFunCall.AutoSize = true;
-            this.chkAGCAddGetModFactorFunCall.Enabled = false;
-            this.chkAGCAddGetModFactorFunCall.Location = new System.Drawing.Point(36, 50);
-            this.chkAGCAddGetModFactorFunCall.Name = "chkAGCAddGetModFactorFunCall";
-            this.chkAGCAddGetModFactorFunCall.Size = new System.Drawing.Size(254, 19);
-            this.chkAGCAddGetModFactorFunCall.TabIndex = 10;
-            this.chkAGCAddGetModFactorFunCall.Text = "Add \'Get Modulation Factor\' Function Call";
-            this.chkAGCAddGetModFactorFunCall.UseVisualStyleBackColor = true;
-            this.chkAGCAddGetModFactorFunCall.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
-            // 
-            // chkAGCAddEnable
-            // 
-            this.chkAGCAddEnable.AutoSize = true;
-            this.chkAGCAddEnable.Enabled = false;
-            this.chkAGCAddEnable.Location = new System.Drawing.Point(36, 25);
-            this.chkAGCAddEnable.Name = "chkAGCAddEnable";
-            this.chkAGCAddEnable.Size = new System.Drawing.Size(178, 19);
-            this.chkAGCAddEnable.TabIndex = 9;
-            this.chkAGCAddEnable.Text = "Add Enable/Disable Control";
-            this.chkAGCAddEnable.UseVisualStyleBackColor = true;
-            this.chkAGCAddEnable.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
-            // 
-            // picInfoAGC
-            // 
-            this.picInfoAGC.Image = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.Image")));
-            this.picInfoAGC.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.InitialImage")));
-            this.picInfoAGC.Location = new System.Drawing.Point(202, 1);
-            this.picInfoAGC.Name = "picInfoAGC";
-            this.picInfoAGC.Size = new System.Drawing.Size(16, 16);
-            this.picInfoAGC.TabIndex = 72;
-            this.picInfoAGC.TabStop = false;
-            this.picInfoAGC.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
-            // 
-            // chkEnableAdaptiveGainControl
-            // 
-            this.chkEnableAdaptiveGainControl.AutoSize = true;
-            this.chkEnableAdaptiveGainControl.BackColor = System.Drawing.SystemColors.Window;
-            this.chkEnableAdaptiveGainControl.Enabled = false;
-            this.chkEnableAdaptiveGainControl.Location = new System.Drawing.Point(10, 0);
-            this.chkEnableAdaptiveGainControl.Name = "chkEnableAdaptiveGainControl";
-            this.chkEnableAdaptiveGainControl.Size = new System.Drawing.Size(188, 19);
-            this.chkEnableAdaptiveGainControl.TabIndex = 8;
-            this.chkEnableAdaptiveGainControl.Text = "Enable Loop &Gain Modulation";
-            this.chkEnableAdaptiveGainControl.UseVisualStyleBackColor = false;
-            this.chkEnableAdaptiveGainControl.CheckedChanged += new System.EventHandler(this.chkEnableAdaptiveGainControl_CheckedChanged);
-            // 
             // chkFeedbackRectification
             // 
             this.chkFeedbackRectification.AutoSize = true;
             this.chkFeedbackRectification.Enabled = false;
-            this.chkFeedbackRectification.Location = new System.Drawing.Point(66, 124);
+            this.chkFeedbackRectification.Location = new System.Drawing.Point(42, 114);
             this.chkFeedbackRectification.Name = "chkFeedbackRectification";
             this.chkFeedbackRectification.Size = new System.Drawing.Size(214, 19);
             this.chkFeedbackRectification.TabIndex = 48;
+            this.chkFeedbackRectification.Tag = "bi_directional_feedback_flag";
             this.chkFeedbackRectification.Text = "Enable Singal &Rectification Control";
             this.chkFeedbackRectification.UseVisualStyleBackColor = true;
             this.chkFeedbackRectification.CheckedChanged += new System.EventHandler(this.UpdateTransferFunction);
@@ -1716,10 +1676,11 @@
             // chkBiDirectionalFeedback
             // 
             this.chkBiDirectionalFeedback.AutoSize = true;
-            this.chkBiDirectionalFeedback.Location = new System.Drawing.Point(46, 89);
+            this.chkBiDirectionalFeedback.Location = new System.Drawing.Point(25, 89);
             this.chkBiDirectionalFeedback.Name = "chkBiDirectionalFeedback";
             this.chkBiDirectionalFeedback.Size = new System.Drawing.Size(331, 19);
             this.chkBiDirectionalFeedback.TabIndex = 6;
+            this.chkBiDirectionalFeedback.Tag = "feedback_offset_compensation";
             this.chkBiDirectionalFeedback.Text = "Feedback Offset Compensation/&Bi-directional Feedback ";
             this.chkBiDirectionalFeedback.UseVisualStyleBackColor = true;
             this.chkBiDirectionalFeedback.CheckedChanged += new System.EventHandler(this.chkBiDirectionalFeedback_CheckedChanged);
@@ -1734,6 +1695,7 @@
             this.chkNormalizeInputGain.Name = "chkNormalizeInputGain";
             this.chkNormalizeInputGain.Size = new System.Drawing.Size(143, 19);
             this.chkNormalizeInputGain.TabIndex = 0;
+            this.chkNormalizeInputGain.Tag = "feedback_conditioning_enable";
             this.chkNormalizeInputGain.Text = "&Normalize Input Gain";
             this.chkNormalizeInputGain.UseVisualStyleBackColor = false;
             this.chkNormalizeInputGain.CheckedChanged += new System.EventHandler(this.chkNormalizeInputGain_CheckedChanged);
@@ -1807,7 +1769,7 @@
             this.grpControllerSelection.Controls.Add(this.cmbQFormat);
             this.grpControllerSelection.Controls.Add(this.lblQFormat);
             this.grpControllerSelection.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpControllerSelection.Location = new System.Drawing.Point(0, 0);
+            this.grpControllerSelection.Location = new System.Drawing.Point(3, 3);
             this.grpControllerSelection.Name = "grpControllerSelection";
             this.grpControllerSelection.Size = new System.Drawing.Size(422, 126);
             this.grpControllerSelection.TabIndex = 1;
@@ -1902,7 +1864,13 @@
             // 
             // tabSourceCodeConfig
             // 
-            this.tabSourceCodeConfig.Controls.Add(this.pnlCodeGeneratorOptions);
+            this.tabSourceCodeConfig.AutoScroll = true;
+            this.tabSourceCodeConfig.Controls.Add(this.grpAntiWindup);
+            this.tabSourceCodeConfig.Controls.Add(this.grpDataProviderSources);
+            this.tabSourceCodeConfig.Controls.Add(this.grpCodeFeatureDataIO);
+            this.tabSourceCodeConfig.Controls.Add(this.grpCodeFeatureOptions);
+            this.tabSourceCodeConfig.Controls.Add(this.grpContextManagement);
+            this.tabSourceCodeConfig.Controls.Add(this.grpFunctionLabel);
             this.tabSourceCodeConfig.Location = new System.Drawing.Point(4, 22);
             this.tabSourceCodeConfig.Name = "tabSourceCodeConfig";
             this.tabSourceCodeConfig.Padding = new System.Windows.Forms.Padding(3);
@@ -1910,23 +1878,6 @@
             this.tabSourceCodeConfig.TabIndex = 1;
             this.tabSourceCodeConfig.Text = "Source Code Configuration";
             this.tabSourceCodeConfig.UseVisualStyleBackColor = true;
-            // 
-            // pnlCodeGeneratorOptions
-            // 
-            this.pnlCodeGeneratorOptions.AutoScroll = true;
-            this.pnlCodeGeneratorOptions.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pnlCodeGeneratorOptions.Controls.Add(this.grpAntiWindup);
-            this.pnlCodeGeneratorOptions.Controls.Add(this.grpDataProviderSources);
-            this.pnlCodeGeneratorOptions.Controls.Add(this.grpCodeFeatureDataIO);
-            this.pnlCodeGeneratorOptions.Controls.Add(this.grpCodeFeatureOptions);
-            this.pnlCodeGeneratorOptions.Controls.Add(this.grpContextSaving);
-            this.pnlCodeGeneratorOptions.Controls.Add(this.grpFunctionLabel);
-            this.pnlCodeGeneratorOptions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlCodeGeneratorOptions.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pnlCodeGeneratorOptions.Location = new System.Drawing.Point(3, 3);
-            this.pnlCodeGeneratorOptions.Name = "pnlCodeGeneratorOptions";
-            this.pnlCodeGeneratorOptions.Size = new System.Drawing.Size(422, 739);
-            this.pnlCodeGeneratorOptions.TabIndex = 19;
             // 
             // grpAntiWindup
             // 
@@ -1937,9 +1888,9 @@
             this.grpAntiWindup.Controls.Add(this.chkAntiWindupClampMax);
             this.grpAntiWindup.Controls.Add(this.chkAntiWindup);
             this.grpAntiWindup.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpAntiWindup.Location = new System.Drawing.Point(0, 732);
+            this.grpAntiWindup.Location = new System.Drawing.Point(3, 779);
             this.grpAntiWindup.Name = "grpAntiWindup";
-            this.grpAntiWindup.Size = new System.Drawing.Size(405, 170);
+            this.grpAntiWindup.Size = new System.Drawing.Size(405, 157);
             this.grpAntiWindup.TabIndex = 6;
             this.grpAntiWindup.TabStop = false;
             // 
@@ -1951,6 +1902,7 @@
             this.chkAntiWindupSoftDesaturationFlag.Name = "chkAntiWindupSoftDesaturationFlag";
             this.chkAntiWindupSoftDesaturationFlag.Size = new System.Drawing.Size(227, 19);
             this.chkAntiWindupSoftDesaturationFlag.TabIndex = 5;
+            this.chkAntiWindupSoftDesaturationFlag.Tag = "anti_windup_soft_desat_flag";
             this.chkAntiWindupSoftDesaturationFlag.Text = "Use S&oft Desaturation (experimental)";
             this.chkAntiWindupSoftDesaturationFlag.UseVisualStyleBackColor = true;
             this.chkAntiWindupSoftDesaturationFlag.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -1963,6 +1915,7 @@
             this.chkAntiWindupMinStatusFlag.Name = "chkAntiWindupMinStatusFlag";
             this.chkAntiWindupMinStatusFlag.Size = new System.Drawing.Size(251, 19);
             this.chkAntiWindupMinStatusFlag.TabIndex = 4;
+            this.chkAntiWindupMinStatusFlag.Tag = "anti_windup_min_status_flag";
             this.chkAntiWindupMinStatusFlag.Text = "Generate &Lower Saturation Status Flag Bit";
             this.chkAntiWindupMinStatusFlag.UseVisualStyleBackColor = true;
             this.chkAntiWindupMinStatusFlag.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -1975,6 +1928,7 @@
             this.chkAntiWindupMaxStatusFlag.Name = "chkAntiWindupMaxStatusFlag";
             this.chkAntiWindupMaxStatusFlag.Size = new System.Drawing.Size(252, 19);
             this.chkAntiWindupMaxStatusFlag.TabIndex = 2;
+            this.chkAntiWindupMaxStatusFlag.Tag = "anti_windup_max_status_flag";
             this.chkAntiWindupMaxStatusFlag.Text = "Generate &Upper Saturation Status Flag Bit";
             this.chkAntiWindupMaxStatusFlag.UseVisualStyleBackColor = true;
             this.chkAntiWindupMaxStatusFlag.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -1989,6 +1943,7 @@
             this.chkAntiWindupClampMin.Name = "chkAntiWindupClampMin";
             this.chkAntiWindupClampMin.Size = new System.Drawing.Size(202, 19);
             this.chkAntiWindupClampMin.TabIndex = 3;
+            this.chkAntiWindupClampMin.Tag = "anti_windup_min";
             this.chkAntiWindupClampMin.Text = "Clamp Control &Output Minimum";
             this.chkAntiWindupClampMin.UseVisualStyleBackColor = true;
             this.chkAntiWindupClampMin.CheckedChanged += new System.EventHandler(this.chkClampControlOutputMinimum_CheckedChanged);
@@ -2003,6 +1958,7 @@
             this.chkAntiWindupClampMax.Name = "chkAntiWindupClampMax";
             this.chkAntiWindupClampMax.Size = new System.Drawing.Size(204, 19);
             this.chkAntiWindupClampMax.TabIndex = 1;
+            this.chkAntiWindupClampMax.Tag = "anti_windup_max";
             this.chkAntiWindupClampMax.Text = "Clamp Control &Output Maximum";
             this.chkAntiWindupClampMax.UseVisualStyleBackColor = true;
             this.chkAntiWindupClampMax.CheckedChanged += new System.EventHandler(this.chkClampControlOutputMaximum_CheckedChanged);
@@ -2018,22 +1974,35 @@
             this.chkAntiWindup.Name = "chkAntiWindup";
             this.chkAntiWindup.Size = new System.Drawing.Size(95, 19);
             this.chkAntiWindup.TabIndex = 0;
+            this.chkAntiWindup.Tag = "anti_windup_enable";
             this.chkAntiWindup.Text = "Anti-&Windup";
             this.chkAntiWindup.UseVisualStyleBackColor = false;
-            this.chkAntiWindup.CheckedChanged += new System.EventHandler(this.chkAntiWindup_CheckedChanged);
+            this.chkAntiWindup.CheckedChanged += new System.EventHandler(this.FoldingBoxEnable_CheckChanged);
             // 
             // grpDataProviderSources
             // 
+            this.grpDataProviderSources.Controls.Add(this.picInfoDataProviders);
             this.grpDataProviderSources.Controls.Add(this.chkDataProviderSource);
             this.grpDataProviderSources.Controls.Add(this.chkAddDataProviderControlInput);
             this.grpDataProviderSources.Controls.Add(this.chkAddDataProviderErrorInput);
             this.grpDataProviderSources.Controls.Add(this.chkAddDataProviderControlOutput);
             this.grpDataProviderSources.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpDataProviderSources.Location = new System.Drawing.Point(0, 624);
+            this.grpDataProviderSources.Location = new System.Drawing.Point(3, 671);
             this.grpDataProviderSources.Name = "grpDataProviderSources";
             this.grpDataProviderSources.Size = new System.Drawing.Size(405, 108);
             this.grpDataProviderSources.TabIndex = 5;
             this.grpDataProviderSources.TabStop = false;
+            // 
+            // picInfoDataProviders
+            // 
+            this.picInfoDataProviders.Image = ((System.Drawing.Image)(resources.GetObject("picInfoDataProviders.Image")));
+            this.picInfoDataProviders.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoDataProviders.InitialImage")));
+            this.picInfoDataProviders.Location = new System.Drawing.Point(164, 3);
+            this.picInfoDataProviders.Name = "picInfoDataProviders";
+            this.picInfoDataProviders.Size = new System.Drawing.Size(16, 16);
+            this.picInfoDataProviders.TabIndex = 72;
+            this.picInfoDataProviders.TabStop = false;
+            this.picInfoDataProviders.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
             // 
             // chkDataProviderSource
             // 
@@ -2044,9 +2013,10 @@
             this.chkDataProviderSource.Name = "chkDataProviderSource";
             this.chkDataProviderSource.Size = new System.Drawing.Size(148, 19);
             this.chkDataProviderSource.TabIndex = 9;
+            this.chkDataProviderSource.Tag = "data_provider_enable";
             this.chkDataProviderSource.Text = "Data &Provider Sources";
             this.chkDataProviderSource.UseVisualStyleBackColor = false;
-            this.chkDataProviderSource.CheckedChanged += new System.EventHandler(this.chkDataProviderSource_CheckedChanged);
+            this.chkDataProviderSource.CheckedChanged += new System.EventHandler(this.FoldingBoxEnable_CheckChanged);
             // 
             // chkAddDataProviderControlInput
             // 
@@ -2057,6 +2027,7 @@
             this.chkAddDataProviderControlInput.Name = "chkAddDataProviderControlInput";
             this.chkAddDataProviderControlInput.Size = new System.Drawing.Size(199, 19);
             this.chkAddDataProviderControlInput.TabIndex = 10;
+            this.chkAddDataProviderControlInput.Tag = "data_provider_control_input";
             this.chkAddDataProviderControlInput.Text = "Push Most Recent Control Input";
             this.chkAddDataProviderControlInput.UseVisualStyleBackColor = true;
             this.chkAddDataProviderControlInput.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2070,6 +2041,7 @@
             this.chkAddDataProviderErrorInput.Name = "chkAddDataProviderErrorInput";
             this.chkAddDataProviderErrorInput.Size = new System.Drawing.Size(186, 19);
             this.chkAddDataProviderErrorInput.TabIndex = 11;
+            this.chkAddDataProviderErrorInput.Tag = "data_provider_control_error";
             this.chkAddDataProviderErrorInput.Text = "Push Most Recent Error Input";
             this.chkAddDataProviderErrorInput.UseVisualStyleBackColor = true;
             this.chkAddDataProviderErrorInput.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2083,22 +2055,35 @@
             this.chkAddDataProviderControlOutput.Name = "chkAddDataProviderControlOutput";
             this.chkAddDataProviderControlOutput.Size = new System.Drawing.Size(208, 19);
             this.chkAddDataProviderControlOutput.TabIndex = 12;
+            this.chkAddDataProviderControlOutput.Tag = "data_provider_control_output";
             this.chkAddDataProviderControlOutput.Text = "Push Most Recent Control Output";
             this.chkAddDataProviderControlOutput.UseVisualStyleBackColor = true;
             this.chkAddDataProviderControlOutput.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
             // grpCodeFeatureDataIO
             // 
+            this.grpCodeFeatureDataIO.Controls.Add(this.picInfoAlternateOutputSource);
             this.grpCodeFeatureDataIO.Controls.Add(this.picInfoAlternateInputSource);
             this.grpCodeFeatureDataIO.Controls.Add(this.chkAddAlternateTarget);
             this.grpCodeFeatureDataIO.Controls.Add(this.chkAddAlternateSource);
             this.grpCodeFeatureDataIO.Controls.Add(this.chkAutomatedDataInterface);
             this.grpCodeFeatureDataIO.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpCodeFeatureDataIO.Location = new System.Drawing.Point(0, 539);
+            this.grpCodeFeatureDataIO.Location = new System.Drawing.Point(3, 586);
             this.grpCodeFeatureDataIO.Name = "grpCodeFeatureDataIO";
             this.grpCodeFeatureDataIO.Size = new System.Drawing.Size(405, 85);
             this.grpCodeFeatureDataIO.TabIndex = 4;
             this.grpCodeFeatureDataIO.TabStop = false;
+            // 
+            // picInfoAlternateOutputSource
+            // 
+            this.picInfoAlternateOutputSource.Image = ((System.Drawing.Image)(resources.GetObject("picInfoAlternateOutputSource.Image")));
+            this.picInfoAlternateOutputSource.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoAlternateOutputSource.InitialImage")));
+            this.picInfoAlternateOutputSource.Location = new System.Drawing.Point(223, 51);
+            this.picInfoAlternateOutputSource.Name = "picInfoAlternateOutputSource";
+            this.picInfoAlternateOutputSource.Size = new System.Drawing.Size(16, 16);
+            this.picInfoAlternateOutputSource.TabIndex = 71;
+            this.picInfoAlternateOutputSource.TabStop = false;
+            this.picInfoAlternateOutputSource.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
             // 
             // picInfoAlternateInputSource
             // 
@@ -2109,7 +2094,6 @@
             this.picInfoAlternateInputSource.Size = new System.Drawing.Size(16, 16);
             this.picInfoAlternateInputSource.TabIndex = 70;
             this.picInfoAlternateInputSource.TabStop = false;
-            this.picInfoAlternateInputSource.Click += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             this.picInfoAlternateInputSource.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
             // 
             // chkAddAlternateTarget
@@ -2120,6 +2104,7 @@
             this.chkAddAlternateTarget.Name = "chkAddAlternateTarget";
             this.chkAddAlternateTarget.Size = new System.Drawing.Size(177, 19);
             this.chkAddAlternateTarget.TabIndex = 3;
+            this.chkAddAlternateTarget.Tag = "data_interface_alt_output";
             this.chkAddAlternateTarget.Text = "Add Alternate Ouptut Target";
             this.chkAddAlternateTarget.UseVisualStyleBackColor = true;
             this.chkAddAlternateTarget.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2132,6 +2117,7 @@
             this.chkAddAlternateSource.Name = "chkAddAlternateSource";
             this.chkAddAlternateSource.Size = new System.Drawing.Size(172, 19);
             this.chkAddAlternateSource.TabIndex = 1;
+            this.chkAddAlternateSource.Tag = "data_interface_alt_input";
             this.chkAddAlternateSource.Text = "Add Alternate Input Source";
             this.chkAddAlternateSource.UseVisualStyleBackColor = true;
             this.chkAddAlternateSource.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2145,9 +2131,10 @@
             this.chkAutomatedDataInterface.Name = "chkAutomatedDataInterface";
             this.chkAutomatedDataInterface.Size = new System.Drawing.Size(166, 19);
             this.chkAutomatedDataInterface.TabIndex = 0;
+            this.chkAutomatedDataInterface.Tag = "data_interface_enable";
             this.chkAutomatedDataInterface.Text = "Automated Data &Interface";
             this.chkAutomatedDataInterface.UseVisualStyleBackColor = false;
-            this.chkAutomatedDataInterface.CheckedChanged += new System.EventHandler(this.chkAutomatedDataInterface_CheckedChanged);
+            this.chkAutomatedDataInterface.CheckedChanged += new System.EventHandler(this.FoldingBoxEnable_CheckChanged);
             // 
             // grpCodeFeatureOptions
             // 
@@ -2164,7 +2151,7 @@
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddEnableDisable);
             this.grpCodeFeatureOptions.Controls.Add(this.chkAddCoreConfig);
             this.grpCodeFeatureOptions.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpCodeFeatureOptions.Location = new System.Drawing.Point(0, 302);
+            this.grpCodeFeatureOptions.Location = new System.Drawing.Point(3, 349);
             this.grpCodeFeatureOptions.Name = "grpCodeFeatureOptions";
             this.grpCodeFeatureOptions.Size = new System.Drawing.Size(405, 237);
             this.grpCodeFeatureOptions.TabIndex = 3;
@@ -2213,9 +2200,10 @@
             this.chkCodeFeatureOptions.Name = "chkCodeFeatureOptions";
             this.chkCodeFeatureOptions.Size = new System.Drawing.Size(162, 19);
             this.chkCodeFeatureOptions.TabIndex = 0;
+            this.chkCodeFeatureOptions.Tag = "option_enable";
             this.chkCodeFeatureOptions.Text = "&Basic Feature Extensions";
             this.chkCodeFeatureOptions.UseVisualStyleBackColor = false;
-            this.chkCodeFeatureOptions.CheckedChanged += new System.EventHandler(this.chkCodeFeatureOptions_CheckedChanged);
+            this.chkCodeFeatureOptions.CheckedChanged += new System.EventHandler(this.FoldingBoxEnable_CheckChanged);
             // 
             // chkAddCascadedFunctionCall
             // 
@@ -2225,6 +2213,7 @@
             this.chkAddCascadedFunctionCall.Name = "chkAddCascadedFunctionCall";
             this.chkAddCascadedFunctionCall.Size = new System.Drawing.Size(171, 19);
             this.chkAddCascadedFunctionCall.TabIndex = 9;
+            this.chkAddCascadedFunctionCall.Tag = "option_cascade_call";
             this.chkAddCascadedFunctionCall.Text = "Add Cascade Function Call";
             this.chkAddCascadedFunctionCall.UseVisualStyleBackColor = true;
             this.chkAddCascadedFunctionCall.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2237,6 +2226,7 @@
             this.chkAddADCTriggerBPlacement.Name = "chkAddADCTriggerBPlacement";
             this.chkAddADCTriggerBPlacement.Size = new System.Drawing.Size(314, 19);
             this.chkAddADCTriggerBPlacement.TabIndex = 7;
+            this.chkAddADCTriggerBPlacement.Tag = "option_adc_trigger_b_placement";
             this.chkAddADCTriggerBPlacement.Text = "Add Automatic Placement of Secondary ADC Trigger &B";
             this.chkAddADCTriggerBPlacement.UseVisualStyleBackColor = true;
             this.chkAddADCTriggerBPlacement.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2251,6 +2241,7 @@
             this.chkAddDisableDummyRead.Name = "chkAddDisableDummyRead";
             this.chkAddDisableDummyRead.Size = new System.Drawing.Size(245, 19);
             this.chkAddDisableDummyRead.TabIndex = 4;
+            this.chkAddDisableDummyRead.Tag = "option_enable_switch_always_read";
             this.chkAddDisableDummyRead.Text = "Always read from source when disabled";
             this.chkAddDisableDummyRead.UseVisualStyleBackColor = true;
             this.chkAddDisableDummyRead.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2265,6 +2256,7 @@
             this.chkAddErrorNormalization.Name = "chkAddErrorNormalization";
             this.chkAddErrorNormalization.Size = new System.Drawing.Size(159, 19);
             this.chkAddErrorNormalization.TabIndex = 5;
+            this.chkAddErrorNormalization.Tag = "option_error_normalization";
             this.chkAddErrorNormalization.Text = "Add Error Normali&zation";
             this.chkAddErrorNormalization.UseVisualStyleBackColor = true;
             this.chkAddErrorNormalization.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2278,6 +2270,7 @@
             this.chkStoreReloadAccLevel1.Name = "chkStoreReloadAccLevel1";
             this.chkStoreReloadAccLevel1.Size = new System.Drawing.Size(207, 19);
             this.chkStoreReloadAccLevel1.TabIndex = 1;
+            this.chkStoreReloadAccLevel1.Tag = "option_store_reload_acc";
             this.chkStoreReloadAccLevel1.Text = "Store/Reload Result Accumulator";
             this.chkStoreReloadAccLevel1.UseVisualStyleBackColor = true;
             this.chkStoreReloadAccLevel1.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2292,6 +2285,7 @@
             this.chkAddADCTriggerAPlacement.Name = "chkAddADCTriggerAPlacement";
             this.chkAddADCTriggerAPlacement.Size = new System.Drawing.Size(301, 19);
             this.chkAddADCTriggerAPlacement.TabIndex = 6;
+            this.chkAddADCTriggerAPlacement.Tag = "option_adc_trigger_a_placement";
             this.chkAddADCTriggerAPlacement.Text = "Add Automatic Placement of Primary ADC Trigger &A";
             this.chkAddADCTriggerAPlacement.UseVisualStyleBackColor = true;
             this.chkAddADCTriggerAPlacement.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2306,6 +2300,7 @@
             this.chkAddEnableDisable.Name = "chkAddEnableDisable";
             this.chkAddEnableDisable.Size = new System.Drawing.Size(178, 19);
             this.chkAddEnableDisable.TabIndex = 3;
+            this.chkAddEnableDisable.Tag = "option_enable_switch";
             this.chkAddEnableDisable.Text = "Add E&nable/Disable Feature";
             this.chkAddEnableDisable.UseVisualStyleBackColor = true;
             this.chkAddEnableDisable.CheckedChanged += new System.EventHandler(this.chkAddEnableDisable_CheckedChanged);
@@ -2320,26 +2315,60 @@
             this.chkAddCoreConfig.Name = "chkAddCoreConfig";
             this.chkAddCoreConfig.Size = new System.Drawing.Size(176, 19);
             this.chkAddCoreConfig.TabIndex = 2;
+            this.chkAddCoreConfig.Tag = "option_core_config";
             this.chkAddCoreConfig.Text = "A&dd DSP Core Configuration";
             this.chkAddCoreConfig.UseVisualStyleBackColor = true;
             this.chkAddCoreConfig.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
-            // grpContextSaving
+            // grpContextManagement
             // 
-            this.grpContextSaving.Controls.Add(this.chkSaveRestoreAccumulatorB);
-            this.grpContextSaving.Controls.Add(this.chkSaveRestoreAccumulatorA);
-            this.grpContextSaving.Controls.Add(this.chkSaveRestoreCoreStatus);
-            this.grpContextSaving.Controls.Add(this.chkSaveRestoreCoreConfig);
-            this.grpContextSaving.Controls.Add(this.chkSaveRestoreAccumulators);
-            this.grpContextSaving.Controls.Add(this.chkSaveRestoreMACRegisters);
-            this.grpContextSaving.Controls.Add(this.chkSaveRestoreShadowRegisters);
-            this.grpContextSaving.Controls.Add(this.chkContextSaving);
-            this.grpContextSaving.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpContextSaving.Location = new System.Drawing.Point(0, 90);
-            this.grpContextSaving.Name = "grpContextSaving";
-            this.grpContextSaving.Size = new System.Drawing.Size(405, 212);
-            this.grpContextSaving.TabIndex = 2;
-            this.grpContextSaving.TabStop = false;
+            this.grpContextManagement.Controls.Add(this.lblContextMgmntResourcesTitle);
+            this.grpContextManagement.Controls.Add(this.lblContextMgmntResources);
+            this.grpContextManagement.Controls.Add(this.picInfoContextManagement);
+            this.grpContextManagement.Controls.Add(this.chkSaveRestoreAccumulatorB);
+            this.grpContextManagement.Controls.Add(this.chkSaveRestoreAccumulatorA);
+            this.grpContextManagement.Controls.Add(this.chkSaveRestoreCoreStatus);
+            this.grpContextManagement.Controls.Add(this.chkSaveRestoreCoreConfig);
+            this.grpContextManagement.Controls.Add(this.chkSaveRestoreAccumulators);
+            this.grpContextManagement.Controls.Add(this.chkSaveRestoreMACRegisters);
+            this.grpContextManagement.Controls.Add(this.chkSaveRestoreShadowRegisters);
+            this.grpContextManagement.Controls.Add(this.chkContextSaving);
+            this.grpContextManagement.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpContextManagement.Location = new System.Drawing.Point(3, 93);
+            this.grpContextManagement.Name = "grpContextManagement";
+            this.grpContextManagement.Size = new System.Drawing.Size(405, 256);
+            this.grpContextManagement.TabIndex = 2;
+            this.grpContextManagement.TabStop = false;
+            // 
+            // lblContextMgmntResourcesTitle
+            // 
+            this.lblContextMgmntResourcesTitle.AutoSize = true;
+            this.lblContextMgmntResourcesTitle.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblContextMgmntResourcesTitle.Location = new System.Drawing.Point(27, 219);
+            this.lblContextMgmntResourcesTitle.Name = "lblContextMgmntResourcesTitle";
+            this.lblContextMgmntResourcesTitle.Size = new System.Drawing.Size(96, 15);
+            this.lblContextMgmntResourcesTitle.TabIndex = 74;
+            this.lblContextMgmntResourcesTitle.Text = "Used Resources:";
+            // 
+            // lblContextMgmntResources
+            // 
+            this.lblContextMgmntResources.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblContextMgmntResources.Location = new System.Drawing.Point(129, 219);
+            this.lblContextMgmntResources.Name = "lblContextMgmntResources";
+            this.lblContextMgmntResources.Size = new System.Drawing.Size(251, 21);
+            this.lblContextMgmntResources.TabIndex = 73;
+            this.lblContextMgmntResources.Text = "lblContextMgmntResources";
+            // 
+            // picInfoContextManagement
+            // 
+            this.picInfoContextManagement.Image = ((System.Drawing.Image)(resources.GetObject("picInfoContextManagement.Image")));
+            this.picInfoContextManagement.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoContextManagement.InitialImage")));
+            this.picInfoContextManagement.Location = new System.Drawing.Point(169, 0);
+            this.picInfoContextManagement.Name = "picInfoContextManagement";
+            this.picInfoContextManagement.Size = new System.Drawing.Size(16, 16);
+            this.picInfoContextManagement.TabIndex = 72;
+            this.picInfoContextManagement.TabStop = false;
+            this.picInfoContextManagement.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
             // 
             // chkSaveRestoreAccumulatorB
             // 
@@ -2351,6 +2380,7 @@
             this.chkSaveRestoreAccumulatorB.Name = "chkSaveRestoreAccumulatorB";
             this.chkSaveRestoreAccumulatorB.Size = new System.Drawing.Size(180, 19);
             this.chkSaveRestoreAccumulatorB.TabIndex = 5;
+            this.chkSaveRestoreAccumulatorB.Tag = "context_acc_b";
             this.chkSaveRestoreAccumulatorB.Text = "&Save/Restore &Accumulator B";
             this.chkSaveRestoreAccumulatorB.UseVisualStyleBackColor = true;
             this.chkSaveRestoreAccumulatorB.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2365,6 +2395,7 @@
             this.chkSaveRestoreAccumulatorA.Name = "chkSaveRestoreAccumulatorA";
             this.chkSaveRestoreAccumulatorA.Size = new System.Drawing.Size(180, 19);
             this.chkSaveRestoreAccumulatorA.TabIndex = 4;
+            this.chkSaveRestoreAccumulatorA.Tag = "context_acc_a";
             this.chkSaveRestoreAccumulatorA.Text = "&Save/Restore &Accumulator A";
             this.chkSaveRestoreAccumulatorA.UseVisualStyleBackColor = true;
             this.chkSaveRestoreAccumulatorA.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2379,6 +2410,7 @@
             this.chkSaveRestoreCoreStatus.Name = "chkSaveRestoreCoreStatus";
             this.chkSaveRestoreCoreStatus.Size = new System.Drawing.Size(209, 19);
             this.chkSaveRestoreCoreStatus.TabIndex = 7;
+            this.chkSaveRestoreCoreStatus.Tag = "context_core_status";
             this.chkSaveRestoreCoreStatus.Text = "Save/Restore Core Status &Register";
             this.chkSaveRestoreCoreStatus.UseVisualStyleBackColor = true;
             this.chkSaveRestoreCoreStatus.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2393,6 +2425,7 @@
             this.chkSaveRestoreCoreConfig.Name = "chkSaveRestoreCoreConfig";
             this.chkSaveRestoreCoreConfig.Size = new System.Drawing.Size(226, 19);
             this.chkSaveRestoreCoreConfig.TabIndex = 6;
+            this.chkSaveRestoreCoreConfig.Tag = "context_core_config";
             this.chkSaveRestoreCoreConfig.Text = "Save/Restore DSP &Core Configuration";
             this.chkSaveRestoreCoreConfig.UseVisualStyleBackColor = true;
             this.chkSaveRestoreCoreConfig.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2407,6 +2440,7 @@
             this.chkSaveRestoreAccumulators.Name = "chkSaveRestoreAccumulators";
             this.chkSaveRestoreAccumulators.Size = new System.Drawing.Size(176, 19);
             this.chkSaveRestoreAccumulators.TabIndex = 3;
+            this.chkSaveRestoreAccumulators.Tag = "context_acc";
             this.chkSaveRestoreAccumulators.Text = "&Save/Restore &Accumulators";
             this.chkSaveRestoreAccumulators.UseVisualStyleBackColor = true;
             this.chkSaveRestoreAccumulators.CheckedChanged += new System.EventHandler(this.chkSaveRestoreAccumulators_CheckedChanged);
@@ -2421,6 +2455,7 @@
             this.chkSaveRestoreMACRegisters.Name = "chkSaveRestoreMACRegisters";
             this.chkSaveRestoreMACRegisters.Size = new System.Drawing.Size(227, 19);
             this.chkSaveRestoreMACRegisters.TabIndex = 2;
+            this.chkSaveRestoreMACRegisters.Tag = "context_mac_wreg";
             this.chkSaveRestoreMACRegisters.Text = "&Save/Restore &MAC Working Registers";
             this.chkSaveRestoreMACRegisters.UseVisualStyleBackColor = true;
             this.chkSaveRestoreMACRegisters.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2435,6 +2470,7 @@
             this.chkSaveRestoreShadowRegisters.Name = "chkSaveRestoreShadowRegisters";
             this.chkSaveRestoreShadowRegisters.Size = new System.Drawing.Size(196, 19);
             this.chkSaveRestoreShadowRegisters.TabIndex = 1;
+            this.chkSaveRestoreShadowRegisters.Tag = "context_shadow";
             this.chkSaveRestoreShadowRegisters.Text = "Save/Restore Shado&w Registers";
             this.chkSaveRestoreShadowRegisters.UseVisualStyleBackColor = true;
             this.chkSaveRestoreShadowRegisters.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
@@ -2450,10 +2486,10 @@
             this.chkContextSaving.Name = "chkContextSaving";
             this.chkContextSaving.Size = new System.Drawing.Size(141, 19);
             this.chkContextSaving.TabIndex = 0;
-            this.chkContextSaving.Tag = "";
+            this.chkContextSaving.Tag = "context_management";
             this.chkContextSaving.Text = "Context &Management";
             this.chkContextSaving.UseVisualStyleBackColor = false;
-            this.chkContextSaving.CheckedChanged += new System.EventHandler(this.chkContextSaving_CheckedChanged);
+            this.chkContextSaving.CheckedChanged += new System.EventHandler(this.FoldingBoxEnable_CheckChanged);
             // 
             // grpFunctionLabel
             // 
@@ -2463,7 +2499,7 @@
             this.grpFunctionLabel.Controls.Add(this.lblFinalNamePrefixOutput);
             this.grpFunctionLabel.Controls.Add(this.lblFinalNamePrefix);
             this.grpFunctionLabel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpFunctionLabel.Location = new System.Drawing.Point(0, 0);
+            this.grpFunctionLabel.Location = new System.Drawing.Point(3, 3);
             this.grpFunctionLabel.Name = "grpFunctionLabel";
             this.grpFunctionLabel.Size = new System.Drawing.Size(405, 90);
             this.grpFunctionLabel.TabIndex = 1;
@@ -2528,6 +2564,230 @@
             this.lblFinalNamePrefix.TabIndex = 29;
             this.lblFinalNamePrefix.Text = "Name Preview:";
             // 
+            // tabAdvanced
+            // 
+            this.tabAdvanced.Controls.Add(this.grpAdaptiveGainControl);
+            this.tabAdvanced.Controls.Add(this.grpDevelopmentTools);
+            this.tabAdvanced.Location = new System.Drawing.Point(4, 22);
+            this.tabAdvanced.Name = "tabAdvanced";
+            this.tabAdvanced.Size = new System.Drawing.Size(428, 745);
+            this.tabAdvanced.TabIndex = 2;
+            this.tabAdvanced.Text = "Advanced";
+            this.tabAdvanced.UseVisualStyleBackColor = true;
+            // 
+            // grpAdaptiveGainControl
+            // 
+            this.grpAdaptiveGainControl.Controls.Add(this.chkAGCAddGetModFactorFunCall);
+            this.grpAdaptiveGainControl.Controls.Add(this.picInfoAGC);
+            this.grpAdaptiveGainControl.Controls.Add(this.chkEnableAdaptiveGainControl);
+            this.grpAdaptiveGainControl.Controls.Add(this.chkAGCAddEnable);
+            this.grpAdaptiveGainControl.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpAdaptiveGainControl.Location = new System.Drawing.Point(0, 210);
+            this.grpAdaptiveGainControl.Name = "grpAdaptiveGainControl";
+            this.grpAdaptiveGainControl.Size = new System.Drawing.Size(428, 79);
+            this.grpAdaptiveGainControl.TabIndex = 10;
+            this.grpAdaptiveGainControl.TabStop = false;
+            // 
+            // chkAGCAddGetModFactorFunCall
+            // 
+            this.chkAGCAddGetModFactorFunCall.AutoSize = true;
+            this.chkAGCAddGetModFactorFunCall.Enabled = false;
+            this.chkAGCAddGetModFactorFunCall.Location = new System.Drawing.Point(28, 50);
+            this.chkAGCAddGetModFactorFunCall.Name = "chkAGCAddGetModFactorFunCall";
+            this.chkAGCAddGetModFactorFunCall.Size = new System.Drawing.Size(280, 19);
+            this.chkAGCAddGetModFactorFunCall.TabIndex = 10;
+            this.chkAGCAddGetModFactorFunCall.Tag = "agc_get_factor_function_call";
+            this.chkAGCAddGetModFactorFunCall.Text = "Add &Observer Function Call before Modulation";
+            this.chkAGCAddGetModFactorFunCall.UseVisualStyleBackColor = true;
+            this.chkAGCAddGetModFactorFunCall.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            // 
+            // picInfoAGC
+            // 
+            this.picInfoAGC.Image = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.Image")));
+            this.picInfoAGC.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.InitialImage")));
+            this.picInfoAGC.Location = new System.Drawing.Point(268, 1);
+            this.picInfoAGC.Name = "picInfoAGC";
+            this.picInfoAGC.Size = new System.Drawing.Size(16, 16);
+            this.picInfoAGC.TabIndex = 72;
+            this.picInfoAGC.TabStop = false;
+            this.picInfoAGC.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
+            // 
+            // chkEnableAdaptiveGainControl
+            // 
+            this.chkEnableAdaptiveGainControl.AutoSize = true;
+            this.chkEnableAdaptiveGainControl.BackColor = System.Drawing.SystemColors.Window;
+            this.chkEnableAdaptiveGainControl.Location = new System.Drawing.Point(10, 0);
+            this.chkEnableAdaptiveGainControl.Name = "chkEnableAdaptiveGainControl";
+            this.chkEnableAdaptiveGainControl.Size = new System.Drawing.Size(242, 19);
+            this.chkEnableAdaptiveGainControl.TabIndex = 8;
+            this.chkEnableAdaptiveGainControl.Tag = "agc_enable";
+            this.chkEnableAdaptiveGainControl.Text = "Enable &Feedback Loop Gain Modulation";
+            this.chkEnableAdaptiveGainControl.UseVisualStyleBackColor = false;
+            this.chkEnableAdaptiveGainControl.CheckedChanged += new System.EventHandler(this.chkEnableAdaptiveGainControl_CheckedChanged);
+            // 
+            // chkAGCAddEnable
+            // 
+            this.chkAGCAddEnable.AutoSize = true;
+            this.chkAGCAddEnable.Enabled = false;
+            this.chkAGCAddEnable.Location = new System.Drawing.Point(28, 25);
+            this.chkAGCAddEnable.Name = "chkAGCAddEnable";
+            this.chkAGCAddEnable.Size = new System.Drawing.Size(257, 19);
+            this.chkAGCAddEnable.TabIndex = 9;
+            this.chkAGCAddEnable.Tag = "agc_enable_switch";
+            this.chkAGCAddEnable.Text = "Add Enable/Disable Adaptive &Gain Control";
+            this.chkAGCAddEnable.UseVisualStyleBackColor = true;
+            this.chkAGCAddEnable.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
+            // 
+            // grpDevelopmentTools
+            // 
+            this.grpDevelopmentTools.Controls.Add(this.cmdGetPTermNominalOutput);
+            this.grpDevelopmentTools.Controls.Add(this.cmdGetPTermNominalFeedback);
+            this.grpDevelopmentTools.Controls.Add(this.lblPTermScaler);
+            this.grpDevelopmentTools.Controls.Add(this.lblPTermFactor);
+            this.grpDevelopmentTools.Controls.Add(this.lblPTermNominalOutput);
+            this.grpDevelopmentTools.Controls.Add(this.lblPTermNominalFeedback);
+            this.grpDevelopmentTools.Controls.Add(this.txtPTermNominalOutput);
+            this.grpDevelopmentTools.Controls.Add(this.txtPTermNominalFeedback);
+            this.grpDevelopmentTools.Controls.Add(this.txtPTermScaler);
+            this.grpDevelopmentTools.Controls.Add(this.txtPTermFactor);
+            this.grpDevelopmentTools.Controls.Add(this.picInfoPTermController);
+            this.grpDevelopmentTools.Controls.Add(this.chkAddPTermLoop);
+            this.grpDevelopmentTools.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpDevelopmentTools.Location = new System.Drawing.Point(0, 0);
+            this.grpDevelopmentTools.Name = "grpDevelopmentTools";
+            this.grpDevelopmentTools.Size = new System.Drawing.Size(428, 210);
+            this.grpDevelopmentTools.TabIndex = 1;
+            this.grpDevelopmentTools.TabStop = false;
+            this.grpDevelopmentTools.Text = "Development Tools";
+            // 
+            // cmdGetPTermNominalOutput
+            // 
+            this.cmdGetPTermNominalOutput.Enabled = false;
+            this.cmdGetPTermNominalOutput.Image = global::dcld.Properties.Resources.calculate;
+            this.cmdGetPTermNominalOutput.Location = new System.Drawing.Point(357, 87);
+            this.cmdGetPTermNominalOutput.Name = "cmdGetPTermNominalOutput";
+            this.cmdGetPTermNominalOutput.Size = new System.Drawing.Size(24, 24);
+            this.cmdGetPTermNominalOutput.TabIndex = 6;
+            this.cmdGetPTermNominalOutput.UseVisualStyleBackColor = true;
+            this.cmdGetPTermNominalOutput.Click += new System.EventHandler(this.cmdGetPTermNominalOutput_Click);
+            // 
+            // cmdGetPTermNominalFeedback
+            // 
+            this.cmdGetPTermNominalFeedback.Enabled = false;
+            this.cmdGetPTermNominalFeedback.Image = global::dcld.Properties.Resources.calculate;
+            this.cmdGetPTermNominalFeedback.Location = new System.Drawing.Point(357, 58);
+            this.cmdGetPTermNominalFeedback.Name = "cmdGetPTermNominalFeedback";
+            this.cmdGetPTermNominalFeedback.Size = new System.Drawing.Size(24, 24);
+            this.cmdGetPTermNominalFeedback.TabIndex = 4;
+            this.cmdGetPTermNominalFeedback.UseVisualStyleBackColor = true;
+            this.cmdGetPTermNominalFeedback.Click += new System.EventHandler(this.cmdGetPTermNominalFeedback_Click);
+            // 
+            // lblPTermScaler
+            // 
+            this.lblPTermScaler.AutoSize = true;
+            this.lblPTermScaler.Enabled = false;
+            this.lblPTermScaler.Location = new System.Drawing.Point(154, 148);
+            this.lblPTermScaler.Name = "lblPTermScaler";
+            this.lblPTermScaler.Size = new System.Drawing.Size(44, 15);
+            this.lblPTermScaler.TabIndex = 84;
+            this.lblPTermScaler.Text = "Scaler:";
+            // 
+            // lblPTermFactor
+            // 
+            this.lblPTermFactor.AutoSize = true;
+            this.lblPTermFactor.Enabled = false;
+            this.lblPTermFactor.Location = new System.Drawing.Point(132, 119);
+            this.lblPTermFactor.Name = "lblPTermFactor";
+            this.lblPTermFactor.Size = new System.Drawing.Size(66, 15);
+            this.lblPTermFactor.TabIndex = 83;
+            this.lblPTermFactor.Text = "Fractional:";
+            // 
+            // lblPTermNominalOutput
+            // 
+            this.lblPTermNominalOutput.AutoSize = true;
+            this.lblPTermNominalOutput.Enabled = false;
+            this.lblPTermNominalOutput.Location = new System.Drawing.Point(57, 90);
+            this.lblPTermNominalOutput.Name = "lblPTermNominalOutput";
+            this.lblPTermNominalOutput.Size = new System.Drawing.Size(142, 15);
+            this.lblPTermNominalOutput.TabIndex = 82;
+            this.lblPTermNominalOutput.Text = "Nominal Control Output:";
+            // 
+            // lblPTermNominalFeedback
+            // 
+            this.lblPTermNominalFeedback.AutoSize = true;
+            this.lblPTermNominalFeedback.Enabled = false;
+            this.lblPTermNominalFeedback.Location = new System.Drawing.Point(57, 61);
+            this.lblPTermNominalFeedback.Name = "lblPTermNominalFeedback";
+            this.lblPTermNominalFeedback.Size = new System.Drawing.Size(141, 15);
+            this.lblPTermNominalFeedback.TabIndex = 81;
+            this.lblPTermNominalFeedback.Text = "Nominal Feedback Level:";
+            // 
+            // txtPTermNominalOutput
+            // 
+            this.txtPTermNominalOutput.Enabled = false;
+            this.txtPTermNominalOutput.Location = new System.Drawing.Point(205, 87);
+            this.txtPTermNominalOutput.Name = "txtPTermNominalOutput";
+            this.txtPTermNominalOutput.Size = new System.Drawing.Size(146, 23);
+            this.txtPTermNominalOutput.TabIndex = 5;
+            this.txtPTermNominalOutput.Text = "0";
+            this.txtPTermNominalOutput.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPTermNominalOutput.TextChanged += new System.EventHandler(this.UpdatePTermController);
+            // 
+            // txtPTermNominalFeedback
+            // 
+            this.txtPTermNominalFeedback.Enabled = false;
+            this.txtPTermNominalFeedback.Location = new System.Drawing.Point(204, 58);
+            this.txtPTermNominalFeedback.Name = "txtPTermNominalFeedback";
+            this.txtPTermNominalFeedback.Size = new System.Drawing.Size(147, 23);
+            this.txtPTermNominalFeedback.TabIndex = 3;
+            this.txtPTermNominalFeedback.Text = "0";
+            this.txtPTermNominalFeedback.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPTermNominalFeedback.TextChanged += new System.EventHandler(this.UpdatePTermController);
+            // 
+            // txtPTermScaler
+            // 
+            this.txtPTermScaler.Enabled = false;
+            this.txtPTermScaler.Location = new System.Drawing.Point(204, 145);
+            this.txtPTermScaler.Name = "txtPTermScaler";
+            this.txtPTermScaler.Size = new System.Drawing.Size(147, 23);
+            this.txtPTermScaler.TabIndex = 8;
+            this.txtPTermScaler.Text = "0";
+            this.txtPTermScaler.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txtPTermFactor
+            // 
+            this.txtPTermFactor.Enabled = false;
+            this.txtPTermFactor.Location = new System.Drawing.Point(204, 116);
+            this.txtPTermFactor.Name = "txtPTermFactor";
+            this.txtPTermFactor.Size = new System.Drawing.Size(147, 23);
+            this.txtPTermFactor.TabIndex = 7;
+            this.txtPTermFactor.Text = "0";
+            this.txtPTermFactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // picInfoPTermController
+            // 
+            this.picInfoPTermController.Image = ((System.Drawing.Image)(resources.GetObject("picInfoPTermController.Image")));
+            this.picInfoPTermController.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoPTermController.InitialImage")));
+            this.picInfoPTermController.Location = new System.Drawing.Point(325, 32);
+            this.picInfoPTermController.Name = "picInfoPTermController";
+            this.picInfoPTermController.Size = new System.Drawing.Size(16, 16);
+            this.picInfoPTermController.TabIndex = 73;
+            this.picInfoPTermController.TabStop = false;
+            this.picInfoPTermController.MouseHover += new System.EventHandler(this.picInfo_MouseHover);
+            // 
+            // chkAddPTermLoop
+            // 
+            this.chkAddPTermLoop.AutoSize = true;
+            this.chkAddPTermLoop.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkAddPTermLoop.Location = new System.Drawing.Point(10, 29);
+            this.chkAddPTermLoop.Name = "chkAddPTermLoop";
+            this.chkAddPTermLoop.Size = new System.Drawing.Size(309, 19);
+            this.chkAddPTermLoop.TabIndex = 2;
+            this.chkAddPTermLoop.Tag = "option_add_p-term";
+            this.chkAddPTermLoop.Text = "Use P-Term Loop Controller for Plant Measurements";
+            this.chkAddPTermLoop.UseVisualStyleBackColor = true;
+            this.chkAddPTermLoop.CheckedChanged += new System.EventHandler(this.chkAddPTermLoop_CheckedChanged);
+            // 
             // tabAnalysis
             // 
             this.tabAnalysis.Controls.Add(this.tabPageBode);
@@ -2538,7 +2798,7 @@
             this.tabAnalysis.Location = new System.Drawing.Point(0, 0);
             this.tabAnalysis.Name = "tabAnalysis";
             this.tabAnalysis.SelectedIndex = 0;
-            this.tabAnalysis.Size = new System.Drawing.Size(966, 771);
+            this.tabAnalysis.Size = new System.Drawing.Size(932, 771);
             this.tabAnalysis.TabIndex = 1;
             // 
             // tabPageBode
@@ -2547,7 +2807,7 @@
             this.tabPageBode.Location = new System.Drawing.Point(4, 24);
             this.tabPageBode.Name = "tabPageBode";
             this.tabPageBode.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBode.Size = new System.Drawing.Size(958, 743);
+            this.tabPageBode.Size = new System.Drawing.Size(924, 743);
             this.tabPageBode.TabIndex = 5;
             this.tabPageBode.Text = "Frequency Domain";
             this.tabPageBode.UseVisualStyleBackColor = true;
@@ -2571,8 +2831,7 @@
             // splitContainerCoefficients.Panel2
             // 
             this.splitContainerCoefficients.Panel2.Controls.Add(this.tabCoefficients);
-            this.splitContainerCoefficients.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainerCoefficients.Size = new System.Drawing.Size(952, 737);
+            this.splitContainerCoefficients.Size = new System.Drawing.Size(918, 737);
             this.splitContainerCoefficients.SplitterDistance = 379;
             this.splitContainerCoefficients.TabIndex = 19;
             // 
@@ -2636,12 +2895,12 @@
             legend1.Alignment = System.Drawing.StringAlignment.Center;
             legend1.AutoFitMinFontSize = 10;
             legendItem1.BorderWidth = 2;
-            legendItem1.Color = System.Drawing.Color.Teal;
+            legendItem1.Color = System.Drawing.Color.LimeGreen;
             legendItem1.ImageStyle = System.Windows.Forms.DataVisualization.Charting.LegendImageStyle.Line;
             legendItem1.MarkerColor = System.Drawing.Color.White;
             legendItem1.Name = "Pole Locations";
             legendItem2.BorderWidth = 2;
-            legendItem2.Color = System.Drawing.Color.Green;
+            legendItem2.Color = System.Drawing.Color.Goldenrod;
             legendItem2.ImageStyle = System.Windows.Forms.DataVisualization.Charting.LegendImageStyle.Line;
             legendItem2.Name = "Zero Locations";
             legend1.CustomItems.Add(legendItem1);
@@ -2688,7 +2947,7 @@
             this.chartBode.Series.Add(series2);
             this.chartBode.Series.Add(series3);
             this.chartBode.Series.Add(series4);
-            this.chartBode.Size = new System.Drawing.Size(950, 352);
+            this.chartBode.Size = new System.Drawing.Size(916, 352);
             this.chartBode.TabIndex = 4;
             this.chartBode.Text = "Compensation Transfer Function";
             this.chartBode.AnnotationPositionChanging += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.AnnotationPositionChangingEventArgs>(this.chartBode_AnnotationPositionChanging);
@@ -2722,7 +2981,7 @@
             this.cmbResetBodeChart});
             this.toolStripBode.Location = new System.Drawing.Point(0, 0);
             this.toolStripBode.Name = "toolStripBode";
-            this.toolStripBode.Size = new System.Drawing.Size(950, 25);
+            this.toolStripBode.Size = new System.Drawing.Size(916, 25);
             this.toolStripBode.TabIndex = 5;
             this.toolStripBode.Text = "toolStrip1";
             // 
@@ -2898,7 +3157,7 @@
             this.tabCoefficients.Location = new System.Drawing.Point(0, 0);
             this.tabCoefficients.Name = "tabCoefficients";
             this.tabCoefficients.SelectedIndex = 0;
-            this.tabCoefficients.Size = new System.Drawing.Size(950, 352);
+            this.tabCoefficients.Size = new System.Drawing.Size(916, 352);
             this.tabCoefficients.TabIndex = 19;
             // 
             // tabCoefficientTable
@@ -2907,14 +3166,13 @@
             this.tabCoefficientTable.Location = new System.Drawing.Point(4, 24);
             this.tabCoefficientTable.Name = "tabCoefficientTable";
             this.tabCoefficientTable.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCoefficientTable.Size = new System.Drawing.Size(942, 324);
+            this.tabCoefficientTable.Size = new System.Drawing.Size(908, 324);
             this.tabCoefficientTable.TabIndex = 0;
             this.tabCoefficientTable.Text = "Number Analysis";
             this.tabCoefficientTable.UseVisualStyleBackColor = true;
             // 
             // lvCoefficients
             // 
-            this.lvCoefficients.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.lvCoefficients.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chdrCoeff,
             this.chdrFloat,
@@ -2964,7 +3222,7 @@
             this.lvCoefficients.Location = new System.Drawing.Point(3, 3);
             this.lvCoefficients.MultiSelect = false;
             this.lvCoefficients.Name = "lvCoefficients";
-            this.lvCoefficients.Size = new System.Drawing.Size(936, 318);
+            this.lvCoefficients.Size = new System.Drawing.Size(902, 318);
             this.lvCoefficients.TabIndex = 17;
             this.lvCoefficients.UseCompatibleStateImageBehavior = false;
             this.lvCoefficients.View = System.Windows.Forms.View.Details;
@@ -3032,7 +3290,7 @@
             this.tabCoefficientsHistory.Location = new System.Drawing.Point(4, 22);
             this.tabCoefficientsHistory.Name = "tabCoefficientsHistory";
             this.tabCoefficientsHistory.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCoefficientsHistory.Size = new System.Drawing.Size(942, 326);
+            this.tabCoefficientsHistory.Size = new System.Drawing.Size(908, 326);
             this.tabCoefficientsHistory.TabIndex = 1;
             this.tabCoefficientsHistory.Text = "Settings History";
             this.tabCoefficientsHistory.UseVisualStyleBackColor = true;
@@ -3052,7 +3310,7 @@
             this.lstCoefficientsHistory.LabelWrap = false;
             this.lstCoefficientsHistory.Location = new System.Drawing.Point(3, 3);
             this.lstCoefficientsHistory.Name = "lstCoefficientsHistory";
-            this.lstCoefficientsHistory.Size = new System.Drawing.Size(936, 320);
+            this.lstCoefficientsHistory.Size = new System.Drawing.Size(902, 320);
             this.lstCoefficientsHistory.TabIndex = 0;
             this.lstCoefficientsHistory.UseCompatibleStateImageBehavior = false;
             this.lstCoefficientsHistory.View = System.Windows.Forms.View.Details;
@@ -3119,43 +3377,13 @@
             this.ctxCoeffSetDelete.Size = new System.Drawing.Size(117, 22);
             this.ctxCoeffSetDelete.Text = "&Delete";
             // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(65, 16);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(8, 8);
-            this.tabControl1.TabIndex = 18;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Location = new System.Drawing.Point(4, 24);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(0, 0);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(0, 0);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
             // tabPageTiming
             // 
             this.tabPageTiming.Controls.Add(this.splitContainerTiming);
             this.tabPageTiming.Location = new System.Drawing.Point(4, 22);
             this.tabPageTiming.Name = "tabPageTiming";
             this.tabPageTiming.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTiming.Size = new System.Drawing.Size(958, 745);
+            this.tabPageTiming.Size = new System.Drawing.Size(924, 745);
             this.tabPageTiming.TabIndex = 4;
             this.tabPageTiming.Text = "Time Domain";
             this.tabPageTiming.UseVisualStyleBackColor = true;
@@ -3179,7 +3407,7 @@
             this.splitContainerTiming.Panel2.AutoScroll = true;
             this.splitContainerTiming.Panel2.Controls.Add(this.grpExecutionTime);
             this.splitContainerTiming.Panel2MinSize = 248;
-            this.splitContainerTiming.Size = new System.Drawing.Size(952, 739);
+            this.splitContainerTiming.Size = new System.Drawing.Size(918, 739);
             this.splitContainerTiming.SplitterDistance = 481;
             this.splitContainerTiming.TabIndex = 0;
             // 
@@ -3195,7 +3423,7 @@
             this.pnlTimingChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlTimingChart.Location = new System.Drawing.Point(0, 0);
             this.pnlTimingChart.Name = "pnlTimingChart";
-            this.pnlTimingChart.Size = new System.Drawing.Size(950, 479);
+            this.pnlTimingChart.Size = new System.Drawing.Size(916, 479);
             this.pnlTimingChart.TabIndex = 0;
             // 
             // pnlCPULoadRatio
@@ -3204,7 +3432,7 @@
             this.pnlCPULoadRatio.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlCPULoadRatio.Controls.Add(this.label2);
             this.pnlCPULoadRatio.Controls.Add(this.lblCPULoadRatio);
-            this.pnlCPULoadRatio.Location = new System.Drawing.Point(839, 322);
+            this.pnlCPULoadRatio.Location = new System.Drawing.Point(805, 322);
             this.pnlCPULoadRatio.Name = "pnlCPULoadRatio";
             this.pnlCPULoadRatio.Size = new System.Drawing.Size(71, 114);
             this.pnlCPULoadRatio.TabIndex = 56;
@@ -3243,7 +3471,7 @@
             this.toolStripLabel3});
             this.tsbCodeGenUpdateWarningTiming.Location = new System.Drawing.Point(0, 454);
             this.tsbCodeGenUpdateWarningTiming.Name = "tsbCodeGenUpdateWarningTiming";
-            this.tsbCodeGenUpdateWarningTiming.Size = new System.Drawing.Size(950, 25);
+            this.tsbCodeGenUpdateWarningTiming.Size = new System.Drawing.Size(916, 25);
             this.tsbCodeGenUpdateWarningTiming.TabIndex = 54;
             this.tsbCodeGenUpdateWarningTiming.Text = "toolStrip1";
             // 
@@ -3369,7 +3597,7 @@
             legend2.IsTextAutoFit = false;
             legend2.Name = "Legend1";
             this.chartTiming.Legends.Add(legend2);
-            this.chartTiming.Location = new System.Drawing.Point(0, 25);
+            this.chartTiming.Location = new System.Drawing.Point(0, 27);
             this.chartTiming.Name = "chartTiming";
             this.chartTiming.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Light;
             series5.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.VerticalCenter;
@@ -3423,7 +3651,7 @@
             this.chartTiming.Series.Add(series5);
             this.chartTiming.Series.Add(series6);
             this.chartTiming.Series.Add(series7);
-            this.chartTiming.Size = new System.Drawing.Size(950, 454);
+            this.chartTiming.Size = new System.Drawing.Size(916, 452);
             this.chartTiming.TabIndex = 2;
             this.chartTiming.Text = "Control Timing";
             this.chartTiming.CursorPositionChanged += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.CursorEventArgs>(this.chartTiming_CursorPositionChanged);
@@ -3455,7 +3683,7 @@
             this.cmbTriggerPlacement});
             this.toolStripTiming.Location = new System.Drawing.Point(0, 0);
             this.toolStripTiming.Name = "toolStripTiming";
-            this.toolStripTiming.Size = new System.Drawing.Size(950, 25);
+            this.toolStripTiming.Size = new System.Drawing.Size(916, 27);
             this.toolStripTiming.TabIndex = 7;
             this.toolStripTiming.Text = "Trigger Placement";
             // 
@@ -3467,19 +3695,19 @@
             this.chkTimingCursor.Image = ((System.Drawing.Image)(resources.GetObject("chkTimingCursor.Image")));
             this.chkTimingCursor.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.chkTimingCursor.Name = "chkTimingCursor";
-            this.chkTimingCursor.Size = new System.Drawing.Size(77, 22);
+            this.chkTimingCursor.Size = new System.Drawing.Size(77, 24);
             this.chkTimingCursor.Text = "Cursor (off):";
             this.chkTimingCursor.CheckedChanged += new System.EventHandler(this.chkTimingCursor_CheckedChanged);
             // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(6, 27);
             // 
             // tslAbsolutePositionLabel
             // 
             this.tslAbsolutePositionLabel.Name = "tslAbsolutePositionLabel";
-            this.tslAbsolutePositionLabel.Size = new System.Drawing.Size(58, 22);
+            this.tslAbsolutePositionLabel.Size = new System.Drawing.Size(58, 24);
             this.tslAbsolutePositionLabel.Text = "Absolute:";
             // 
             // txtTimingAbsolutePosition
@@ -3494,18 +3722,18 @@
             // tslAbsolutePositionUnit
             // 
             this.tslAbsolutePositionUnit.Name = "tslAbsolutePositionUnit";
-            this.tslAbsolutePositionUnit.Size = new System.Drawing.Size(32, 22);
+            this.tslAbsolutePositionUnit.Size = new System.Drawing.Size(32, 24);
             this.tslAbsolutePositionUnit.Text = "nsec";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 27);
             // 
             // tslRelativePosToTrigger
             // 
             this.tslRelativePosToTrigger.Name = "tslRelativePosToTrigger";
-            this.tslRelativePosToTrigger.Size = new System.Drawing.Size(150, 22);
+            this.tslRelativePosToTrigger.Size = new System.Drawing.Size(150, 24);
             this.tslRelativePosToTrigger.Text = "Relative to ADC S&&H Event:";
             // 
             // txtTimingRelativePosToTrigger
@@ -3520,18 +3748,18 @@
             // tslRelativePosToTriggerUnit
             // 
             this.tslRelativePosToTriggerUnit.Name = "tslRelativePosToTriggerUnit";
-            this.tslRelativePosToTriggerUnit.Size = new System.Drawing.Size(32, 22);
+            this.tslRelativePosToTriggerUnit.Size = new System.Drawing.Size(32, 24);
             this.tslRelativePosToTriggerUnit.Text = "nsec";
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 27);
             // 
             // tslRelativePosToFallingEdge
             // 
             this.tslRelativePosToFallingEdge.Name = "tslRelativePosToFallingEdge";
-            this.tslRelativePosToFallingEdge.Size = new System.Drawing.Size(137, 22);
+            this.tslRelativePosToFallingEdge.Size = new System.Drawing.Size(137, 24);
             this.tslRelativePosToFallingEdge.Text = "Relative To Falling Edge:";
             // 
             // txtTimingRelativePosToFallingEdge
@@ -3546,18 +3774,18 @@
             // tslRelativePosToFallingEdgeUnit
             // 
             this.tslRelativePosToFallingEdgeUnit.Name = "tslRelativePosToFallingEdgeUnit";
-            this.tslRelativePosToFallingEdgeUnit.Size = new System.Drawing.Size(32, 22);
+            this.tslRelativePosToFallingEdgeUnit.Size = new System.Drawing.Size(32, 24);
             this.tslRelativePosToFallingEdgeUnit.Text = "nsec";
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(6, 27);
             // 
             // tslTriggerPlacement
             // 
             this.tslTriggerPlacement.Name = "tslTriggerPlacement";
-            this.tslTriggerPlacement.Size = new System.Drawing.Size(61, 22);
+            this.tslTriggerPlacement.Size = new System.Drawing.Size(61, 24);
             this.tslTriggerPlacement.Text = "Trigger at:";
             // 
             // cmbTriggerPlacement
@@ -3571,7 +3799,7 @@
             "Falling Edge",
             "(user defined)"});
             this.cmbTriggerPlacement.Name = "cmbTriggerPlacement";
-            this.cmbTriggerPlacement.Size = new System.Drawing.Size(121, 25);
+            this.cmbTriggerPlacement.Size = new System.Drawing.Size(121, 23);
             this.cmbTriggerPlacement.SelectedIndexChanged += new System.EventHandler(this.cmbTriggerPlacement_SelectedIndexChanged);
             // 
             // grpExecutionTime
@@ -3581,7 +3809,7 @@
             this.grpExecutionTime.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpExecutionTime.Location = new System.Drawing.Point(0, 0);
             this.grpExecutionTime.Name = "grpExecutionTime";
-            this.grpExecutionTime.Size = new System.Drawing.Size(950, 245);
+            this.grpExecutionTime.Size = new System.Drawing.Size(916, 245);
             this.grpExecutionTime.TabIndex = 8;
             this.grpExecutionTime.TabStop = false;
             this.grpExecutionTime.Text = "Execution Time";
@@ -3633,7 +3861,7 @@
             this.pnlTimingSettings.Controls.Add(this.lblResponseDelayLabel);
             this.pnlTimingSettings.Controls.Add(this.lblResponseDelay);
             this.pnlTimingSettings.Controls.Add(this.txtCPUClock);
-            this.pnlTimingSettings.Location = new System.Drawing.Point(13, 15);
+            this.pnlTimingSettings.Location = new System.Drawing.Point(-4, 15);
             this.pnlTimingSettings.Name = "pnlTimingSettings";
             this.pnlTimingSettings.Size = new System.Drawing.Size(924, 224);
             this.pnlTimingSettings.TabIndex = 49;
@@ -4117,7 +4345,7 @@
             this.tabPageBlockDiagram.Location = new System.Drawing.Point(4, 22);
             this.tabPageBlockDiagram.Name = "tabPageBlockDiagram";
             this.tabPageBlockDiagram.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageBlockDiagram.Size = new System.Drawing.Size(958, 745);
+            this.tabPageBlockDiagram.Size = new System.Drawing.Size(924, 745);
             this.tabPageBlockDiagram.TabIndex = 6;
             this.tabPageBlockDiagram.Text = "Block Diagram";
             this.tabPageBlockDiagram.UseVisualStyleBackColor = true;
@@ -4130,7 +4358,7 @@
             this.grpFilterProcessing.Location = new System.Drawing.Point(3, 905);
             this.grpFilterProcessing.MinimumSize = new System.Drawing.Size(0, 325);
             this.grpFilterProcessing.Name = "grpFilterProcessing";
-            this.grpFilterProcessing.Size = new System.Drawing.Size(935, 325);
+            this.grpFilterProcessing.Size = new System.Drawing.Size(901, 325);
             this.grpFilterProcessing.TabIndex = 5;
             this.grpFilterProcessing.TabStop = false;
             this.grpFilterProcessing.Text = "Processing Workflow";
@@ -4138,7 +4366,7 @@
             // lblWorkflowInfo
             // 
             this.lblWorkflowInfo.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblWorkflowInfo.Location = new System.Drawing.Point(573, 44);
+            this.lblWorkflowInfo.Location = new System.Drawing.Point(556, 44);
             this.lblWorkflowInfo.Name = "lblWorkflowInfo";
             this.lblWorkflowInfo.Size = new System.Drawing.Size(235, 85);
             this.lblWorkflowInfo.TabIndex = 8;
@@ -4149,7 +4377,7 @@
             // 
             this.picFlowChart.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.picFlowChart.Image = ((System.Drawing.Image)(resources.GetObject("picFlowChart.Image")));
-            this.picFlowChart.Location = new System.Drawing.Point(16, 22);
+            this.picFlowChart.Location = new System.Drawing.Point(-1, 22);
             this.picFlowChart.Name = "picFlowChart";
             this.picFlowChart.Size = new System.Drawing.Size(903, 303);
             this.picFlowChart.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -4164,7 +4392,7 @@
             this.grpEquation.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpEquation.Location = new System.Drawing.Point(3, 759);
             this.grpEquation.Name = "grpEquation";
-            this.grpEquation.Size = new System.Drawing.Size(935, 146);
+            this.grpEquation.Size = new System.Drawing.Size(901, 146);
             this.grpEquation.TabIndex = 4;
             this.grpEquation.TabStop = false;
             this.grpEquation.Text = "Transfer Function Equations";
@@ -4173,7 +4401,7 @@
             // 
             this.lblFilterOrder.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblFilterOrder.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFilterOrder.Location = new System.Drawing.Point(474, 118);
+            this.lblFilterOrder.Location = new System.Drawing.Point(457, 118);
             this.lblFilterOrder.Name = "lblFilterOrder";
             this.lblFilterOrder.Size = new System.Drawing.Size(38, 15);
             this.lblFilterOrder.TabIndex = 18;
@@ -4183,7 +4411,7 @@
             // 
             this.picZTransform.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.picZTransform.Image = ((System.Drawing.Image)(resources.GetObject("picZTransform.Image")));
-            this.picZTransform.Location = new System.Drawing.Point(82, 22);
+            this.picZTransform.Location = new System.Drawing.Point(65, 22);
             this.picZTransform.Name = "picZTransform";
             this.picZTransform.Size = new System.Drawing.Size(766, 93);
             this.picZTransform.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -4195,7 +4423,7 @@
             this.lblFilterOrderLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblFilterOrderLabel.AutoSize = true;
             this.lblFilterOrderLabel.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFilterOrderLabel.Location = new System.Drawing.Point(423, 118);
+            this.lblFilterOrderLabel.Location = new System.Drawing.Point(406, 118);
             this.lblFilterOrderLabel.Name = "lblFilterOrderLabel";
             this.lblFilterOrderLabel.Size = new System.Drawing.Size(55, 15);
             this.lblFilterOrderLabel.TabIndex = 17;
@@ -4221,7 +4449,7 @@
             this.grpCompBlockDiagram.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpCompBlockDiagram.Location = new System.Drawing.Point(3, 406);
             this.grpCompBlockDiagram.Name = "grpCompBlockDiagram";
-            this.grpCompBlockDiagram.Size = new System.Drawing.Size(935, 353);
+            this.grpCompBlockDiagram.Size = new System.Drawing.Size(901, 353);
             this.grpCompBlockDiagram.TabIndex = 3;
             this.grpCompBlockDiagram.TabStop = false;
             this.grpCompBlockDiagram.Text = "Compensator Block Diagram";
@@ -4230,7 +4458,7 @@
             // 
             this.lblBDReferenceResolutionUnit.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblBDReferenceResolutionUnit.AutoSize = true;
-            this.lblBDReferenceResolutionUnit.Location = new System.Drawing.Point(213, 152);
+            this.lblBDReferenceResolutionUnit.Location = new System.Drawing.Point(196, 152);
             this.lblBDReferenceResolutionUnit.Name = "lblBDReferenceResolutionUnit";
             this.lblBDReferenceResolutionUnit.Size = new System.Drawing.Size(22, 15);
             this.lblBDReferenceResolutionUnit.TabIndex = 15;
@@ -4239,7 +4467,7 @@
             // lblBDReferenceResolution
             // 
             this.lblBDReferenceResolution.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblBDReferenceResolution.Location = new System.Drawing.Point(175, 152);
+            this.lblBDReferenceResolution.Location = new System.Drawing.Point(158, 152);
             this.lblBDReferenceResolution.Name = "lblBDReferenceResolution";
             this.lblBDReferenceResolution.Size = new System.Drawing.Size(38, 15);
             this.lblBDReferenceResolution.TabIndex = 14;
@@ -4250,7 +4478,7 @@
             // 
             this.lblBDReferenceResolutionLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblBDReferenceResolutionLabel.AutoSize = true;
-            this.lblBDReferenceResolutionLabel.Location = new System.Drawing.Point(115, 152);
+            this.lblBDReferenceResolutionLabel.Location = new System.Drawing.Point(98, 152);
             this.lblBDReferenceResolutionLabel.Name = "lblBDReferenceResolutionLabel";
             this.lblBDReferenceResolutionLabel.Size = new System.Drawing.Size(68, 15);
             this.lblBDReferenceResolutionLabel.TabIndex = 13;
@@ -4261,7 +4489,7 @@
             this.lblCompTypeDescr.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblCompTypeDescr.BackColor = System.Drawing.Color.LightGoldenrodYellow;
             this.lblCompTypeDescr.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCompTypeDescr.Location = new System.Drawing.Point(435, 140);
+            this.lblCompTypeDescr.Location = new System.Drawing.Point(418, 140);
             this.lblCompTypeDescr.Name = "lblCompTypeDescr";
             this.lblCompTypeDescr.Size = new System.Drawing.Size(110, 18);
             this.lblCompTypeDescr.TabIndex = 12;
@@ -4272,7 +4500,7 @@
             // 
             this.lblPostScaler.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblPostScaler.BackColor = System.Drawing.Color.LightGoldenrodYellow;
-            this.lblPostScaler.Location = new System.Drawing.Point(552, 206);
+            this.lblPostScaler.Location = new System.Drawing.Point(535, 206);
             this.lblPostScaler.Name = "lblPostScaler";
             this.lblPostScaler.Size = new System.Drawing.Size(38, 15);
             this.lblPostScaler.TabIndex = 11;
@@ -4283,7 +4511,7 @@
             // 
             this.lblPreScaler.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblPreScaler.BackColor = System.Drawing.Color.LightGoldenrodYellow;
-            this.lblPreScaler.Location = new System.Drawing.Point(354, 206);
+            this.lblPreScaler.Location = new System.Drawing.Point(337, 206);
             this.lblPreScaler.Name = "lblPreScaler";
             this.lblPreScaler.Size = new System.Drawing.Size(38, 15);
             this.lblPreScaler.TabIndex = 10;
@@ -4294,7 +4522,7 @@
             // 
             this.lblBDInputResolutionUnit.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblBDInputResolutionUnit.AutoSize = true;
-            this.lblBDInputResolutionUnit.Location = new System.Drawing.Point(212, 302);
+            this.lblBDInputResolutionUnit.Location = new System.Drawing.Point(195, 302);
             this.lblBDInputResolutionUnit.Name = "lblBDInputResolutionUnit";
             this.lblBDInputResolutionUnit.Size = new System.Drawing.Size(22, 15);
             this.lblBDInputResolutionUnit.TabIndex = 9;
@@ -4303,7 +4531,7 @@
             // lblBDInputResolution
             // 
             this.lblBDInputResolution.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblBDInputResolution.Location = new System.Drawing.Point(174, 302);
+            this.lblBDInputResolution.Location = new System.Drawing.Point(157, 302);
             this.lblBDInputResolution.Name = "lblBDInputResolution";
             this.lblBDInputResolution.Size = new System.Drawing.Size(38, 15);
             this.lblBDInputResolution.TabIndex = 8;
@@ -4314,7 +4542,7 @@
             // 
             this.lblBDInputResolutionLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblBDInputResolutionLabel.AutoSize = true;
-            this.lblBDInputResolutionLabel.Location = new System.Drawing.Point(115, 302);
+            this.lblBDInputResolutionLabel.Location = new System.Drawing.Point(98, 302);
             this.lblBDInputResolutionLabel.Name = "lblBDInputResolutionLabel";
             this.lblBDInputResolutionLabel.Size = new System.Drawing.Size(68, 15);
             this.lblBDInputResolutionLabel.TabIndex = 7;
@@ -4323,7 +4551,7 @@
             // lblBDInputGain
             // 
             this.lblBDInputGain.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblBDInputGain.Location = new System.Drawing.Point(196, 318);
+            this.lblBDInputGain.Location = new System.Drawing.Point(179, 318);
             this.lblBDInputGain.Name = "lblBDInputGain";
             this.lblBDInputGain.Size = new System.Drawing.Size(38, 15);
             this.lblBDInputGain.TabIndex = 6;
@@ -4334,7 +4562,7 @@
             // 
             this.lblBDInputGainLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblBDInputGainLabel.AutoSize = true;
-            this.lblBDInputGainLabel.Location = new System.Drawing.Point(115, 318);
+            this.lblBDInputGainLabel.Location = new System.Drawing.Point(98, 318);
             this.lblBDInputGainLabel.Name = "lblBDInputGainLabel";
             this.lblBDInputGainLabel.Size = new System.Drawing.Size(73, 15);
             this.lblBDInputGainLabel.TabIndex = 5;
@@ -4344,7 +4572,7 @@
             // 
             this.lblTickRateUnit.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTickRateUnit.AutoSize = true;
-            this.lblTickRateUnit.Location = new System.Drawing.Point(500, 252);
+            this.lblTickRateUnit.Location = new System.Drawing.Point(483, 252);
             this.lblTickRateUnit.Name = "lblTickRateUnit";
             this.lblTickRateUnit.Size = new System.Drawing.Size(32, 15);
             this.lblTickRateUnit.TabIndex = 4;
@@ -4353,7 +4581,7 @@
             // lblTickRate
             // 
             this.lblTickRate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblTickRate.Location = new System.Drawing.Point(464, 252);
+            this.lblTickRate.Location = new System.Drawing.Point(447, 252);
             this.lblTickRate.Name = "lblTickRate";
             this.lblTickRate.Size = new System.Drawing.Size(38, 15);
             this.lblTickRate.TabIndex = 3;
@@ -4364,7 +4592,7 @@
             // 
             this.lblTickRateLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTickRateLabel.AutoSize = true;
-            this.lblTickRateLabel.Location = new System.Drawing.Point(399, 252);
+            this.lblTickRateLabel.Location = new System.Drawing.Point(382, 252);
             this.lblTickRateLabel.Name = "lblTickRateLabel";
             this.lblTickRateLabel.Size = new System.Drawing.Size(59, 15);
             this.lblTickRateLabel.TabIndex = 2;
@@ -4374,7 +4602,7 @@
             // 
             this.picCompBlockDiagram.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.picCompBlockDiagram.Image = ((System.Drawing.Image)(resources.GetObject("picCompBlockDiagram.Image")));
-            this.picCompBlockDiagram.Location = new System.Drawing.Point(13, 22);
+            this.picCompBlockDiagram.Location = new System.Drawing.Point(-4, 22);
             this.picCompBlockDiagram.Name = "picCompBlockDiagram";
             this.picCompBlockDiagram.Size = new System.Drawing.Size(906, 295);
             this.picCompBlockDiagram.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -4387,7 +4615,7 @@
             this.grpControlBlockDiagram.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpControlBlockDiagram.Location = new System.Drawing.Point(3, 3);
             this.grpControlBlockDiagram.Name = "grpControlBlockDiagram";
-            this.grpControlBlockDiagram.Size = new System.Drawing.Size(935, 403);
+            this.grpControlBlockDiagram.Size = new System.Drawing.Size(901, 403);
             this.grpControlBlockDiagram.TabIndex = 6;
             this.grpControlBlockDiagram.TabStop = false;
             this.grpControlBlockDiagram.Text = "Controller Block Diagram";
@@ -4398,7 +4626,7 @@
             this.picControlBlockDiagram.Image = ((System.Drawing.Image)(resources.GetObject("picControlBlockDiagram.Image")));
             this.picControlBlockDiagram.Location = new System.Drawing.Point(3, 19);
             this.picControlBlockDiagram.Name = "picControlBlockDiagram";
-            this.picControlBlockDiagram.Size = new System.Drawing.Size(929, 381);
+            this.picControlBlockDiagram.Size = new System.Drawing.Size(895, 381);
             this.picControlBlockDiagram.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picControlBlockDiagram.TabIndex = 1;
             this.picControlBlockDiagram.TabStop = false;
@@ -4406,10 +4634,12 @@
             // tabPageCodeOutput
             // 
             this.tabPageCodeOutput.Controls.Add(this.tabSourceCode);
+            this.tabPageCodeOutput.Controls.Add(this.splitDebug);
+            this.tabPageCodeOutput.Controls.Add(this.txtDebugOutput);
             this.tabPageCodeOutput.Location = new System.Drawing.Point(4, 22);
             this.tabPageCodeOutput.Name = "tabPageCodeOutput";
             this.tabPageCodeOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCodeOutput.Size = new System.Drawing.Size(958, 745);
+            this.tabPageCodeOutput.Size = new System.Drawing.Size(924, 745);
             this.tabPageCodeOutput.TabIndex = 0;
             this.tabPageCodeOutput.Text = "Source Code Output";
             this.tabPageCodeOutput.UseVisualStyleBackColor = true;
@@ -4425,21 +4655,40 @@
             this.tabSourceCode.Location = new System.Drawing.Point(3, 3);
             this.tabSourceCode.Name = "tabSourceCode";
             this.tabSourceCode.SelectedIndex = 0;
-            this.tabSourceCode.Size = new System.Drawing.Size(952, 739);
+            this.tabSourceCode.Size = new System.Drawing.Size(918, 573);
             this.tabSourceCode.TabIndex = 1;
             // 
             // tabPageAssembly
             // 
-            this.tabPageAssembly.Controls.Add(this.tsbCodeGenUpdateWarningAssembly);
             this.tabPageAssembly.Controls.Add(this.txtSyntaxEditorAssembly);
+            this.tabPageAssembly.Controls.Add(this.tsbCodeGenUpdateWarningAssembly);
             this.tabPageAssembly.Controls.Add(this.panelASMSource);
             this.tabPageAssembly.Location = new System.Drawing.Point(4, 24);
             this.tabPageAssembly.Name = "tabPageAssembly";
             this.tabPageAssembly.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAssembly.Size = new System.Drawing.Size(944, 711);
+            this.tabPageAssembly.Size = new System.Drawing.Size(910, 545);
             this.tabPageAssembly.TabIndex = 0;
             this.tabPageAssembly.Text = "Assembly";
             this.tabPageAssembly.UseVisualStyleBackColor = true;
+            // 
+            // txtSyntaxEditorAssembly
+            // 
+            this.txtSyntaxEditorAssembly.AutoScroll = true;
+            this.txtSyntaxEditorAssembly.BracketHighlightingInclusive = true;
+            this.txtSyntaxEditorAssembly.BracketHighlightingVisible = true;
+            this.txtSyntaxEditorAssembly.CurrentLineHighlightingVisible = true;
+            this.txtSyntaxEditorAssembly.Dock = System.Windows.Forms.DockStyle.Fill;
+            document1.Filename = "";
+            document1.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
+            this.txtSyntaxEditorAssembly.Document = document1;
+            this.txtSyntaxEditorAssembly.LineNumberMarginVisible = true;
+            this.txtSyntaxEditorAssembly.Location = new System.Drawing.Point(3, 97);
+            this.txtSyntaxEditorAssembly.Name = "txtSyntaxEditorAssembly";
+            visualStudio2005SyntaxEditorRenderer1.ResetAllPropertiesOnSystemColorChange = false;
+            this.txtSyntaxEditorAssembly.Renderer = visualStudio2005SyntaxEditorRenderer1;
+            this.txtSyntaxEditorAssembly.SelectionMovesOnRightClick = false;
+            this.txtSyntaxEditorAssembly.Size = new System.Drawing.Size(904, 445);
+            this.txtSyntaxEditorAssembly.TabIndex = 0;
             // 
             // tsbCodeGenUpdateWarningAssembly
             // 
@@ -4450,7 +4699,7 @@
             this.toolStripLabel1});
             this.tsbCodeGenUpdateWarningAssembly.Location = new System.Drawing.Point(3, 72);
             this.tsbCodeGenUpdateWarningAssembly.Name = "tsbCodeGenUpdateWarningAssembly";
-            this.tsbCodeGenUpdateWarningAssembly.Size = new System.Drawing.Size(938, 25);
+            this.tsbCodeGenUpdateWarningAssembly.Size = new System.Drawing.Size(904, 25);
             this.tsbCodeGenUpdateWarningAssembly.TabIndex = 31;
             this.tsbCodeGenUpdateWarningAssembly.Text = "toolStrip1";
             // 
@@ -4470,25 +4719,6 @@
             this.toolStripLabel1.Text = "Update";
             this.toolStripLabel1.Click += new System.EventHandler(this.GenerateCode);
             // 
-            // txtSyntaxEditorAssembly
-            // 
-            this.txtSyntaxEditorAssembly.AutoScroll = true;
-            this.txtSyntaxEditorAssembly.BracketHighlightingInclusive = true;
-            this.txtSyntaxEditorAssembly.BracketHighlightingVisible = true;
-            this.txtSyntaxEditorAssembly.CurrentLineHighlightingVisible = true;
-            this.txtSyntaxEditorAssembly.Dock = System.Windows.Forms.DockStyle.Fill;
-            document1.Filename = "";
-            document1.Outlining.Mode = ActiproSoftware.SyntaxEditor.OutliningMode.Automatic;
-            this.txtSyntaxEditorAssembly.Document = document1;
-            this.txtSyntaxEditorAssembly.LineNumberMarginVisible = true;
-            this.txtSyntaxEditorAssembly.Location = new System.Drawing.Point(3, 72);
-            this.txtSyntaxEditorAssembly.Name = "txtSyntaxEditorAssembly";
-            visualStudio2005SyntaxEditorRenderer1.ResetAllPropertiesOnSystemColorChange = false;
-            this.txtSyntaxEditorAssembly.Renderer = visualStudio2005SyntaxEditorRenderer1;
-            this.txtSyntaxEditorAssembly.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorAssembly.Size = new System.Drawing.Size(938, 636);
-            this.txtSyntaxEditorAssembly.TabIndex = 0;
-            // 
             // panelASMSource
             // 
             this.panelASMSource.Controls.Add(this.chkASMIncludePath);
@@ -4498,7 +4728,7 @@
             this.panelASMSource.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelASMSource.Location = new System.Drawing.Point(3, 3);
             this.panelASMSource.Name = "panelASMSource";
-            this.panelASMSource.Size = new System.Drawing.Size(938, 69);
+            this.panelASMSource.Size = new System.Drawing.Size(904, 69);
             this.panelASMSource.TabIndex = 9;
             // 
             // chkASMIncludePath
@@ -4520,7 +4750,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtASMSourcePath.Location = new System.Drawing.Point(106, 12);
             this.txtASMSourcePath.Name = "txtASMSourcePath";
-            this.txtASMSourcePath.Size = new System.Drawing.Size(722, 23);
+            this.txtASMSourcePath.Size = new System.Drawing.Size(688, 23);
             this.txtASMSourcePath.TabIndex = 2;
             this.txtASMSourcePath.TextChanged += new System.EventHandler(this.SourcePathTextBox_TextChanged);
             // 
@@ -4536,7 +4766,7 @@
             // cmdASMSourcePath
             // 
             this.cmdASMSourcePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdASMSourcePath.Location = new System.Drawing.Point(828, 9);
+            this.cmdASMSourcePath.Location = new System.Drawing.Point(794, 9);
             this.cmdASMSourcePath.Name = "cmdASMSourcePath";
             this.cmdASMSourcePath.Size = new System.Drawing.Size(86, 29);
             this.cmdASMSourcePath.TabIndex = 0;
@@ -4552,7 +4782,7 @@
             this.tabPageCSource.Location = new System.Drawing.Point(4, 22);
             this.tabPageCSource.Name = "tabPageCSource";
             this.tabPageCSource.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCSource.Size = new System.Drawing.Size(944, 713);
+            this.tabPageCSource.Size = new System.Drawing.Size(910, 547);
             this.tabPageCSource.TabIndex = 2;
             this.tabPageCSource.Text = "C-Source";
             this.tabPageCSource.UseVisualStyleBackColor = true;
@@ -4566,7 +4796,7 @@
             this.tslCodeGenUpdateCSource});
             this.tsbCodeGenUpdateWarningCSource.Location = new System.Drawing.Point(3, 72);
             this.tsbCodeGenUpdateWarningCSource.Name = "tsbCodeGenUpdateWarningCSource";
-            this.tsbCodeGenUpdateWarningCSource.Size = new System.Drawing.Size(938, 25);
+            this.tsbCodeGenUpdateWarningCSource.Size = new System.Drawing.Size(904, 25);
             this.tsbCodeGenUpdateWarningCSource.TabIndex = 32;
             this.tsbCodeGenUpdateWarningCSource.Text = "toolStrip1";
             // 
@@ -4602,7 +4832,7 @@
             visualStudio2005SyntaxEditorRenderer2.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCSource.Renderer = visualStudio2005SyntaxEditorRenderer2;
             this.txtSyntaxEditorCSource.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(938, 638);
+            this.txtSyntaxEditorCSource.Size = new System.Drawing.Size(904, 472);
             this.txtSyntaxEditorCSource.TabIndex = 5;
             // 
             // panelCSourcePath
@@ -4614,7 +4844,7 @@
             this.panelCSourcePath.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelCSourcePath.Location = new System.Drawing.Point(3, 3);
             this.panelCSourcePath.Name = "panelCSourcePath";
-            this.panelCSourcePath.Size = new System.Drawing.Size(938, 69);
+            this.panelCSourcePath.Size = new System.Drawing.Size(904, 69);
             this.panelCSourcePath.TabIndex = 8;
             // 
             // chkCSourceIncludePath
@@ -4636,7 +4866,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCSourcePath.Location = new System.Drawing.Point(106, 12);
             this.txtCSourcePath.Name = "txtCSourcePath";
-            this.txtCSourcePath.Size = new System.Drawing.Size(722, 23);
+            this.txtCSourcePath.Size = new System.Drawing.Size(688, 23);
             this.txtCSourcePath.TabIndex = 2;
             this.txtCSourcePath.TextChanged += new System.EventHandler(this.SourcePathTextBox_TextChanged);
             // 
@@ -4652,7 +4882,7 @@
             // cmdCSourcePath
             // 
             this.cmdCSourcePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdCSourcePath.Location = new System.Drawing.Point(828, 9);
+            this.cmdCSourcePath.Location = new System.Drawing.Point(794, 9);
             this.cmdCSourcePath.Name = "cmdCSourcePath";
             this.cmdCSourcePath.Size = new System.Drawing.Size(86, 29);
             this.cmdCSourcePath.TabIndex = 0;
@@ -4668,7 +4898,7 @@
             this.tabPageCHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageCHeader.Name = "tabPageCHeader";
             this.tabPageCHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCHeader.Size = new System.Drawing.Size(944, 713);
+            this.tabPageCHeader.Size = new System.Drawing.Size(910, 547);
             this.tabPageCHeader.TabIndex = 3;
             this.tabPageCHeader.Text = "C-Header";
             this.tabPageCHeader.UseVisualStyleBackColor = true;
@@ -4682,7 +4912,7 @@
             this.tslCodeGenUpdateCHeader});
             this.tsbCodeGenUpdateWarningCHeader.Location = new System.Drawing.Point(3, 72);
             this.tsbCodeGenUpdateWarningCHeader.Name = "tsbCodeGenUpdateWarningCHeader";
-            this.tsbCodeGenUpdateWarningCHeader.Size = new System.Drawing.Size(938, 25);
+            this.tsbCodeGenUpdateWarningCHeader.Size = new System.Drawing.Size(904, 25);
             this.tsbCodeGenUpdateWarningCHeader.TabIndex = 33;
             this.tsbCodeGenUpdateWarningCHeader.Text = "toolStrip1";
             // 
@@ -4718,7 +4948,7 @@
             visualStudio2005SyntaxEditorRenderer3.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCHeader.Renderer = visualStudio2005SyntaxEditorRenderer3;
             this.txtSyntaxEditorCHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(938, 638);
+            this.txtSyntaxEditorCHeader.Size = new System.Drawing.Size(904, 472);
             this.txtSyntaxEditorCHeader.TabIndex = 5;
             // 
             // panelCHeaderPath
@@ -4730,7 +4960,7 @@
             this.panelCHeaderPath.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelCHeaderPath.Location = new System.Drawing.Point(3, 3);
             this.panelCHeaderPath.Name = "panelCHeaderPath";
-            this.panelCHeaderPath.Size = new System.Drawing.Size(938, 69);
+            this.panelCHeaderPath.Size = new System.Drawing.Size(904, 69);
             this.panelCHeaderPath.TabIndex = 8;
             // 
             // chkCHeaderIncludePath
@@ -4752,7 +4982,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCHeaderPath.Location = new System.Drawing.Point(106, 12);
             this.txtCHeaderPath.Name = "txtCHeaderPath";
-            this.txtCHeaderPath.Size = new System.Drawing.Size(722, 23);
+            this.txtCHeaderPath.Size = new System.Drawing.Size(688, 23);
             this.txtCHeaderPath.TabIndex = 2;
             this.txtCHeaderPath.TextChanged += new System.EventHandler(this.SourcePathTextBox_TextChanged);
             // 
@@ -4768,7 +4998,7 @@
             // cmdCHeaderPath
             // 
             this.cmdCHeaderPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdCHeaderPath.Location = new System.Drawing.Point(828, 9);
+            this.cmdCHeaderPath.Location = new System.Drawing.Point(794, 9);
             this.cmdCHeaderPath.Name = "cmdCHeaderPath";
             this.cmdCHeaderPath.Size = new System.Drawing.Size(86, 29);
             this.cmdCHeaderPath.TabIndex = 0;
@@ -4784,7 +5014,7 @@
             this.tabPageLibraryHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageLibraryHeader.Name = "tabPageLibraryHeader";
             this.tabPageLibraryHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLibraryHeader.Size = new System.Drawing.Size(944, 713);
+            this.tabPageLibraryHeader.Size = new System.Drawing.Size(910, 547);
             this.tabPageLibraryHeader.TabIndex = 6;
             this.tabPageLibraryHeader.Text = "Library Header";
             this.tabPageLibraryHeader.UseVisualStyleBackColor = true;
@@ -4798,7 +5028,7 @@
             this.tslCodeGenUpdateLibHeader});
             this.tsbCodeGenUpdateWarningLibHeader.Location = new System.Drawing.Point(3, 72);
             this.tsbCodeGenUpdateWarningLibHeader.Name = "tsbCodeGenUpdateWarningLibHeader";
-            this.tsbCodeGenUpdateWarningLibHeader.Size = new System.Drawing.Size(938, 25);
+            this.tsbCodeGenUpdateWarningLibHeader.Size = new System.Drawing.Size(904, 25);
             this.tsbCodeGenUpdateWarningLibHeader.TabIndex = 33;
             this.tsbCodeGenUpdateWarningLibHeader.Text = "toolStrip1";
             // 
@@ -4834,7 +5064,7 @@
             visualStudio2005SyntaxEditorRenderer4.ResetAllPropertiesOnSystemColorChange = false;
             this.txtSyntaxEditorCLibHeader.Renderer = visualStudio2005SyntaxEditorRenderer4;
             this.txtSyntaxEditorCLibHeader.SelectionMovesOnRightClick = false;
-            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(938, 638);
+            this.txtSyntaxEditorCLibHeader.Size = new System.Drawing.Size(904, 472);
             this.txtSyntaxEditorCLibHeader.TabIndex = 6;
             // 
             // panelCLibPath
@@ -4846,7 +5076,7 @@
             this.panelCLibPath.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelCLibPath.Location = new System.Drawing.Point(3, 3);
             this.panelCLibPath.Name = "panelCLibPath";
-            this.panelCLibPath.Size = new System.Drawing.Size(938, 69);
+            this.panelCLibPath.Size = new System.Drawing.Size(904, 69);
             this.panelCLibPath.TabIndex = 7;
             // 
             // chkCLibIncludePath
@@ -4867,7 +5097,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCLibPath.Location = new System.Drawing.Point(106, 12);
             this.txtCLibPath.Name = "txtCLibPath";
-            this.txtCLibPath.Size = new System.Drawing.Size(722, 23);
+            this.txtCLibPath.Size = new System.Drawing.Size(688, 23);
             this.txtCLibPath.TabIndex = 2;
             this.txtCLibPath.TextChanged += new System.EventHandler(this.SourcePathTextBox_TextChanged);
             // 
@@ -4883,7 +5113,7 @@
             // cmdCLibPath
             // 
             this.cmdCLibPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdCLibPath.Location = new System.Drawing.Point(828, 9);
+            this.cmdCLibPath.Location = new System.Drawing.Point(794, 9);
             this.cmdCLibPath.Name = "cmdCLibPath";
             this.cmdCLibPath.Size = new System.Drawing.Size(86, 29);
             this.cmdCLibPath.TabIndex = 0;
@@ -4897,23 +5127,45 @@
             this.tabPageInfo.Location = new System.Drawing.Point(4, 22);
             this.tabPageInfo.Name = "tabPageInfo";
             this.tabPageInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInfo.Size = new System.Drawing.Size(944, 713);
+            this.tabPageInfo.Size = new System.Drawing.Size(910, 547);
             this.tabPageInfo.TabIndex = 5;
             this.tabPageInfo.Text = "Info";
             this.tabPageInfo.UseVisualStyleBackColor = true;
             // 
             // txtOutput
             // 
-            this.txtOutput.BackColor = System.Drawing.SystemColors.Info;
+            this.txtOutput.BackColor = System.Drawing.SystemColors.Window;
             this.txtOutput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtOutput.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtOutput.Location = new System.Drawing.Point(3, 3);
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtOutput.Size = new System.Drawing.Size(938, 707);
+            this.txtOutput.Size = new System.Drawing.Size(904, 541);
             this.txtOutput.TabIndex = 0;
             this.txtOutput.WordWrap = false;
+            // 
+            // splitDebug
+            // 
+            this.splitDebug.BackColor = System.Drawing.SystemColors.Window;
+            this.splitDebug.Cursor = System.Windows.Forms.Cursors.HSplit;
+            this.splitDebug.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.splitDebug.Location = new System.Drawing.Point(3, 576);
+            this.splitDebug.Name = "splitDebug";
+            this.splitDebug.Size = new System.Drawing.Size(918, 6);
+            this.splitDebug.TabIndex = 4;
+            this.splitDebug.TabStop = false;
+            // 
+            // txtDebugOutput
+            // 
+            this.txtDebugOutput.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.txtDebugOutput.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.txtDebugOutput.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDebugOutput.Location = new System.Drawing.Point(3, 582);
+            this.txtDebugOutput.Name = "txtDebugOutput";
+            this.txtDebugOutput.Size = new System.Drawing.Size(918, 160);
+            this.txtDebugOutput.TabIndex = 5;
+            this.txtDebugOutput.Text = "";
             // 
             // timRefresh
             // 
@@ -4949,7 +5201,7 @@
             this.toolStripButtonMPLABXPathWarning});
             this.tsbMain.Location = new System.Drawing.Point(0, 24);
             this.tsbMain.Name = "tsbMain";
-            this.tsbMain.Size = new System.Drawing.Size(1408, 38);
+            this.tsbMain.Size = new System.Drawing.Size(1374, 38);
             this.tsbMain.TabIndex = 18;
             this.tsbMain.Text = "toolStrip1";
             // 
@@ -5152,7 +5404,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1408, 855);
+            this.ClientSize = new System.Drawing.Size(1374, 855);
             this.Controls.Add(this.splitContainerContents);
             this.Controls.Add(this.tsbMain);
             this.Controls.Add(this.stbMain);
@@ -5164,6 +5416,7 @@
             this.MainMenuStrip = this.mnuMain;
             this.MinimumSize = new System.Drawing.Size(1218, 512);
             this.Name = "frmMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Digital Control Loop Designer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Load += new System.EventHandler(this.frmMain_Load);
@@ -5180,36 +5433,41 @@
             this.splitContainerContents.ResumeLayout(false);
             this.tabConfig.ResumeLayout(false);
             this.tabController.ResumeLayout(false);
-            this.pnlCompensator.ResumeLayout(false);
             this.grpPolesZeros.ResumeLayout(false);
             this.grpPolesZeros.PerformLayout();
             this.grpOutputDataNormalization.ResumeLayout(false);
             this.grpOutputDataNormalization.PerformLayout();
             this.grpInputDataSpecifications.ResumeLayout(false);
             this.grpInputDataSpecifications.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).EndInit();
             this.grpControllerSelection.ResumeLayout(false);
             this.grpControllerSelection.PerformLayout();
             this.tabSourceCodeConfig.ResumeLayout(false);
-            this.pnlCodeGeneratorOptions.ResumeLayout(false);
             this.grpAntiWindup.ResumeLayout(false);
             this.grpAntiWindup.PerformLayout();
             this.grpDataProviderSources.ResumeLayout(false);
             this.grpDataProviderSources.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoDataProviders)).EndInit();
             this.grpCodeFeatureDataIO.ResumeLayout(false);
             this.grpCodeFeatureDataIO.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAlternateOutputSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoAlternateInputSource)).EndInit();
             this.grpCodeFeatureOptions.ResumeLayout(false);
             this.grpCodeFeatureOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoErrNorm)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoCascadeFunctionCall)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInfoDSPConfig)).EndInit();
-            this.grpContextSaving.ResumeLayout(false);
-            this.grpContextSaving.PerformLayout();
+            this.grpContextManagement.ResumeLayout(false);
+            this.grpContextManagement.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoContextManagement)).EndInit();
             this.grpFunctionLabel.ResumeLayout(false);
             this.grpFunctionLabel.PerformLayout();
+            this.tabAdvanced.ResumeLayout(false);
+            this.grpAdaptiveGainControl.ResumeLayout(false);
+            this.grpAdaptiveGainControl.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoAGC)).EndInit();
+            this.grpDevelopmentTools.ResumeLayout(false);
+            this.grpDevelopmentTools.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picInfoPTermController)).EndInit();
             this.tabAnalysis.ResumeLayout(false);
             this.tabPageBode.ResumeLayout(false);
             this.splitContainerCoefficients.Panel1.ResumeLayout(false);
@@ -5224,7 +5482,6 @@
             this.tabCoefficientTable.ResumeLayout(false);
             this.tabCoefficientsHistory.ResumeLayout(false);
             this.ctxCoefficientsHistory.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
             this.tabPageTiming.ResumeLayout(false);
             this.splitContainerTiming.Panel1.ResumeLayout(false);
             this.splitContainerTiming.Panel2.ResumeLayout(false);
@@ -5342,7 +5599,7 @@
         private System.Windows.Forms.Label lblNumberOfInstructionCyclesResponseLabel;
         private System.Windows.Forms.Label lblNumberOfInstructionCyclesResponse;
         private System.Windows.Forms.GroupBox grpExecutionTime;
-        private System.Windows.Forms.GroupBox grpContextSaving;
+        private System.Windows.Forms.GroupBox grpContextManagement;
         private System.Windows.Forms.CheckBox chkContextSaving;
         private System.Windows.Forms.GroupBox grpCodeFeatureOptions;
         private System.Windows.Forms.CheckBox chkAddErrorNormalization;
@@ -5393,7 +5650,6 @@
         private System.Windows.Forms.CheckBox chkSaveRestoreAccumulatorA;
         private System.Windows.Forms.CheckBox chkStoreReloadAccLevel1;
         private System.Windows.Forms.TabPage tabPageBode;
-        private System.Windows.Forms.Panel pnlCompensator;
         private System.Windows.Forms.GroupBox grpPolesZeros;
         private System.Windows.Forms.TextBox txtSamplingFrequency;
         private System.Windows.Forms.Label lblFZ1Unit;
@@ -5587,7 +5843,6 @@
         private System.Windows.Forms.ToolStrip tsbCodeGenUpdateWarningTiming;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
-        private System.Windows.Forms.Panel pnlCodeGeneratorOptions;
         private System.Windows.Forms.CheckBox chkAntiWindupSoftDesaturationFlag;
         private System.Windows.Forms.PictureBox picInfoTimingPWMFrequency;
         private System.Windows.Forms.CheckBox chkCSourceIncludePath;
@@ -5603,9 +5858,6 @@
         private System.Windows.Forms.TabControl tabCoefficients;
         private System.Windows.Forms.TabPage tabCoefficientTable;
         private System.Windows.Forms.TabPage tabCoefficientsHistory;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.ListView lstCoefficientsHistory;
         private System.Windows.Forms.ColumnHeader colHeadTimeStamp;
         private System.Windows.Forms.ColumnHeader colHeadUser;
@@ -5670,15 +5922,10 @@
         private System.Windows.Forms.ToolStripComboBox cmbTriggerPlacement;
         private System.Windows.Forms.PictureBox picInfoDSPConfig;
         private System.Windows.Forms.PictureBox picInfoCascadeFunctionCall;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox chkEnableAdaptiveGainControl;
-        private System.Windows.Forms.PictureBox picInfoAGC;
         private System.Windows.Forms.ToolStripStatusLabel stbMainProgressTime;
         private System.Windows.Forms.ToolStripButton toolStripButtonConfig;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator30;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator29;
-        private System.Windows.Forms.CheckBox chkAGCAddGetModFactorFunCall;
-        private System.Windows.Forms.CheckBox chkAGCAddEnable;
         private System.Windows.Forms.PictureBox picInfoErrNorm;
         private System.Windows.Forms.Label lbltxtUserTriggerDelay;
         private System.Windows.Forms.Label lbltxtUserTriggerDelayUnit;
@@ -5687,6 +5934,33 @@
         private System.Windows.Forms.PictureBox picInfoADCLatency;
         private System.Windows.Forms.PictureBox picInfoISRLatency;
         private System.Windows.Forms.PictureBox picInfoCycleStats;
+        private System.Windows.Forms.TabPage tabAdvanced;
+        private System.Windows.Forms.GroupBox grpDevelopmentTools;
+        private System.Windows.Forms.PictureBox picInfoPTermController;
+        private System.Windows.Forms.CheckBox chkAddPTermLoop;
+        private System.Windows.Forms.Label lblPTermScaler;
+        private System.Windows.Forms.Label lblPTermFactor;
+        private System.Windows.Forms.Label lblPTermNominalOutput;
+        private System.Windows.Forms.Label lblPTermNominalFeedback;
+        private System.Windows.Forms.TextBox txtPTermNominalOutput;
+        private System.Windows.Forms.TextBox txtPTermNominalFeedback;
+        private System.Windows.Forms.TextBox txtPTermScaler;
+        private System.Windows.Forms.TextBox txtPTermFactor;
+        private System.Windows.Forms.Button cmdGetPTermNominalOutput;
+        private System.Windows.Forms.Button cmdGetPTermNominalFeedback;
+        private System.Windows.Forms.GroupBox grpAdaptiveGainControl;
+        private System.Windows.Forms.CheckBox chkAGCAddGetModFactorFunCall;
+        private System.Windows.Forms.CheckBox chkAGCAddEnable;
+        private System.Windows.Forms.PictureBox picInfoAGC;
+        private System.Windows.Forms.CheckBox chkEnableAdaptiveGainControl;
+        private System.Windows.Forms.Splitter splitDebug;
+        private System.Windows.Forms.ToolStripMenuItem showOutputWindowToolStripMenuItem;
+        private System.Windows.Forms.PictureBox picInfoContextManagement;
+        private System.Windows.Forms.PictureBox picInfoAlternateOutputSource;
+        private System.Windows.Forms.PictureBox picInfoDataProviders;
+        private System.Windows.Forms.Label lblContextMgmntResources;
+        private System.Windows.Forms.Label lblContextMgmntResourcesTitle;
+        private System.Windows.Forms.RichTextBox txtDebugOutput;
     }
 }
 

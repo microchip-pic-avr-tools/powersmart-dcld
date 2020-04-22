@@ -40,6 +40,11 @@ namespace dcld
         Color WarningBackground = Color.FromArgb(255, 255, 120);
         Color AlertBackground = Color.FromArgb(255, 200, 200);
 
+        // Output window message coloring
+        Color DebugOutputMessageDefaultColor = Color.DimGray;
+
+
+
         string Q7Format  = "{0:0.00000000}";
         string Q15Format = "{0:0.000000000000000}";
         string Q23Format = "{0:0.000000000000000000000}";
@@ -67,6 +72,7 @@ namespace dcld
         bool UpdateComplete = false;
         bool UpdateWarning = false;
         bool ApplicationStartUp = true;
+        bool ApplicationShutDown = false;
         bool ProjectFileLoadActive = false;
         bool ProjectFileChanged = false;
         bool ShowSDomainTF = true;
@@ -131,6 +137,7 @@ namespace dcld
         int GroupFolding_grpCodeFeatureDataIOHeight = 80;
         int GroupFolding_grpDataProviderSourcesHeight = 100;
         int GroupFolding_grpAntiWindupHeight = 100;
+//        int GroupFolding_grpDevelopmentToolsHeight = 100;
 
         public frmMain(string[] args)
         {
@@ -167,14 +174,6 @@ namespace dcld
             return;
         }
 
-        private void DebugInfoPrintLine(string str_debug)
-        {
-            if ((txtOutput.TextLength + str_debug.Length) > txtOutput.MaxLength) 
-                txtOutput.Clear();
-            txtOutput.AppendText(str_debug + "\r\n");
-            txtOutput.SelectionStart = txtOutput.TextLength;
-            txtOutput.ScrollToCaret();
-        }
 
         private bool frmMain_SetAppEnvironment()
         {
@@ -512,11 +511,14 @@ namespace dcld
             // Set startup-status
             lvCoefficients.HideSelection = false;
             lvCoefficients.MultiSelect = false;
-
+           
             // capture foldable object sizes of code generator option catalog
-            GroupFolding_grpContextSavingHeight = grpContextSaving.Height;
+            GroupFolding_grpContextSavingHeight = grpContextManagement.Height;
             GroupFolding_grpCodeFeatureOptionsHeight = grpCodeFeatureOptions.Height;
+            GroupFolding_grpCodeFeatureDataIOHeight = grpCodeFeatureDataIO.Height;
+            GroupFolding_grpDataProviderSourcesHeight = grpDataProviderSources.Height;
             GroupFolding_grpAntiWindupHeight = grpAntiWindup.Height;
+//            GroupFolding_grpDevelopmentToolsHeight = grpDevelopmentTools.Height;
 
             // reload last Bode chart settings
             DefaultXMin = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "x_min", DefaultXMin.ToString()));
@@ -536,6 +538,11 @@ namespace dcld
             // reload compensator settings status
             showSourceCodeTimingToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(SettingsFile.ReadKey("code_generator", "timing_visible", "1")));
             showSourceCodeTimingToolStripMenuItem_CheckedChanged(sender, e);
+
+            // reload output window status
+            showOutputWindowToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(SettingsFile.ReadKey("code_generator", "output_window", "1")));
+            showOutputWindowToolStripMenuItem_CheckedChanged(sender, e);
+            splitDebug.SplitPosition = Convert.ToInt32(SettingsFile.ReadKey("code_generator", "output_splitter_pos", "300"));
 
             // Set default options
             cmbQFormat.SelectedIndex = 1;   // Always select Q15 format as default
@@ -624,26 +631,26 @@ namespace dcld
             {
                 if (System.IO.File.Exists(ExternalFileOpenPath))
                 {
-                    DebugInfoPrintLine(">Open file by external call: " + ExternalFileOpenPath);
+                    DebugOutput("open file by external call: " + ExternalFileOpenPath);
 
                     if (OpenFile(ExternalFileOpenPath))
-                        DebugInfoPrintLine(">    -> File loaded successfully");
+                        DebugOutput("file loaded successfully");
                     else
-                        DebugInfoPrintLine(">    -> File loaded with errors");
+                        DebugOutput("file loaded with errors");
 
                     UpdateTransferFunction(this, EventArgs.Empty);
                     GenerateCode(this, EventArgs.Empty);
 
                     if (this.txtMPLABXProjectDir.Text.Trim().Length == 0)
-                        DebugInfoPrintLine(">MPLAB X Project Directory: " + this.txtMPLABXProjectDir.Text + "(not set)");
+                        DebugOutput("MPLAB X Project Directory: " + this.txtMPLABXProjectDir.Text + "(not set)");
                     else
-                        DebugInfoPrintLine(">MPLAB X Project Directory: " + this.txtMPLABXProjectDir.Text);
+                        DebugOutput("MPLAB X Project Directory: " + this.txtMPLABXProjectDir.Text);
 
 
                 }
                 else
                 {
-                    DebugInfoPrintLine(">    -> Cannot open/access external file");
+                    DebugOutput("cannot open/access external file");
                 }
                 ExternalFileOpenPath = "";
                 ExternalFileOpenEvent = false;
@@ -786,6 +793,14 @@ namespace dcld
     
         }
 
+        private void UpdatePTermController(object sender, EventArgs e)
+        {
+            cNPNZ.PTermNominalFeedback = Convert.ToInt32(txtPTermNominalFeedback.Text);
+            cNPNZ.PTermNominalControlOutput = Convert.ToInt32(Convert.ToDouble(txtPTermNominalOutput.Text));
+            txtPTermFactor.Text = NumberBaseConverter.Dec2Fractional(cNPNZ.PTermFactor, Q_format).ToString(CultureInfo.CurrentCulture);
+            txtPTermScaler.Text = cNPNZ.PTermScaler.ToString(CultureInfo.CurrentCulture);
+        }
+
         private void UpdateTransferFunction(object sender, EventArgs e)
         {
             int i = 0;
@@ -796,6 +811,7 @@ namespace dcld
 
             try
             {
+                DebugOutput("update transfer function...");
             
                 if (ApplicationStartUp) return;     // During the startup-phase o fhte application, suppress all updates
                 if (ProjectFileLoadActive) return;         // If settings are loaded from a file, suppress all updates
@@ -994,10 +1010,10 @@ namespace dcld
                         "Filter Steps: " + (2 * cNPNZ.FilterOrder + 1).ToString("#0", CultureInfo.CurrentCulture) + "\r\n" +
                         "Number of Accumulators used: " + str_buf + "\r\n" +
                         "Sample History Depth: " + (cNPNZ.FilterOrder + 1).ToString("#0", CultureInfo.CurrentCulture) + "\r\n" +
-                        "Sample History Timespan: " + (1e+6 * (cNPNZ.FilterOrder + 1) * cNPNZ.SamplingInterval).ToString("#0.000 usec", CultureInfo.CurrentCulture) + "\r\n";
+                        "Sample History Timespan: " + (1e+6 * (cNPNZ.FilterOrder + 1) * cNPNZ.SamplingPeriod).ToString("#0.000 usec", CultureInfo.CurrentCulture) + "\r\n";
 
                     // plot debug info to output window
-                    DebugInfoPrintLine(">" + cNPNZ.DebugInfo.ToString().Replace("\r\n", "\r\n>"));
+                    DebugOutput(cNPNZ.DebugInfo.ToString().Replace("\r\n", "\r\n>"));
 
                     // Update displayed data => A-Coefficients
                     for (i = 1; i <= LagElements; i++)
@@ -1086,7 +1102,6 @@ namespace dcld
                         lvCoefficients.Items["OutSclFct"].SubItems["scalerOSF"].Text = cNPNZ.OutputScalingFactor.QScaler.ToString();
                     }      
 
-
                 }
                 else
                 {
@@ -1095,13 +1110,17 @@ namespace dcld
 
                 // show success message in status bar
                 if (!UpdateWarning)
-                { 
+                {
+                    DebugOutput("transfer function update complete", Color.ForestGreen);
+
                     stbMainStatusLabel.Text = "Coefficients generated successfully";
                     stbMainStatusLabel.Image = dcld.Properties.Resources.icon_ready.ToBitmap();
                     stbMainStatusLabel.BackColor = stbMain.BackColor;
                 }
                 else
                 {
+                    DebugOutput("transfer function update completed with warnings", Color.Red);
+
                     stbMainStatusLabel.Text = "Coefficients have been generated with warnings";
                     stbMainStatusLabel.Image = dcld.Properties.Resources.icon_exclamation.ToBitmap();
                     stbMainStatusLabel.BackColor = stbMain.BackColor;
@@ -1127,8 +1146,10 @@ namespace dcld
 
             
             }   // end of try
-            catch 
+            catch(Exception ex)
             {
+                DebugOutput("UpdateTransferFunction() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
+
                 // show failure message in status bar
                 stbMainStatusLabel.Text = "Invalid number format detected - results may be corrupted";
                 stbMainStatusLabel.Image = dcld.Properties.Resources.icon_critical.ToBitmap();
@@ -1144,6 +1165,9 @@ namespace dcld
             FilterTypeChanged = false;
             ScalingChanged = false;
             UpdateComplete = true;
+
+            stbProgressBar.Value = 100;
+            Application.DoEvents();
             stbProgressBar.Visible = false;
             stbProgressBarLabel.Visible = false;
 
@@ -1210,14 +1234,14 @@ namespace dcld
                 chartBode.Annotations.Add(h_anno);
 
                 for (i = 0; i < LagElements; i++)
-                {
-                    v_anno = GetVline(chartBode, 0, "Pole" + i.ToString(), Color.Teal, 2, ChartDashStyle.DashDotDot, cNPNZ.Pole[i].Frequency);
+                {                                                               //   Color.Teal
+                    v_anno = GetVline(chartBode, 0, "Pole" + i.ToString(), chartBode.Legends[0].CustomItems[0].Color, 2, ChartDashStyle.DashDotDot, cNPNZ.Pole[i].Frequency);
                     v_anno.Tag = txtPole[i];
                     chartBode.Annotations.Add(v_anno);
                 }
                 for (i = 1; i < LagElements; i++)
-                {
-                    v_anno = GetVline(chartBode, 0, "Zero" + i.ToString(), Color.Green, 2, ChartDashStyle.DashDotDot, cNPNZ.Zero[i].Frequency);
+                {                                                               //   Color.Green
+                    v_anno = GetVline(chartBode, 0, "Zero" + i.ToString(), chartBode.Legends[0].CustomItems[1].Color, 2, ChartDashStyle.DashDotDot, cNPNZ.Zero[i].Frequency);
                     v_anno.Tag = txtZero[i];
                     chartBode.Annotations.Add(v_anno);
                 }
@@ -1254,6 +1278,9 @@ namespace dcld
 
             try
             {
+
+                DebugOutput("update Bode plot data...");
+
                 if (chartBode == null) return (false);
                 if (chartBode.Series == null) return (false);
                 if (chartBode.Series.Count == 0) return (false);
@@ -1293,10 +1320,13 @@ namespace dcld
                     }
 
                 }
+
+                DebugOutput("Bode plot data update complete", Color.MediumSlateBlue);
+
             }
-            catch
+            catch(Exception ex)
             {
-                DebugInfoPrintLine("UpdateBodePlot(" + ForceAnnotationUpdate.ToString() + ") Exception");
+                DebugOutput("UpdateBodePlot(" + ForceAnnotationUpdate.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
             }
 
             return (true);
@@ -1410,7 +1440,6 @@ namespace dcld
 
             // Prepare the status bar progress bar
             stbMainStatusLabel.Text = "Saving File:";
-            stbMainStatusLabel.Visible = true;
             stbProgressBar.Visible = true;
             stbProgressBar.Value = 10;
             Application.DoEvents();
@@ -1470,7 +1499,6 @@ namespace dcld
                                         );
                         // Restore output window
                         sfdlg.Dispose();
-                        stbMainStatusLabel.Visible = false;
                         stbProgressBar.Visible = false;
                         ProjectFile.Clear();
 
@@ -1482,7 +1510,6 @@ namespace dcld
                 {
                     // Restore output window
                     sfdlg.Dispose();
-                    stbMainStatusLabel.Visible = false;
                     stbProgressBar.Visible = false;
 
                     return (false);
@@ -1541,6 +1568,10 @@ namespace dcld
                 ProjectFile.WriteKey("ControlSetup", "AddAGCEnableSwitch", Math.Abs(Convert.ToInt32(chkAGCAddEnable.Checked)).ToString());
                 ProjectFile.WriteKey("ControlSetup", "AddAGCGetModFunCall", Math.Abs(Convert.ToInt32(chkAGCAddGetModFactorFunCall.Checked)).ToString());
 
+                ProjectFile.WriteKey("ControlSetup", "PTermNomFeedback", cNPNZ.PTermNominalFeedback.ToString());
+                ProjectFile.WriteKey("ControlSetup", "PTermNomOutput", cNPNZ.PTermNominalControlOutput.ToString());
+                ProjectFile.WriteKey("ControlSetup", "PTermFactor", cNPNZ.PTermFactor.ToString());
+                ProjectFile.WriteKey("ControlSetup", "PTermScaler", cNPNZ.PTermScaler.ToString());
 
                 for (i = 0; i < txtPole.Length; i++)
                 { 
@@ -1561,16 +1592,26 @@ namespace dcld
                 ProjectFile.WriteKey("FeedbackDeclaration", "VDR1", feedback.VoltageDividerR1.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("FeedbackDeclaration", "VDR2", feedback.VoltageDividerR2.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("FeedbackDeclaration", "VDGA", feedback.VoltageDividerAmplifierGain.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "CSNomValue", feedback.VoltageDividerSenseVoltage.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("FeedbackDeclaration", "CSRS", feedback.CurrentSenseRshunt.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("FeedbackDeclaration", "CSGA", feedback.CurrentSenseAmplifierGain.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "CSNomValue", feedback.CurrentSenseSenseCurrent.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("FeedbackDeclaration", "CTRB", feedback.CurrentTransformerBurdenResistance.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("FeedbackDeclaration", "CTWR", feedback.CurrentTransformerWindingRatio.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "CTNomValue", feedback.CurrentTransformerSenseCurrent.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "DSRES", feedback.DigitalSourceResolution.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("FeedbackDeclaration", "DSNomValue", feedback.DigitalSourceValue.ToString(CultureInfo.InvariantCulture));
 
                 // Ouptput Definition
                 ProjectFile.WriteKey("OutputDeclaration", "Type", Convert.ToInt32(ctrl_output.OutputType).ToString());
                 ProjectFile.WriteKey("OutputDeclaration", "PCLK", ctrl_output.PWMClock.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("OutputDeclaration", "PCLKDIV", ctrl_output.PWMClockDivider.ToString(CultureInfo.InvariantCulture));
                 ProjectFile.WriteKey("OutputDeclaration", "PWMFREQ", ctrl_output.PWMFrequency.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("OutputDeclaration", "NomVin", ctrl_output.NominalInputVoltage.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("OutputDeclaration", "NomVout", ctrl_output.NominalOutputVoltage.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("OutputDeclaration", "NomEfficiency", ctrl_output.NominalEfficiency.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("OutputDeclaration", "WindingRatioPrimary", ctrl_output.WindingRatioPrimary.ToString(CultureInfo.InvariantCulture));
+                ProjectFile.WriteKey("OutputDeclaration", "WindingRatioSecondary", ctrl_output.WindingRatioSecondary.ToString(CultureInfo.InvariantCulture));
 
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 30;
@@ -1612,6 +1653,8 @@ namespace dcld
                 ProjectFile.WriteKey("AssemblyGenerator", "AddAntiWindupMinimumClamping", Convert.ToUInt16(this.chkAntiWindupClampMin.Checked).ToString());
                 ProjectFile.WriteKey("AssemblyGenerator", "AddAntiWindupMinimumClampingStatusFlag", Convert.ToUInt16(this.chkAntiWindupMinStatusFlag.Checked).ToString());
 
+                ProjectFile.WriteKey("AssemblyGenerator", "AddPTermLoop", Convert.ToUInt16(this.chkAddPTermLoop.Checked).ToString());
+
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 50;
                 Application.DoEvents();
@@ -1634,6 +1677,13 @@ namespace dcld
                 stbProgressBar.Value = 65;
                 Application.DoEvents();
 
+                // Bode Plot settings
+                ProjectFile.WriteKey("BodePlot", "XScale-NyquistShannonLimit", Convert.ToInt32(nyquistShannonLimitToolStripMenuItem.Checked).ToString());
+                ProjectFile.WriteKey("BodePlot", "XScale-SamplingFrequency", Convert.ToInt32(samplingFrequencyToolStripMenuItem.Checked).ToString());
+                ProjectFile.WriteKey("BodePlot", "XScale-FullScale", Convert.ToInt32(fullScaleToolStripMenuItem.Checked).ToString());
+                ProjectFile.WriteKey("BodePlot", "YScale-UnwrapPhase", Convert.ToInt32(unwrapPhaseToolStripMenuItem.Checked).ToString());
+                ProjectFile.WriteKey("BodePlot", "ShowSDomain", Convert.ToInt32(showSDomainTransferFunctionToolStripMenuItem.Checked).ToString());
+                    
                 // Timing graph
                 ProjectFile.WriteKey("TimingGraph", "LoopTriggerOption", this.cmbLoopTriggerOption.SelectedIndex.ToString());
 
@@ -1658,7 +1708,6 @@ namespace dcld
 
                 // Restore output window
                 sfdlg.Dispose();
-                stbMainStatusLabel.Visible = false;
                 stbProgressBar.Visible = false;
 
                 return (true);
@@ -1674,7 +1723,6 @@ namespace dcld
 
                 // Restore output window
                 sfdlg.Dispose();
-                stbMainStatusLabel.Visible = false;
                 stbProgressBar.Visible = false;
 
                 return (false);
@@ -1698,16 +1746,16 @@ namespace dcld
             {
 
                 // write debugging info to output window
-                DebugInfoPrintLine(">Open File '" + Filename + "'...");
+                DebugOutput("open file '" + Filename + "'...");
                 
                 // Set Project File
                 if (!ProjectFile.SetFilename(Filename.Trim()))
                 {
-                    DebugInfoPrintLine(">File loading error. Could not set project file.");
+                    DebugOutput("file loading error. Could not set project file.");
                     return (false);
                 }
                 else
-                    DebugInfoPrintLine(">File found");
+                    DebugOutput("file found");
 
                 // Set flag
                 ProjectFileLoadActive = true;
@@ -1716,6 +1764,7 @@ namespace dcld
                 stbProgressBar.Value = 10;
                 Application.DoEvents();
 
+                DebugOutput("loading project settings...");
 
                 // Control Type and Mode
                 cmbCompType.SelectedIndex = Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "ControlType", "2"));
@@ -1734,6 +1783,8 @@ namespace dcld
                 chkAGCAddEnable.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "AddAGCEnableSwitch", "0")));
                 chkAGCAddGetModFactorFunCall.Checked = Convert.ToBoolean(Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "AddAGCGetModFunCall", "0")));
 
+                txtPTermNominalFeedback.Text = Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "PTermNomFeedback", "0")).ToString(CultureInfo.CurrentCulture);
+                txtPTermNominalOutput.Text = Convert.ToInt32(ProjectFile.ReadKey("ControlSetup", "PTermNomOutput", "0")).ToString(CultureInfo.CurrentCulture);
 
                 for (i = 0; i < txtPole.Length; i++)
                 {
@@ -1758,10 +1809,16 @@ namespace dcld
                 feedback.VoltageDividerR1 = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "VDR1", "12000"));
                 feedback.VoltageDividerR2 = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "VDR2", "2200"));
                 feedback.VoltageDividerAmplifierGain = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "VDGA", "1.0"));
+                feedback.VoltageDividerSenseVoltage = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "VDNomVal", "5.0"));
                 feedback.CurrentSenseRshunt = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CSRS", "0.010"));
                 feedback.CurrentSenseAmplifierGain = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CSGA", "20"));
+                feedback.CurrentSenseSenseCurrent = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CSNomVal", "5.0"));
                 feedback.CurrentTransformerBurdenResistance = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CTRB", "10"));
                 feedback.CurrentTransformerWindingRatio = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CTWR", "50"));
+                feedback.CurrentTransformerSenseCurrent = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "CTNomVal", "5.0"));
+                feedback.DigitalSourceResolution = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "DSRES", "12.0"));
+                feedback.DigitalSourceValue = Convert.ToDouble(ProjectFile.ReadKey("FeedbackDeclaration", "DSNomValue", "2047.0"));
+
 
                 // Ouptput Definition
                 int_dum = Convert.ToInt32(ProjectFile.ReadKey("OutputDeclaration", "Type", "1"));
@@ -1769,6 +1826,11 @@ namespace dcld
                 ctrl_output.PWMClock = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "PCLK", "4000000000"));
                 ctrl_output.PWMClockDivider = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "PCLKDIV", "1.0"));
                 ctrl_output.PWMFrequency = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "PWMFREQ", "250000.0"));
+                ctrl_output.NominalInputVoltage = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "NomVin", "0.0"));
+                ctrl_output.NominalOutputVoltage = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "NomVout", "0.0"));
+                ctrl_output.NominalEfficiency = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "NomEfficiency", "1.0"));
+                ctrl_output.WindingRatioPrimary = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "WindingRatioPrimary", "1.0"));
+                ctrl_output.WindingRatioSecondary = Convert.ToDouble(ProjectFile.ReadKey("OutputDeclaration", "WindingRatioSecondary", "1.0"));
 
                 // Code Generator Tab
                 txtControllerNamePrefix.Text = ProjectFile.ReadKey("AssemblyGenerator", "UserPrefix1", "");
@@ -1814,7 +1876,10 @@ namespace dcld
                 this.chkAntiWindupMaxStatusFlag.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddAntiWindupMaximumClampingStatusFlag", "0")));
                 this.chkAntiWindupClampMin.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddAntiWindupMinimumClamping", "1")));
                 this.chkAntiWindupMinStatusFlag.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddAntiWindupMinimumClampingStatusFlag", "0")));
-                
+
+                this.chkAddPTermLoop.Checked = Convert.ToBoolean(Convert.ToUInt16(ProjectFile.ReadKey("AssemblyGenerator", "AddPTermLoop", "0")));
+
+
 
                 stbProgressBar.Value = 60;
                 Application.DoEvents();
@@ -1839,6 +1904,21 @@ namespace dcld
 
                 stbProgressBar.Value = 80;
                 Application.DoEvents();
+
+                // Bode Plot settings
+                unwrapPhaseToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("BodePlot", "YScale-UnwrapPhase", "1")));
+
+                if (Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("BodePlot", "XScale-NyquistShannonLimit", "1"))))
+                    chartBode_ScaleOptionChanged(nyquistShannonLimitToolStripMenuItem, EventArgs.Empty);
+
+                if ( Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("BodePlot", "XScale-SamplingFrequency", "0"))) )
+                    chartBode_ScaleOptionChanged(samplingFrequencyToolStripMenuItem, EventArgs.Empty);
+                
+                if ( Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("BodePlot", "XScale-FullScale", "0"))) )
+                    chartBode_ScaleOptionChanged(fullScaleToolStripMenuItem, EventArgs.Empty);
+
+                this.showSDomainTransferFunctionToolStripMenuItem.Checked = Convert.ToBoolean(Convert.ToUInt32(ProjectFile.ReadKey("BodePlot", "ShowSDomain", "0")));
+
 
                 // Timing graph
                 this.cmbLoopTriggerOption.SelectedIndex = Convert.ToInt16(ProjectFile.ReadKey("TimingGraph", "LoopTriggerOption", "0"));
@@ -1897,14 +1977,17 @@ namespace dcld
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
 
+
                 // write debugging info to output window
-                DebugInfoPrintLine(">Code Generator File Paths:");
-                DebugInfoPrintLine(">    - DCLD Project Directory:         " + ProjectFile.Directory);
-                DebugInfoPrintLine(">    - MPLAB X Project Directory:      " + MPLABXProject.MPLABXProjectDirectory);
-                DebugInfoPrintLine(">    - ASM Source File Directory:      " + ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXProjectDirectory));
-                DebugInfoPrintLine(">    - C Source File Directory:        " + ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXProjectDirectory));
-                DebugInfoPrintLine(">    - C Header File Directory:        " + ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXProjectDirectory));
-                DebugInfoPrintLine(">    - Library Header File Directory:  " + ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXProjectDirectory));
+                DebugOutput("loading project settings complete");
+
+                DebugOutput("code generator file paths:");
+                DebugOutput("    - DCLD Project Directory:         " + ProjectFile.Directory);
+                DebugOutput("    - MPLAB X Project Directory:      " + MPLABXProject.MPLABXProjectDirectory);
+                DebugOutput("    - ASM Source File Directory:      " + ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXProjectDirectory));
+                DebugOutput("    - C Source File Directory:        " + ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXProjectDirectory));
+                DebugOutput("    - C Header File Directory:        " + ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXProjectDirectory));
+                DebugOutput("    - Library Header File Directory:  " + ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXProjectDirectory));
 
                 // Set Flags
                 ProjectFileLoadActive = false;
@@ -1925,10 +2008,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugInfoPrintLine(
-                    ">Open File Error (0x" + ex.HResult.ToString("X") + ")\r\n" + 
-                    ">Original error: " + ex.Message
-                    );
+                DebugOutput("open file exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
                 MessageBox.Show(
                     "Error (0x" + ex.HResult.ToString("X") + "): Could not read file from disk.\r\n" + 
                     "Original error: " + ex.Message, 
@@ -1940,6 +2020,8 @@ namespace dcld
                 // Clear Project File
                 ProjectFile.Clear();
 
+                stbProgressBar.Value = 100;
+                Application.DoEvents();
                 stbProgressBarLabel.Visible = false;
                 stbProgressBar.Visible = false;
                 return (false);
@@ -1950,28 +2032,23 @@ namespace dcld
         {
             string asm_source_buf = "", c_cource_buf = "", c_head_buf = "", c_lib_buf = "";
 
+            DebugOutput("update file paths...");
+
             asm_source_buf = ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute);
             c_cource_buf = ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute);
             c_head_buf = ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute);
             c_lib_buf = ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXIncludeDirectoryAbsolute);
+
+            DebugOutput("    - assembly library file:" + asm_source_buf);
+            DebugOutput("    - C source file:" + c_cource_buf);
+            DebugOutput("    - C header file:" + c_head_buf);
+            DebugOutput("    - C library header file:" + c_lib_buf);
 
             // Make file locations relative
             txtASMSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(asm_source_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
             txtCSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_cource_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
             txtCHeaderPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_head_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
             txtCLibPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_lib_buf, MPLABXProject.MPLABXIncludeDirectoryAbsolute));
-
-
-            //asm_source_buf = ConvertFilePath.ToAbsoluteFilePath(txtASMSourcePath.Text, MPLABXProject.MPLABXProjectDirectory);
-            //c_cource_buf = ConvertFilePath.ToAbsoluteFilePath(txtCSourcePath.Text, MPLABXProject.MPLABXProjectDirectory);
-            //c_head_buf = ConvertFilePath.ToAbsoluteFilePath(txtCHeaderPath.Text, MPLABXProject.MPLABXProjectDirectory);
-            //c_lib_buf = ConvertFilePath.ToAbsoluteFilePath(txtCLibPath.Text, MPLABXProject.MPLABXProjectDirectory);
-
-            //// Make file locations relative
-            //txtASMSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(asm_source_buf, MPLABXProject.MPLABXProjectDirectory));
-            //txtCSourcePath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_cource_buf, MPLABXProject.MPLABXProjectDirectory));
-            //txtCHeaderPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_head_buf, MPLABXProject.MPLABXProjectDirectory));
-            //txtCLibPath.Text = ConvertFilePath.Unix2Win(ConvertFilePath.ToRelativeFilePath(c_lib_buf, MPLABXProject.MPLABXProjectDirectory));
 
             return;
 
@@ -2259,6 +2336,9 @@ namespace dcld
             }
 
             ofdlg.Dispose();
+
+            stbProgressBar.Value = 100;
+            Application.DoEvents();
             stbProgressBar.Visible = false;
             stbProgressBarLabel.Visible = false;
 
@@ -2364,7 +2444,7 @@ namespace dcld
         private void ExportGeneratedFiles(object sender, EventArgs e)
         {
             int i = 0;
-            string str_path = "", str_dum = "", str_msg = "";
+            string str_path = "", str_dum = "", str_msg = "", str_debug = "";
             DialogResult result;
             SaveFileDialog sfdlg = new SaveFileDialog();
 
@@ -2372,7 +2452,7 @@ namespace dcld
             if (!File.Exists(ProjectFile.FileName))
             {
                 result = MessageBox.Show(this,
-                        "The recent configuration has not been copleted yet. \r\n" +
+                        "The recent configuration has not been completed yet. \r\n" +
                         "\r\n" + 
                         "Features such as relative path declaration in source files and the user setting " +
                         "hitory log, will not be supported until this configuration has been saved. \r\n"+
@@ -2396,6 +2476,11 @@ namespace dcld
             }
             else { str_msg = ""; }
 
+            // Lease here is application is shutting down while code was updated
+            if (ApplicationShutDown) 
+                return;
+
+            // Show Status bar
             stbProgressBarLabel.Text = "Exporting Generated Files:";
             stbProgressBarLabel.Visible = true;
             stbProgressBar.Visible = true;
@@ -2454,7 +2539,6 @@ namespace dcld
                 if (str_path.Substring(str_path.Length - _dsp.Length, _dsp.Length) != _dsp)
                 { str_path = str_path + _dsp; }
 
-
                 switch (i)
                 {
                     case 0: // save assembly file
@@ -2463,16 +2547,18 @@ namespace dcld
                         if (assemblyLibraryExportToolStripMenuItem.Checked)
                         {
                             sfdlg.FileName = str_path + lblFinalNamePrefixOutput.Text + "_asm.s";
-                            DebugInfoPrintLine(">Generating file " + sfdlg.FileName);
+
                             if (System.IO.Directory.Exists(str_path))
                             {
                                 System.IO.File.WriteAllText(sfdlg.FileName, txtSyntaxEditorAssembly.Text);
                                 str_msg += "OK" + "\r\n";
+                                str_debug = "OK";
                             }
                             else
                             {
 
                                 str_msg += "failed" + "\r\n";
+                                str_debug = "failed";
                                 MessageBox.Show(
                                     str_msg + "\r\n" +
                                     "Specified target directory does not exists.\r\n\r\n" +
@@ -2487,6 +2573,7 @@ namespace dcld
                         else
                         {
                             str_msg += "(skipped)" + "\r\n";
+                            str_debug = "skipped";
                         }
                         break;
 
@@ -2496,15 +2583,18 @@ namespace dcld
                         if (libraryCHeaderExportToolStripMenuItem.Checked)
                         {
                             sfdlg.FileName = str_path + lblFinalNamePrefixOutput.Text + ".h";
-                            DebugInfoPrintLine(">Generating file " + sfdlg.FileName);
+
+                            // Check if directory is valid
                             if (System.IO.Directory.Exists(str_path)) 
                             {
                                 System.IO.File.WriteAllText(sfdlg.FileName, txtSyntaxEditorCHeader.Text);
                                 str_msg += "OK" + "\r\n";
+                                str_debug = "OK";
                             }
                             else
                             {
                                 str_msg += "failed" + "\r\n";
+                                str_debug = "failed";
                                 MessageBox.Show(
                                     str_msg + "\r\n" +
                                     "Specified target directory does not exists.\r\n\r\n" +
@@ -2519,6 +2609,7 @@ namespace dcld
                         else
                         {
                             str_msg += "(skipped)" + "\r\n";
+                            str_debug = "skipped";
                         }
                         break;
 
@@ -2528,15 +2619,17 @@ namespace dcld
                         if (libraryCSourceFileExportToolStripMenuItem.Checked)
                         { 
                             sfdlg.FileName = str_path + lblFinalNamePrefixOutput.Text + ".c";
-                            DebugInfoPrintLine(">Generating file " + sfdlg.FileName);
+                            
                             if (System.IO.Directory.Exists(str_path)) 
                             {
                                 System.IO.File.WriteAllText(sfdlg.FileName, txtSyntaxEditorCSource.Text);
                                 str_msg += "OK" + "\r\n";
+                                str_debug = "OK";
                             }
                             else
                             {
                                 str_msg += "failed" + "\r\n";
+                                str_debug = "failed";
                                 MessageBox.Show(
                                     str_msg + "\r\n" +
                                     "Specified target directory does not exists.\r\n\r\n" +
@@ -2551,6 +2644,7 @@ namespace dcld
                         else
                         {
                             str_msg += "(skipped)" + "\r\n";
+                            str_debug = "skipped";
                         }
                         break;
 
@@ -2560,15 +2654,17 @@ namespace dcld
                         if (genericControlLibraryHeaderExportToolStripMenuItem.Checked)
                         {
                             sfdlg.FileName = str_path + "npnz16b.h";
-                            DebugInfoPrintLine(">Generating file " + sfdlg.FileName);
+                            
                             if (System.IO.Directory.Exists(str_path))
                             { 
                                 System.IO.File.WriteAllText(sfdlg.FileName, txtSyntaxEditorCLibHeader.Text);
                                 str_msg += "OK" + "\r\n";
+                                str_debug = "OK";
                             }
                             else
                             {
                                 str_msg += "failed" + "\r\n";
+                                str_debug = "failed";
                                 MessageBox.Show(
                                     str_msg + "\r\n" +
                                     "Specified target directory does not exists.\r\n\r\n" +
@@ -2584,6 +2680,7 @@ namespace dcld
                         else
                         {
                             str_msg += "(skipped)" + "\r\n";
+                            str_debug = "skipped";
                         }
                         break;
 
@@ -2591,14 +2688,22 @@ namespace dcld
                         break;
                 }
 
-                
+                // Debugging information
+                if (!File.Exists(sfdlg.FileName))
+                    DebugOutput("create file " + sfdlg.FileName + ": " + str_debug);
+                else
+                    DebugOutput("overwrite file " + sfdlg.FileName + ": " + str_debug);
+
 
             }
 
             // Add controller settings to user history
+            DebugOutput("capture settings in history");
             AddHistorySettings(sender, e);
+            DebugOutput("history item auto-saved");
 
             // Acknowledge successfully executed command
+            DebugOutput("file export complete", Color.ForestGreen);
             if (generateCodeBeforeExportToolStripMenuItem.Checked)
             {
                 MessageBox.Show(
@@ -2623,8 +2728,11 @@ namespace dcld
             }
 
 
+            stbProgressBar.Value = 100;
+            Application.DoEvents();
             stbProgressBar.Visible = false;
             stbProgressBarLabel.Visible = false;
+
             return;
 
         }
@@ -2633,7 +2741,14 @@ namespace dcld
         {
 
             // Check for unsaved changes
-            if (!AskForFileSave(sender, e)) e.Cancel = true;
+            if (!AskForFileSave(sender, e))
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            // Set FORM CLOSING flag
+            ApplicationShutDown = true;
 
             // Save last user settings
             SettingsFile.WriteKey("main_window", "winstate", Convert.ToInt32(WindowState).ToString());
@@ -2661,9 +2776,10 @@ namespace dcld
 
             // save body generation and timing analysis window status
            SettingsFile.WriteKey("code_generator", "settings_splitter_pos", splitContainerContents.SplitterDistance.ToString());
-           SettingsFile.WriteKey("code_generator", "timing_visible", Convert.ToUInt16(showSourceCodeTimingToolStripMenuItem.Checked).ToString());
+           SettingsFile.WriteKey("code_generator", "timing_visible", Convert.ToUInt32(showSourceCodeTimingToolStripMenuItem.Checked).ToString());
            SettingsFile.WriteKey("code_generator", "timing_splitter_pos", splitContainerTiming.Panel2.Height.ToString());
-            
+           SettingsFile.WriteKey("code_generator", "output_window", Convert.ToUInt32(showOutputWindowToolStripMenuItem.Checked).ToString());
+           SettingsFile.WriteKey("code_generator", "output_splitter_pos", splitDebug.SplitPosition.ToString(CultureInfo.InvariantCulture));
 
         }
 
@@ -2777,9 +2893,9 @@ namespace dcld
                 txtBodePhaseErrosion.Text = (cNPNZ.TransferFunction.MagPhase_z[(int)cursorY_scaler] - cNPNZ.TransferFunction.MagPhase_s[(int)cursorY_scaler]).ToString("0.0");
 
             }
-            catch
+            catch (Exception ex)
             {
-                DebugInfoPrintLine(">chartBode_UpdateCursorMeasurement(" + ForceCursorPositionX.ToString() + ", " + ForceCursorPositionY.ToString() + ", " + CursorX.ToString() + ") Exception");
+                DebugOutput("chartBode_UpdateCursorMeasurement(" + ForceCursorPositionX.ToString() + ", " + ForceCursorPositionY.ToString() + ", " + CursorX.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
             }
 
             return;
@@ -2806,9 +2922,9 @@ namespace dcld
                 txtBodePhaseErrosion.Text = "0";
 
             }
-            catch
+            catch (Exception ex)
             {
-                DebugInfoPrintLine(">chartBode_ResetCursorMeasurement(" + HideCursor.ToString() + ") Exception");
+                DebugOutput("chartBode_ResetCursorMeasurement(" + HideCursor.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
             }
 
             return;
@@ -3095,9 +3211,9 @@ namespace dcld
 
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                DebugInfoPrintLine(">chartBode_MouseMove() Exception");
+                DebugOutput("chartBode_MouseMove() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
             }
 
 
@@ -3140,6 +3256,19 @@ namespace dcld
             showSourceCodeTimingToolStripMenuItem.Checked = !showSourceCodeTimingToolStripMenuItem.Checked;
             return;
         }
+
+
+        private void showOutputWindowToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            txtDebugOutput.Visible = showOutputWindowToolStripMenuItem.Checked;
+            return;
+        }
+
+        private void showOutputWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showOutputWindowToolStripMenuItem.Checked = !showOutputWindowToolStripMenuItem.Checked;
+        }
+
 
         private void frmMain_ResizeEnd(object sender, EventArgs e)
         {
@@ -3289,103 +3418,188 @@ namespace dcld
 
         }
 
+        public static Control FindByTag(Control root, string tag)
+        {
+            if (root == null) return null;
+            if (root.Tag is string && (string)root.Tag == tag) return root;
+            return (from Control control in root.Controls
+                    select FindByTag(control, tag)).FirstOrDefault(c => c != null);
+        }
+
         private void GenerateCode(object sender, EventArgs e)
         {
-
+            int _i = 0;
+            string tagName = "";
             int EditorASMScrollPos = 0;
 
             if (ApplicationStartUp) return;     // During the startup-phase o fhte application, suppress all updates
             if (ProjectFileLoadActive) return;  // If settings are loaded from a file, suppress all updates
             if (cNPNZ.QFormat != 15) return;    // Q15-Format supported only
 
-            stbProgressBarLabel.Text = "Generating Source Code:";
-            stbProgressBarLabel.Visible = true;
-            stbProgressBar.Visible = true;
+            try
+            {
+                DebugOutput_Clear();
+                DebugOutput("starting code generation...");
+                stbProgressBarLabel.Text = "Generating Source Code:";
+                stbProgressBarLabel.Visible = true;
+                stbProgressBar.Visible = true;
 
-            stbProgressBar.Value = 10;
-            Application.DoEvents();
+                stbProgressBar.Value = 10;
+                Application.DoEvents();
 
-            // capture editor windows vertical scroll status
-            EditorASMScrollPos = txtSyntaxEditorAssembly.SelectedView.CurrentDisplayLine.Index;   //SelectedView.DisplayLines.IndexOf();  //.VerticalScroll.Value;
+                // capture editor windows vertical scroll status
+                EditorASMScrollPos = txtSyntaxEditorAssembly.SelectedView.CurrentDisplayLine.Index;   //SelectedView.DisplayLines.IndexOf();  //.VerticalScroll.Value;
 
-            // ========================================================================
+                // ========================================================================
 
-            // Set common C-Code Generator Settings
-            clsCCodeGenerator cGen = new clsCCodeGenerator();
+                // Set common C-Code Generator Settings
+                clsCCodeGenerator cGen = new clsCCodeGenerator();
 
-            cGen.dcldProjectFile = ProjectFile;
+                cGen.dcldProjectFile = ProjectFile;
+                DebugOutput("project file: " + cGen.dcldProjectFile.FileName);
 
-            cGen.FileNamePattern = txtControllerNamePrefix.Text.Trim() + txtControllerNameLabel.Text.Trim();
-            cGen.PreShift = (int)(Convert.ToUInt32(cmbQFormat.Text.Substring(1, (int)cmbQFormat.Text.Length - 1)) - Convert.ToUInt32(txtInputDataResolution.Text));
+                cGen.FileNamePattern = txtControllerNamePrefix.Text.Trim() + txtControllerNameLabel.Text.Trim();
+                cGen.PreShift = (int)(Convert.ToUInt32(cmbQFormat.Text.Substring(1, (int)cmbQFormat.Text.Length - 1)) - Convert.ToUInt32(txtInputDataResolution.Text));
 
-            if (txtControllerNamePrefix.Text.Trim().Length > 0)
-            { cGen.PreFix = txtControllerNamePrefix.Text.Trim() + "_"; }
-            else { cGen.PreFix = DefaultVariablePrefix + "_"; }
+                if (txtControllerNamePrefix.Text.Trim().Length > 0)
+                { cGen.PreFix = txtControllerNamePrefix.Text.Trim() + "_"; }
+                else { cGen.PreFix = DefaultVariablePrefix + "_"; }
+                DebugOutput("using controller name prefix: " + cGen.PreFix);
 
-            if (chkCSourceIncludePath.Checked)
-            { cGen.CHeaderIncludePath = ConvertFilePath.Win2Unix(GetIncludePath(txtCHeaderPath.Text)); }
-            else
-            { cGen.CHeaderIncludePath = ""; }
+                if (chkCSourceIncludePath.Checked)
+                { cGen.CHeaderIncludePath = ConvertFilePath.Win2Unix(GetIncludePath(txtCHeaderPath.Text)); }
+                else
+                { cGen.CHeaderIncludePath = ""; }
+                DebugOutput("MPLAB X c include path: " + cGen.CHeaderIncludePath);
 
-            if (chkCHeaderIncludePath.Checked)
-            { cGen.LibHeaderIncludePath = ConvertFilePath.Win2Unix(GetIncludePath(txtCLibPath.Text)); }
-            else
-            { cGen.LibHeaderIncludePath = ""; }
+                if (chkCHeaderIncludePath.Checked)
+                { cGen.LibHeaderIncludePath = ConvertFilePath.Win2Unix(GetIncludePath(txtCLibPath.Text)); }
+                else
+                { cGen.LibHeaderIncludePath = ""; }
+                DebugOutput("MPLAB X library header include path: " + cGen.LibHeaderIncludePath);
 
-            cGen.GeneratorScript = CCodeGeneratorScript;
-            cGen.CGS_Version = CCodeGeneratorScript.ReadKey("generic", "Version", "n/a");
-            cGen.CGS_VersionDate = CCodeGeneratorScript.ReadKey("generic", "Date", "n/a");
-            cGen.CompTypeName = cmbCompType.Text;
-            cGen.ScalingMethodName = cmbQScalingMethod.Text;
+                cGen.GeneratorScript = CCodeGeneratorScript;
+                //cGen.CGS_Version = CCodeGeneratorScript.ReadKey("generic", "Version", "n/a");
+                //cGen.CGS_VersionDate = CCodeGeneratorScript.ReadKey("generic", "Date", "n/a");
+                cGen.CompTypeName = cmbCompType.Text;
+                cGen.ScalingMethodName = cmbQScalingMethod.Text;
+
+                DebugOutput("C-code generator script: " + cGen.GeneratorScript.FileName);
+                DebugOutput("C-code generator script version: " + cGen.GeneratorScript.FileVersion + " (" + cGen.GeneratorScript.FileVersionDate + ")"); // cGen.CGS_Version + " (" + cGen.CGS_VersionDate + ")");
+                DebugOutput("compensator type: " + cmbCompType.Text);
+                DebugOutput("number scaling method: " + cGen.ScalingMethodName);
+
+                // Set Code Generation Options
+                //Control parent = new Control();
+                CheckBox check = new CheckBox();
+
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                // Get Code Generation Option Tokens
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+                DebugOutput("capture option tokens...");
+
+                for (_i = 0; _i < cGen.Tokens.Items.Count(); _i++)
+                {
+                    foreach (Control _tab in tabConfig.Controls)
+                    {
+                        if (_tab.GetType().ToString() == "System.Windows.Forms.TabPage")
+                        {
+                            foreach (Control parent in _tab.Controls)
+                            {
+                                if (parent.GetType().ToString() == "System.Windows.Forms.GroupBox")
+                                {
+                                    tagName = cGen.Tokens.Items[_i].Key;
+                                    var items = parent.Controls;
+                                    var item = items.Cast<Control>().FirstOrDefault(control => String.Equals(control.Tag, tagName));
+
+                                    if (item != null)
+                                    {
+                                        if (item.GetType().ToString() == "System.Windows.Forms.CheckBox")
+                                        {
+                                            check = (CheckBox)item;
+                                            cGen.Tokens.Items[_i].Enabled = (bool)(check.Checked && check.Enabled);
+                                            DebugOutput("code generator option '" + cGen.Tokens.Items[_i].Key + "': " + cGen.Tokens.Items[_i].Enabled.ToString());
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+                // Generate C-Source incorporating coefficients
+                DebugOutput("generate C source...");
+                txtSyntaxEditorCSource.Text = cGen.BuildSource(cNPNZ).ToString(); // GenerateCSource(sender, e).ToString();
+                DebugOutput("C source code generation complete");
+                stbProgressBar.Value = 20;
+                Application.DoEvents();
+
+                // Generate C-Header
+                DebugOutput("generate C header...");
+                txtSyntaxEditorCHeader.Text = cGen.BuildCHeader(cNPNZ).ToString(); // GenerateCHeader(sender, e).ToString();
+                DebugOutput("C header code generation complete");
+                stbProgressBar.Value = 30;
+                Application.DoEvents();
+
+                // Generate C Library Header
+                DebugOutput("generate C library header...");
+                txtSyntaxEditorCLibHeader.Text = cGen.BuildCLibHeader(cNPNZ).ToString(); //  GenerateCLibHeader(sender, e).ToString();
+                DebugOutput("C library header code generation complete");
+                stbProgressBar.Value = 35;
+                Application.DoEvents();
+
+                // ========================================================================
+
+                // Generate assembly body
+                DebugOutput("generate assembly library...");
+                txtSyntaxEditorAssembly.Document.Text = GenerateAssembly(sender, e).ToString();
+                DebugOutput("assembly library code generation complete");
+
+                stbProgressBar.Value = 70;
+                Application.DoEvents();
+
+                // ========================================================================
+
+                // Hide code generation update warnings
+                tsbCodeGenUpdateWarningAssembly.Visible = false;
+                tsbCodeGenUpdateWarningCSource.Visible = false;
+                tsbCodeGenUpdateWarningCHeader.Visible = false;
+                tsbCodeGenUpdateWarningLibHeader.Visible = false;
+                tsbCodeGenUpdateWarningTiming.Visible = false;
+
+                stbProgressBar.Value = 90;
+                Application.DoEvents();
+
+                // Update execution timing chart and data
+                DebugOutput("calculate execution timing...");
+                UpdateExecutionRuntime(sender, e);
+
+                // Reset editor windows vertial scroll status
+                if (EditorASMScrollPos > 0)
+                    txtSyntaxEditorAssembly.SelectedView.GoToLine(EditorASMScrollPos - 1);
+
+                stbProgressBar.Value = 100;
+                Application.DoEvents();
+                stbProgressBar.Visible = false;
+                stbProgressBarLabel.Visible = false;
+                DebugOutput("code generation completed successfully", Color.RoyalBlue);
+                DebugOutput("");
+
+            }
+            catch (Exception ex)
+            {
+                if (!ApplicationShutDown) 
+                {
+                    DebugOutput("code generation exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
+                    stbMainStatusLabel.Text = "Unexpected exception during code generation. The generated code may be incomplete or corrupted.";
+                    stbMainStatusLabel.Image = dcld.Properties.Resources.icon_critical.ToBitmap();
+                    stbMainStatusLabel.BackColor = stbMain.BackColor;
+                }
+            }
             
-            // Generate C-Source incorporating coefficients
-
-            txtSyntaxEditorCSource.Text = cGen.BuildSource(cNPNZ).ToString(); // GenerateCSource(sender, e).ToString();
-            stbProgressBar.Value = 20;
-            Application.DoEvents();
-
-            // Generate C-Header
-            txtSyntaxEditorCHeader.Text = cGen.BuildCHeader(cNPNZ).ToString(); // GenerateCHeader(sender, e).ToString();
-            stbProgressBar.Value = 30;
-            Application.DoEvents();
-
-            // Generate C Library Header
-            txtSyntaxEditorCLibHeader.Text = cGen.BuildCLibHeader(cNPNZ).ToString(); //  GenerateCLibHeader(sender, e).ToString();
-            stbProgressBar.Value = 35;
-            Application.DoEvents();
-
-            // ========================================================================
-
-            // Generate assembly body
-            txtSyntaxEditorAssembly.Document.Text = GenerateAssembly(sender, e).ToString();
-
-            stbProgressBar.Value = 70;
-            Application.DoEvents();
-
-            // ========================================================================
-
-            // Hide code generation update warnings
-            tsbCodeGenUpdateWarningAssembly.Visible = false;
-            tsbCodeGenUpdateWarningCSource.Visible = false;
-            tsbCodeGenUpdateWarningCHeader.Visible = false;
-            tsbCodeGenUpdateWarningLibHeader.Visible = false;
-            tsbCodeGenUpdateWarningTiming.Visible = false;
-
-            stbProgressBar.Value = 90;
-            Application.DoEvents();
-
-            // Update execution timing chart and data
-            UpdateExecutionRuntime(sender, e);
-
-            // Reset editor windows vertial scroll status
-            if (EditorASMScrollPos > 0)
-                txtSyntaxEditorAssembly.SelectedView.GoToLine(EditorASMScrollPos-1);
-
-            stbProgressBar.Value = 100;
-            Application.DoEvents();
-            stbProgressBar.Visible = false;
-            stbProgressBarLabel.Visible = false;
-
             return;
         }
 
@@ -3438,6 +3652,9 @@ namespace dcld
         private StringBuilder GenerateAssembly(object sender, EventArgs e)
         {
 
+            int _i = 0; // Runtime indices for loading option catalog
+            string tagName = ""; // Tag name to identify related user control on frmMain
+
             string prefix = "";
             StringBuilder code = new StringBuilder();
             clsAssemblyGenerator AssGen = new clsAssemblyGenerator();
@@ -3447,7 +3664,6 @@ namespace dcld
 
             // Save recent cursor position
             txtSyntaxEditorAssembly.SelectionMovesOnRightClick = false;
-
             //CursorPositionLine = txtSyntaxEditorAssembly.Caret.EditPosition.Line;
             //CursorPositionColumn = txtSyntaxEditorAssembly.Caret.CharacterColumn;
 
@@ -3472,49 +3688,96 @@ namespace dcld
             AssGen.ScalingMethod = (int)(cNPNZ.ScalingMethod);
             AssGen.FilterOrder = (int)(cNPNZ.FilterOrder);
             AssGen.CodeOptimizationLevel = 0;
-            AssGen.BidirectionalFeedback = cNPNZ.IsBidirectional;
-            if (AssGen.BidirectionalFeedback) // feedback rectification option only allowed with bi-directional feedbacks
-                AssGen.FeedbackRectification = cNPNZ.FeedbackRecitification; 
-            else
-                AssGen.FeedbackRectification = false;
 
-            // Set Adaptive Gain Control options
-            AssGen.AdaptiveGainModulationEnable = (chkEnableAdaptiveGainControl.Checked && chkEnableAdaptiveGainControl.Enabled);
-            AssGen.AdaptiveGainModulationAddEnableSwitch = (chkAGCAddEnable.Checked && chkAGCAddEnable.Enabled);
-            AssGen.AdaptiveGainModulationAddFunctionCall = (chkAGCAddGetModFactorFunCall.Checked && chkAGCAddGetModFactorFunCall.Enabled);
+            // ToDo: Remove
+            //AssGen.BidirectionalFeedback = cNPNZ.IsBidirectional;
+            //if (AssGen.BidirectionalFeedback) // feedback rectification option only allowed with bi-directional feedbacks
+            //    AssGen.FeedbackRectification = cNPNZ.FeedbackRecitification; 
+            //else
+            //    AssGen.FeedbackRectification = false;
 
-            // set dynamic execution options
-            AssGen.SaveRestoreContext = this.chkContextSaving.Checked;
-            AssGen.SaveRestoreShadowRegisters = ((this.chkSaveRestoreShadowRegisters.Checked) && (this.chkContextSaving.Checked));
-            AssGen.SaveRestoreMACRegisters = ((this.chkSaveRestoreMACRegisters.Checked) && (this.chkContextSaving.Checked));
-            AssGen.SaveRestoreAccumulators = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked));
-            AssGen.SaveRestoreAccumulatorA = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked) && (this.chkSaveRestoreAccumulatorA.Checked));
-            AssGen.SaveRestoreAccumulatorB = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked) && (this.chkSaveRestoreAccumulatorB.Checked));
-            AssGen.SaveRestoreCoreConfig = ((this.chkSaveRestoreCoreConfig.Checked) && (this.chkContextSaving.Checked));
-            AssGen.SaveRestoreCoreStatusRegister = ((this.chkSaveRestoreCoreStatus.Checked) && (this.chkContextSaving.Checked));
+            DebugOutput("assembly generator script: " + AssGen.GeneratorScript.FileName);
+            DebugOutput("assembly generator script version: " + AssGen.GeneratorScript.FileVersion + " (" + AssGen.GeneratorScript.FileVersionDate + ")");
+            DebugOutput("filter order: " + AssGen.FilterOrder.ToString());
+            DebugOutput("number scaling method: " + AssGen.ScalingMethod.ToString() + " (" + AssGen.ScalingMethodDescription + ")");
+            DebugOutput("assembly code ptimization level: " + AssGen.CodeOptimizationLevel.ToString());
 
-            AssGen.AddAlternateSource = ((this.chkAddAlternateSource.Checked) && (this.chkAddAlternateSource.Enabled));
-            AssGen.AddAlternateTarget = ((this.chkAddAlternateTarget.Checked) && (this.chkAddAlternateTarget.Enabled));
-            AssGen.AddADCTriggerAPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerAPlacement.Checked));
-            AssGen.AddADCTriggerBPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerBPlacement.Checked));
-            AssGen.AddCascadedFunctionCall = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCascadedFunctionCall.Checked));
-            AssGen.AddErrorInputNormalization = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddErrorNormalization.Checked));
-            AssGen.AddEnableDisableFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked));
-            AssGen.AddDisableDummyReadFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked) && (this.chkAddDisableDummyRead.Checked));
-            AssGen.AddCoreConfig = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCoreConfig.Checked));
 
-            AssGen.AddAntiWindup = this.chkAntiWindup.Checked;
-            AssGen.AntiWindupSoftDesaturationFlag = ((this.chkAntiWindupSoftDesaturationFlag.Checked) && ((this.chkAntiWindupClampMax.Checked) || (this.chkAntiWindupClampMin.Checked)));
-            AssGen.AntiWindupClampMax = this.chkAntiWindupClampMax.Checked;
-            AssGen.AntiWindupClampMaxWithStatusFlag = ((this.chkAntiWindupMaxStatusFlag.Checked) && (this.chkAntiWindupClampMax.Checked));
-            AssGen.AntiWindupClampMin = this.chkAntiWindupClampMin.Checked;
-            AssGen.AntiWindupClampMinWithStatusFlag = ((this.chkAntiWindupMinStatusFlag.Checked) && (this.chkAntiWindupClampMin.Checked));
+            // Set Code Generation Options
+            //Control parent = new Control();
+            CheckBox check = new CheckBox();
 
-            AssGen.CreateCopyOfMostRecentControlInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlInput.Checked) && (chkDataProviderSource.Checked));
-            AssGen.CreateCopyOfMostRecentErrorInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderErrorInput.Checked) && (chkDataProviderSource.Checked));
-            AssGen.CreateCopyOfMostRecentControlOutput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlOutput.Checked) && (chkDataProviderSource.Checked));
+            DebugOutput("capture option tokens...");
 
-            AssGen.StoreReloadAccLevel1 = ((this.chkCodeFeatureOptions.Checked) && (this.chkStoreReloadAccLevel1.Checked) && (this.chkStoreReloadAccLevel1.Enabled) && (AssGen.CodeOptimizationLevel == 1));
+            for (_i = 0; _i < AssGen.Tokens.Items.Count(); _i++)
+            {
+                foreach (Control _tab in tabConfig.Controls)
+                {
+                    if (_tab.GetType().ToString() == "System.Windows.Forms.TabPage") 
+                    {
+                        foreach (Control parent in _tab.Controls)
+                        {
+                            if (parent.GetType().ToString() == "System.Windows.Forms.GroupBox")
+                            { 
+                                tagName = AssGen.Tokens.Items[_i].Key;
+                                var items = parent.Controls;
+                                var item = items.Cast<Control>().FirstOrDefault(control => String.Equals(control.Tag, tagName));
+
+                                if (item != null)
+                                {
+                                    if (item.GetType().ToString() == "System.Windows.Forms.CheckBox")
+                                    {
+                                        check = (CheckBox)item;
+                                        AssGen.Tokens.Items[_i].Enabled = (bool)(check.Checked && check.Enabled);
+                                        DebugOutput("code generator option '" + AssGen.Tokens.Items[_i].Key + "': " + AssGen.Tokens.Items[_i].Enabled.ToString().ToLower());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ToDo: Remove
+
+            //// Set Adaptive Gain Control options
+            //AssGen.AdaptiveGainModulationEnable = (chkEnableAdaptiveGainControl.Checked && chkEnableAdaptiveGainControl.Enabled);
+            //AssGen.AdaptiveGainModulationAddEnableSwitch = (chkAGCAddEnable.Checked && chkAGCAddEnable.Enabled);
+            //AssGen.AdaptiveGainModulationAddFunctionCall = (chkAGCAddGetModFactorFunCall.Checked && chkAGCAddGetModFactorFunCall.Enabled);
+
+            //// set dynamic execution options
+            //AssGen.SaveRestoreContext = this.chkContextSaving.Checked;
+            //AssGen.SaveRestoreShadowRegisters = ((this.chkSaveRestoreShadowRegisters.Checked) && (this.chkContextSaving.Checked));
+            //AssGen.SaveRestoreMACRegisters = ((this.chkSaveRestoreMACRegisters.Checked) && (this.chkContextSaving.Checked));
+            //AssGen.SaveRestoreAccumulators = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked));
+            //AssGen.SaveRestoreAccumulatorA = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked) && (this.chkSaveRestoreAccumulatorA.Checked));
+            //AssGen.SaveRestoreAccumulatorB = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked) && (this.chkSaveRestoreAccumulatorB.Checked));
+            //AssGen.SaveRestoreCoreConfig = ((this.chkSaveRestoreCoreConfig.Checked) && (this.chkContextSaving.Checked));
+            //AssGen.SaveRestoreCoreStatusRegister = ((this.chkSaveRestoreCoreStatus.Checked) && (this.chkContextSaving.Checked));
+
+            //AssGen.AddAlternateSource = ((this.chkAddAlternateSource.Checked) && (this.chkAddAlternateSource.Enabled));
+            //AssGen.AddAlternateTarget = ((this.chkAddAlternateTarget.Checked) && (this.chkAddAlternateTarget.Enabled));
+            //AssGen.AddADCTriggerAPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerAPlacement.Checked));
+            //AssGen.AddADCTriggerBPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerBPlacement.Checked));
+            //AssGen.AddCascadedFunctionCall = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCascadedFunctionCall.Checked));
+            //AssGen.AddErrorInputNormalization = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddErrorNormalization.Checked));
+            //AssGen.AddEnableDisableFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked));
+            //AssGen.AddDisableDummyReadFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked) && (this.chkAddDisableDummyRead.Checked));
+            //AssGen.AddCoreConfig = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCoreConfig.Checked));
+
+            //AssGen.AddAntiWindup = this.chkAntiWindup.Checked;
+            //AssGen.AntiWindupSoftDesaturationFlag = ((this.chkAntiWindupSoftDesaturationFlag.Checked) && ((this.chkAntiWindupClampMax.Checked) || (this.chkAntiWindupClampMin.Checked)));
+            //AssGen.AntiWindupClampMax = this.chkAntiWindupClampMax.Checked;
+            //AssGen.AntiWindupClampMaxWithStatusFlag = ((this.chkAntiWindupMaxStatusFlag.Checked) && (this.chkAntiWindupClampMax.Checked));
+            //AssGen.AntiWindupClampMin = this.chkAntiWindupClampMin.Checked;
+            //AssGen.AntiWindupClampMinWithStatusFlag = ((this.chkAntiWindupMinStatusFlag.Checked) && (this.chkAntiWindupClampMin.Checked));
+
+            //AssGen.CreateCopyOfMostRecentControlInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlInput.Checked) && (chkDataProviderSource.Checked));
+            //AssGen.CreateCopyOfMostRecentErrorInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderErrorInput.Checked) && (chkDataProviderSource.Checked));
+            //AssGen.CreateCopyOfMostRecentControlOutput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlOutput.Checked) && (chkDataProviderSource.Checked));
+
+            //AssGen.StoreReloadAccLevel1 = ((this.chkCodeFeatureOptions.Checked) && (this.chkStoreReloadAccLevel1.Checked) && (this.chkStoreReloadAccLevel1.Enabled) && (AssGen.CodeOptimizationLevel == 1));
 
             // Start body generation by adding generator header
 
@@ -3530,11 +3793,22 @@ namespace dcld
                                    "; **********************************************************************************" + "\r\n";
                                     
             // add body from the body generator
+            DebugOutput("generate code body...");
             code.Append(AssGen.BuildCode());
+            DebugOutput("assembly code body generation complete");
+
+            // Print used resources to Context Management section of main window
+            lblContextMgmntResources.Text = "WREG " + AssGen.WREGUsage + "/ACC " + AssGen.AccumulatorUsage.ToUpper();
+
+            DebugOutput("capture execution timing...");
 
             lblNumberOfInstructionCycles.Text = AssGen.CycleCountTotal.ToString();
             lblNumberOfInstructionCyclesRead.Text = AssGen.CycleCountToDataCapture.ToString();
             lblNumberOfInstructionCyclesResponse.Text = AssGen.CycleCountToWriteback.ToString();
+
+            DebugOutput("instruction cycles (total): " + AssGen.CycleCountTotal.ToString());
+            DebugOutput("instruction cycles (READ): " + AssGen.CycleCountToDataCapture.ToString());
+            DebugOutput("instruction cycles (WRITEBACK): " + AssGen.CycleCountToWriteback.ToString());
 
             return (code);
 
@@ -3554,7 +3828,6 @@ namespace dcld
             double[] pwm_data_level;
             double nan = Double.NaN;
 
-
             try 
             { 
                 // Print execution time results
@@ -3566,8 +3839,18 @@ namespace dcld
                     control_read = 1e+3 * Convert.ToDouble(lblNumberOfInstructionCyclesRead.Text) * (1.0 / cpu_clk);
                     control_write = 1e+3 * Convert.ToDouble(lblNumberOfInstructionCyclesResponse.Text) * (1.0 / cpu_clk);
 
+                    DebugOutput("CPU clock setting: " + cpu_clk.ToString() + " MHz");
+                    DebugOutput("control interrupt latency: " + control_latency.ToString() + " ns");
+                    DebugOutput("READ delay: " + control_read.ToString() + " ns");
+                    DebugOutput("WRITEBACK delay: " + control_write.ToString() + " ns");
+
                 }
-                else { return; }
+                else {
+                    DebugOutput("error: CPU clock setting not defined");
+                    DebugOutput("exit timing chart update");
+                    return;
+                }
+
 
 
                 // Set user, control and ADC delays
@@ -3588,7 +3871,11 @@ namespace dcld
 
 
                 if ((control_latency < 0) || (float.IsInfinity((float)control_latency)))
-                { return; }
+                {
+                    DebugOutput("error: corrupt timing parameters detected");
+                    DebugOutput("exit timing chart update");
+                    return; 
+                }
 
                 // Capture ADC trigger point
 
@@ -3751,7 +4038,7 @@ namespace dcld
                 read_delay = (adc_trig + control_start_delay + control_read) - adc_trig;
                 response_delay = (adc_trig + control_start_delay + control_write) - adc_trig;
 
-                cpu_load = (double)(control_start_delay + control_latency) / (1e+9 * cNPNZ.SamplingInterval);
+                cpu_load = (double)(control_start_delay + control_latency) / (1e+9 * cNPNZ.SamplingPeriod);
                 lblCPULoad.Text = Math.Round(100.0 * cpu_load, 1).ToString("#0.0", CultureInfo.CurrentCulture);
                 lblCPULoadRatio.Text = lblCPULoad.Text + " %";
                 lblCPULoadRatio.Height = Convert.ToInt32(cpu_load * pnlCPULoadRatio.Height);
@@ -3762,9 +4049,15 @@ namespace dcld
 
                 eventProjectFileChanged(sender, e);
 
+                DebugOutput("timing chart update complete", Color.DarkOrchid);
+
                 return;
             }
-            catch{ return; }
+            catch (Exception ex) {
+                DebugOutput("error (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
+                DebugOutput("exit timing chart update");
+                return; 
+            }
         }
 
         private void chartTimingSetAnnotationLabelPositions(object sender, EventArgs e)
@@ -3817,25 +4110,20 @@ namespace dcld
 
         private void codeGeneratorConfig_GroupFolding(object sender, EventArgs e)
         {
-            if (!chkContextSaving.Checked){ grpContextSaving.Height = GroupFolding_MinHeight; }
-            else { grpContextSaving.Height = GroupFolding_grpContextSavingHeight; }
-            //grpContextSaving.Top = grpFunctionLabel.Top + grpFunctionLabel.Height + GroupFolding_VDistance; // changed to object Docking->Top
+            if (!chkContextSaving.Checked){ grpContextManagement.Height = GroupFolding_MinHeight; }
+            else { grpContextManagement.Height = GroupFolding_grpContextSavingHeight; }
 
             if (!chkCodeFeatureOptions.Checked) { grpCodeFeatureOptions.Height = GroupFolding_MinHeight; }
             else { grpCodeFeatureOptions.Height = GroupFolding_grpCodeFeatureOptionsHeight; }
-            //grpCodeFeatureOptions.Top = grpContextSaving.Top + grpContextSaving.Height + GroupFolding_VDistance;
 
             if (!chkAutomatedDataInterface.Checked) { grpCodeFeatureDataIO.Height = GroupFolding_MinHeight; }
             else { grpCodeFeatureDataIO.Height = GroupFolding_grpCodeFeatureDataIOHeight; }
-            //grpCodeFeatureOptions.Top = grpContextSaving.Top + grpContextSaving.Height + GroupFolding_VDistance;
 
             if (!chkDataProviderSource.Checked) { grpDataProviderSources.Height = GroupFolding_MinHeight; }
             else { grpDataProviderSources.Height = GroupFolding_grpDataProviderSourcesHeight; }
-            //grpCodeFeatureOptions.Top = grpContextSaving.Top + grpContextSaving.Height + GroupFolding_VDistance;
 
             if (!chkAntiWindup.Checked) { grpAntiWindup.Height = GroupFolding_MinHeight; }
             else { grpAntiWindup.Height = GroupFolding_grpAntiWindupHeight; }
-            //grpAntiWindup.Top = grpCodeFeatureOptions.Top + grpCodeFeatureOptions.Height + GroupFolding_VDistance;
 
             return;
         }
@@ -3843,81 +4131,90 @@ namespace dcld
         private void CodeGeneratorOptions_CheckedChanged(object sender, EventArgs e)
         {
             codeGeneratorConfig_GroupFolding(sender, e);
+            
             GenerateCode(sender, e);
+            //ForceCoefficientsUpdate(sender, e);
 
             eventProjectFileChanged(sender, e);
             
             return;
         }
 
-        private void chkContextSaving_CheckedChanged(object sender, EventArgs e)
+        private void FoldingBoxEnable_CheckChanged(object sender, EventArgs e)
         {
+            // generic variables
             int i = 0;
-            CheckBox check;
-            bool ACCBIsValid = false;
+            CheckBox check, chkItem;
+            GroupBox group;
+            Button btn;
 
-            ACCBIsValid = (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT) ||
-                          (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT);
 
-            for (i=0; i<grpContextSaving.Controls.Count; i++)
+            // If function was called from other control than a check box, exit here
+            if (sender.GetType().ToString() != "System.Windows.Forms.CheckBox")
+                return;
+
+            check = (CheckBox)sender;
+
+            // If parent of selected check box is not a group box, exit here
+            if (check.Parent.GetType().ToString() != "System.Windows.Forms.GroupBox")
+                return;
+
+            group = (GroupBox)check.Parent;
+
+            // Let the Check Box respond before updating the GUI
+            Application.DoEvents();
+
+            // enable/disable child controls within a group box
+            for (i = 0; i < group.Controls.Count; i++)
             {
-                check = (CheckBox)grpContextSaving.Controls[i];
-                if (check.Name == chkSaveRestoreAccumulatorB.Name) check.Enabled = (chkContextSaving.Checked & ACCBIsValid);
-                else if (check.Name != chkContextSaving.Name) check.Enabled = chkContextSaving.Checked; 
-            }
 
-            CodeGeneratorOptions_CheckedChanged(sender, e);
-            
-            return;
-        }
+                switch (group.Controls[i].GetType().ToString())
+                {
 
-        private void chkCodeFeatureOptions_CheckedChanged(object sender, EventArgs e)
-        {
-            int i = 0;
-            CheckBox check;
+                    // If control is a check box
+                    case "System.Windows.Forms.CheckBox":
 
-            for (i = 0; i < grpCodeFeatureOptions.Controls.Count; i++)
-            {
-                check = (CheckBox)grpCodeFeatureOptions.Controls[i];
-                if (check.Name != chkCodeFeatureOptions.Name) 
-                    check.Enabled = chkCodeFeatureOptions.Checked;
-            }
+                        chkItem = (CheckBox)group.Controls[i];
+                        
 
-            CodeGeneratorOptions_CheckedChanged(sender, e);
+                        // ~~~~~~~~~ Handle individual exceptions ~~~~~~~~~~~~~~~~~~
 
-            return;
-        }
 
-        private void chkAntiWindup_CheckedChanged(object sender, EventArgs e)
-        {
-            int i = 0;
-            CheckBox check;
+                        // ~~~~~~~~~
+                        if (chkItem.Name != check.Name)
+                            chkItem.Enabled = check.Checked;
+                        else
+                        {  } // ??? //
 
-            for (i = 0; i < grpAntiWindup.Controls.Count; i++)
-            {
-                check = (CheckBox)grpAntiWindup.Controls[i];
-                if (check.Name != "chkAntiWindup") check.Enabled = chkAntiWindup.Checked;
-            }
 
-            CodeGeneratorOptions_CheckedChanged(sender, e);
-            return;
-        }
+                        break;
 
-        private void chkAutomatedDataInterface_CheckedChanged(object sender, EventArgs e)
-        {
-            int i = 0;
-            CheckBox check;
+                    // If control is a command button
+                    case "System.Windows.Forms.Button":
 
-            for (i = 0; i < grpCodeFeatureDataIO.Controls.Count; i++)
-            {
-                if (grpCodeFeatureDataIO.Controls[i].Name.Substring(0, 3) == "chk")
-                { 
-                    check = (CheckBox)grpCodeFeatureDataIO.Controls[i];
-                    if (check.Name != "chkAutomatedDataInterface") check.Enabled = chkAutomatedDataInterface.Checked;
+                        btn = (Button)group.Controls[i];
+
+                        // ~~~~~~~~~ Handle individual exceptions ~~~~~~~~~~~~~~~~~~
+    
+                        // Development Tools
+                        //if (check.Name == chkEnableDevelopmentTools.Name)
+                        //    btn.Enabled = (chkAddPTermLoop.Checked & chkAddPTermLoop.Enabled & chkEnableDevelopmentTools.Checked);
+
+
+                        // ~~~~~~~~~
+                        //else
+                            btn.Enabled = check.Checked;
+
+
+                        break;
+
+                    default:
+                        break;
                 }
 
             }
 
+            // Update project settings
             CodeGeneratorOptions_CheckedChanged(sender, e);
             return;
 
@@ -3953,13 +4250,8 @@ namespace dcld
 
         private void chkSaveRestoreAccumulators_CheckedChanged(object sender, EventArgs e)
         {
-            bool ACCBIsValid = false;
-
-            ACCBIsValid = (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DBLSCL_FLOAT) || 
-                          (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT);
-
             chkSaveRestoreAccumulatorA.Enabled = chkSaveRestoreAccumulators.Checked;
-            chkSaveRestoreAccumulatorB.Enabled = chkSaveRestoreAccumulators.Checked && ACCBIsValid;
+            chkSaveRestoreAccumulatorB.Enabled = chkSaveRestoreAccumulators.Checked;
 
             CodeGeneratorOptions_CheckedChanged(sender, e);
             return;
@@ -3971,14 +4263,6 @@ namespace dcld
             UpdateTransferFunction(sender, e);
             chkSaveRestoreAccumulators_CheckedChanged(sender, e);
 
-            chkEnableAdaptiveGainControl.Enabled = (cmbQScalingMethod.SelectedIndex == 2);
-
-            //chkEnableAdaptiveGainControl.Enabled = ((cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_DUAL_BIT_SHIFT) ||
-            //                                        (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_SINGLE_BIT_SHIFT) ||
-            //                                        (cNPNZ.ScalingMethod == clsCompensatorNPNZ.dcldScalingMethod.DCLD_SCLMOD_OUTPUT_SCALING_FACTOR)
-            //                                        );
-            chkAGCAddEnable.Enabled = (chkEnableAdaptiveGainControl.Enabled && chkEnableAdaptiveGainControl.Checked);
-            chkAGCAddGetModFactorFunCall.Enabled = (chkEnableAdaptiveGainControl.Enabled && chkEnableAdaptiveGainControl.Checked);
             return;
         }
 
@@ -4170,8 +4454,9 @@ namespace dcld
                 }
 
             }
-            catch {
-                DebugInfoPrintLine(">chartBode_SetScales(" + XAxesLimitType.ToString() + ") Exception");
+            catch (Exception ex)
+            {
+                DebugOutput("chartBode_SetScales(" + XAxesLimitType.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
             }
             return;
         }
@@ -4459,7 +4744,7 @@ namespace dcld
 
             id = save_item.ToString();
             key = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Datecode identifies the item
-            label = "(Autosafe)";
+            label = "(Autosave)";
             user = Environment.UserName.ToString();
             settings =
                 cmbCompType.SelectedIndex.ToString() + "; " +
@@ -4711,23 +4996,55 @@ namespace dcld
             CodeGeneratorOptions_CheckedChanged(sender, e);
         }
 
-        private void chkDataProviderSource_CheckedChanged(object sender, EventArgs e)
+        private void chkAddPTermLoop_CheckedChanged(object sender, EventArgs e)
         {
-            chkAddDataProviderControlInput.Enabled = chkDataProviderSource.Checked;
-            chkAddDataProviderControlOutput.Enabled = chkDataProviderSource.Checked;
-            chkAddDataProviderErrorInput.Enabled = chkDataProviderSource.Checked;
-            CodeGeneratorOptions_CheckedChanged(sender, e);
+            DialogResult msg_res = new DialogResult();
+
+            if (!ProjectFileLoadActive)
+            {
+                // When enabled by user, show warning message
+                if (chkAddPTermLoop.Checked)
+                {
+                    msg_res = MessageBox.Show(
+                        "Attention!\r\n\r\n" +
+                        "This P-Term control loop is by default unstable and is not suited to be used to regulate the power supply stage. " +
+                        "It only serves the sole purpose of being used as regulator during measurements of the plant transfer function.\r\n\r\n" +
+                        "By enabling this option, a P-Term Control Loop will be added to the assembly library file. This P-Term controller " +
+                        "is meant to replace the main control loop."
+                        , "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+
+                    // If user denies, uncheck this option
+                    chkAddPTermLoop.Checked = (bool)(msg_res == System.Windows.Forms.DialogResult.OK);
+
+                }
+
+                // Update project settings
+                CodeGeneratorOptions_CheckedChanged(sender, e);
+            }
+
+            // Enable configuration command button
+            cmdGetPTermNominalFeedback.Enabled = chkAddPTermLoop.Checked;
+            cmdGetPTermNominalOutput.Enabled = chkAddPTermLoop.Checked;
+            
+            txtPTermNominalFeedback.Enabled = chkAddPTermLoop.Checked;
+            lblPTermNominalFeedback.Enabled = chkAddPTermLoop.Checked;
+            txtPTermNominalOutput.Enabled = chkAddPTermLoop.Checked;
+            lblPTermNominalOutput.Enabled = chkAddPTermLoop.Checked;
+
         }
 
         private void showSDomainTransferFunctionToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
+            ShowSDomainTF = showSDomainTransferFunctionToolStripMenuItem.Checked;
             chartBode.Series[2].IsVisibleInLegend = ShowSDomainTF;
             chartBode.Series[3].IsVisibleInLegend = ShowSDomainTF;
             UpdateBodePlot(sender, e, false);
+            eventProjectFileChanged(sender, e);
         }
 
         private void showSDomainTransferFunctionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Toggle Check State on Click
             if (showSDomainTransferFunctionToolStripMenuItem.Checked)
                 ShowSDomainTF = false;
             else
@@ -4761,19 +5078,26 @@ namespace dcld
             // Show the settings form
             if (ctrl_output.OutputType == clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_UNDEFINED)
                 ctrl_output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_FIXED_FREQUENCY;
+
             frm.output = ctrl_output;
-            frm.PWMFrequency = (Convert.ToDouble(this.txtPWMFrequency.Text) * 1000.0);
-            frm.PWMClock = (4e+9);
-            frm.PWMClockDivider = 1.0;
+
+            frm.output.SetDeviceType(_targetDeviceType);
+            //frm.output.PWMFrequency = (Convert.ToDouble(this.txtPWMFrequency.Text) * 1000.0);
+            //frm.output.PWMClock = (4e+9);
+            //frm.output.PWMClockDivider = 1.0;
+
+            frm.EnableNominalControlEdits = true;
 
             if(frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 double outgain = 0.0;
                 string str_outgain = "";
-                outgain = frm.OutputGain;
+
+                outgain = frm.output.Gain;
                 str_outgain = outgain.ToString("#0.000000", CultureInfo.CurrentCulture);
                 txtOutputGain.Text = str_outgain;
-                txtPWMFrequency.Text = (frm.PWMFrequency / 1000.0).ToString(CultureInfo.CurrentCulture);
+                txtPWMFrequency.Text = (frm.output.PWMFrequency / 1000.0).ToString(CultureInfo.CurrentCulture);
+
                 ctrl_output = frm.output;
             }
         }
@@ -4792,6 +5116,7 @@ namespace dcld
         {
             txtInputGain.Enabled = chkNormalizeInputGain.Checked;
             lblInputGain.Enabled = chkNormalizeInputGain.Checked;
+            cmdGetInputGain.Enabled = chkNormalizeInputGain.Checked;
             UpdateTransferFunction(sender, e);
         }
 
@@ -4803,41 +5128,136 @@ namespace dcld
             // Show the settings form
             frm.feedback = feedback;
             frm.feedback.ADCResolution = cNPNZ.InputDataResolution;
-            frm.feedback.FeedbackGain = cNPNZ.InputGain;
+            frm.Text = "Input Gain Calculator";
 
             if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 txtInputGain.Text = frm.feedback.FeedbackGain.ToString("#0.000000", CultureInfo.CurrentCulture); ;
                 txtInputDataResolution.Text = frm.feedback.ADCResolution.ToString("#0.#", CultureInfo.CurrentCulture);
+
+                if (frm.feedback.FeedbackType != clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE)
+                    txtPTermNominalFeedback.Text = frm.feedback.FeedbackValue.ToString(CultureInfo.CurrentCulture);
+
                 feedback = frm.feedback;
             }
 
         }
 
-        private void ToolTip_Show(object sender, EventArgs e, string tool_tip_text)
+        private void cmdGetPTermNominalFeedback_Click(object sender, EventArgs e)
         {
-            // guarding condition...
-            if (sender.GetType().ToString() != "System.Windows.Forms.PictureBox")
-                return;
+            // Create a new instance of the form class
+            frmCalculateInputGain frm = new frmCalculateInputGain();
+            double dbl_DSRes = 0.0;    // Copies of Digital Source Max Value and Resolution
 
-            PictureBox TTpic = (PictureBox)sender;
-            frmToolTip TTip = new frmToolTip();
+            // Show the settings form
+            frm.feedback = feedback;
 
-            TTip.BackColor = SystemColors.Info;
-            TTip.ToolTipText = tool_tip_text;
-            TTip.StartPosition = FormStartPosition.Manual;
-            TTip.WinPos = TTpic.PointToScreen(Point.Empty); ;
-            TTip.Show(this);
+            if (frm.feedback.ADCResolution != cNPNZ.InputDataResolution) feedback.ADCResolution = cNPNZ.InputDataResolution;
 
-            return;
+            if (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER)
+                frm.feedback.VoltageDividerSenseVoltage = (Convert.ToDouble(txtPTermNominalFeedback.Text) * frm.feedback.ADCGranularity) / frm.feedback.VoltageDividerFeedbackGain;
+            else if (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_SHUNT_AMPLIFIER)
+                frm.feedback.CurrentSenseSenseCurrent = (Convert.ToDouble(txtPTermNominalFeedback.Text) * frm.feedback.ADCGranularity) / frm.feedback.CurrentSenseFeedbackGain;
+            else if (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_CURRENT_TRANSFORMER)
+                frm.feedback.CurrentTransformerSenseCurrent = (Convert.ToDouble(txtPTermNominalFeedback.Text) * frm.feedback.ADCGranularity) / frm.feedback.CurrentTransformerFeedbackGain;
+            else if (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE)
+                frm.feedback.DigitalSourceValue = (Convert.ToDouble(txtPTermNominalFeedback.Text));
+
+            dbl_DSRes = feedback.DigitalSourceResolution; // Backup signal resolution of digital source
+            frm.EnableInputValueEdits = true; // Allow user edits of value field
+            frm.Text = "Nominal Feedback Level Calculator";
+
+            if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                // Restore original Digital Source Resolution
+                if (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE)
+                    frm.feedback.DigitalSourceResolution = dbl_DSRes;   // Restore original signal resolution
+                
+                // Set nominal feedback level
+                txtPTermNominalFeedback.Text = frm.feedback.FeedbackValue.ToString(CultureInfo.CurrentCulture);
+
+                // Keep Input Gain and Input Resolution in Sync
+                if (frm.feedback.FeedbackType != clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_DIGITAL_SOURCE)
+                { 
+                    if (chkNormalizeInputGain.Checked)
+                    { 
+                        txtInputGain.Text = frm.feedback.FeedbackGain.ToString("#0.000000", CultureInfo.CurrentCulture); ;
+                        txtInputDataResolution.Text = frm.feedback.ADCResolution.ToString("#0.#", CultureInfo.CurrentCulture);
+                        feedback = frm.feedback;
+                    }
+
+                    // Sync settings across output and input objects
+                    if ((frm.feedback.VoltageDividerSenseVoltage != ctrl_output.NominalOutputVoltage) && 
+                        (frm.feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER))
+                    {
+                        ctrl_output.NominalOutputVoltage = frm.feedback.VoltageDividerSenseVoltage;
+                        txtPTermNominalOutput.Text = Math.Round(ctrl_output.NominalOutput, 0).ToString(CultureInfo.CurrentCulture);
+                    }
+
+                }
+
+                CodeGeneratorOptions_CheckedChanged(chkAddPTermLoop, e);
+            }
+
+        }
+
+
+        private void cmdGetPTermNominalOutput_Click(object sender, EventArgs e)
+        {
+            // Create a new instance of the form class
+            frmCalculateOutputGain frm = new frmCalculateOutputGain();
+
+            // Show the settings form
+            if (ctrl_output.OutputType == clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_UNDEFINED)
+                ctrl_output.OutputType = clsOutputDeclaration.dcldOutputType.DCLD_OUT_TYPE_FIXED_FREQUENCY;
+
+            // Sync Parameters across application
+            if ((Convert.ToDouble(txtPWMFrequency.Text) * 1000) != ctrl_output.PWMFrequency)
+                ctrl_output.PWMFrequency = (Convert.ToDouble(txtPWMFrequency.Text) * 1000);
+            
+            // Set frm objects
+            frm.output = ctrl_output;
+            frm.output.SetDeviceType(_targetDeviceType);
+            frm.EnableNominalControlEdits = true;
+            frm.Text = "Nominal Ouptut Level Calculator";
+
+            if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                // Update control output object
+                txtPTermNominalOutput.Text = Math.Round(frm.output.NominalOutput, 0).ToString(CultureInfo.CurrentCulture);
+
+                // Sync settings across output and input objects
+                if ((feedback.VoltageDividerSenseVoltage != ctrl_output.NominalOutputVoltage) &&
+                    (feedback.FeedbackType == clsFeedbackDeclaration.dcldFeedbackType.DCLD_FB_TYPE_VOLTAGE_DIVIDER))
+                {
+                    feedback.VoltageDividerSenseVoltage = frm.output.NominalOutputVoltage;
+                    txtPTermNominalFeedback.Text = feedback.FeedbackValue.ToString(CultureInfo.CurrentCulture);
+                }
+                  
+                // Capture output configuration
+                ctrl_output = frm.output;
+
+                // Update Timing Graph parameters
+                txtPWMFrequency.Text = (ctrl_output.PWMFrequency / 1000.0).ToString(CultureInfo.CurrentCulture);
+                txtPWMDutyCycle.Text = Math.Round((100.0 * ctrl_output.PWMDutyCycle), 1).ToString(CultureInfo.CurrentCulture);
+
+                // Update code output
+                CodeGeneratorOptions_CheckedChanged(cmdGetPTermNominalOutput, e);
+            }
 
         }
 
         private void chkEnableAdaptiveGainControl_CheckedChanged(object sender, EventArgs e)
         {
-            chkAGCAddGetModFactorFunCall.Enabled = chkEnableAdaptiveGainControl.Checked;
-            chkAGCAddEnable.Enabled = chkEnableAdaptiveGainControl.Checked;
+            chkAGCAddGetModFactorFunCall.Enabled = (chkEnableAdaptiveGainControl.Enabled && chkEnableAdaptiveGainControl.Checked);
+            chkAGCAddEnable.Enabled = (chkEnableAdaptiveGainControl.Enabled && chkEnableAdaptiveGainControl.Checked);
             CodeGeneratorOptions_CheckedChanged(sender, e);
+        }
+
+
+        private void toolStripButtonConfig_Click(object sender, EventArgs e)
+        {
+            OpenProjectConfigWindow();
         }
 
         private void OpenProjectConfigWindow()
@@ -4865,9 +5285,10 @@ namespace dcld
             { frm.dcldControllerNameLabel = txtControllerNameLabel.Text.Trim(); }
             else { frm.dcldControllerNameLabel = ""; }
 
-            // 
+            // Set option if window should be shown at startup by default
             frm.ShowWinAtStartup = showMPLABXconfigWindowAtStartup;
 
+            // Open Window...
             if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 MPLABXProject = frm.MPLABXProject;
@@ -4884,7 +5305,14 @@ namespace dcld
 
                 // capture selected target device
                 _targetDevice = MPLABXProject.MPLABXConfiguration[MPLABXProject.ActiveConfiguration].TargetDevice;
-                if (_targetDevice.Length >= 5) _targetDeviceType = _targetDevice.Substring(0, 5);
+                if (_targetDevice.Length >= 7)
+                { 
+                    if (_targetDevice.Substring(5, 1) == "C")
+                        _targetDeviceType = _targetDevice.Substring(0, 6);
+                    else
+                        _targetDeviceType = _targetDevice.Substring(0, 7);
+
+                }
                 ProjectFile.WriteKey("ControlSetup", "TargetDevice", _targetDevice);
 
                 // If both objects have been set, update path information
@@ -4917,9 +5345,23 @@ namespace dcld
 
         }
 
-        private void toolStripButtonConfig_Click(object sender, EventArgs e)
+        private void ToolTip_Show(object sender, EventArgs e, string tool_tip_text)
         {
-            OpenProjectConfigWindow();
+            // guarding condition...
+            if (sender.GetType().ToString() != "System.Windows.Forms.PictureBox")
+                return;
+
+            PictureBox TTpic = (PictureBox)sender;
+            frmToolTip TTip = new frmToolTip();
+
+            TTip.BackColor = SystemColors.Info;
+            TTip.ToolTipText = tool_tip_text;
+            TTip.StartPosition = FormStartPosition.Manual;
+            TTip.WinPos = TTpic.PointToScreen(Point.Empty); ;
+            TTip.Show(this);
+
+            return;
+
         }
 
         private void picInfo_MouseHover(object sender, EventArgs e)
@@ -4942,27 +5384,39 @@ namespace dcld
 
             else if (pic.Name == picInfoAGC.Name)
                 msg = "This function adds a modulation factor to the control loop code allowing runtime tuning " +
-                      "of the loop gain. \r\n" +
+                      "of the feedback loop gain. \r\n" +
                       "\r\n" +
-                      "This option is only available for fast number scaling modes.\r\n" +
+                      "Please note:\r\n" +
+                      "When enabled, this option will automatically enable the Alternate Input Source port of this " +
+                      "contorller.\r\n" +
+                      "\r\n" +
                       "Please refer to the user guide for more details.";
 
             else if (pic.Name == picInfoAlternateInputSource.Name)
-                msg = "The NPNZ controller xupport up to two input ports. For common feedback loops only one port " +
+                msg = "A NPNZ controller support up to two input ports. For common feedback loops only one port " +
                       "is required. The second 'Alternate Source' port is provided to support enhanced functoins where " +
-                      "control inputs need to be swapped during runtime (e.g. bi-directional control loops). \r\n" +
-                      "Alternatively, a second input port is required for control modes where the controller result " +
-                      "has further dependencies. (e.g. Adaptive Gain Modulation) \r\n" +
+                      "control inputs need to be swapped during runtime (e.g. bi-directional control loops) or a second " +
+                      "data input is required for advanced control features (e.g. Adaptive Gain Control). \r\n" +
                       "\r\n" +
                       "Please note:\r\n" +
-                      "This option is locked when option\r\n'Adaptive Gain Control' is enabled.";
+                      "This option is locked when option 'Adaptive Gain Control' is enabled.";
 
             else if (pic.Name == picInfoCascadeFunctionCall.Name)
-                msg = "By enabling this function, you can specify a function pointer" + "\r\n" +
-                      "to an additional function which should be executed right after" + "\r\n" +
+                msg = "By enabling this function, you can specify a function pointer " +
+                      "to an additional function which should be executed right after " +
                       "the execution of this loop has been completed." + "\r\n" +
                       "\r\n" +
                       "Please refer to the user guide for more details.";
+
+            else if (pic.Name == picInfoContextManagement.Name)
+                msg = "Context switching is performed by the CPU everytime when the normal execution of instrucitons is interrupted. " +
+                      "Since the introduction of the dsPIC33EP product family, dsPIC devices support so-called Alternate Working Registers, " +
+                      "which is swapping the entire set of working registers in a single cycle operation. This feature is based on the " +
+                      "assignment of an Alternate Working Register set to a defined interrupt priority. This relation needs to be actively " +
+                      "configured and enabled in user code.\r\n\r\n(Please refer to the device data sheet for more information)\r\n\r\n" +
+                      "When an  Alternate Working Register set is assigned to this control loop, context management can safely been turned off. " +
+                      "If no Alternate Working Register set is available or is shared with other software instances, it's recommended " +
+                      "to enable context management only for the registers used by this control loop to minimize the impact on CPU load.";
 
             else if (pic.Name == picInfoCycleStats.Name)
                 msg = "The number of cycles and related timings shown in this statistics is provided by the code generator " +
@@ -4972,21 +5426,26 @@ namespace dcld
                       "Hence, the total number of cycles shown may therefore differ from the real number of executions " +
                       "and this statics should be used for estimations only.";
 
+            else if (pic.Name == picInfoDataProviders.Name)
+                msg = "The control loop is a self-sustained entity capturing data from and writing control output results to memory locations " +
+                      "without the need for further interaction with other software instances. In most applications, however, other software " +
+                      "instances, such as fault handlers or data monitors, require access to the most recent data consumed or produced by the " +
+                      "control loop. \r\n\r\n" +
+                      "By enabling Data Providers, code is added to the control loop routine which will push most recent data to user specified " + 
+                      "memory locations (e.g. user variables) thus providing insight in internal processes of the control loop at runtime.";
+
             else if (pic.Name == picInfoDSPConfig.Name)
-                msg = "Executing control loops require a specific DSP core configuration," + "\r\n" +
-                      "which has to be set once in per project. " + "\r\n" +
+                msg = Application.ProductName + " uses a specific DSP core configuration to execute control loops at optimal performance.\r\n" +
                       "\r\n" +
-                      "Enable this option if the DSP core is also used by other software " + "\r\n" +
-                      "instances with a different configuration." + "\r\n" +
+                      "Enable this option if the DSP core is also used by other software instances with a different configuration." + "\r\n" +
                       "\r\n" +
-                      "If the DSP is only used for control loop executions, it's recommended" + "\r\n" +
-                      "to configure the DSP in a separated routine during decive initialization" + "\r\n" +
-                      "and disable this option";
+                      "If the DSP is only used to execute control loop generated by " + Application.ProductName + ", it is recommended " +
+                      "to configure the DSP in a separated routine (e.g. during device initialization) and disable this option";
 
             else if (pic.Name == picInfoErrNorm.Name)
-                msg = "Error Normalization is required when data is read \r\n" +
-                      "in integer format from the source (e.g. ADC converter)\r\n" +
-                      "If the source is providing data in Q15 number format \r\n" +
+                msg = "Error Normalization is required when data is read " +
+                      "in integer format from the source (e.g. ADC converter) " +
+                      "If the source is providing data in Q15 number format  " +
                       "this option can be disabled.";
 
             else if (pic.Name == picInfoISRLatency.Name)
@@ -4997,6 +5456,13 @@ namespace dcld
                       "priorities." + "\r\n" +
                       "\r\n" +
                       "Please refer to the user guide for more details.";
+
+            else if (pic.Name == picInfoAlternateOutputSource.Name)
+                msg = "A NPNZ controller support up to two output ports. For common control loops only one port " +
+                      "is required. The second 'Alternate Target' port is provided to support enhanced functoins where " +
+                      "control outputs need to be swapped during runtime (e.g. bi-directional control loops) or a second " +
+                      "control output is required for advanced control features (PWM control signals shared across multiple " +
+                      "channels). \r\n";
 
             else if (pic.Name == picInfoTimingPWMFrequency.Name)
                 msg = "The switching frequency settingis only used to create the above waveform (blue) and does not " +
@@ -5009,6 +5475,15 @@ namespace dcld
                       "\r\n" +
                       "This setting is highly hardware dependent and would have to be determined for each design individually";
 
+            else if (pic.Name == picInfoPTermController.Name)
+                msg = "This option enables the configuration of a simple proportional error controller (P-Term Controller). " +
+                      "This control loop serves the sole purpose of regulating the output voltage during plant measurements. \r\n\r\n" +
+                      "Please note: \r\n" +
+                      "This control loop is highly unstable and requires absolutely stable operating conditions to remain working. \r\n\r\n" +
+                      "Do not use this controller for regulation under normal operating conditions!" +
+                      "\r\n" +
+                      "";
+
             else
                 msg = "(help message missing)";
 
@@ -5016,6 +5491,53 @@ namespace dcld
             ToolTip_Show(sender, e, msg);
         }
 
+
+        private void DebugOutput(string debugString, Color color = default(Color))
+        {
+            int txt_start = 0, txt_stop = 0;
+
+            // If no color is defined, set color to Default Color
+            if (color.IsEmpty)
+                color = DebugOutputMessageDefaultColor;
+
+            // cut debug window text if contents exceed buffer size
+            if ((txtDebugOutput.TextLength + debugString.Length) > txtDebugOutput.MaxLength)
+            {
+                txt_start = (debugString.Length + 7);
+                txt_stop = (txtDebugOutput.TextLength - txt_start);
+                txtDebugOutput.Text = ">..." + txtDebugOutput.Text.Substring(txt_start, txt_stop);
+            }
+
+            txt_start = (txtDebugOutput.TextLength);
+            txt_stop = (debugString.Length)+1;
+
+            // Add debug text
+            if (debugString.Trim().Length > 0) debugString = ">" + debugString;
+            txtDebugOutput.AppendText(debugString + "\r\n");
+
+//            txtDebugOutput.SelectionType = RichTextBoxSelectionTypes.Text;
+//            if (color_index > (DebugOutputMessageColor.Length-1)) color_index = 0;
+            txtDebugOutput.SelectionStart = txt_start;
+            txtDebugOutput.SelectionLength = txt_stop;
+            txtDebugOutput.SelectionColor = color; //DebugOutputMessageColor[color_index];
+            txtDebugOutput.SelectionStart = txtDebugOutput.TextLength;
+
+            txtDebugOutput.ScrollToCaret();
+        }
+
+        public void DebugOutput_Clear()
+        {
+            txtDebugOutput.Clear();
+        }
+
+        private void DebugInfoPrintLine(string str_debug)
+        {
+            if ((txtOutput.TextLength + str_debug.Length) > txtOutput.MaxLength)
+                txtOutput.Clear();
+            txtOutput.AppendText(str_debug + "\r\n");
+            txtOutput.SelectionStart = txtOutput.TextLength;
+            txtOutput.ScrollToCaret();
+        }
 
     }
 
