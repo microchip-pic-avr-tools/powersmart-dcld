@@ -2,11 +2,11 @@
 Name=C-Source and Header Generator Script
 Description=This scriptprovides C-source and header files for user-tailored SMPS control loops based on DSP assembly code modules templates generated using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=2.0.4
-Date=04/03/2020
+Version=2.0.5
+Date=04/21/2020
 
 [history]
-count=12
+count=13
 0=11/08/19;1.0.0;Initial version after moving C-sources and headers from application code to external script
 1=01/10/20;1.1.0;Added support for cascaded functions. This allows the assembly routine to call another controller or user-defined function extension code module.\r\nAdded pointers to alternate source and terget register supporting bi-directional control and advanced adaptive control methods
 2=03/18/2020;1.1.1;Changed function call name of controller initialization from xxx_Init to xxx_Initialize to stay consistent with other generic code modules
@@ -19,6 +19,7 @@ count=12
 9=03/30/2020;2.0.2;Renamed data structure group 'TriggerControl' to 'ADC TriggerControl'
 10=03/31/2020;2.0.3;Added P-Term controller for plant transfer function measurement support
 11=04/03/2020;2.0.4;Added Token IDs for enhanced code generation option support
+12=04/21/2020;2.0.5;Added user-defined function pointer to observer function to AGC declarations
 
 
 [tokens]
@@ -89,7 +90,7 @@ count=37
 
 
 [library_header]
-count=178
+count=179
 line0=/* ********************************************************************************
 line1= * %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
 line2= * ********************************************************************************
@@ -245,33 +246,34 @@ line151=%IDENT%} __attribute__((packed))CascadeTrigger; // Cascade triggers with
 line152=%EMPTY%
 line153=%IDENT%// Adaptive Gain Control Modulation
 line154=%IDENT%struct {
-line155=%IDENT%%IDENT%volatile uint16_t agcScaler; // Bit-shift scaler of Adaptive Gain Modulation factor
-line156=%IDENT%%IDENT%volatile fractional agcFactor; // Q15 value of Adaptive Gain Modulation factor
-line157=%IDENT%%IDENT%volatile fractional agcMedian; // Q15 value of Adaptive Gain Modulation nominal operating point
-line158=%IDENT%} __attribute__((packed))GainControl; // Parameter section for advanced control options
-line159=%EMPTY%
-line160=%IDENT%// User Data Space for Advanced Control Functions
-line161=%IDENT%struct {
-line162=%IDENT%%IDENT%volatile uint16_t advParam1; // generic 16-bit wide, user-defined parameter #1 for advanced control options
-line163=%IDENT%%IDENT%volatile uint16_t advParam2; // generic 16-bit wide, user-defined parameter #2 for advanced control options
-line164=%IDENT%%IDENT%volatile uint16_t advParam3; // generic 16-bit wide, user-defined parameter #3 for advanced control options
-line165=%IDENT%%IDENT%volatile uint16_t advParam4; // generic 16-bit wide, user-defined parameter #4 for advanced control options
-line166=%IDENT%} __attribute__((packed))Advanced; // Parameter section for advanced control options
-line167=%EMPTY%
-line168=} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output
-line169=%EMPTY%
-line170=/* ********************************************************************************/
-line171=#endif  // end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__ header file section
-line172=%EMPTY%
+line155=%IDENT%%IDENT%volatile uint16_t AgcScaler; // Bit-shift scaler of Adaptive Gain Modulation factor
+line156=%IDENT%%IDENT%volatile fractional AgcFactor; // Q15 value of Adaptive Gain Modulation factor
+line157=%IDENT%%IDENT%volatile fractional AgcMedian; // Q15 value of Adaptive Gain Modulation nominal operating point
+line158=%IDENT%%IDENT%volatile uint16_t* ptrAgcObserverFunction; // Function Pointer to Observer function updating the AGC modulation factor
+line159=%IDENT%} __attribute__((packed))GainControl; // Parameter section for advanced control options
+line160=%EMPTY%
+line161=%IDENT%// User Data Space for Advanced Control Functions
+line162=%IDENT%struct {
+line163=%IDENT%%IDENT%volatile uint16_t advParam1; // generic 16-bit wide, user-defined parameter #1 for advanced control options
+line164=%IDENT%%IDENT%volatile uint16_t advParam2; // generic 16-bit wide, user-defined parameter #2 for advanced control options
+line165=%IDENT%%IDENT%volatile uint16_t advParam3; // generic 16-bit wide, user-defined parameter #3 for advanced control options
+line166=%IDENT%%IDENT%volatile uint16_t advParam4; // generic 16-bit wide, user-defined parameter #4 for advanced control options
+line167=%IDENT%} __attribute__((packed))Advanced; // Parameter section for advanced control options
+line168=%EMPTY%
+line169=} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output
+line170=%EMPTY%
+line171=/* ********************************************************************************/
+line172=#endif  // end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__ header file section
 line173=%EMPTY%
-line174=//**********************************************************************************
-line175=// Download latest version of this tool here: %TOOL_HOME_URL%
-line176=//**********************************************************************************
-line177=%EMPTY%
+line174=%EMPTY%
+line175=//**********************************************************************************
+line176=// Download latest version of this tool here: %TOOL_HOME_URL%
+line177=//**********************************************************************************
+line178=%EMPTY%
 
 
 [comp_header]
-count=101
+count=110
 line0=/* ********************************************************************************
 line1=%SPACE%* %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
 line2=%SPACE%* ********************************************************************************
@@ -327,56 +329,65 @@ line51={
 line52=%IDENT%volatile %HISTORY_DATA_TYPE% ControlHistory[%FILTER_ORDER%];  // Control History Array
 line53=%IDENT%volatile %HISTORY_DATA_TYPE% ErrorHistory[%FILTER_ORDER+1%];  // Error History Array
 line54=} __attribute__((packed)) %PREFIXU%CONTROL_LOOP_HISTORIES_t;
-line55=%EMPTY%
-line56=%EMPTY%
-line57=extern volatile %STRUCTURE_LABEL% %FILENAME_PATTERN%; // user-controller data object
-line58=%EMPTY%
-line59=      /* *******************************************************************************
-line60=%SPACE%* Function call prototypes for initialization routines and control loops
-line61=%SPACE%* ******************************************************************************/
-line62=%EMPTY%
-line63=// Initialization of %FILENAME_PATTERN% controller object
-line64=extern volatile uint16_t %FILENAME_PATTERN%_Initialize( // %FILENAME_PATTERN% initialization function call
-line65=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
-line66=%IDENT%);
+line55=%{(1209)}%%EMPTY%
+line56=%{(1209)}%// P-Term Coefficient for Plant Measurements
+line57=%{(1209)}%extern volatile int16_t %PREFIX%pterm_factor;
+line58=%{(1209)}%extern volatile int16_t %PREFIX%pterm_scaler;
+line59=%{(1800)}%%EMPTY%
+line60=%{(1800)}%//Adaptive Gain Control Coefficient
+line61=%{(1800)}%extern volatile int16_t %PREFIX%agc_factor_default;
+line62=%{(1800)}%extern volatile int16_t %PREFIX%agc_scaler_default;
+line63=%EMPTY%
+line64=%EMPTY%
+line65=// User-defined cNPNZ_t controller data object
+line66=extern volatile %STRUCTURE_LABEL% %FILENAME_PATTERN%; // user-controller data object
 line67=%EMPTY%
-line68=// Clears the %FILTER_ORDER%P%FILTER_ORDER%Z controller output and error histories
-line69=extern void %FILENAME_PATTERN%_Reset( // %FILENAME_PATTERN% reset function call (Assembly)
-line70=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
-line71=%IDENT%);
-line72=%EMPTY%
-line73=// Loads user-defined values into %FILTER_ORDER%P%FILTER_ORDER%Z controller output and error histories
-line74=extern void %FILENAME_PATTERN%_Precharge( // %FILENAME_PATTERN% history pre-charge function call (Assembly)
-line75=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller, // Pointer to nPnZ data type object
-line76=%IDENT%%IDENT%volatile %HISTORY_DATA_TYPE% ctrl_input, // user-defined, constant error history value
-line77=%IDENT%%IDENT%volatile %HISTORY_DATA_TYPE% ctrl_output // user-defined, constant control output history value
-line78=%IDENT%);
-line79=%EMPTY%
-line80=// Calls the %FILENAME_PATTERN% control loop
-line81=extern void %FILENAME_PATTERN%_Update( // Calls the %FILTER_ORDER%P%FILTER_ORDER%Z controller (Assembly)
-line82=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
-line83=%IDENT%);
-line84=%EMPTY%
-line85=%{(1209)}%// Calls the %FILENAME_PATTERN% P-Term controller during measurements of plant transfer functions
-line86=%{(1209)}%// THIS CONTROLLER IS USED FOR MEASUREMENTS OF THE PLANT TRANSFER FUNCTION ONLY.
-line87=%{(1209)}%// THIS LOOP IS BY DEFAULT UNSTABLE AND ONLY WORKS UNDER STABLE TEST CONDITIONS
-line88=%{(1209)}%// DO NOT USE THIS CONTROLLER TYPE FOR NORMAL OPERATION
-line89=%{(1209)}%extern void %FILENAME_PATTERN%_PTermUpdate( // Calls the P-Term controller (Assembly)
-line90=%{(1209)}%%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
-line91=%{(1209)}%%IDENT%);
-line92=%{(1209)}%%EMPTY%
+line68=      /* *******************************************************************************
+line69=%SPACE%* Function call prototypes for initialization routines and control loops
+line70=%SPACE%* ******************************************************************************/
+line71=%EMPTY%
+line72=// Initialization of %FILENAME_PATTERN% controller object
+line73=extern volatile uint16_t %FILENAME_PATTERN%_Initialize( // %FILENAME_PATTERN% initialization function call
+line74=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
+line75=%IDENT%);
+line76=%EMPTY%
+line77=// Clears the %FILTER_ORDER%P%FILTER_ORDER%Z controller output and error histories
+line78=extern void %FILENAME_PATTERN%_Reset( // %FILENAME_PATTERN% reset function call (Assembly)
+line79=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
+line80=%IDENT%);
+line81=%EMPTY%
+line82=// Loads user-defined values into %FILTER_ORDER%P%FILTER_ORDER%Z controller output and error histories
+line83=extern void %FILENAME_PATTERN%_Precharge( // %FILENAME_PATTERN% history pre-charge function call (Assembly)
+line84=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller, // Pointer to nPnZ data type object
+line85=%IDENT%%IDENT%volatile %HISTORY_DATA_TYPE% ctrl_input, // user-defined, constant error history value
+line86=%IDENT%%IDENT%volatile %HISTORY_DATA_TYPE% ctrl_output // user-defined, constant control output history value
+line87=%IDENT%);
+line88=%EMPTY%
+line89=// Calls the %FILENAME_PATTERN% control loop
+line90=extern void %FILENAME_PATTERN%_Update( // Calls the %FILTER_ORDER%P%FILTER_ORDER%Z controller (Assembly)
+line91=%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
+line92=%IDENT%);
 line93=%EMPTY%
-line94=#endif // end of __SPECIAL_FUNCTION_LAYER_%FILENAME_PATTERN_U%_H__
-line95=%EMPTY%
-line96=%EMPTY%
-line97=//**********************************************************************************
-line98=// Download latest version of this tool here: %TOOL_HOME_URL%
-line99=//**********************************************************************************
-line100=%EMPTY%
+line94=%{(1209)}%// Calls the %FILENAME_PATTERN% P-Term controller during measurements of plant transfer functions
+line95=%{(1209)}%// THIS CONTROLLER IS USED FOR MEASUREMENTS OF THE PLANT TRANSFER FUNCTION ONLY.
+line96=%{(1209)}%// THIS LOOP IS BY DEFAULT UNSTABLE AND ONLY WORKS UNDER STABLE TEST CONDITIONS
+line97=%{(1209)}%// DO NOT USE THIS CONTROLLER TYPE FOR NORMAL OPERATION
+line98=%{(1209)}%extern void %FILENAME_PATTERN%_PTermUpdate( // Calls the P-Term controller (Assembly)
+line99=%{(1209)}%%IDENT%%IDENT%volatile %STRUCTURE_LABEL%* controller // Pointer to nPnZ data type object
+line100=%{(1209)}%%IDENT%);
+line101=%{(1209)}%%EMPTY%
+line102=%EMPTY%
+line103=#endif // end of __SPECIAL_FUNCTION_LAYER_%FILENAME_PATTERN_U%_H__
+line104=%EMPTY%
+line105=%EMPTY%
+line106=//**********************************************************************************
+line107=// Download latest version of this tool here: %TOOL_HOME_URL%
+line108=//**********************************************************************************
+line109=%EMPTY%
 
 
 [comp_source_head]
-count=80
+count=86
 line0=      /* **********************************************************************************
 line1=%SPACE%* %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
 line2=%SPACE%* **********************************************************************************
@@ -452,11 +463,17 @@ line71=%{(1209)}%%EMPTY%
 line72=%{(1209)}%// P-Term Coefficient for Plant Measurements
 line73=%{(1209)}%volatile int16_t %PREFIX%pterm_factor = %PTERMFACTOR%;
 line74=%{(1209)}%volatile int16_t %PREFIX%pterm_scaler = %PTERMSCALER%;
-line75=%EMPTY%
-line76=volatile %STRUCTURE_LABEL% %FILENAME_PATTERN%; // user-controller data object
-line77=%EMPTY%
-line78=     /* ********************************************************************************/
+line75=%{(1800)}%%EMPTY%
+line76=%{(1800)}%//Adaptive Gain Control Coefficient
+line77=%{(1800)}%volatile int16_t %PREFIX%agc_factor_default = %AGCFACTOR%;
+line78=%{(1800)}%volatile int16_t %PREFIX%agc_scaler_default = %AGCSCALER%;
 line79=%EMPTY%
+line80=%EMPTY%
+line81=// User-defined cNPNZ_t controller data object
+line82=volatile %STRUCTURE_LABEL% %FILENAME_PATTERN%; // user-controller data object
+line83=%EMPTY%
+line84=     /* ********************************************************************************/
+line85=%EMPTY%
 
 
 [comp_source_functions]
@@ -465,7 +482,7 @@ function0=comp_source_init
 
 
 [comp_source_init]
-count=71
+count=75
 line0=      /*!%FILENAME_PATTERN%_Init()
 line1=%SPACE%* *********************************************************************************
 line2=%SPACE%* Summary: Initializes controller coefficient arrays and normalization
@@ -528,15 +545,19 @@ line58=%{(1209)}%%IDENT%
 line59=%{(1209)}%%IDENT%// Load P-Term factor and scaler into data structure
 line60=%{(1209)}%%IDENT%controller->Filter.PTermFactor = %PREFIX%pterm_factor;;
 line61=%{(1209)}%%IDENT%controller->Filter.PTermScaler = %PREFIX%pterm_scaler;
-line62=%IDENT%
-line63=%IDENT%return(1);
-line64=}
-line65=%EMPTY%
-line66=%EMPTY%
-line67=//**********************************************************************************
-line68=// Download latest version of this tool here: %TOOL_HOME_URL%
-line69=//**********************************************************************************
+line62=%{(1800)}%%IDENT%
+line63=%{(1800)}%%IDENT%// Load initial AGC factor and scaler into data structure
+line64=%{(1800)}%%IDENT%controller->GainControl.AgcFactor = %PREFIX%agc_factor_default;
+line65=%{(1800)}%%IDENT%controller->GainControl.AgcScaler = %PREFIX%agc_scaler_default;
+line66=%IDENT%
+line67=%IDENT%return(1);
+line68=}
+line69=%EMPTY%
 line70=%EMPTY%
+line71=//**********************************************************************************
+line72=// Download latest version of this tool here: %TOOL_HOME_URL%
+line73=//**********************************************************************************
+line74=%EMPTY%
 
 
 ___________________________________________________

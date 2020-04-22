@@ -277,6 +277,20 @@ namespace dcld
             set { _PTermScaler = value; return; }
         }
 
+        private int _AgcFactor = 0x7FFF;
+        internal int AgcFactor
+        {
+            get { return _AgcFactor; }
+            set { _AgcFactor = value; return; }
+        }
+
+        private int _AgcScaler = 0x0000;
+        internal int AgcScaler
+        {
+            get { return _AgcScaler; }
+            set { _AgcScaler = value; return; }
+        }
+
         private void PTermFactorUpdate()
         {
             double _pfactor = 0.0;
