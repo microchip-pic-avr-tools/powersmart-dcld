@@ -2,11 +2,11 @@
 Name=Assembly Generator Script
 Description=This script defines DSP assembly code generation templates used to generate user-tailored SMPS control loops using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=2.0.7
-Date=04/14/2020
+Version=2.0.8
+Date=04/21/2020
 
 [history]
-count=22
+count=23
 0=04/03/19;1.1.1;Added input offset compensation applied to input source
 1=10/18/19;1.2.0;Changed existing input offset compensation to full bi-directional feedback implementation
 2=10/19/19;1.2.1;Added code option for feedback signal rectification
@@ -29,6 +29,7 @@ count=22
 19=04/03/2020;2.0.5;Added Token IDs for enhanced code generator option support
 20=04/03/2020;2.0.6;Added Token IDs for enhanced code generator option support
 21=04/14/2020;2.0.7;Added support of new tokens to Output Scaler Controller
+22=04/21/2020;2.0.8;Added user-defined function call to observer function to AGC delarations
 
 [filter_block_scaling_modes]
 count=6
@@ -130,7 +131,7 @@ count=37
 [add_data_structure_sbsft]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing (single bit-shift scaling)
 cycles=0
-lines=52
+lines=53
 comment0=controller object status word at address-offset = 0
 comment1=parameter group Ports.Source: pointer to source memory address
 comment2=parameter group Ports.Source: bit-shift scaler of normalization factor
@@ -179,10 +180,11 @@ comment44=parameter group CascadeTrigger: 16-bit wide function parameter or poin
 comment45=parameter group GainControl: bit-shift scaler of Adaptive Gain Control Modulation factor
 comment46=parameter group GainControl: Q15 value of Adaptive Gain Control Modulation factor
 comment47=parameter group GainControl: Q15 value of Adaptive Gain Control Modulation norminal operating point
-comment48=parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
-comment49=parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
-comment50=parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
-comment51=parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for advanced control options
+comment48=parameter group GainControl: function pointer to observer function updating the AGC modulation factor
+comment49=parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
+comment50=parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
+comment51=parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
+comment52=parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for advanced control options
 code0=.equ Status,                    0
 code1=.equ ptrSourceRegister,         2
 code2=.equ SourceNormShift,           4
@@ -231,10 +233,11 @@ code44=.equ CascadedFunParam,          88
 code45=.equ agcGainModScaler,          90
 code46=.equ agcGainModFactor,          92
 code47=.equ agcGainModMedian,          94
-code48=.equ AdvParam1,                 96
-code49=.equ AdvParam2,                 98
-code50=.equ AdvParam3,                 100
-code51=.equ AdvParam4,                 102
+code48=.equ ptrAgcObserverFunction,    96
+code49=.equ AdvParam1,                 98
+code50=.equ AdvParam2,                 100
+code51=.equ AdvParam3,                 102
+code52=.equ AdvParam4,                 104
 
 
 [blockset_sbsft_0]
@@ -412,7 +415,7 @@ count=164
 [add_data_structure_scscl]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing (single bit-shift with output factor scaling)
 cycles=0
-lines=52
+lines=53
 comment0=controller object status word at address-offset = 0
 comment1=parameter group Ports.Source: pointer to source memory address
 comment2=parameter group Ports.Source: bit-shift scaler of normalization factor
@@ -461,10 +464,11 @@ comment44=parameter group CascadeTrigger: 16-bit wide function parameter or poin
 comment45=parameter group GainControl: bit-shift scaler of Adaptive Gain Control Modulation factor
 comment46=parameter group GainControl: Q15 value of Adaptive Gain Control Modulation factor
 comment47=parameter group GainControl: Q15 value of Adaptive Gain Control Modulation norminal operating point
-comment48=parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
-comment49=parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
-comment50=parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
-comment51=parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for advanced control options
+comment48=parameter group GainControl: function pointer to observer function updating the AGC modulation factor
+comment49=parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
+comment50=parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
+comment51=parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
+comment52=parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for advanced control options
 code0=.equ Status,                    0
 code1=.equ ptrSourceRegister,         2
 code2=.equ SourceNormShift,           4
@@ -513,10 +517,11 @@ code44=.equ CascadedFunParam,          88
 code45=.equ agcGainModScaler,          90
 code46=.equ agcGainModFactor,          92
 code47=.equ agcGainModMedian,          94
-code48=.equ AdvParam1,                 96
-code49=.equ AdvParam2,                 98
-code50=.equ AdvParam3,                 100
-code51=.equ AdvParam4,                 102
+code48=.equ ptrAgcObserverFunction,    96
+code49=.equ AdvParam1,                 98
+code50=.equ AdvParam2,                 100
+code51=.equ AdvParam3,                 102
+code52=.equ AdvParam4,                 104
 
 
 [blockset_scscl_0]
@@ -696,7 +701,7 @@ count=166
 [add_data_structure_dbsft]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing (double bit-shift scaling)
 cycles=0
-lines=52
+lines=53
 comment0=controller object status word at address-offset = 0
 comment1=parameter group Ports.Source: pointer to source memory address
 comment2=parameter group Ports.Source: bit-shift scaler of normalization factor
@@ -745,10 +750,11 @@ comment44=parameter group CascadeTrigger: 16-bit wide function parameter or poin
 comment45=parameter group GainControl: bit-shift scaler of Adaptive Gain Control Modulation factor
 comment46=parameter group GainControl: Q15 value of Adaptive Gain Control Modulation factor
 comment47=parameter group GainControl: Q15 value of Adaptive Gain Control Modulation norminal operating point
-comment48=parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
-comment49=parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
-comment50=parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
-comment51=parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for advanced control options
+comment48=parameter group GainControl: function pointer to observer function updating the AGC modulation factor
+comment49=parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
+comment50=parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
+comment51=parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
+comment52=parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for advanced control options
 code0=.equ Status,                    0
 code1=.equ ptrSourceRegister,         2
 code2=.equ SourceNormShift,           4
@@ -797,10 +803,11 @@ code44=.equ CascadedFunParam,          88
 code45=.equ agcGainModScaler,          90
 code46=.equ agcGainModFactor,          92
 code47=.equ agcGainModMedian,          94
-code48=.equ AdvParam1,                 96
-code49=.equ AdvParam2,                 98
-code50=.equ AdvParam3,                 100
-code51=.equ AdvParam4,                 102
+code48=.equ ptrAgcObserverFunction,    96
+code49=.equ AdvParam1,                 98
+code50=.equ AdvParam2,                 100
+code51=.equ AdvParam3,                 102
+code52=.equ AdvParam4,                 104
 
 
 [blockset_dbsft_0]
@@ -979,7 +986,7 @@ count=165
 [add_data_structure_fscl]
 head_comment=%SEPARATOR%; Address offset declarations for data structure addressing
 cycles=0
-lines=52
+lines=53
 comment0=controller object status word at address-offset = 0
 comment1=parameter group Ports.Source: pointer to source memory address
 comment2=parameter group Ports.Source: bit-shift scaler of normalization factor
@@ -1028,10 +1035,11 @@ comment44=parameter group CascadeTrigger: 16-bit wide function parameter or poin
 comment45=parameter group GainControl: bit-shift scaler of Adaptive Gain Control Modulation factor
 comment46=parameter group GainControl: Q15 value of Adaptive Gain Control Modulation factor
 comment47=parameter group GainControl: Q15 value of Adaptive Gain Control Modulation norminal operating point
-comment48=parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
-comment49=parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
-comment50=parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
-comment51=parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for advanced control options
+comment48=parameter group GainControl: function pointer to observer function updating the AGC modulation factor
+comment49=parameter group Advanced: generic 16-bit wide, user-defined parameter #1 for advanced control options
+comment50=parameter group Advanced: generic 16-bit wide, user-defined parameter #2 for advanced control options
+comment51=parameter group Advanced: generic 16-bit wide, user-defined parameter #3 for advanced control options
+comment52=parameter group Advanced: generic 16-bit wide, user-defined parameter #4 for advanced control options
 code0=.equ Status,                    0
 code1=.equ ptrSourceRegister,         2
 code2=.equ SourceNormShift,           4
@@ -1080,10 +1088,11 @@ code44=.equ CascadedFunParam,          88
 code45=.equ agcGainModScaler,          90
 code46=.equ agcGainModFactor,          92
 code47=.equ agcGainModMedian,          94
-code48=.equ AdvParam1,                 96
-code49=.equ AdvParam2,                 98
-code50=.equ AdvParam3,                 100
-code51=.equ AdvParam4,                 102
+code48=.equ ptrAgcObserverFunction,    96
+code49=.equ AdvParam1,                 98
+code50=.equ AdvParam2,                 100
+code51=.equ AdvParam3,                 102
+code52=.equ AdvParam4,                 104
 
 
 [blockset_fscl_0]
@@ -2626,10 +2635,12 @@ code0=%PREFIXU%_BYPASS_AGC:
 
 [agc_factor_multiply_get_factor_call]
 head_comment=%EMPTY%
-cycles=2
-lines=1
-comment0=call function determining most recent modulation factor
-code0=call %PREFIXG%_GetGainFactor
+cycles=3
+lines=2
+comment0=load function pointer to observer function
+comment1=call observer function to update gain modulation factor
+code0=mov [w0 + ptrAgcObserverFunction], w1
+code1=call w1
 
 [agc_factor_multiply_scaled]
 head_comment=%EMPTY%
