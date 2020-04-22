@@ -3366,28 +3366,10 @@ namespace dcld
             return;
         }
 
-        private void showCoeffficientDataTableToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            showCoeffficientDataTableToolStripMenuItem.Checked = !showCoeffficientDataTableToolStripMenuItem.Checked;
-            return;
-        }
-
-        private void showSourceCodeTimingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            showSourceCodeTimingToolStripMenuItem.Checked = !showSourceCodeTimingToolStripMenuItem.Checked;
-            return;
-        }
-
-
         private void showOutputWindowToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             txtDebugOutput.Visible = showOutputWindowToolStripMenuItem.Checked;
             return;
-        }
-
-        private void showOutputWindowToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            showOutputWindowToolStripMenuItem.Checked = !showOutputWindowToolStripMenuItem.Checked;
         }
 
 
