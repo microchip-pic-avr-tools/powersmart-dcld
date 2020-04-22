@@ -39,7 +39,11 @@ namespace dcld
         // Value table formating
         Color WarningBackground = Color.FromArgb(255, 255, 120);
         Color AlertBackground = Color.FromArgb(255, 200, 200);
-        Color[] DebugOutputMessageColor = new Color[6] { Color.Black, Color.DarkGray, Color.Goldenrod, Color.Blue, Color.Green, Color.Red };
+
+        // Output window message coloring
+        Color DebugOutputMessageDefaultColor = Color.DimGray;
+
+
 
         string Q7Format  = "{0:0.00000000}";
         string Q15Format = "{0:0.000000000000000}";
@@ -1107,7 +1111,7 @@ namespace dcld
                 // show success message in status bar
                 if (!UpdateWarning)
                 {
-                    DebugOutput("transfer function update complete");
+                    DebugOutput("transfer function update complete", Color.ForestGreen);
 
                     stbMainStatusLabel.Text = "Coefficients generated successfully";
                     stbMainStatusLabel.Image = dcld.Properties.Resources.icon_ready.ToBitmap();
@@ -1115,7 +1119,7 @@ namespace dcld
                 }
                 else
                 {
-                    DebugOutput("transfer function update completed with warnings");
+                    DebugOutput("transfer function update completed with warnings", Color.Red);
 
                     stbMainStatusLabel.Text = "Coefficients have been generated with warnings";
                     stbMainStatusLabel.Image = dcld.Properties.Resources.icon_exclamation.ToBitmap();
@@ -1144,7 +1148,7 @@ namespace dcld
             }   // end of try
             catch(Exception ex)
             {
-                DebugOutput("UpdateTransferFunction() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
+                DebugOutput("UpdateTransferFunction() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
 
                 // show failure message in status bar
                 stbMainStatusLabel.Text = "Invalid number format detected - results may be corrupted";
@@ -1317,12 +1321,12 @@ namespace dcld
 
                 }
 
-                DebugOutput("Bode plot data update complete");
+                DebugOutput("Bode plot data update complete", Color.MediumSlateBlue);
 
             }
             catch(Exception ex)
             {
-                DebugOutput("UpdateBodePlot(" + ForceAnnotationUpdate.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
+                DebugOutput("UpdateBodePlot(" + ForceAnnotationUpdate.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
             }
 
             return (true);
@@ -2004,7 +2008,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("open file exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
+                DebugOutput("open file exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
                 MessageBox.Show(
                     "Error (0x" + ex.HResult.ToString("X") + "): Could not read file from disk.\r\n" + 
                     "Original error: " + ex.Message, 
@@ -2699,7 +2703,7 @@ namespace dcld
             DebugOutput("history item auto-saved");
 
             // Acknowledge successfully executed command
-            DebugOutput("file export complete");
+            DebugOutput("file export complete", Color.ForestGreen);
             if (generateCodeBeforeExportToolStripMenuItem.Checked)
             {
                 MessageBox.Show(
@@ -2891,7 +2895,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("chartBode_UpdateCursorMeasurement(" + ForceCursorPositionX.ToString() + ", " + ForceCursorPositionY.ToString() + ", " + CursorX.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
+                DebugOutput("chartBode_UpdateCursorMeasurement(" + ForceCursorPositionX.ToString() + ", " + ForceCursorPositionY.ToString() + ", " + CursorX.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
             }
 
             return;
@@ -2920,7 +2924,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("chartBode_ResetCursorMeasurement(" + HideCursor.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
+                DebugOutput("chartBode_ResetCursorMeasurement(" + HideCursor.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
             }
 
             return;
@@ -3209,7 +3213,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("chartBode_MouseMove() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
+                DebugOutput("chartBode_MouseMove() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
             }
 
 
@@ -3581,7 +3585,7 @@ namespace dcld
                 Application.DoEvents();
                 stbProgressBar.Visible = false;
                 stbProgressBarLabel.Visible = false;
-                DebugOutput("code generation completed successfully", 3);
+                DebugOutput("code generation completed successfully", Color.RoyalBlue);
                 DebugOutput("");
 
             }
@@ -3589,7 +3593,7 @@ namespace dcld
             {
                 if (!ApplicationShutDown) 
                 {
-                    DebugOutput("code generation exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
+                    DebugOutput("code generation exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
                     stbMainStatusLabel.Text = "Unexpected exception during code generation. The generated code may be incomplete or corrupted.";
                     stbMainStatusLabel.Image = dcld.Properties.Resources.icon_critical.ToBitmap();
                     stbMainStatusLabel.BackColor = stbMain.BackColor;
@@ -4045,12 +4049,12 @@ namespace dcld
 
                 eventProjectFileChanged(sender, e);
 
-                DebugOutput("timing chart update complete");
+                DebugOutput("timing chart update complete", Color.DarkOrchid);
 
                 return;
             }
             catch (Exception ex) {
-                DebugOutput("error (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
+                DebugOutput("error (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
                 DebugOutput("exit timing chart update");
                 return; 
             }
@@ -4452,7 +4456,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("chartBode_SetScales(" + XAxesLimitType.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, 5);
+                DebugOutput("chartBode_SetScales(" + XAxesLimitType.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
             }
             return;
         }
@@ -4740,7 +4744,7 @@ namespace dcld
 
             id = save_item.ToString();
             key = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Datecode identifies the item
-            label = "(Autosafe)";
+            label = "(Autosave)";
             user = Environment.UserName.ToString();
             settings =
                 cmbCompType.SelectedIndex.ToString() + "; " +
@@ -5488,9 +5492,13 @@ namespace dcld
         }
 
 
-        private void DebugOutput(string debugString, int color_index = 0)
+        private void DebugOutput(string debugString, Color color = default(Color))
         {
             int txt_start = 0, txt_stop = 0;
+
+            // If no color is defined, set color to Default Color
+            if (color.IsEmpty)
+                color = DebugOutputMessageDefaultColor;
 
             // cut debug window text if contents exceed buffer size
             if ((txtDebugOutput.TextLength + debugString.Length) > txtDebugOutput.MaxLength)
@@ -5508,10 +5516,10 @@ namespace dcld
             txtDebugOutput.AppendText(debugString + "\r\n");
 
 //            txtDebugOutput.SelectionType = RichTextBoxSelectionTypes.Text;
-            if (color_index > (DebugOutputMessageColor.Length-1)) color_index = 0;
+//            if (color_index > (DebugOutputMessageColor.Length-1)) color_index = 0;
             txtDebugOutput.SelectionStart = txt_start;
             txtDebugOutput.SelectionLength = txt_stop;
-            txtDebugOutput.SelectionColor = DebugOutputMessageColor[color_index];
+            txtDebugOutput.SelectionColor = color; //DebugOutputMessageColor[color_index];
             txtDebugOutput.SelectionStart = txtDebugOutput.TextLength;
 
             txtDebugOutput.ScrollToCaret();
