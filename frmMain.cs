@@ -628,7 +628,6 @@ namespace dcld
             GroupFolding_grpCodeFeatureDataIOHeight = grpCodeFeatureDataIO.Height;
             GroupFolding_grpDataProviderSourcesHeight = grpDataProviderSources.Height;
             GroupFolding_grpAntiWindupHeight = grpAntiWindup.Height;
-//            GroupFolding_grpDevelopmentToolsHeight = grpDevelopmentTools.Height;
 
             // reload last Bode chart settings
             DefaultXMin = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "x_min", DefaultXMin.ToString()));
@@ -5645,6 +5644,8 @@ namespace dcld
             txtOutput.SelectionStart = txtOutput.TextLength;
             txtOutput.ScrollToCaret();
         }
+
+
 
     }
 
