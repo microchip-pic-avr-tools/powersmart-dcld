@@ -154,6 +154,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="clsRecentFileList.cs" />
     <Compile Include="clsConditionalCode.cs" />
     <Compile Include="clsGlobals.cs" />
     <Compile Include="clsFilePathHandler.cs" />
@@ -210,6 +211,7 @@
     <Content Include="Resources\c-code.gen">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\delete.ico" />
     <Content Include="Resources\readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

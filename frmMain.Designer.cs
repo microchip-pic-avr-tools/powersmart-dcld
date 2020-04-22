@@ -110,6 +110,10 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.recentFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearRecentFileListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripRecentFileListSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator31 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showCoeffficientDataTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -624,6 +628,8 @@
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripSeparator1,
+            this.recentFilesToolStripMenuItem,
+            this.toolStripSeparator31,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
@@ -634,7 +640,7 @@
             this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "&Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -643,27 +649,55 @@
             this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // recentFilesToolStripMenuItem
+            // 
+            this.recentFilesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearRecentFileListToolStripMenuItem,
+            this.toolStripRecentFileListSeparator});
+            this.recentFilesToolStripMenuItem.Name = "recentFilesToolStripMenuItem";
+            this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.recentFilesToolStripMenuItem.Text = "&Recent Files";
+            // 
+            // clearRecentFileListToolStripMenuItem
+            // 
+            this.clearRecentFileListToolStripMenuItem.Image = global::dcld.Properties.Resources.delete;
+            this.clearRecentFileListToolStripMenuItem.Name = "clearRecentFileListToolStripMenuItem";
+            this.clearRecentFileListToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.clearRecentFileListToolStripMenuItem.Text = "Clear Recent File LIst";
+            this.clearRecentFileListToolStripMenuItem.Click += new System.EventHandler(this.ClearRecentFileList_Click);
+            // 
+            // toolStripRecentFileListSeparator
+            // 
+            this.toolStripRecentFileListSeparator.Name = "toolStripRecentFileListSeparator";
+            this.toolStripRecentFileListSeparator.Size = new System.Drawing.Size(185, 6);
+            this.toolStripRecentFileListSeparator.Visible = false;
+            // 
+            // toolStripSeparator31
+            // 
+            this.toolStripSeparator31.Name = "toolStripSeparator31";
+            this.toolStripSeparator31.Size = new System.Drawing.Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -684,35 +718,35 @@
             // showCoeffficientDataTableToolStripMenuItem
             // 
             this.showCoeffficientDataTableToolStripMenuItem.Checked = true;
+            this.showCoeffficientDataTableToolStripMenuItem.CheckOnClick = true;
             this.showCoeffficientDataTableToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showCoeffficientDataTableToolStripMenuItem.Name = "showCoeffficientDataTableToolStripMenuItem";
             this.showCoeffficientDataTableToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.D)));
             this.showCoeffficientDataTableToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.showCoeffficientDataTableToolStripMenuItem.Text = "Show Coeffficient &Data Table";
             this.showCoeffficientDataTableToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showCoeffficientDataTableToolStripMenuItem_CheckedChanged);
-            this.showCoeffficientDataTableToolStripMenuItem.Click += new System.EventHandler(this.showCoeffficientDataTableToolStripMenuItem_Click);
             // 
             // showSourceCodeTimingToolStripMenuItem
             // 
             this.showSourceCodeTimingToolStripMenuItem.Checked = true;
+            this.showSourceCodeTimingToolStripMenuItem.CheckOnClick = true;
             this.showSourceCodeTimingToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showSourceCodeTimingToolStripMenuItem.Name = "showSourceCodeTimingToolStripMenuItem";
             this.showSourceCodeTimingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.T)));
             this.showSourceCodeTimingToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.showSourceCodeTimingToolStripMenuItem.Text = "Show Source Code &Timing";
             this.showSourceCodeTimingToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showSourceCodeTimingToolStripMenuItem_CheckedChanged);
-            this.showSourceCodeTimingToolStripMenuItem.Click += new System.EventHandler(this.showSourceCodeTimingToolStripMenuItem_Click);
             // 
             // showOutputWindowToolStripMenuItem
             // 
             this.showOutputWindowToolStripMenuItem.Checked = true;
+            this.showOutputWindowToolStripMenuItem.CheckOnClick = true;
             this.showOutputWindowToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showOutputWindowToolStripMenuItem.Name = "showOutputWindowToolStripMenuItem";
             this.showOutputWindowToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
             this.showOutputWindowToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.showOutputWindowToolStripMenuItem.Text = "Show Output Window";
             this.showOutputWindowToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showOutputWindowToolStripMenuItem_CheckedChanged);
-            this.showOutputWindowToolStripMenuItem.Click += new System.EventHandler(this.showOutputWindowToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -5268,7 +5302,6 @@
             this.toolStripButtonShowCoefficientTable.Text = "Coefficients";
             this.toolStripButtonShowCoefficientTable.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonShowCoefficientTable.ToolTipText = "Show/Hide Coefficient Table";
-            this.toolStripButtonShowCoefficientTable.Click += new System.EventHandler(this.showCoeffficientDataTableToolStripMenuItem_Click);
             // 
             // toolStripButtonShowTimingTable
             // 
@@ -5279,15 +5312,14 @@
             this.toolStripButtonShowTimingTable.Text = "Timing";
             this.toolStripButtonShowTimingTable.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonShowTimingTable.ToolTipText = "Show/Hide Timing Table";
-            this.toolStripButtonShowTimingTable.Click += new System.EventHandler(this.showSourceCodeTimingToolStripMenuItem_Click);
             // 
             // toolStripButtonRefresh
             // 
             this.toolStripButtonRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRefresh.Image")));
             this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
-            this.toolStripButtonRefresh.Size = new System.Drawing.Size(50, 35);
-            this.toolStripButtonRefresh.Text = "Refresh";
+            this.toolStripButtonRefresh.Size = new System.Drawing.Size(87, 35);
+            this.toolStripButtonRefresh.Text = "Refresh Charts";
             this.toolStripButtonRefresh.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonRefresh.ToolTipText = "Refresh Diagrams";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
@@ -5307,8 +5339,8 @@
             this.toolStripButtonUpdateCode.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUpdateCode.Image")));
             this.toolStripButtonUpdateCode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUpdateCode.Name = "toolStripButtonUpdateCode";
-            this.toolStripButtonUpdateCode.Size = new System.Drawing.Size(49, 35);
-            this.toolStripButtonUpdateCode.Text = "Update";
+            this.toolStripButtonUpdateCode.Size = new System.Drawing.Size(80, 35);
+            this.toolStripButtonUpdateCode.Text = "Update Code";
             this.toolStripButtonUpdateCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolStripButtonUpdateCode.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonUpdateCode.ToolTipText = "Update Generated Source Code";
@@ -5319,8 +5351,8 @@
             this.toolStripButtonUpdateExportCode.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUpdateExportCode.Image")));
             this.toolStripButtonUpdateExportCode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUpdateExportCode.Name = "toolStripButtonUpdateExportCode";
-            this.toolStripButtonUpdateExportCode.Size = new System.Drawing.Size(45, 35);
-            this.toolStripButtonUpdateExportCode.Text = "Export";
+            this.toolStripButtonUpdateExportCode.Size = new System.Drawing.Size(71, 35);
+            this.toolStripButtonUpdateExportCode.Text = "Export Files";
             this.toolStripButtonUpdateExportCode.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonUpdateExportCode.ToolTipText = "Generate and Export Source Code";
             this.toolStripButtonUpdateExportCode.Click += new System.EventHandler(this.ExportGeneratedFiles);
@@ -5961,6 +5993,10 @@
         private System.Windows.Forms.Label lblContextMgmntResources;
         private System.Windows.Forms.Label lblContextMgmntResourcesTitle;
         private System.Windows.Forms.RichTextBox txtDebugOutput;
+        private System.Windows.Forms.ToolStripMenuItem recentFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearRecentFileListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator31;
+        private System.Windows.Forms.ToolStripSeparator toolStripRecentFileListSeparator;
     }
 }
 

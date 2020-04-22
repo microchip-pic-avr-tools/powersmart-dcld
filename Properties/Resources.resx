@@ -124,14 +124,17 @@
   <data name="DS" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DS.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="hz_flowchart" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hz_flowchart.PNG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="icon_ready" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_ready.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icon_legend" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icon_legend.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="icon_generate_export" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_generate_export.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_critical" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_critical.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="FFreq" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\FFreq.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -139,17 +142,17 @@
   <data name="dcld" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dcld.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icon_rotate4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icon_rotate.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="icon_table" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_table.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icon_generate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icon_generate.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="icon_help" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_help.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="icon_chart_line" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_chart_line.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="VD" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\VD.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="icon_refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_refresh.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -160,17 +163,20 @@
   <data name="icon_open" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_open.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="calculate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\calculate.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="VFreq" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\VFreq.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="PSFT" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PSFT.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icon_critical" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icon_critical.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="icon_time_table" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_time_table.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="VD" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\VD.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="icon_legend" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_legend.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_rotate4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_rotate.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="z_domain_compensator_block_diagram" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\z-domain_compensator_block_diagram.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -178,22 +184,19 @@
   <data name="z_transform_euqations" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\z-transform_euqations.PNG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icon_help" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icon_help.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icon_exclamation" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icon_exclamation.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="icon_generate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_generate.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="icon_save" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_save.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="hz_flowchart" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\hz_flowchart.PNG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="calculate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\calculate.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icon_time_table" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icon_time_table.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="icon_exclamation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_exclamation.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="VFreq" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\VFreq.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
