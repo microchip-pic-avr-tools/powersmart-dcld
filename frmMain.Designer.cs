@@ -2594,10 +2594,10 @@
             this.chkAGCAddGetModFactorFunCall.Enabled = false;
             this.chkAGCAddGetModFactorFunCall.Location = new System.Drawing.Point(28, 50);
             this.chkAGCAddGetModFactorFunCall.Name = "chkAGCAddGetModFactorFunCall";
-            this.chkAGCAddGetModFactorFunCall.Size = new System.Drawing.Size(254, 19);
+            this.chkAGCAddGetModFactorFunCall.Size = new System.Drawing.Size(280, 19);
             this.chkAGCAddGetModFactorFunCall.TabIndex = 10;
             this.chkAGCAddGetModFactorFunCall.Tag = "agc_get_factor_function_call";
-            this.chkAGCAddGetModFactorFunCall.Text = "Add \'Get Modulation Factor\' Function Call";
+            this.chkAGCAddGetModFactorFunCall.Text = "Add &Observer Function Call before Modulation";
             this.chkAGCAddGetModFactorFunCall.UseVisualStyleBackColor = true;
             this.chkAGCAddGetModFactorFunCall.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
@@ -2605,7 +2605,7 @@
             // 
             this.picInfoAGC.Image = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.Image")));
             this.picInfoAGC.InitialImage = ((System.Drawing.Image)(resources.GetObject("picInfoAGC.InitialImage")));
-            this.picInfoAGC.Location = new System.Drawing.Point(202, 1);
+            this.picInfoAGC.Location = new System.Drawing.Point(268, 1);
             this.picInfoAGC.Name = "picInfoAGC";
             this.picInfoAGC.Size = new System.Drawing.Size(16, 16);
             this.picInfoAGC.TabIndex = 72;
@@ -2618,10 +2618,10 @@
             this.chkEnableAdaptiveGainControl.BackColor = System.Drawing.SystemColors.Window;
             this.chkEnableAdaptiveGainControl.Location = new System.Drawing.Point(10, 0);
             this.chkEnableAdaptiveGainControl.Name = "chkEnableAdaptiveGainControl";
-            this.chkEnableAdaptiveGainControl.Size = new System.Drawing.Size(188, 19);
+            this.chkEnableAdaptiveGainControl.Size = new System.Drawing.Size(242, 19);
             this.chkEnableAdaptiveGainControl.TabIndex = 8;
             this.chkEnableAdaptiveGainControl.Tag = "agc_enable";
-            this.chkEnableAdaptiveGainControl.Text = "Enable Loop &Gain Modulation";
+            this.chkEnableAdaptiveGainControl.Text = "Enable &Feedback Loop Gain Modulation";
             this.chkEnableAdaptiveGainControl.UseVisualStyleBackColor = false;
             this.chkEnableAdaptiveGainControl.CheckedChanged += new System.EventHandler(this.chkEnableAdaptiveGainControl_CheckedChanged);
             // 
@@ -2634,7 +2634,7 @@
             this.chkAGCAddEnable.Size = new System.Drawing.Size(257, 19);
             this.chkAGCAddEnable.TabIndex = 9;
             this.chkAGCAddEnable.Tag = "agc_enable_switch";
-            this.chkAGCAddEnable.Text = "Add Enable/Disable Adaptive Gain Control";
+            this.chkAGCAddEnable.Text = "Add Enable/Disable Adaptive &Gain Control";
             this.chkAGCAddEnable.UseVisualStyleBackColor = true;
             this.chkAGCAddEnable.CheckedChanged += new System.EventHandler(this.CodeGeneratorOptions_CheckedChanged);
             // 
@@ -5158,7 +5158,7 @@
             // 
             // txtDebugOutput
             // 
-            this.txtDebugOutput.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.txtDebugOutput.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.txtDebugOutput.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.txtDebugOutput.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtDebugOutput.Location = new System.Drawing.Point(3, 582);

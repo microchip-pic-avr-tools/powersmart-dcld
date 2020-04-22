@@ -210,10 +210,10 @@
     <Content Include="Resources\c-code.gen">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\181026e_dcld_beta_user_guide.pdf">
+    <Content Include="Resources\readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\readme.txt">
+    <Content Include="Resources\181026f_dcld_beta_user_guide.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\VFreq.png" />
