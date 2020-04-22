@@ -41,6 +41,6 @@ Makefile-genesis.properties
 *.bak
 *.log
 
-# su-directories which need to be included
+# sub-directories which need to be included
 !Resources/
 !Properties
