@@ -4353,6 +4353,7 @@ namespace dcld
         {
             UpdateTransferFunction(sender, e);
             chartTimingSetAnnotationLabelPositions(sender, e);
+            this.Refresh();
             return;
         }
 
