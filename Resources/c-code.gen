@@ -2,11 +2,11 @@
 Name=C-Source and Header Generator Script
 Description=This scriptprovides C-source and header files for user-tailored SMPS control loops based on DSP assembly code modules templates generated using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=2.0.5
-Date=04/21/2020
+Version=2.0.6
+Date=04/23/2020
 
 [history]
-count=13
+count=14
 0=11/08/19;1.0.0;Initial version after moving C-sources and headers from application code to external script
 1=01/10/20;1.1.0;Added support for cascaded functions. This allows the assembly routine to call another controller or user-defined function extension code module.\r\nAdded pointers to alternate source and terget register supporting bi-directional control and advanced adaptive control methods
 2=03/18/2020;1.1.1;Changed function call name of controller initialization from xxx_Init to xxx_Initialize to stay consistent with other generic code modules
@@ -20,6 +20,7 @@ count=13
 10=03/31/2020;2.0.3;Added P-Term controller for plant transfer function measurement support
 11=04/03/2020;2.0.4;Added Token IDs for enhanced code generation option support
 12=04/21/2020;2.0.5;Added user-defined function pointer to observer function to AGC declarations
+13=04/23/2020;2.0.6;Fixed comments in C-Source file and bug not updating DCD version code
 
 
 [tokens]
@@ -91,13 +92,13 @@ count=37
 
 [library_header]
 count=179
-line0=/* ********************************************************************************
-line1= * %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
-line2= * ********************************************************************************
-line3= * Generic library header for z-domain compensation filter assembly functions
-line4= * CGS Version: %CGS_VERSION%
-line5= * CGS Date:    %CGS_VERSION_DATE%
-line6= * ********************************************************************************/
+line0=      /* *********************************************************************************
+line1=%SPACE%* %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
+line2=%SPACE%* *********************************************************************************
+line3=%SPACE%* Generic library header for z-domain compensation filter assembly functions
+line4=%SPACE%* CGS Version: %CGS_VERSION%
+line5=%SPACE%* CGS Date:    %CGS_VERSION_DATE%
+line6=%SPACE%* ********************************************************************************/
 line7=#ifndef __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
 line8=#define __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__
 line9=%EMPTY%
@@ -108,9 +109,9 @@ line13=#include <stdbool.h> // include standard boolean data types (true/false)
 line14=%EMPTY%
 line15=// Generic macro allowing to identify the file version of  'npnz16b.h'
 line16=// This version key represents the product version of DCLD as integer number
-line17=// of the form [MAJOR][MINOR][REVISION] => version 0.9.03 would be shown as 903
+line17=// of the form [MAJOR][MINOR][REVISION] => version 0.9.3.xxx would be shown as 903
 line18=#ifndef __DCLD_VERSION
-line19=%IDENT%#define __DCLD_VERSION    903
+line19=%IDENT%#define __DCLD_VERSION    %DCLD_VERSION_CODE%
 line20=#endif  // end of __DCLD_VERSION
 line21=%EMPTY%
 line22=/* Status flags (Single Bit) */
@@ -274,12 +275,12 @@ line178=%EMPTY%
 
 [comp_header]
 count=110
-line0=/* ********************************************************************************
+line0=      /* *********************************************************************************
 line1=%SPACE%* %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
-line2=%SPACE%* ********************************************************************************
+line2=%SPACE%* *********************************************************************************
 line3=%SPACE%* %FILTER_ORDER%p%FILTER_ORDER%z controller function declarations and compensation filter coefficients
 line4=%SPACE%* derived for following operating conditions:
-line5=%SPACE%* ********************************************************************************
+line5=%SPACE%* *********************************************************************************
 line6=%SPACE%*
 line7=%SPACE%*  Controller Type:    %COMP_TYPE_NAME%
 line8=%SPACE%*  Sampling Frequency: %SAMPLING_FREQUENCY% Hz 
@@ -287,13 +288,13 @@ line9=%SPACE%*  Fixed Point Format: %Q_FORMAT%
 line10=%SPACE%*  Scaling Mode:       %SCALING_MODE%
 line11=%SPACE%*  Input Gain:         %INPUT_GAIN%
 line12=%SPACE%*
-line13=%SPACE%* *******************************************************************************
+line13=%SPACE%* *********************************************************************************
 line14=%SPACE%* CGS Version:         %CGS_VERSION%
 line15=%SPACE%* CGS Date:            %CGS_VERSION_DATE%
-line16=%SPACE%* *******************************************************************************
+line16=%SPACE%* *********************************************************************************
 line17=%SPACE%* User:                %USER_NAME%
 line18=%SPACE%* Date/Time:           %DATE_TODAY%
-line19=%SPACE%* *******************************************************************************/
+line19=%SPACE%* ********************************************************************************/
 line20=%EMPTY%
 line21=#ifndef __SPECIAL_FUNCTION_LAYER_%FILENAME_PATTERN_U%_H__
 line22=#define __SPECIAL_FUNCTION_LAYER_%FILENAME_PATTERN_U%_H__
@@ -388,12 +389,12 @@ line109=%EMPTY%
 
 [comp_source_head]
 count=86
-line0=      /* **********************************************************************************
+line0=      /* *********************************************************************************
 line1=%SPACE%* %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
-line2=%SPACE%* **********************************************************************************
-line3=%SPACE%* %FILTER_ORDER%p%FILTER_ORDER%z compensation filter coefficients derived for following operating 
-line4=%SPACE%* conditions:
-line5=%SPACE%* **********************************************************************************
+line2=%SPACE%* *********************************************************************************
+line3=%SPACE%* %FILTER_ORDER%p%FILTER_ORDER%z controller function declarations and compensation filter coefficients
+line4=%SPACE%* derived for following operating conditions:
+line5=%SPACE%* *********************************************************************************
 line6=%SPACE%*
 line7=%SPACE%*  Controller Type:    %COMP_TYPE_NAME%
 line8=%SPACE%*  Sampling Frequency: %SAMPLING_FREQUENCY% Hz 
@@ -423,7 +424,7 @@ line31=%SPACE%* Y-space for control and error history arrays).
 line32=%SPACE%*
 line33=%SPACE%* The following declarations are used to define the array data contents, their 
 line34=%SPACE%* length and memory location. These declarations are made publicly accessible 
-line35=%SPACE%* through defines in source file %FILENAME_PATTERN_L%.c
+line35=%SPACE%* through extern declarations in header file %FILENAME_PATTERN_L%.h
 line36=%SPACE%* ********************************************************************************/
 line37=%EMPTY%
 line38=volatile %PREFIXU%CONTROL_LOOP_COEFFICIENTS_t __attribute__((space(xmemory), near)) %PREFIX%coefficients; // A/B-Coefficients 
