@@ -66,6 +66,8 @@ namespace dcld
         string _targetDeviceType = ""; // Reduced type indication, e.g. dsPIC33C
 
         // GUI status flags
+        bool BodeUpdateInProgress = false;
+        bool TFUpdateInProgress = false;
         bool ExternalFileOpenEvent = false;
         bool FilterTypeChanged = true;
         bool ScalingChanged = true;
@@ -918,20 +920,23 @@ namespace dcld
             bool valid_data_entry = false;
             string str_buf = "";
 
+
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
             try
             {
-                DebugOutput("update transfer function...");
-            
-                if (ApplicationStartUp) return;     // During the startup-phase o fhte application, suppress all updates
+                if (ApplicationStartUp) return;     // During the startup-phase of the application, suppress all updates
                 if (ProjectFileLoadActive) return;         // If settings are loaded from a file, suppress all updates
-                if (cmbCompType.Text.Trim().Length == 0) return;
+                if (cmbCompType.Text.Trim().Length == 0) return; // Prevent update when no compensator type has been selected
+                if (TFUpdateInProgress) return; // Prevent update if update is already in progress
+
+                DebugOutput("update transfer function...");
 
                 // Reset flags
                 UpdateWarning = false;
                 UpdateComplete = false;
                 cNPNZ.AutoUpdate = false;
+                TFUpdateInProgress = true;
 
                 eventProjectFileChanged(sender, e);
                 stbProgressBarLabel.Text = "Updating Results:";
@@ -1282,6 +1287,8 @@ namespace dcld
             stbProgressBar.Visible = false;
             stbProgressBarLabel.Visible = false;
 
+            TFUpdateInProgress = false;
+
             return;
         
         }
@@ -1386,6 +1393,10 @@ namespace dcld
         {
             int i = 0;
             Annotation v_anno;
+
+            // Recursion Protection
+            if (BodeUpdateInProgress) return(true);
+            BodeUpdateInProgress = true;
 
             try
             {
@@ -2121,6 +2132,13 @@ namespace dcld
                 stbProgressBar.Visible = false;
                 stbProgressBarLabel.Visible = false;
 
+                // Update charts and generated code based on loaded settings
+                UpdateTransferFunction(this, EventArgs.Empty);
+                //UpdateBodePlot(this, EventArgs.Empty);
+                GenerateCode(this, EventArgs.Empty);
+                ProjectFileChanged = false;
+
+                // Open Project Configuration in case there are conflicts
                 if (project_conflicts)
                     OpenProjectConfigWindow();
 
@@ -2937,19 +2955,24 @@ namespace dcld
 
             if (txtPZ != null) e.NewLocationX = Convert.ToDouble(txtPZ.Text);
 
+
+            return;
+        }
+
+        private void TriggerTransferFunctionUpdate(object sender, EventArgs e)
+        {
             if (!timRefresh.Enabled)
-            { 
-                timRefresh.Interval = 30;
+            {
+                timRefresh.Interval = 100;
                 timRefresh.Enabled = true;
             }
-            return;
         }
 
         private void timRefresh_Tick(object sender, EventArgs e)
         {
             if (UpdateComplete)
             {
-                UpdateBodePlot(sender, e, false);
+                UpdateTransferFunction(sender, e);
                 timRefresh.Enabled = false;
             }
         }
@@ -2981,6 +3004,8 @@ namespace dcld
             AbsoluteMouseMoveStart = null;
             RelativeMouseMoveStop = e;
             AbsoluteMouseMoveStop = e;
+
+            TriggerTransferFunctionUpdate(sender, e);
         }
 
         private void chartBode_UpdateCursorMeasurement(object sender, bool ForceCursorPositionX = false, bool ForceCursorPositionY = false, double CursorX = 1.0)
