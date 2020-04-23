@@ -457,7 +457,7 @@ namespace dcld
             for (_i = 0; _i < RecentFileList.Count; _i++)
             {
                 itm = new ToolStripMenuItem();
-                itm.Text = ("&" + (_i + 1).ToString() + " " + RecentFileList.Items[_i].Path);
+                itm.Text = ("&" + (_i + 1).ToString() + " " + RecentFileList.Items[_i].DisplayLabel);
                 itm.Name = "file_" + _i.ToString();
                 itm.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 itm.Click += new System.EventHandler(this.OpenFileFromRecentFileList);
