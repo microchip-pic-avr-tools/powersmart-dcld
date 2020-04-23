@@ -9,8 +9,6 @@ namespace dcld
 {
     class clsRecentFileList
     {
-        string _dsp = System.IO.Path.DirectorySeparatorChar.ToString();
-
         internal int Count 
         {
             get {
@@ -136,24 +134,20 @@ namespace dcld
         internal void AddNew(string Filename)
         {
             string str_dum = Filename.Trim();
-            string[] dum_sep = new string[1];
-            string[] str_arr;
             clsRecentFileListItem[] _item_list;
             clsRecentFileListItem new_item;
 
+            // Exit if filename is empty
             if (str_dum.Length == 0)
                 return;
 
+            // Exit if file does not exist
             if (!File.Exists(str_dum))
                 return;
 
             // Create new item
-            dum_sep[0] = _dsp;
-            str_arr = str_dum.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
-
             new_item = new clsRecentFileListItem();
             new_item.Path = str_dum;
-            new_item.Title = str_arr[str_arr.GetUpperBound(0)];
             
             // Extend items array by one element
             _item_list = _items;
@@ -184,18 +178,23 @@ namespace dcld
         {
             int _i = 0;
 
+            // Set selected item to NULL
             for (_i = 0; _i < _items.Length; _i++)
             {
-                if(_items[_i].Path.Trim().ToLower() == Filename.Trim().ToLower())
+                if (_items[_i] != null)
                 {
-                    _items[_i] = null;
-                    break;
+                    if (_items[_i].Path.Trim().ToLower() == Filename.Trim().ToLower())
+                    {
+                        _items[_i] = null;
+                        break;
+                    }
                 }
             }
 
-            Trim();
-            WriteParentFileList();
-            GetFileList();
+            // Clean file list and return result
+            Trim();                 // Trim file list
+            WriteParentFileList();  // Write cleaned-up list to file
+            GetFileList();          // reload file list from file
 
             return;
         }
@@ -264,19 +263,53 @@ namespace dcld
 
     public class clsRecentFileListItem
     {
+        string _dsp = System.IO.Path.DirectorySeparatorChar.ToString();
+        string _adsp = System.IO.Path.AltDirectorySeparatorChar.ToString();
+        
         private string _path = "";
         internal string Path
         {
             get { return (_path); }
-            set { _path = value; return; }
+            set {
+                int arr_ubound = 0;
+                string[] dum_sep = new string[1];
+                string[] str_arr;
+                
+                _path = value;
+
+                // Create a label whcih gets shortedned if path is getting too long
+                if (_path.Contains(_dsp) && (!_path.Contains(_adsp)))
+                    dum_sep[0] = _dsp;
+                else if ((!_path.Contains(_dsp)) && (_path.Contains(_adsp)))
+                    dum_sep[0] = _adsp;
+                str_arr = _path.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
+                arr_ubound = str_arr.GetUpperBound(0);
+
+                if (str_arr.Length > 6)
+                    _display_label = str_arr[0] + _dsp + str_arr[1] + _dsp + "..." + 
+                        _dsp + str_arr[arr_ubound - 2] + _dsp + str_arr[arr_ubound - 1] + _dsp + str_arr[arr_ubound];
+                else
+                    _display_label = _path;
+
+                // Extract file title
+                _title = str_arr[arr_ubound];
+
+                return; 
+            }
         }
 
         private string _title = "";
         internal string Title
         {
             get { return (_title); }
-            set { _title = value; return; }
+        }
+
+        private string _display_label = "";
+        internal string DisplayLabel
+        {
+            get { return (_display_label); }
         }
     
+
     }
 }
