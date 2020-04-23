@@ -197,7 +197,7 @@ namespace dcld
                           Convert.ToInt32(str_arr[1]).ToString("#0") +
                           Convert.ToInt32(str_arr[2]).ToString("#00");
                 dcldGlobals.APP_VERSION_KEY = Convert.ToInt32(str_dum);
-                
+
                 // Initialize debug output
                 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 DebugInfoPrintLine(
@@ -3817,13 +3817,6 @@ namespace dcld
             AssGen.FilterOrder = (int)(cNPNZ.FilterOrder);
             AssGen.CodeOptimizationLevel = 0;
 
-            // ToDo: Remove
-            //AssGen.BidirectionalFeedback = cNPNZ.IsBidirectional;
-            //if (AssGen.BidirectionalFeedback) // feedback rectification option only allowed with bi-directional feedbacks
-            //    AssGen.FeedbackRectification = cNPNZ.FeedbackRecitification; 
-            //else
-            //    AssGen.FeedbackRectification = false;
-
             DebugOutput("assembly generator script: " + AssGen.GeneratorScript.FileName);
             DebugOutput("assembly generator script version: " + AssGen.GeneratorScript.FileVersion + " (" + AssGen.GeneratorScript.FileVersionDate + ")");
             DebugOutput("filter order: " + AssGen.FilterOrder.ToString());
@@ -3866,46 +3859,6 @@ namespace dcld
                     }
                 }
             }
-
-            // ToDo: Remove
-
-            //// Set Adaptive Gain Control options
-            //AssGen.AdaptiveGainModulationEnable = (chkEnableAdaptiveGainControl.Checked && chkEnableAdaptiveGainControl.Enabled);
-            //AssGen.AdaptiveGainModulationAddEnableSwitch = (chkAGCAddEnable.Checked && chkAGCAddEnable.Enabled);
-            //AssGen.AdaptiveGainModulationAddFunctionCall = (chkAGCAddGetModFactorFunCall.Checked && chkAGCAddGetModFactorFunCall.Enabled);
-
-            //// set dynamic execution options
-            //AssGen.SaveRestoreContext = this.chkContextSaving.Checked;
-            //AssGen.SaveRestoreShadowRegisters = ((this.chkSaveRestoreShadowRegisters.Checked) && (this.chkContextSaving.Checked));
-            //AssGen.SaveRestoreMACRegisters = ((this.chkSaveRestoreMACRegisters.Checked) && (this.chkContextSaving.Checked));
-            //AssGen.SaveRestoreAccumulators = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked));
-            //AssGen.SaveRestoreAccumulatorA = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked) && (this.chkSaveRestoreAccumulatorA.Checked));
-            //AssGen.SaveRestoreAccumulatorB = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked) && (this.chkSaveRestoreAccumulatorB.Checked));
-            //AssGen.SaveRestoreCoreConfig = ((this.chkSaveRestoreCoreConfig.Checked) && (this.chkContextSaving.Checked));
-            //AssGen.SaveRestoreCoreStatusRegister = ((this.chkSaveRestoreCoreStatus.Checked) && (this.chkContextSaving.Checked));
-
-            //AssGen.AddAlternateSource = ((this.chkAddAlternateSource.Checked) && (this.chkAddAlternateSource.Enabled));
-            //AssGen.AddAlternateTarget = ((this.chkAddAlternateTarget.Checked) && (this.chkAddAlternateTarget.Enabled));
-            //AssGen.AddADCTriggerAPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerAPlacement.Checked));
-            //AssGen.AddADCTriggerBPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerBPlacement.Checked));
-            //AssGen.AddCascadedFunctionCall = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCascadedFunctionCall.Checked));
-            //AssGen.AddErrorInputNormalization = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddErrorNormalization.Checked));
-            //AssGen.AddEnableDisableFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked));
-            //AssGen.AddDisableDummyReadFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked) && (this.chkAddDisableDummyRead.Checked));
-            //AssGen.AddCoreConfig = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCoreConfig.Checked));
-
-            //AssGen.AddAntiWindup = this.chkAntiWindup.Checked;
-            //AssGen.AntiWindupSoftDesaturationFlag = ((this.chkAntiWindupSoftDesaturationFlag.Checked) && ((this.chkAntiWindupClampMax.Checked) || (this.chkAntiWindupClampMin.Checked)));
-            //AssGen.AntiWindupClampMax = this.chkAntiWindupClampMax.Checked;
-            //AssGen.AntiWindupClampMaxWithStatusFlag = ((this.chkAntiWindupMaxStatusFlag.Checked) && (this.chkAntiWindupClampMax.Checked));
-            //AssGen.AntiWindupClampMin = this.chkAntiWindupClampMin.Checked;
-            //AssGen.AntiWindupClampMinWithStatusFlag = ((this.chkAntiWindupMinStatusFlag.Checked) && (this.chkAntiWindupClampMin.Checked));
-
-            //AssGen.CreateCopyOfMostRecentControlInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlInput.Checked) && (chkDataProviderSource.Checked));
-            //AssGen.CreateCopyOfMostRecentErrorInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderErrorInput.Checked) && (chkDataProviderSource.Checked));
-            //AssGen.CreateCopyOfMostRecentControlOutput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlOutput.Checked) && (chkDataProviderSource.Checked));
-
-            //AssGen.StoreReloadAccLevel1 = ((this.chkCodeFeatureOptions.Checked) && (this.chkStoreReloadAccLevel1.Checked) && (this.chkStoreReloadAccLevel1.Enabled) && (AssGen.CodeOptimizationLevel == 1));
 
             // Start body generation by adding generator header
 
@@ -4719,18 +4672,6 @@ namespace dcld
             Clipboard.SetText(AsmGeneratorScript.FileName);
 
             MessageBox.Show(this, "Configuraiton file path has been successfully copied into the clipboard.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void FileExportItemToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ToolStripMenuItem mnuitm;
-
-            mnuitm = (ToolStripMenuItem)sender;
-            mnuitm.Checked = !mnuitm.Checked;
-
-            eventProjectFileChanged(sender, e);
-
-            return;
         }
 
         private void DropDownList_LockingKeyDown(object sender, KeyEventArgs e)
