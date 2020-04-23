@@ -151,6 +151,7 @@ namespace dcld
                 sDum = sDum.Replace("%CGS_VERSION%", _GenScript.FileVersion); // _CGS_Version);
                 sDum = sDum.Replace("%CGS_VERSION_DATE%", _GenScript.FileVersionDate); // _CGS_VersionDate);
                 sDum = sDum.Replace("%COMP_TYPE_NAME%", _CompTypeName);
+                sDum = sDum.Replace("%DCLD_VERSION_CODE%", dcldGlobals.APP_VERSION_KEY.ToString());
                 sDum = sDum.Replace("%SAMPLING_FREQUENCY%", compFilter.SamplingFrequency.ToString());
                 sDum = sDum.Replace("%Q_FORMAT%", compFilter.QFormat.ToString());
                 sDum = sDum.Replace("%SCALING_MODE%", _ScalingMethodName);
