@@ -98,22 +98,6 @@ namespace dcld
             set { _PreShift = value; return; }
         }
 
-        //private string _CGS_Version = "n/a";
-        //internal string CGS_Version
-        //{
-        //    get { return(_CGS_Version); }
-        //    set { _CGS_Version = value; return; }
-        //}
-
-        //private string _CGS_VersionDate = "n/a";
-        //internal string CGS_VersionDate
-        //{
-        //    get { return (_CGS_VersionDate); }
-        //    set { _CGS_VersionDate = value; return; }
-        //}
-
-        /* Code Generation Options */
-
         private dcld.clsConditionalCode _tokens;
         internal dcld.clsConditionalCode Tokens
         {
