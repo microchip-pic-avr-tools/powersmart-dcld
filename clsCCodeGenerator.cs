@@ -98,22 +98,6 @@ namespace dcld
             set { _PreShift = value; return; }
         }
 
-        //private string _CGS_Version = "n/a";
-        //internal string CGS_Version
-        //{
-        //    get { return(_CGS_Version); }
-        //    set { _CGS_Version = value; return; }
-        //}
-
-        //private string _CGS_VersionDate = "n/a";
-        //internal string CGS_VersionDate
-        //{
-        //    get { return (_CGS_VersionDate); }
-        //    set { _CGS_VersionDate = value; return; }
-        //}
-
-        /* Code Generation Options */
-
         private dcld.clsConditionalCode _tokens;
         internal dcld.clsConditionalCode Tokens
         {
@@ -167,6 +151,7 @@ namespace dcld
                 sDum = sDum.Replace("%CGS_VERSION%", _GenScript.FileVersion); // _CGS_Version);
                 sDum = sDum.Replace("%CGS_VERSION_DATE%", _GenScript.FileVersionDate); // _CGS_VersionDate);
                 sDum = sDum.Replace("%COMP_TYPE_NAME%", _CompTypeName);
+                sDum = sDum.Replace("%DCLD_VERSION_CODE%", dcldGlobals.APP_VERSION_KEY.ToString());
                 sDum = sDum.Replace("%SAMPLING_FREQUENCY%", compFilter.SamplingFrequency.ToString());
                 sDum = sDum.Replace("%Q_FORMAT%", compFilter.QFormat.ToString());
                 sDum = sDum.Replace("%SCALING_MODE%", _ScalingMethodName);

@@ -110,6 +110,10 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.recentFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearRecentFileListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripRecentFileListSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator31 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showCoeffficientDataTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -624,6 +628,8 @@
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripSeparator1,
+            this.recentFilesToolStripMenuItem,
+            this.toolStripSeparator31,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
@@ -659,6 +665,34 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
             // 
+            // recentFilesToolStripMenuItem
+            // 
+            this.recentFilesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearRecentFileListToolStripMenuItem,
+            this.toolStripRecentFileListSeparator});
+            this.recentFilesToolStripMenuItem.Name = "recentFilesToolStripMenuItem";
+            this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.recentFilesToolStripMenuItem.Text = "&Recent Files";
+            // 
+            // clearRecentFileListToolStripMenuItem
+            // 
+            this.clearRecentFileListToolStripMenuItem.Image = global::dcld.Properties.Resources.delete;
+            this.clearRecentFileListToolStripMenuItem.Name = "clearRecentFileListToolStripMenuItem";
+            this.clearRecentFileListToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.clearRecentFileListToolStripMenuItem.Text = "Clear Recent File LIst";
+            this.clearRecentFileListToolStripMenuItem.Click += new System.EventHandler(this.ClearRecentFileList_Click);
+            // 
+            // toolStripRecentFileListSeparator
+            // 
+            this.toolStripRecentFileListSeparator.Name = "toolStripRecentFileListSeparator";
+            this.toolStripRecentFileListSeparator.Size = new System.Drawing.Size(185, 6);
+            this.toolStripRecentFileListSeparator.Visible = false;
+            // 
+            // toolStripSeparator31
+            // 
+            this.toolStripSeparator31.Name = "toolStripSeparator31";
+            this.toolStripSeparator31.Size = new System.Drawing.Size(148, 6);
+            // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
@@ -684,35 +718,35 @@
             // showCoeffficientDataTableToolStripMenuItem
             // 
             this.showCoeffficientDataTableToolStripMenuItem.Checked = true;
+            this.showCoeffficientDataTableToolStripMenuItem.CheckOnClick = true;
             this.showCoeffficientDataTableToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showCoeffficientDataTableToolStripMenuItem.Name = "showCoeffficientDataTableToolStripMenuItem";
             this.showCoeffficientDataTableToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.D)));
             this.showCoeffficientDataTableToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.showCoeffficientDataTableToolStripMenuItem.Text = "Show Coeffficient &Data Table";
             this.showCoeffficientDataTableToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showCoeffficientDataTableToolStripMenuItem_CheckedChanged);
-            this.showCoeffficientDataTableToolStripMenuItem.Click += new System.EventHandler(this.showCoeffficientDataTableToolStripMenuItem_Click);
             // 
             // showSourceCodeTimingToolStripMenuItem
             // 
             this.showSourceCodeTimingToolStripMenuItem.Checked = true;
+            this.showSourceCodeTimingToolStripMenuItem.CheckOnClick = true;
             this.showSourceCodeTimingToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showSourceCodeTimingToolStripMenuItem.Name = "showSourceCodeTimingToolStripMenuItem";
             this.showSourceCodeTimingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.T)));
             this.showSourceCodeTimingToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.showSourceCodeTimingToolStripMenuItem.Text = "Show Source Code &Timing";
             this.showSourceCodeTimingToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showSourceCodeTimingToolStripMenuItem_CheckedChanged);
-            this.showSourceCodeTimingToolStripMenuItem.Click += new System.EventHandler(this.showSourceCodeTimingToolStripMenuItem_Click);
             // 
             // showOutputWindowToolStripMenuItem
             // 
             this.showOutputWindowToolStripMenuItem.Checked = true;
+            this.showOutputWindowToolStripMenuItem.CheckOnClick = true;
             this.showOutputWindowToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showOutputWindowToolStripMenuItem.Name = "showOutputWindowToolStripMenuItem";
             this.showOutputWindowToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
             this.showOutputWindowToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.showOutputWindowToolStripMenuItem.Text = "Show Output Window";
             this.showOutputWindowToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showOutputWindowToolStripMenuItem_CheckedChanged);
-            this.showOutputWindowToolStripMenuItem.Click += new System.EventHandler(this.showOutputWindowToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -800,38 +834,42 @@
             // assemblyLibraryExportToolStripMenuItem
             // 
             this.assemblyLibraryExportToolStripMenuItem.Checked = true;
+            this.assemblyLibraryExportToolStripMenuItem.CheckOnClick = true;
             this.assemblyLibraryExportToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.assemblyLibraryExportToolStripMenuItem.Name = "assemblyLibraryExportToolStripMenuItem";
             this.assemblyLibraryExportToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
             this.assemblyLibraryExportToolStripMenuItem.Text = "&Assembly Library";
-            this.assemblyLibraryExportToolStripMenuItem.Click += new System.EventHandler(this.FileExportItemToolStripMenuItem_Click);
+            this.assemblyLibraryExportToolStripMenuItem.CheckedChanged += new System.EventHandler(this.eventProjectFileChanged);
             // 
             // libraryCHeaderExportToolStripMenuItem
             // 
             this.libraryCHeaderExportToolStripMenuItem.Checked = true;
+            this.libraryCHeaderExportToolStripMenuItem.CheckOnClick = true;
             this.libraryCHeaderExportToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.libraryCHeaderExportToolStripMenuItem.Name = "libraryCHeaderExportToolStripMenuItem";
             this.libraryCHeaderExportToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
             this.libraryCHeaderExportToolStripMenuItem.Text = "Library C-&Header";
-            this.libraryCHeaderExportToolStripMenuItem.Click += new System.EventHandler(this.FileExportItemToolStripMenuItem_Click);
+            this.libraryCHeaderExportToolStripMenuItem.CheckedChanged += new System.EventHandler(this.eventProjectFileChanged);
             // 
             // libraryCSourceFileExportToolStripMenuItem
             // 
             this.libraryCSourceFileExportToolStripMenuItem.Checked = true;
+            this.libraryCSourceFileExportToolStripMenuItem.CheckOnClick = true;
             this.libraryCSourceFileExportToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.libraryCSourceFileExportToolStripMenuItem.Name = "libraryCSourceFileExportToolStripMenuItem";
             this.libraryCSourceFileExportToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
             this.libraryCSourceFileExportToolStripMenuItem.Text = "Library C-&Source File";
-            this.libraryCSourceFileExportToolStripMenuItem.Click += new System.EventHandler(this.FileExportItemToolStripMenuItem_Click);
+            this.libraryCSourceFileExportToolStripMenuItem.CheckedChanged += new System.EventHandler(this.eventProjectFileChanged);
             // 
             // genericControlLibraryHeaderExportToolStripMenuItem
             // 
             this.genericControlLibraryHeaderExportToolStripMenuItem.Checked = true;
+            this.genericControlLibraryHeaderExportToolStripMenuItem.CheckOnClick = true;
             this.genericControlLibraryHeaderExportToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.genericControlLibraryHeaderExportToolStripMenuItem.Name = "genericControlLibraryHeaderExportToolStripMenuItem";
             this.genericControlLibraryHeaderExportToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
             this.genericControlLibraryHeaderExportToolStripMenuItem.Text = "Generic Control &Library Header";
-            this.genericControlLibraryHeaderExportToolStripMenuItem.Click += new System.EventHandler(this.FileExportItemToolStripMenuItem_Click);
+            this.genericControlLibraryHeaderExportToolStripMenuItem.CheckedChanged += new System.EventHandler(this.eventProjectFileChanged);
             // 
             // toolStripSeparator15
             // 
@@ -1156,7 +1194,7 @@
             this.txtSamplingFrequency.Text = "250000";
             this.txtSamplingFrequency.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtSamplingFrequency.WordWrap = false;
-            this.txtSamplingFrequency.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtSamplingFrequency.TextChanged += new System.EventHandler(this.TriggerTransferFunctionUpdate);
             this.txtSamplingFrequency.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtSamplingFrequency.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
@@ -1210,7 +1248,7 @@
             this.txtFZ4.Text = "50000";
             this.txtFZ4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFZ4.WordWrap = false;
-            this.txtFZ4.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtFZ4.TextChanged += new System.EventHandler(this.TriggerTransferFunctionUpdate);
             this.txtFZ4.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtFZ4.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
@@ -1276,7 +1314,7 @@
             this.txtFP4.Text = "125000";
             this.txtFP4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFP4.WordWrap = false;
-            this.txtFP4.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtFP4.TextChanged += new System.EventHandler(this.TriggerTransferFunctionUpdate);
             this.txtFP4.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtFP4.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
@@ -1290,7 +1328,7 @@
             this.txtFP0.Text = "650";
             this.txtFP0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFP0.WordWrap = false;
-            this.txtFP0.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtFP0.TextChanged += new System.EventHandler(this.TriggerTransferFunctionUpdate);
             this.txtFP0.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtFP0.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
@@ -1315,7 +1353,7 @@
             this.txtFZ5.Text = "50000";
             this.txtFZ5.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFZ5.WordWrap = false;
-            this.txtFZ5.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtFZ5.TextChanged += new System.EventHandler(this.TriggerTransferFunctionUpdate);
             this.txtFZ5.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtFZ5.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
@@ -1350,7 +1388,7 @@
             this.txtFZ3.Text = "40000";
             this.txtFZ3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFZ3.WordWrap = false;
-            this.txtFZ3.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtFZ3.TextChanged += new System.EventHandler(this.TriggerTransferFunctionUpdate);
             this.txtFZ3.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtFZ3.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
@@ -1407,7 +1445,7 @@
             this.txtFP1.Text = "30000";
             this.txtFP1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFP1.WordWrap = false;
-            this.txtFP1.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtFP1.TextChanged += new System.EventHandler(this.TriggerTransferFunctionUpdate);
             this.txtFP1.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtFP1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
@@ -1431,7 +1469,7 @@
             this.txtFP5.Text = "125000";
             this.txtFP5.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFP5.WordWrap = false;
-            this.txtFP5.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtFP5.TextChanged += new System.EventHandler(this.TriggerTransferFunctionUpdate);
             this.txtFP5.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtFP5.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
@@ -1445,7 +1483,7 @@
             this.txtFP3.Text = "125000";
             this.txtFP3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFP3.WordWrap = false;
-            this.txtFP3.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtFP3.TextChanged += new System.EventHandler(this.TriggerTransferFunctionUpdate);
             this.txtFP3.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtFP3.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
@@ -1480,7 +1518,7 @@
             this.txtFZ1.Text = "3000";
             this.txtFZ1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFZ1.WordWrap = false;
-            this.txtFZ1.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtFZ1.TextChanged += new System.EventHandler(this.TriggerTransferFunctionUpdate);
             this.txtFZ1.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtFZ1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
@@ -1516,7 +1554,7 @@
             this.txtFZ2.Text = "6000";
             this.txtFZ2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFZ2.WordWrap = false;
-            this.txtFZ2.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtFZ2.TextChanged += new System.EventHandler(this.TriggerTransferFunctionUpdate);
             this.txtFZ2.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtFZ2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
@@ -1562,7 +1600,7 @@
             this.txtFP2.Text = "125000";
             this.txtFP2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtFP2.WordWrap = false;
-            this.txtFP2.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtFP2.TextChanged += new System.EventHandler(this.TriggerTransferFunctionUpdate);
             this.txtFP2.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtFP2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
@@ -1616,7 +1654,7 @@
             this.txtOutputGain.Text = "1.000";
             this.txtOutputGain.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtOutputGain.WordWrap = false;
-            this.txtOutputGain.TextChanged += new System.EventHandler(this.UpdateTransferFunction);
+            this.txtOutputGain.TextChanged += new System.EventHandler(this.TriggerTransferFunctionUpdate);
             this.txtOutputGain.Enter += new System.EventHandler(this.NumberTextBox_Enter);
             this.txtOutputGain.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NumberTextBox_KeyDownWithScaling);
             // 
@@ -2550,7 +2588,7 @@
             this.lblFinalNamePrefixOutput.Size = new System.Drawing.Size(80, 15);
             this.lblFinalNamePrefixOutput.TabIndex = 30;
             this.lblFinalNamePrefixOutput.Text = "{Name Prefix}";
-            this.lblFinalNamePrefixOutput.TextChanged += new System.EventHandler(this.GenerateCode);
+            this.lblFinalNamePrefixOutput.TextChanged += new System.EventHandler(this.ForceCoefficientsUpdate);
             // 
             // lblFinalNamePrefix
             // 
@@ -5268,7 +5306,6 @@
             this.toolStripButtonShowCoefficientTable.Text = "Coefficients";
             this.toolStripButtonShowCoefficientTable.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonShowCoefficientTable.ToolTipText = "Show/Hide Coefficient Table";
-            this.toolStripButtonShowCoefficientTable.Click += new System.EventHandler(this.showCoeffficientDataTableToolStripMenuItem_Click);
             // 
             // toolStripButtonShowTimingTable
             // 
@@ -5279,15 +5316,14 @@
             this.toolStripButtonShowTimingTable.Text = "Timing";
             this.toolStripButtonShowTimingTable.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonShowTimingTable.ToolTipText = "Show/Hide Timing Table";
-            this.toolStripButtonShowTimingTable.Click += new System.EventHandler(this.showSourceCodeTimingToolStripMenuItem_Click);
             // 
             // toolStripButtonRefresh
             // 
             this.toolStripButtonRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRefresh.Image")));
             this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
-            this.toolStripButtonRefresh.Size = new System.Drawing.Size(50, 35);
-            this.toolStripButtonRefresh.Text = "Refresh";
+            this.toolStripButtonRefresh.Size = new System.Drawing.Size(87, 35);
+            this.toolStripButtonRefresh.Text = "Refresh Charts";
             this.toolStripButtonRefresh.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonRefresh.ToolTipText = "Refresh Diagrams";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
@@ -5307,8 +5343,8 @@
             this.toolStripButtonUpdateCode.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUpdateCode.Image")));
             this.toolStripButtonUpdateCode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUpdateCode.Name = "toolStripButtonUpdateCode";
-            this.toolStripButtonUpdateCode.Size = new System.Drawing.Size(49, 35);
-            this.toolStripButtonUpdateCode.Text = "Update";
+            this.toolStripButtonUpdateCode.Size = new System.Drawing.Size(80, 35);
+            this.toolStripButtonUpdateCode.Text = "Update Code";
             this.toolStripButtonUpdateCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolStripButtonUpdateCode.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonUpdateCode.ToolTipText = "Update Generated Source Code";
@@ -5319,8 +5355,8 @@
             this.toolStripButtonUpdateExportCode.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUpdateExportCode.Image")));
             this.toolStripButtonUpdateExportCode.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUpdateExportCode.Name = "toolStripButtonUpdateExportCode";
-            this.toolStripButtonUpdateExportCode.Size = new System.Drawing.Size(45, 35);
-            this.toolStripButtonUpdateExportCode.Text = "Export";
+            this.toolStripButtonUpdateExportCode.Size = new System.Drawing.Size(71, 35);
+            this.toolStripButtonUpdateExportCode.Text = "Export Files";
             this.toolStripButtonUpdateExportCode.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.toolStripButtonUpdateExportCode.ToolTipText = "Generate and Export Source Code";
             this.toolStripButtonUpdateExportCode.Click += new System.EventHandler(this.ExportGeneratedFiles);
@@ -5961,6 +5997,10 @@
         private System.Windows.Forms.Label lblContextMgmntResources;
         private System.Windows.Forms.Label lblContextMgmntResourcesTitle;
         private System.Windows.Forms.RichTextBox txtDebugOutput;
+        private System.Windows.Forms.ToolStripMenuItem recentFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearRecentFileListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator31;
+        private System.Windows.Forms.ToolStripSeparator toolStripRecentFileListSeparator;
     }
 }
 

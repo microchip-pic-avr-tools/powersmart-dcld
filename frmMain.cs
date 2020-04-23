@@ -66,6 +66,8 @@ namespace dcld
         string _targetDeviceType = ""; // Reduced type indication, e.g. dsPIC33C
 
         // GUI status flags
+        bool BodeUpdateInProgress = false;
+        bool TFUpdateInProgress = false;
         bool ExternalFileOpenEvent = false;
         bool FilterTypeChanged = true;
         bool ScalingChanged = true;
@@ -100,6 +102,8 @@ namespace dcld
         clsINIFileHandler ProjectFile = new clsINIFileHandler();
         clsINIFileHandler AsmGeneratorScript = new clsINIFileHandler();
         clsINIFileHandler CCodeGeneratorScript = new clsINIFileHandler();
+
+        clsRecentFileList RecentFileList = new clsRecentFileList();
 
         // GUI controls groups
         TextBox[] txtPole = null, txtZero = null;
@@ -193,7 +197,7 @@ namespace dcld
                           Convert.ToInt32(str_arr[1]).ToString("#0") +
                           Convert.ToInt32(str_arr[2]).ToString("#00");
                 dcldGlobals.APP_VERSION_KEY = Convert.ToInt32(str_dum);
-                
+
                 // Initialize debug output
                 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 DebugInfoPrintLine(
@@ -433,6 +437,114 @@ namespace dcld
             return(f_res);
         }
 
+        private void LoadRecentFileList()
+        {
+            int _i = 0;
+            ToolStripItem tsi;
+
+            ToolStripMenuItem itm;
+
+            // Clear current File List Menu
+            for (_i = (recentFilesToolStripMenuItem.DropDownItems.Count - 1); _i > 0; _i--)
+            {
+                tsi = recentFilesToolStripMenuItem.DropDownItems[_i];
+                if (tsi.Name.Contains("file"))
+                    recentFilesToolStripMenuItem.DropDownItems.Remove(tsi);
+            }
+
+            // Clear Recent File List and set new source file
+            RecentFileList.SettingsFile = SettingsFile; // by setting the file, the Recent File List will get updated automatically
+
+            // Load Recent File List
+            for (_i = 0; _i < RecentFileList.Count; _i++)
+            {
+                itm = new ToolStripMenuItem();
+                itm.Text = ("&" + (_i + 1).ToString() + " " + RecentFileList.Items[_i].DisplayLabel);
+                itm.Name = "file_" + _i.ToString();
+                itm.DisplayStyle = ToolStripItemDisplayStyle.Text;
+                itm.Click += new System.EventHandler(this.OpenFileFromRecentFileList);
+                recentFilesToolStripMenuItem.DropDownItems.Add(itm);
+            }
+
+            toolStripRecentFileListSeparator.Visible = (bool)(RecentFileList.Count > 0);
+
+            return;
+
+        }
+
+        private void ClearRecentFileList_Click(object sender, EventArgs e)
+        {
+            int _i = 0;
+            DialogResult dlgResult = 0;
+            ToolStripItem tsi;
+
+            if (RecentFileList.Count == 0) // Nothing to clear
+                return;
+
+            dlgResult = MessageBox.Show(this,
+                "Do you want to clear the list or recently opened files?\r\n" + 
+                "This action cannot be undone.", 
+                "Clear Recent File List", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+            if (dlgResult == System.Windows.Forms.DialogResult.Cancel)
+                return;
+
+            RecentFileList.Clear();
+
+            for (_i = (recentFilesToolStripMenuItem.DropDownItems.Count - 1); _i > 0; _i--)
+            {
+                tsi = recentFilesToolStripMenuItem.DropDownItems[_i];
+                if (tsi.Name.Contains("file"))
+                    recentFilesToolStripMenuItem.DropDownItems.Remove(tsi);
+            }
+
+            toolStripRecentFileListSeparator.Visible = false;
+
+        }
+
+        private void OpenFileFromRecentFileList(object sender, EventArgs e)
+        {
+            int file_index = 0;
+            string file_name = "";
+            ToolStripMenuItem itm;
+            DialogResult dlgResult;
+
+            if (sender.GetType().ToString() != "System.Windows.Forms.ToolStripMenuItem")
+                return;
+
+            itm = (ToolStripMenuItem)sender;
+            if (!itm.Name.Contains("file"))
+                return;
+
+            file_index = Convert.ToInt32(itm.Name.Replace("file_", ""));
+            file_name = RecentFileList.Items[file_index].Path;
+            if (file_name.Length == 0)
+                return;
+
+            if (!File.Exists(file_name))
+            {
+                dlgResult = MessageBox.Show(this,
+                    "File " +
+                    "'" + file_name + "'" +
+                    " could not be found and will be removed from the list of recetly opend files. \r\n\r\n" +
+                    "Would you like to search for this file?"
+                    , "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
+
+                RecentFileList.Remove(file_name);
+                LoadRecentFileList();
+
+                if (dlgResult == DialogResult.OK)
+                    openToolStripMenuItem_Click(openToolStripMenuItem, e);
+            }
+            else
+            {
+                OpenFile(file_name);
+            }
+
+        }
+
+
+
         private void frmMain_Load(object sender, EventArgs e)
         {
             double[,] GainSeries = new double[2, 100];
@@ -518,7 +630,6 @@ namespace dcld
             GroupFolding_grpCodeFeatureDataIOHeight = grpCodeFeatureDataIO.Height;
             GroupFolding_grpDataProviderSourcesHeight = grpDataProviderSources.Height;
             GroupFolding_grpAntiWindupHeight = grpAntiWindup.Height;
-//            GroupFolding_grpDevelopmentToolsHeight = grpDevelopmentTools.Height;
 
             // reload last Bode chart settings
             DefaultXMin = Convert.ToDouble(SettingsFile.ReadKey("bode_plot", "x_min", DefaultXMin.ToString()));
@@ -568,6 +679,8 @@ namespace dcld
             this.txtCHeaderPath.Text = ""; // rootPath;
             this.txtCLibPath.Text = ""; // rootPath;
 
+            // Load list of previously opened files
+            LoadRecentFileList();
 
             // Refresh GUI
             ApplicationStartUp = false;
@@ -807,20 +920,23 @@ namespace dcld
             bool valid_data_entry = false;
             string str_buf = "";
 
+
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
             try
             {
-                DebugOutput("update transfer function...");
-            
-                if (ApplicationStartUp) return;     // During the startup-phase o fhte application, suppress all updates
+                if (ApplicationStartUp) return;     // During the startup-phase of the application, suppress all updates
                 if (ProjectFileLoadActive) return;         // If settings are loaded from a file, suppress all updates
-                if (cmbCompType.Text.Trim().Length == 0) return;
+                if (cmbCompType.Text.Trim().Length == 0) return; // Prevent update when no compensator type has been selected
+                if (TFUpdateInProgress) return; // Prevent update if update is already in progress
+
+                DebugOutput("update transfer function...");
 
                 // Reset flags
                 UpdateWarning = false;
                 UpdateComplete = false;
                 cNPNZ.AutoUpdate = false;
+                TFUpdateInProgress = true;
 
                 eventProjectFileChanged(sender, e);
                 stbProgressBarLabel.Text = "Updating Results:";
@@ -1119,7 +1235,7 @@ namespace dcld
                 }
                 else
                 {
-                    DebugOutput("transfer function update completed with warnings", Color.Red);
+                    DebugOutput("transfer function update completed with warnings", Color.Red, FontStyle.Bold);
 
                     stbMainStatusLabel.Text = "Coefficients have been generated with warnings";
                     stbMainStatusLabel.Image = dcld.Properties.Resources.icon_exclamation.ToBitmap();
@@ -1148,7 +1264,7 @@ namespace dcld
             }   // end of try
             catch(Exception ex)
             {
-                DebugOutput("UpdateTransferFunction() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
+                DebugOutput("UpdateTransferFunction() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red, FontStyle.Bold);
 
                 // show failure message in status bar
                 stbMainStatusLabel.Text = "Invalid number format detected - results may be corrupted";
@@ -1170,6 +1286,8 @@ namespace dcld
             Application.DoEvents();
             stbProgressBar.Visible = false;
             stbProgressBarLabel.Visible = false;
+
+            TFUpdateInProgress = false;
 
             return;
         
@@ -1276,6 +1394,10 @@ namespace dcld
             int i = 0;
             Annotation v_anno;
 
+            // Recursion Protection
+            if (BodeUpdateInProgress) return(true);
+            BodeUpdateInProgress = true;
+
             try
             {
 
@@ -1326,9 +1448,10 @@ namespace dcld
             }
             catch(Exception ex)
             {
-                DebugOutput("UpdateBodePlot(" + ForceAnnotationUpdate.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
+                DebugOutput("UpdateBodePlot(" + ForceAnnotationUpdate.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red, FontStyle.Bold);
             }
 
+            BodeUpdateInProgress = false;
             return (true);
         }
 
@@ -1698,6 +1821,10 @@ namespace dcld
 
                 // Parameter listing complete
 
+                // Update Recent File List
+                RecentFileList.AddNew(sfdlg.FileName);
+                LoadRecentFileList();
+
                 // Status Bar Progress Indication
                 stbProgressBar.Value = 100;
                 Application.DoEvents();
@@ -1995,11 +2122,23 @@ namespace dcld
                 saveToolStripMenuItem.Enabled = false;
                 toolStripButtonSave.Enabled = saveToolStripMenuItem.Enabled;
 
+                // Update Recent File List
+                RecentFileList.AddNew(Filename);
+                LoadRecentFileList();
+
+                // Finish progress indication
                 stbProgressBar.Value = 100;
                 Application.DoEvents();
                 stbProgressBar.Visible = false;
                 stbProgressBarLabel.Visible = false;
 
+                // Update charts and generated code based on loaded settings
+                UpdateTransferFunction(this, EventArgs.Empty);
+                //UpdateBodePlot(this, EventArgs.Empty);
+                GenerateCode(this, EventArgs.Empty);
+                ProjectFileChanged = false;
+
+                // Open Project Configuration in case there are conflicts
                 if (project_conflicts)
                     OpenProjectConfigWindow();
 
@@ -2008,7 +2147,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("open file exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
+                DebugOutput("open file exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red, FontStyle.Bold);
                 MessageBox.Show(
                     "Error (0x" + ex.HResult.ToString("X") + "): Could not read file from disk.\r\n" + 
                     "Original error: " + ex.Message, 
@@ -2703,7 +2842,7 @@ namespace dcld
             DebugOutput("history item auto-saved");
 
             // Acknowledge successfully executed command
-            DebugOutput("file export complete", Color.ForestGreen);
+            DebugOutput("file export completed successfully", Color.ForestGreen, FontStyle.Bold);
             if (generateCodeBeforeExportToolStripMenuItem.Checked)
             {
                 MessageBox.Show(
@@ -2816,19 +2955,24 @@ namespace dcld
 
             if (txtPZ != null) e.NewLocationX = Convert.ToDouble(txtPZ.Text);
 
+
+            return;
+        }
+
+        private void TriggerTransferFunctionUpdate(object sender, EventArgs e)
+        {
             if (!timRefresh.Enabled)
-            { 
-                timRefresh.Interval = 30;
+            {
+                timRefresh.Interval = 100;
                 timRefresh.Enabled = true;
             }
-            return;
         }
 
         private void timRefresh_Tick(object sender, EventArgs e)
         {
             if (UpdateComplete)
             {
-                UpdateBodePlot(sender, e, false);
+                UpdateTransferFunction(sender, e);
                 timRefresh.Enabled = false;
             }
         }
@@ -2860,6 +3004,8 @@ namespace dcld
             AbsoluteMouseMoveStart = null;
             RelativeMouseMoveStop = e;
             AbsoluteMouseMoveStop = e;
+
+            TriggerTransferFunctionUpdate(sender, e);
         }
 
         private void chartBode_UpdateCursorMeasurement(object sender, bool ForceCursorPositionX = false, bool ForceCursorPositionY = false, double CursorX = 1.0)
@@ -2895,7 +3041,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("chartBode_UpdateCursorMeasurement(" + ForceCursorPositionX.ToString() + ", " + ForceCursorPositionY.ToString() + ", " + CursorX.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
+                DebugOutput("chartBode_UpdateCursorMeasurement(" + ForceCursorPositionX.ToString() + ", " + ForceCursorPositionY.ToString() + ", " + CursorX.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red, FontStyle.Bold);
             }
 
             return;
@@ -2924,7 +3070,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("chartBode_ResetCursorMeasurement(" + HideCursor.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
+                DebugOutput("chartBode_ResetCursorMeasurement(" + HideCursor.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red, FontStyle.Bold);
             }
 
             return;
@@ -3213,7 +3359,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("chartBode_MouseMove() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
+                DebugOutput("chartBode_MouseMove() exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red, FontStyle.Bold);
             }
 
 
@@ -3245,28 +3391,10 @@ namespace dcld
             return;
         }
 
-        private void showCoeffficientDataTableToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            showCoeffficientDataTableToolStripMenuItem.Checked = !showCoeffficientDataTableToolStripMenuItem.Checked;
-            return;
-        }
-
-        private void showSourceCodeTimingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            showSourceCodeTimingToolStripMenuItem.Checked = !showSourceCodeTimingToolStripMenuItem.Checked;
-            return;
-        }
-
-
         private void showOutputWindowToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             txtDebugOutput.Visible = showOutputWindowToolStripMenuItem.Checked;
             return;
-        }
-
-        private void showOutputWindowToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            showOutputWindowToolStripMenuItem.Checked = !showOutputWindowToolStripMenuItem.Checked;
         }
 
 
@@ -3585,7 +3713,7 @@ namespace dcld
                 Application.DoEvents();
                 stbProgressBar.Visible = false;
                 stbProgressBarLabel.Visible = false;
-                DebugOutput("code generation completed successfully", Color.RoyalBlue);
+                DebugOutput("code generation completed successfully", Color.RoyalBlue, FontStyle.Bold);
                 DebugOutput("");
 
             }
@@ -3593,7 +3721,7 @@ namespace dcld
             {
                 if (!ApplicationShutDown) 
                 {
-                    DebugOutput("code generation exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
+                    DebugOutput("code generation exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red, FontStyle.Bold);
                     stbMainStatusLabel.Text = "Unexpected exception during code generation. The generated code may be incomplete or corrupted.";
                     stbMainStatusLabel.Image = dcld.Properties.Resources.icon_critical.ToBitmap();
                     stbMainStatusLabel.BackColor = stbMain.BackColor;
@@ -3689,13 +3817,6 @@ namespace dcld
             AssGen.FilterOrder = (int)(cNPNZ.FilterOrder);
             AssGen.CodeOptimizationLevel = 0;
 
-            // ToDo: Remove
-            //AssGen.BidirectionalFeedback = cNPNZ.IsBidirectional;
-            //if (AssGen.BidirectionalFeedback) // feedback rectification option only allowed with bi-directional feedbacks
-            //    AssGen.FeedbackRectification = cNPNZ.FeedbackRecitification; 
-            //else
-            //    AssGen.FeedbackRectification = false;
-
             DebugOutput("assembly generator script: " + AssGen.GeneratorScript.FileName);
             DebugOutput("assembly generator script version: " + AssGen.GeneratorScript.FileVersion + " (" + AssGen.GeneratorScript.FileVersionDate + ")");
             DebugOutput("filter order: " + AssGen.FilterOrder.ToString());
@@ -3738,46 +3859,6 @@ namespace dcld
                     }
                 }
             }
-
-            // ToDo: Remove
-
-            //// Set Adaptive Gain Control options
-            //AssGen.AdaptiveGainModulationEnable = (chkEnableAdaptiveGainControl.Checked && chkEnableAdaptiveGainControl.Enabled);
-            //AssGen.AdaptiveGainModulationAddEnableSwitch = (chkAGCAddEnable.Checked && chkAGCAddEnable.Enabled);
-            //AssGen.AdaptiveGainModulationAddFunctionCall = (chkAGCAddGetModFactorFunCall.Checked && chkAGCAddGetModFactorFunCall.Enabled);
-
-            //// set dynamic execution options
-            //AssGen.SaveRestoreContext = this.chkContextSaving.Checked;
-            //AssGen.SaveRestoreShadowRegisters = ((this.chkSaveRestoreShadowRegisters.Checked) && (this.chkContextSaving.Checked));
-            //AssGen.SaveRestoreMACRegisters = ((this.chkSaveRestoreMACRegisters.Checked) && (this.chkContextSaving.Checked));
-            //AssGen.SaveRestoreAccumulators = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked));
-            //AssGen.SaveRestoreAccumulatorA = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked) && (this.chkSaveRestoreAccumulatorA.Checked));
-            //AssGen.SaveRestoreAccumulatorB = ((this.chkSaveRestoreAccumulators.Checked) && (this.chkContextSaving.Checked) && (this.chkSaveRestoreAccumulatorB.Checked));
-            //AssGen.SaveRestoreCoreConfig = ((this.chkSaveRestoreCoreConfig.Checked) && (this.chkContextSaving.Checked));
-            //AssGen.SaveRestoreCoreStatusRegister = ((this.chkSaveRestoreCoreStatus.Checked) && (this.chkContextSaving.Checked));
-
-            //AssGen.AddAlternateSource = ((this.chkAddAlternateSource.Checked) && (this.chkAddAlternateSource.Enabled));
-            //AssGen.AddAlternateTarget = ((this.chkAddAlternateTarget.Checked) && (this.chkAddAlternateTarget.Enabled));
-            //AssGen.AddADCTriggerAPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerAPlacement.Checked));
-            //AssGen.AddADCTriggerBPlacement = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddADCTriggerBPlacement.Checked));
-            //AssGen.AddCascadedFunctionCall = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCascadedFunctionCall.Checked));
-            //AssGen.AddErrorInputNormalization = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddErrorNormalization.Checked));
-            //AssGen.AddEnableDisableFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked));
-            //AssGen.AddDisableDummyReadFeature = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddEnableDisable.Checked) && (this.chkAddDisableDummyRead.Checked));
-            //AssGen.AddCoreConfig = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddCoreConfig.Checked));
-
-            //AssGen.AddAntiWindup = this.chkAntiWindup.Checked;
-            //AssGen.AntiWindupSoftDesaturationFlag = ((this.chkAntiWindupSoftDesaturationFlag.Checked) && ((this.chkAntiWindupClampMax.Checked) || (this.chkAntiWindupClampMin.Checked)));
-            //AssGen.AntiWindupClampMax = this.chkAntiWindupClampMax.Checked;
-            //AssGen.AntiWindupClampMaxWithStatusFlag = ((this.chkAntiWindupMaxStatusFlag.Checked) && (this.chkAntiWindupClampMax.Checked));
-            //AssGen.AntiWindupClampMin = this.chkAntiWindupClampMin.Checked;
-            //AssGen.AntiWindupClampMinWithStatusFlag = ((this.chkAntiWindupMinStatusFlag.Checked) && (this.chkAntiWindupClampMin.Checked));
-
-            //AssGen.CreateCopyOfMostRecentControlInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlInput.Checked) && (chkDataProviderSource.Checked));
-            //AssGen.CreateCopyOfMostRecentErrorInput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderErrorInput.Checked) && (chkDataProviderSource.Checked));
-            //AssGen.CreateCopyOfMostRecentControlOutput = ((this.chkCodeFeatureOptions.Checked) && (this.chkAddDataProviderControlOutput.Checked) && (chkDataProviderSource.Checked));
-
-            //AssGen.StoreReloadAccLevel1 = ((this.chkCodeFeatureOptions.Checked) && (this.chkStoreReloadAccLevel1.Checked) && (this.chkStoreReloadAccLevel1.Enabled) && (AssGen.CodeOptimizationLevel == 1));
 
             // Start body generation by adding generator header
 
@@ -3839,10 +3920,10 @@ namespace dcld
                     control_read = 1e+3 * Convert.ToDouble(lblNumberOfInstructionCyclesRead.Text) * (1.0 / cpu_clk);
                     control_write = 1e+3 * Convert.ToDouble(lblNumberOfInstructionCyclesResponse.Text) * (1.0 / cpu_clk);
 
-                    DebugOutput("CPU clock setting: " + cpu_clk.ToString() + " MHz");
-                    DebugOutput("control interrupt latency: " + control_latency.ToString() + " ns");
-                    DebugOutput("READ delay: " + control_read.ToString() + " ns");
-                    DebugOutput("WRITEBACK delay: " + control_write.ToString() + " ns");
+                    DebugOutput("CPU clock setting: " + cpu_clk.ToString() + " MHz", Color.DarkOrange);
+                    DebugOutput("control interrupt latency: " + control_latency.ToString() + " ns", Color.DarkOrange);
+                    DebugOutput("READ delay: " + control_read.ToString() + " ns", Color.DarkOrange);
+                    DebugOutput("WRITEBACK delay: " + control_write.ToString() + " ns", Color.DarkOrange);
 
                 }
                 else {
@@ -4054,7 +4135,7 @@ namespace dcld
                 return;
             }
             catch (Exception ex) {
-                DebugOutput("error (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
+                DebugOutput("error (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red, FontStyle.Bold);
                 DebugOutput("exit timing chart update");
                 return; 
             }
@@ -4225,6 +4306,7 @@ namespace dcld
         {
             UpdateTransferFunction(sender, e);
             chartTimingSetAnnotationLabelPositions(sender, e);
+            this.Refresh();
             return;
         }
 
@@ -4456,7 +4538,7 @@ namespace dcld
             }
             catch (Exception ex)
             {
-                DebugOutput("chartBode_SetScales(" + XAxesLimitType.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red);
+                DebugOutput("chartBode_SetScales(" + XAxesLimitType.ToString() + ") exception (0x" + ex.HResult.ToString("X") + " " + ex.Message, Color.Red, FontStyle.Bold);
             }
             return;
         }
@@ -4590,18 +4672,6 @@ namespace dcld
             Clipboard.SetText(AsmGeneratorScript.FileName);
 
             MessageBox.Show(this, "Configuraiton file path has been successfully copied into the clipboard.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void FileExportItemToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ToolStripMenuItem mnuitm;
-
-            mnuitm = (ToolStripMenuItem)sender;
-            mnuitm.Checked = !mnuitm.Checked;
-
-            eventProjectFileChanged(sender, e);
-
-            return;
         }
 
         private void DropDownList_LockingKeyDown(object sender, KeyEventArgs e)
@@ -5492,37 +5562,42 @@ namespace dcld
         }
 
 
-        private void DebugOutput(string debugString, Color color = default(Color))
+        private void DebugOutput(string debugString, Color color = default(Color), FontStyle FontBold = FontStyle.Regular)
         {
             int txt_start = 0, txt_stop = 0;
 
-            // If no color is defined, set color to Default Color
-            if (color.IsEmpty)
-                color = DebugOutputMessageDefaultColor;
-
-            // cut debug window text if contents exceed buffer size
-            if ((txtDebugOutput.TextLength + debugString.Length) > txtDebugOutput.MaxLength)
+            try
             {
-                txt_start = (debugString.Length + 7);
-                txt_stop = (txtDebugOutput.TextLength - txt_start);
-                txtDebugOutput.Text = ">..." + txtDebugOutput.Text.Substring(txt_start, txt_stop);
+                // If no color is defined, set color to Default Color
+                if (color.IsEmpty)
+                    color = DebugOutputMessageDefaultColor;
+
+                // cut debug window text if contents exceed buffer size
+                if ((txtDebugOutput.TextLength + debugString.Length) > txtDebugOutput.MaxLength)
+                {
+                    txt_start = (debugString.Length + 7);
+                    txt_stop = (txtDebugOutput.TextLength - txt_start);
+                    txtDebugOutput.Text = ">..." + txtDebugOutput.Text.Substring(txt_start, txt_stop);
+                }
+
+                txt_start = (txtDebugOutput.TextLength);
+                txt_stop = (debugString.Length) + 1;
+
+                // Add debug text
+                if (debugString.Trim().Length > 0) debugString = ">" + debugString;
+                txtDebugOutput.AppendText(debugString + "\r\n");
+
+                //            txtDebugOutput.SelectionType = RichTextBoxSelectionTypes.Text;
+                //            if (color_index > (DebugOutputMessageColor.Length-1)) color_index = 0;
+                txtDebugOutput.SelectionStart = txt_start;
+                txtDebugOutput.SelectionLength = txt_stop;
+                txtDebugOutput.SelectionFont = new Font(txtDebugOutput.Font, FontBold); ;
+                txtDebugOutput.SelectionColor = color; 
+                txtDebugOutput.SelectionStart = txtDebugOutput.TextLength;
+
+                txtDebugOutput.ScrollToCaret();
             }
-
-            txt_start = (txtDebugOutput.TextLength);
-            txt_stop = (debugString.Length)+1;
-
-            // Add debug text
-            if (debugString.Trim().Length > 0) debugString = ">" + debugString;
-            txtDebugOutput.AppendText(debugString + "\r\n");
-
-//            txtDebugOutput.SelectionType = RichTextBoxSelectionTypes.Text;
-//            if (color_index > (DebugOutputMessageColor.Length-1)) color_index = 0;
-            txtDebugOutput.SelectionStart = txt_start;
-            txtDebugOutput.SelectionLength = txt_stop;
-            txtDebugOutput.SelectionColor = color; //DebugOutputMessageColor[color_index];
-            txtDebugOutput.SelectionStart = txtDebugOutput.TextLength;
-
-            txtDebugOutput.ScrollToCaret();
+            catch { /* do nothing */ }
         }
 
         public void DebugOutput_Clear()
@@ -5538,6 +5613,8 @@ namespace dcld
             txtOutput.SelectionStart = txtOutput.TextLength;
             txtOutput.ScrollToCaret();
         }
+
+
 
     }
 

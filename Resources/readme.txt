@@ -31,13 +31,17 @@ Please read the sections in new user guide for more information.
 
 A new output window has been added to the code generator view providing more detailed debugging information. Errors and data violations occurring during internal calculations and code generation are now provided with dedicated error messages and codes to make troubleshooting mode effective.
 
-4) Bugfixes
+4) List of Most Recently Opened Files
+
+Inside the 'File' menu you now find a sub-menu where previously opened files are stored. You can open of of the DCLD configuration files by clicking on the regarding list entry and the file will be loaded automatically. The list can be cleared by clicking on 'Clear Recent File List'. The maximum number of recently opened files is currently limited to eight. You can adjust the number of files by editing the key '[recent_files]->max' in the application settings file dcld.ini located in the program folder. The absolute maximum number of files allowed is limited to 128. Setting the maximum number of files =0 will disable this feature and no file history will be stored.
+
+5) Bugfixes
 
   - solved conflicts with relative path declarations in #include paths
   - solved a calculation error in input gain calculations of digital sources
   - solved a bug accidentally overwriting the ADC gain in input gain calculations when using digital input sources
 
-5) 'Under-The-Hood' changes
+6) 'Under-The-Hood' changes
 
 With increasing number of code generation options, feature management has been optimized by introducing combinatorial tokens in code generator scripts. These changes are not visible and noticeable for common users but may be of interest for users who manipulate/tweak code generator scripts to better meet their own requirements. More detailed information on code generator scripts is available on request.
 

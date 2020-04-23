@@ -195,6 +195,8 @@
             // 
             // cmbIncludeDirectories
             // 
+            this.cmbIncludeDirectories.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbIncludeDirectories.FormattingEnabled = true;
             this.cmbIncludeDirectories.Location = new System.Drawing.Point(199, 80);
             this.cmbIncludeDirectories.Name = "cmbIncludeDirectories";
