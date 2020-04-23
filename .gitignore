@@ -3,50 +3,45 @@
 # Set up for Visual Studio Environment
 #
 # Special gitignore for release branch only containing the publish folder
+# No Code Files should be available.
 
 # Project Folders
+~*.*
 .vs/
+.svn/
 bin/
 bin/Debug/
 bin/Release/
-code_templates/
 obj/
 Properties/
 Resources/
 Service References/
 test_cases/
 tools/
+user_feedback/
 user_guide/
-user_guide/pictures/
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
-.svn
+# Source Files
 *.bak
-
-# VS C# specific
-~*.*
-.vs/
-obj/
-build/
-dist/
-private/
-disassembly/
-*.pdb
+*.bash
 *.cache
 *.cs
-*.config
 *.csproj
-*.resx
+*.config
+*.elf
+*.ini
 *.ico
+*.ko
+*.log
+*.mk
+*.obj
+*.pdb
+*.psess
+*.resx
 *.sln
 *.suo
-*.mk
-*.bash
-Makefile-genesis.properties
+*.user
+*.vspx
 
 ### Files and folders to keep ###
 !docs/
@@ -64,9 +59,12 @@ Makefile-genesis.properties
 !publish/ThumbDrive Version/*.*
 !publish/ThumbDrive Version/Resources/
 !publish/ThumbDrive Version/Resources/*.*
+!publish/Windows Install/
+!publish/Windows Install/*.*
 !README.md
 !readme.txt
 
+# Individually Listed Files which happen to slip back into Version Control
 dcld.ini
 debug.log
 Digital Control Loop Designer.csproj.user
