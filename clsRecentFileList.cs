@@ -28,11 +28,13 @@ namespace dcld
             set { _settings_file = value; GetFileList(); return; }
         }
 
-        private int _selected_item = 0;
-        internal int SelectedItem
+        private int _max_items_absolute = 128;
+        private int _max_items_default = 8;
+        private int _max_items = 8;
+        internal int MaximumItems
         {
-            get { return (_selected_item); }
-            set { _selected_item = value; return; }
+            get { return (_max_items); }
+            set { _max_items = value; return; }
         }
 
         private clsRecentFileListItem[] _items;
@@ -44,28 +46,34 @@ namespace dcld
 
         private void WriteParentFileList()
         {
-            int _i = 0;
+            int _i = 0, _max = 0;
+
+            // Limit number of list items to user-defined maximum
+            if (_items.Length > _max_items)
+                _max = _max_items;
+            else
+                _max = _items.Length;
 
             // Write updated recent file list to file
-            for (_i = 0; _i < _items.Length; _i++)
+            for (_i = 0; _i < _max; _i++)
             {
                 _settings_file.WriteKey("recent_files", "file" + _i.ToString(), _items[_i].Path);
             }
-            _settings_file.WriteKey("recent_files", "count", _items.Length.ToString());
+            _settings_file.WriteKey("recent_files", "count", _i.ToString());
 
             return;
         }
 
         private void ClearParentFileList()
         {
-            int _i = 0, file_count = 0;
+            int _i = 0;
 
-            // Clear recent file list in file
-            file_count = Convert.ToInt32(_settings_file.ReadKey("recent_files", "count", "0"));
-
-            for (_i = 0; _i < file_count; _i++)
+            // Clear recent file list in file up to 128 entries in case maximum level has been changed
+            // and old entries are still there....
+            for (_i = 0; _i < _max_items_absolute; _i++)
             {
-                _settings_file.DeleteKey("recent_files", "file" + _i.ToString());
+                if (_settings_file.ReadKey("recent_files", "file" + _i.ToString(), "").Length > 0)
+                    _settings_file.DeleteKey("recent_files", "file" + _i.ToString());
             }
             _settings_file.WriteKey("recent_files", "count", "0");
 
@@ -92,28 +100,33 @@ namespace dcld
         internal bool GetFileList()
         {
             int _i = 0, file_count = 0;
-            string[] dum_sep = new string[1];
-            string[] str_arr;
 
             if(_settings_file == null)
                 return(false);
 
+            // read number of saved files
             file_count = Convert.ToInt32(_settings_file.ReadKey("recent_files", "count", "0"));
             if (file_count == 0)
                 return(true);
 
+            // read maximum length of file list
+            _max_items = Convert.ToInt32(_settings_file.ReadKey("recent_files", "max", _max_items_default.ToString()));
+            if (_max_items == 0)
+                _max_items = _max_items_default;
+
+            // clamp file count to maximum
+            if (file_count > _max_items)
+                file_count = _max_items;
+
+            // Crate items array
             _items = new clsRecentFileListItem[file_count];
 
+            // Read file information of file list
             for (_i = 0; _i < _items.Length; _i++)
             {
                 // Read full string from file
                 _items[_i] = new clsRecentFileListItem();
                 _items[_i].Path = _settings_file.ReadKey("recent_files", "file" + _i.ToString(), "").Trim();
-
-                // Split off file name
-                dum_sep[0] = _dsp;
-                str_arr = _items[_i].Path.Split(dum_sep, StringSplitOptions.RemoveEmptyEntries);
-                _items[_i].Title = str_arr[str_arr.GetUpperBound(0)];
 
             }
 
@@ -153,6 +166,10 @@ namespace dcld
             _item_list = null;
 
             Trim(); // Trim new list
+
+            // Limit number of items to user-defined maximum
+            if (_items.Length > _max_items)
+                Array.Resize(ref _items, _max_items);
 
             // Clear file list in file
             ClearParentFileList();
