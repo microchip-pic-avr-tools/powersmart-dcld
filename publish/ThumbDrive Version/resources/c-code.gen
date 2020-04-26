@@ -2,11 +2,11 @@
 Name=C-Source and Header Generator Script
 Description=This scriptprovides C-source and header files for user-tailored SMPS control loops based on DSP assembly code modules templates generated using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=2.0.6
-Date=04/23/2020
+Version=2.0.7
+Date=04/24/2020
 
 [history]
-count=14
+count=15
 0=11/08/19;1.0.0;Initial version after moving C-sources and headers from application code to external script
 1=01/10/20;1.1.0;Added support for cascaded functions. This allows the assembly routine to call another controller or user-defined function extension code module.\r\nAdded pointers to alternate source and terget register supporting bi-directional control and advanced adaptive control methods
 2=03/18/2020;1.1.1;Changed function call name of controller initialization from xxx_Init to xxx_Initialize to stay consistent with other generic code modules
@@ -21,6 +21,7 @@ count=14
 11=04/03/2020;2.0.4;Added Token IDs for enhanced code generation option support
 12=04/21/2020;2.0.5;Added user-defined function pointer to observer function to AGC declarations
 13=04/23/2020;2.0.6;Fixed comments in C-Source file and bug not updating DCD version code
+14=04/24/2020;2.0.7;Bugfix: ptrAgcObserverFunction was declared as 16-bit pointer, which causes conflicts with declaration is user code. Type has been changed to uint16_t.
 
 
 [tokens]
@@ -250,7 +251,7 @@ line154=%IDENT%struct {
 line155=%IDENT%%IDENT%volatile uint16_t AgcScaler; // Bit-shift scaler of Adaptive Gain Modulation factor
 line156=%IDENT%%IDENT%volatile fractional AgcFactor; // Q15 value of Adaptive Gain Modulation factor
 line157=%IDENT%%IDENT%volatile fractional AgcMedian; // Q15 value of Adaptive Gain Modulation nominal operating point
-line158=%IDENT%%IDENT%volatile uint16_t* ptrAgcObserverFunction; // Function Pointer to Observer function updating the AGC modulation factor
+line158=%IDENT%%IDENT%volatile uint16_t ptrAgcObserverFunction; // Function Pointer to Observer function updating the AGC modulation factor
 line159=%IDENT%} __attribute__((packed))GainControl; // Parameter section for advanced control options
 line160=%EMPTY%
 line161=%IDENT%// User Data Space for Advanced Control Functions

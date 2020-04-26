@@ -2,11 +2,11 @@
 Name=Assembly Generator Script
 Description=This script defines DSP assembly code generation templates used to generate user-tailored SMPS control loops using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=2.0.8
-Date=04/21/2020
+Version=2.0.9
+Date=04/24/2020
 
 [history]
-count=23
+count=24
 0=04/03/19;1.1.1;Added input offset compensation applied to input source
 1=10/18/19;1.2.0;Changed existing input offset compensation to full bi-directional feedback implementation
 2=10/19/19;1.2.1;Added code option for feedback signal rectification
@@ -30,6 +30,7 @@ count=23
 20=04/03/2020;2.0.6;Added Token IDs for enhanced code generator option support
 21=04/14/2020;2.0.7;Added support of new tokens to Output Scaler Controller
 22=04/21/2020;2.0.8;Added user-defined function call to observer function to AGC delarations
+23=04/24/2020;2.0.9;Bugfix: Context Save in Fast Floating Point scaling mode missed to resote WREG5
 
 [filter_block_scaling_modes]
 count=6
@@ -1174,7 +1175,7 @@ count=164
 70=comp_control_add_most_recent_to_history
 71=update_status_bitfield
 72=%{(1100)}%context_restore
-73=%{(1100)&&(1102)}%context_restore_mac_registers
+73=%{(1100)&&(1102)}%fscl_context_restore_mac_registers
 74=%{(1100)&&(1103)&&(1104)}%context_restore_accumulator_a
 75=%{(1100)&&(1103)&&(1105)}%context_restore_accumulator_b
 76=%{(1100)&&(1106)}%context_restore_core_config
@@ -1686,7 +1687,7 @@ code1=mov w4, _CORCON
 head_comment=%SEPARATOR%; Call next function of cascade
 cycles=3
 lines=3
-comment0=load functoin pointer
+comment0=load function pointer to cascaded, extern funtion
 comment1=load single parameter or pointer to parameter data structure
 comment2=call function
 code0=mov [w0 + #ptrCascadedFunction], w1
@@ -2598,7 +2599,7 @@ comment0=move P-coefficient fractional into working register
 comment1=move P-coefficient scaler into working register
 comment2=move error to MPY working register 
 code0=mov [w0 + #pterm_factor], w6
-code1=mov [w0 + #pterm_scaler], w5 
+code1=mov [w0 + #pterm_scaler], w2 
 code2=mov w1, w4
 
 [pterm_comp_exec_pterm]
@@ -2609,7 +2610,7 @@ comment0=multiply most recent error with P-coefficient
 comment1=shift accumulator to post-scale floating number
 comment2=store accumulator result to working register
 code0=mpy w4*w6, a
-code1=sftac a, w5
+code1=sftac a, w2
 code2=sac.r a, w4
 
 [agc_factor_multiply_start]
@@ -2623,7 +2624,7 @@ cycles=3
 lines=2
 comment0=check status bit if Adaptive Gain Control is enabled
 comment1=branch to end of AGC calculation if not
-code0=btss w12, #NPMZ16_STATUS_AGC_ENABLED
+code0=btss w12, #NPNZ16_STATUS_AGC_ENABLED
 code1=bra %PREFIXU%_BYPASS_AGC
 
 [agc_factor_multiply_enable_end]
@@ -2638,7 +2639,7 @@ head_comment=%EMPTY%
 cycles=3
 lines=2
 comment0=load function pointer to observer function
-comment1=call observer function to update gain modulation factor
+comment1=call extern observer function to update gain modulation factor
 code0=mov [w0 + ptrAgcObserverFunction], w1
 code1=call w1
 
