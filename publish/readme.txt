@@ -5,11 +5,12 @@ Version 0.9.7.101 Release Notes:
 
 This is a patch release for version v0.9.7.100 incorporating the following bug fixes: 
 
-    - When fast floating point scaling was used with full manual context management, working register WREG5 got saved but never restored creating a potential risk for randomly occurring address errors in interrupted user code funcitons.
+    - When fast floating point scaling was used with full manual context management, working register WREG5 got saved but never restored creating a potential risk for randomly occurring address errors in interrupted user code functions.
 
-    - When enabling Adaptive Gain Control with the sub-option "Add Observer Function Call before Moulation", the respective function pointer declaation in the cNPNZ16b_t data structure caused a compiler warning indicating a incompatible pointer type. This was due to ptrAgcObserverFunction ebing declared as 16-bit pointer. 
+    - When enabling Adaptive Gain Control with the sub-option "Add Observer Function Call before Modulation", the respective function pointer declaration in the cNPNZ16b_t data structure caused a compiler warning indicating a incompatible pointer type. This was due to ptrAgcObserverFunction being declared as 16-bit pointer. 
 
-    - When a user switched from one DCLD configuration file to another with a invalid or corrupted MPLAB X Project declaration, parts of the MPLAB X project declaration of the previously loaded DCLD configuration file remained loaded and active. 
+    - When a user switched from one DCLD configuration file to another with a invalid or corrupted MPLAB X Project declaration, parts of the MPLAB X project declaration of the previously loaded DCLD configuration file remained loaded and active.
+
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
