@@ -1,6 +1,6 @@
 Digital Control Library Designer SDK (DCLD) for Microchip dsPIC33®
 ==================================================================
-Version 0.9.7.101 Release Notes:
+Version 0.9.7.102 Release Notes:
 -------------------------------
 
 This is a patch release for version v0.9.7.100 incorporating the following bug fixes: 
