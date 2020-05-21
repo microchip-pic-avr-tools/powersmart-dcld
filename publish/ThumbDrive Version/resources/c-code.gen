@@ -2,11 +2,11 @@
 Name=C-Source and Header Generator Script
 Description=This scriptprovides C-source and header files for user-tailored SMPS control loops based on DSP assembly code modules templates generated using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=2.0.7
-Date=04/24/2020
+Version=2.0.10
+Date=05/20/2020
 
 [history]
-count=15
+count=18
 0=11/08/19;1.0.0;Initial version after moving C-sources and headers from application code to external script
 1=01/10/20;1.1.0;Added support for cascaded functions. This allows the assembly routine to call another controller or user-defined function extension code module.\r\nAdded pointers to alternate source and terget register supporting bi-directional control and advanced adaptive control methods
 2=03/18/2020;1.1.1;Changed function call name of controller initialization from xxx_Init to xxx_Initialize to stay consistent with other generic code modules
@@ -22,6 +22,9 @@ count=15
 12=04/21/2020;2.0.5;Added user-defined function pointer to observer function to AGC declarations
 13=04/23/2020;2.0.6;Fixed comments in C-Source file and bug not updating DCD version code
 14=04/24/2020;2.0.7;Bugfix: ptrAgcObserverFunction was declared as 16-bit pointer, which causes conflicts with declaration is user code. Type has been changed to uint16_t.
+15=04/27/2020;2.0.8;Bugfix: Library header enumeration CONTROLLER_STATUS_FLAGS_t caused the MPLAB X real time parser to fail in resolving the label. Thus it was renamed to CONTROLLER_STATUS_FLAGS_e, eventually resolving the problem
+16=05/20/2020;2.0.9;Added alternate control output mirror feature
+17=05/20/2020;2.0.10;Changed port offset and norm scaler to signed numbers
 
 
 [tokens]
@@ -45,7 +48,7 @@ count=18
 16=%TOOL_HOME_URL%
 
 [option_ids]
-count=37
+count=38
 0=%{(1100)}%;context_management
 1=%{(1101)}%;context_shadow
 2=%{(1102)}%;context_mac_wreg
@@ -67,22 +70,23 @@ count=37
 18=%{(1300)}%;data_interface_enable
 19=%{(1301)}%;data_interface_alt_input
 20=%{(1302)}%;data_interface_alt_output
-21=%{(1400)}%;data_provider_enable
-22=%{(1401)}%;data_provider_control_input
-23=%{(1402)}%;data_provider_control_error
-24=%{(1403)}%;data_provider_control_output
-25=%{(1500)}%;anti_windup_enable
-26=%{(1501)}%;anti_windup_max
-27=%{(1502)}%;anti_windup_max_status_flag
-28=%{(1503)}%;anti_windup_min
-29=%{(1504)}%;anti_windup_min_status_flag
-30=%{(1505)}%;anti_windup_soft_desat_flag
-31=%{(1600)}%;feedback_conditioning_enable
-32=%{(1601)}%;feedback_offset_compensation
-33=%{(1602)}%;bi_directional_feedback_flag
-34=%{(1800)}%;agc_enable
-35=%{(1801)}%;agc_enable_switch
-36=%{(1802)}%;agc_get_factor_function_call
+21=%{(1303)}%;data_interface_copy_to_alt_output
+22=%{(1400)}%;data_provider_enable
+23=%{(1401)}%;data_provider_control_input
+24=%{(1402)}%;data_provider_control_error
+25=%{(1403)}%;data_provider_control_output
+26=%{(1500)}%;anti_windup_enable
+27=%{(1501)}%;anti_windup_max
+28=%{(1502)}%;anti_windup_max_status_flag
+29=%{(1503)}%;anti_windup_min
+30=%{(1504)}%;anti_windup_min_status_flag
+31=%{(1505)}%;anti_windup_soft_desat_flag
+32=%{(1600)}%;feedback_conditioning_enable
+33=%{(1601)}%;feedback_offset_compensation
+34=%{(1602)}%;bi_directional_feedback_flag
+35=%{(1800)}%;agc_enable
+36=%{(1801)}%;agc_enable_switch
+37=%{(1802)}%;agc_get_factor_function_call
 
 
 [labels]
@@ -149,7 +153,7 @@ line52=%IDENT%CONTROLLER_STATUS_INV_INPUT_OFF   = 0b0000000000000000,
 line53=%IDENT%CONTROLLER_STATUS_INV_INPUT_ON    = 0b0100000000000000,
 line54=%IDENT%CONTROLLER_STATUS_ENABLE_OFF      = 0b0000000000000000,
 line55=%IDENT%CONTROLLER_STATUS_ENABLE_ON       = 0b1000000000000000
-line56=} CONTROLLER_STATUS_FLAGS_t;
+line56=} CONTROLLER_STATUS_FLAGS_e;
 line57=%EMPTY%
 line58=typedef union {
 line59=%IDENT%struct {
@@ -175,9 +179,9 @@ line78=} __attribute__((packed))CONTROLLER_STATUS_t; // Controller status data s
 line79=%EMPTY%
 line80=typedef struct {
 line81=%IDENT%volatile uint16_t* ptrAddress; // Pointer to register or variable where the value is read from (e.g. ADCBUFx) or written to (e.g. PGxDC)
-line82=%IDENT%volatile uint16_t  NormScaler; // Bit-shift scaler of the Q15 normalization factor
+line82=%IDENT%volatile int16_t   NormScaler; // Bit-shift scaler of the Q15 normalization factor
 line83=%IDENT%volatile fractional NormFactor; // Q15 normalization factor
-line84=%IDENT%volatile uint16_t  Offset; // Value/signal offset of this port
+line84=%IDENT%volatile int16_t   Offset; // Value/signal offset of this port
 line85=} __attribute__((packed))CONTROLLER_PORT_t;
 line86=%EMPTY%
 line87=typedef struct {
