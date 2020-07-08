@@ -2,11 +2,11 @@
 Name=C-Source and Header Generator Script
 Description=This scriptprovides C-source and header files for user-tailored SMPS control loops based on DSP assembly code modules templates generated using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=2.0.10
-Date=05/20/2020
+Version=2.0.11
+Date=07/08/2020
 
 [history]
-count=18
+count=19
 0=11/08/19;1.0.0;Initial version after moving C-sources and headers from application code to external script
 1=01/10/20;1.1.0;Added support for cascaded functions. This allows the assembly routine to call another controller or user-defined function extension code module.\r\nAdded pointers to alternate source and terget register supporting bi-directional control and advanced adaptive control methods
 2=03/18/2020;1.1.1;Changed function call name of controller initialization from xxx_Init to xxx_Initialize to stay consistent with other generic code modules
@@ -25,6 +25,7 @@ count=18
 15=04/27/2020;2.0.8;Bugfix: Library header enumeration CONTROLLER_STATUS_FLAGS_t caused the MPLAB X real time parser to fail in resolving the label. Thus it was renamed to CONTROLLER_STATUS_FLAGS_e, eventually resolving the problem
 16=05/20/2020;2.0.9;Added alternate control output mirror feature
 17=05/20/2020;2.0.10;Changed port offset and norm scaler to signed numbers
+18=07/08/2020;2.0.11;Added new data provider for raw and compensated control input reading
 
 
 [tokens]
@@ -48,7 +49,7 @@ count=18
 16=%TOOL_HOME_URL%
 
 [option_ids]
-count=38
+count=39
 0=%{(1100)}%;context_management
 1=%{(1101)}%;context_shadow
 2=%{(1102)}%;context_mac_wreg
@@ -72,21 +73,22 @@ count=38
 20=%{(1302)}%;data_interface_alt_output
 21=%{(1303)}%;data_interface_copy_to_alt_output
 22=%{(1400)}%;data_provider_enable
-23=%{(1401)}%;data_provider_control_input
-24=%{(1402)}%;data_provider_control_error
-25=%{(1403)}%;data_provider_control_output
-26=%{(1500)}%;anti_windup_enable
-27=%{(1501)}%;anti_windup_max
-28=%{(1502)}%;anti_windup_max_status_flag
-29=%{(1503)}%;anti_windup_min
-30=%{(1504)}%;anti_windup_min_status_flag
-31=%{(1505)}%;anti_windup_soft_desat_flag
-32=%{(1600)}%;feedback_conditioning_enable
-33=%{(1601)}%;feedback_offset_compensation
-34=%{(1602)}%;bi_directional_feedback_flag
-35=%{(1800)}%;agc_enable
-36=%{(1801)}%;agc_enable_switch
-37=%{(1802)}%;agc_get_factor_function_call
+23=%{(1401)}%;data_provider_control_input_raw
+24=%{(1402)}%;data_provider_control_input_compensated
+25=%{(1403)}%;data_provider_control_error
+26=%{(1404)}%;data_provider_control_output
+27=%{(1500)}%;anti_windup_enable
+28=%{(1501)}%;anti_windup_max
+29=%{(1502)}%;anti_windup_max_status_flag
+30=%{(1503)}%;anti_windup_min
+31=%{(1504)}%;anti_windup_min_status_flag
+32=%{(1505)}%;anti_windup_soft_desat_flag
+33=%{(1600)}%;feedback_conditioning_enable
+34=%{(1601)}%;feedback_offset_compensation
+35=%{(1602)}%;bi_directional_feedback_flag
+36=%{(1800)}%;agc_enable
+37=%{(1801)}%;agc_enable_switch
+38=%{(1802)}%;agc_get_factor_function_call
 
 
 [labels]
@@ -96,7 +98,7 @@ count=38
 
 
 [library_header]
-count=179
+count=180
 line0=      /* *********************************************************************************
 line1=%SPACE%* %APP_PRODUCT_NAME%, Version %APP_PRODUCT_VERSION%
 line2=%SPACE%* *********************************************************************************
@@ -239,43 +241,44 @@ line138=%IDENT%} __attribute__((packed))ADCTriggerControl; // Automatic ADC trig
 line139=%EMPTY%
 line140=%IDENT%// Data Provider Sources
 line141=%IDENT%struct {
-line142=%IDENT%%IDENT%volatile uint16_t* ptrDProvControlInput; // Pointer to external data buffer of most recent control input 
-line143=%IDENT%%IDENT%volatile uint16_t* ptrDProvControlError; // Pointer to external data buffer of most recent control error 
-line144=%IDENT%%IDENT%volatile uint16_t* ptrDProvControlOutput; // Pointer to external data buffer of most recent control output 
-line145=%IDENT%} __attribute__((packed))DataProviders; // Automated data sources pushing data points to user-defined variables
-line146=%EMPTY%
-line147=%IDENT%// Cascaded Function Call Parameters
-line148=%IDENT%struct {
-line149=%IDENT%%IDENT%volatile uint16_t ptrCascadedFunction; // Pointer to Function which should be called at the end of the control loop
-line150=%IDENT%%IDENT%volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
-line151=%IDENT%} __attribute__((packed))CascadeTrigger; // Cascade triggers with parameters for next function call
-line152=%EMPTY%
-line153=%IDENT%// Adaptive Gain Control Modulation
-line154=%IDENT%struct {
-line155=%IDENT%%IDENT%volatile uint16_t AgcScaler; // Bit-shift scaler of Adaptive Gain Modulation factor
-line156=%IDENT%%IDENT%volatile fractional AgcFactor; // Q15 value of Adaptive Gain Modulation factor
-line157=%IDENT%%IDENT%volatile fractional AgcMedian; // Q15 value of Adaptive Gain Modulation nominal operating point
-line158=%IDENT%%IDENT%volatile uint16_t ptrAgcObserverFunction; // Function Pointer to Observer function updating the AGC modulation factor
-line159=%IDENT%} __attribute__((packed))GainControl; // Parameter section for advanced control options
-line160=%EMPTY%
-line161=%IDENT%// User Data Space for Advanced Control Functions
-line162=%IDENT%struct {
-line163=%IDENT%%IDENT%volatile uint16_t advParam1; // generic 16-bit wide, user-defined parameter #1 for advanced control options
-line164=%IDENT%%IDENT%volatile uint16_t advParam2; // generic 16-bit wide, user-defined parameter #2 for advanced control options
-line165=%IDENT%%IDENT%volatile uint16_t advParam3; // generic 16-bit wide, user-defined parameter #3 for advanced control options
-line166=%IDENT%%IDENT%volatile uint16_t advParam4; // generic 16-bit wide, user-defined parameter #4 for advanced control options
-line167=%IDENT%} __attribute__((packed))Advanced; // Parameter section for advanced control options
-line168=%EMPTY%
-line169=} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output
-line170=%EMPTY%
-line171=/* ********************************************************************************/
-line172=#endif  // end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__ header file section
-line173=%EMPTY%
+line142=%IDENT%%IDENT%volatile uint16_t* ptrDProvControlInput; // Pointer to external data buffer of most recent, raw control input 
+line143=%IDENT%%IDENT%volatile uint16_t* ptrDProvControlInputCompensated; // Pointer to external data buffer of most recent, compensated control input 
+line144=%IDENT%%IDENT%volatile uint16_t* ptrDProvControlError; // Pointer to external data buffer of most recent control error 
+line145=%IDENT%%IDENT%volatile uint16_t* ptrDProvControlOutput; // Pointer to external data buffer of most recent control output 
+line146=%IDENT%} __attribute__((packed))DataProviders; // Automated data sources pushing data points to user-defined variables
+line147=%EMPTY%
+line148=%IDENT%// Cascaded Function Call Parameters
+line149=%IDENT%struct {
+line150=%IDENT%%IDENT%volatile uint16_t ptrCascadedFunction; // Pointer to Function which should be called at the end of the control loop
+line151=%IDENT%%IDENT%volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
+line152=%IDENT%} __attribute__((packed))CascadeTrigger; // Cascade triggers with parameters for next function call
+line153=%EMPTY%
+line154=%IDENT%// Adaptive Gain Control Modulation
+line155=%IDENT%struct {
+line156=%IDENT%%IDENT%volatile uint16_t AgcScaler; // Bit-shift scaler of Adaptive Gain Modulation factor
+line157=%IDENT%%IDENT%volatile fractional AgcFactor; // Q15 value of Adaptive Gain Modulation factor
+line158=%IDENT%%IDENT%volatile fractional AgcMedian; // Q15 value of Adaptive Gain Modulation nominal operating point
+line159=%IDENT%%IDENT%volatile uint16_t ptrAgcObserverFunction; // Function Pointer to Observer function updating the AGC modulation factor
+line160=%IDENT%} __attribute__((packed))GainControl; // Parameter section for advanced control options
+line161=%EMPTY%
+line162=%IDENT%// User Data Space for Advanced Control Functions
+line163=%IDENT%struct {
+line164=%IDENT%%IDENT%volatile uint16_t advParam1; // generic 16-bit wide, user-defined parameter #1 for advanced control options
+line165=%IDENT%%IDENT%volatile uint16_t advParam2; // generic 16-bit wide, user-defined parameter #2 for advanced control options
+line166=%IDENT%%IDENT%volatile uint16_t advParam3; // generic 16-bit wide, user-defined parameter #3 for advanced control options
+line167=%IDENT%%IDENT%volatile uint16_t advParam4; // generic 16-bit wide, user-defined parameter #4 for advanced control options
+line168=%IDENT%} __attribute__((packed))Advanced; // Parameter section for advanced control options
+line169=%EMPTY%
+line170=} __attribute__((packed))cNPNZ16b_t; // Generic nPnZ Controller Object with 16-bit fixed point coefficients, data input and data output
+line171=%EMPTY%
+line172=/* ********************************************************************************/
+line173=#endif  // end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ_H__ header file section
 line174=%EMPTY%
-line175=//**********************************************************************************
-line176=// Download latest version of this tool here: %TOOL_HOME_URL%
-line177=//**********************************************************************************
-line178=%EMPTY%
+line175=%EMPTY%
+line176=//**********************************************************************************
+line177=// Download latest version of this tool here: %TOOL_HOME_URL%
+line178=//**********************************************************************************
+line179=%EMPTY%
 
 
 [comp_header]
