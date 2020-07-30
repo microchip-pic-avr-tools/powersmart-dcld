@@ -8,12 +8,12 @@ The major scope of this tool is the rapid design of a digital power supply contr
 
 In the current version the essential functions of the z-domain configuration block of the Digital Control Library SDK is allowing the graphical design of z-Domain compensation filters from the 1st to the 6th order (1P1Z to 6P6Z), the generation of customized/tailored digital SMPS controller code libraries with standardized API, taking away the need to manually write DSP-specific source code. Analysis results on timing, number accuracy and resolution and support of alternative fixed- and floating point number scaling options help to tune and optimize the final SMPS controller firmware for specific needs.
 
-![DCLD z-Domain Configuration Window](https://github.com/areiter128/DCLD/blob/master/user_guide/WikiDot%20Contents/zDLD-main.JPG)
+![DCLD z-Domain Configuration Window](https://github.com/areiter128/DCLD/blob/gh-pages/docs/index_files/zDLD-main.JPG)
 
 The standardized API ensures seamless integration into the final firmware, supporting multiple, co-existing controllers in one firmware and seamless exchange between different controller types and scaling methods helping to solve typical performance vs. accuracy and feature tradeoffs.
 For simplified use during code development, the z-Domain configuration window and code generator can be called directly from the MPLAB X® environment to make changes. 
 
-(Please refer to the [PDF User Guide](https://github.com/areiter128/DCLD/blob/master/user_guide/181026f_dcld_beta_user_guide.pdf) for details)
+(Please refer to the [PDF User Guide](https://github.com/areiter128/DCLD/blob/gh-pages/docs/latest_releases/181026g_dcld_beta_user_guide.pdf) for details)
 
 ### Core Features:
 * **Supports z-Domain Compensation Filters from 1st to 6th Order**
@@ -34,7 +34,7 @@ Export of s-Domain and z-Domain Transfer Function (Bode Plot Data) copies the bo
 This is practically the content of the C-source file and therefore pretty much obsolete. You could as well just select the generated code from the C-Source window and copy it from there.
 
 * **Coefficient Table**  
-All coefficients are exported a block covering floating point, scaled floating point, fixed point, hex, int and binary number format and the rounding error. This is more for documentation than for any other reasonable use case.
+All coefficients are exported as block covering floating point, scaled floating point, fixed point, hex, int and binary number format and the rounding error. This is more for documentation than for any other reasonable use case.
 
 * **Config File Location**  
 Copies the file location of the op-code file for the assembly code generation. This is the script used to build the assembly library. Unfortunately, the C-code is not script based yet. Any larger modification affecting names or data structure elements would result in necessary changes to the DCLD code, which is not feasible. In future versions beyond v1.0 both (assembly and C) will be fully script based to allow anyone to add and modify supported controllers without the need to change to the main program.  
