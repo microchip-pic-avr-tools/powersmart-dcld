@@ -13,28 +13,6 @@ docs/
 docs/index_files/
 docs/latest_releases/
 
-# Source Files
-*.bak
-*.bash
-*.cache
-*.cs
-*.csproj
-*.config
-*.elf
-*.ini
-*.ico
-*.ko
-*.log
-*.mk
-*.obj
-*.pdb
-*.psess
-*.resx
-*.sln
-*.suo
-*.user
-*.vspx
-
 # Individually Listed Files which happen to slip back into Version Control
 index.md
 _config.yml
@@ -43,11 +21,10 @@ _config.yml
 !publish/
 !publish/*.*
 !publish/*.pdf
+!publish/*.txt
 !publish/Windows Install/
-!publish/Windows Install/Windows Install.zip
 !publish/Windows Install/*.*
-!publish/Windows Install/Application Files/
-!publish/Windows Install/Application Files/*.*
+!publish/Windows Install/DCLD_Installer.msi
 !publish/ThumbDrive Version/
 !publish/ThumbDrive Version/*.*
 !publish/ThumbDrive Version/Resources/
@@ -55,5 +32,4 @@ _config.yml
 !publish/Windows Install/
 !publish/Windows Install/*.*
 !README.md
-!readme.txt
 
