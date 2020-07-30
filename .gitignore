@@ -9,9 +9,6 @@
 ~*.*
 .vs/
 .svn/
-docs/
-docs/index_files/
-docs/latest_releases/
 
 # Individually Listed Files which happen to slip back into Version Control
 index.md
@@ -32,4 +29,6 @@ _config.yml
 !publish/Windows Install/
 !publish/Windows Install/*.*
 !README.md
+!docs/
+!docs/*.*
 
