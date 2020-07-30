@@ -11,13 +11,13 @@ In the current version the essential functions of the z-domain configuration blo
 ![DCLD z-Domain Configuration Window](./docs/zDLD-main.JPG)
 DCLD z-Domain Configuration Main Window
 
-![DCLD z-Domain Timing Analysis View](./docs/zDLD-timing.JPG)
+![DCLD z-Domain Timing Analysis View](./docs/zDLD-timing.jpg)
 DCLD z-Domain Timing Analysis View
 
-![DCLD z-Domain Code Configuration View](./docs/zDLD-code_config.JPG)
+![DCLD z-Domain Code Configuration View](./docs/zDLD-code_config.jpg)
 DCLD z-Domain Code Configuration View
 
-![DCLD z-Domain Code Generation View](./docs/zDLD-code_generation.JPG)
+![DCLD z-Domain Code Generation View](./docs/zDLD-code_generation.jpg)
 DCLD z-Domain Code Generation View
 
 The standardized API ensures seamless integration into the final firmware, supporting multiple, co-existing controllers in one firmware and seamless exchange between different controller types and scaling methods helping to solve typical performance vs. accuracy and feature tradeoffs.
