@@ -2,11 +2,11 @@
 Name=C-Source and Header Generator Script
 Description=This scriptprovides C-source and header files for user-tailored SMPS control loops based on DSP assembly code modules templates generated using the DCLD SDK
 Author=Andreas Reiter - M91406
-Version=2.0.12
-Date=07/15/2020
+Version=2.0.13
+Date=07/30/2020
 
 [history]
-count=20
+count=21
 0=11/08/19;1.0.0;Initial version after moving C-sources and headers from application code to external script
 1=01/10/20;1.1.0;Added support for cascaded functions. This allows the assembly routine to call another controller or user-defined function extension code module.\r\nAdded pointers to alternate source and terget register supporting bi-directional control and advanced adaptive control methods
 2=03/18/2020;1.1.1;Changed function call name of controller initialization from xxx_Init to xxx_Initialize to stay consistent with other generic code modules
@@ -27,6 +27,7 @@ count=20
 17=05/20/2020;2.0.10;Changed port offset and norm scaler to signed numbers
 18=07/08/2020;2.0.11;Added new data provider for raw and compensated control input reading
 19=07/15/2020;2.0.12;Changed data structure declarations to match C99 standards
+20=07/30/2020;2.0.13;Renamed status flags flt_clamp_min and flt_clamp_max to lower_saturation_event and upper_saturation_event
 
 
 [tokens]
@@ -50,7 +51,7 @@ count=18
 16=%TOOL_HOME_URL%
 
 [option_ids]
-count=40
+count=41
 0=%{(1100)}%;context_management
 1=%{(1101)}%;context_shadow
 2=%{(1102)}%;context_mac_wreg
@@ -91,6 +92,7 @@ count=40
 37=%{(1800)}%;agc_enable
 38=%{(1801)}%;agc_enable_switch
 39=%{(1802)}%;agc_get_factor_function_call
+40=%{(9001)}%;library_data_structure_include
 
 
 [labels]
@@ -215,8 +217,8 @@ line109=      /* Controller status data structure */
 line110=typedef struct NPNZ_STATUS_s {
 line111=%IDENT%union {
 line112=%IDENT%struct {
-line113=%IDENT%%IDENT%volatile bool flt_clamp_min : 1; // Bit 0: control loop is clamped at minimum output level
-line114=%IDENT%%IDENT%volatile bool flt_clamp_max : 1; // Bit 1: control loop is clamped at maximum output level
+line113=%IDENT%%IDENT%volatile bool lower_saturation_event : 1; // Bit 0: control loop is clamped at minimum output level
+line114=%IDENT%%IDENT%volatile bool upper_saturation_event : 1; // Bit 1: control loop is clamped at maximum output level
 line115=%IDENT%%IDENT%volatile unsigned : 1; // Bit 2: reserved
 line116=%IDENT%%IDENT%volatile unsigned : 1; // Bit 3: reserved
 line117=%IDENT%%IDENT%volatile unsigned : 1; // Bit 4: reserved
@@ -398,7 +400,7 @@ line292=%SPACE%* The NPNZ_CASCADE_TRG_t data object holds all parameters require
 line293=%SPACE%* function call triggers. When enabled, the NPNZ controller can automatically call any
 line294=%SPACE%* user-defined function after the execution of the control loop. This data object declares
 line295=%SPACE%* a function pointer <ptrCascadedFunction> and one additional, 16-bit wide function parameter
-line296=%SPACE%* <CascadedFunParam>.
+line296=%SPACE%* <CascadedFunctionParam>.
 line297=%SPACE%* 
 line298=%SPACE%* This feature is optional and needs to be enabled, configured and managed manually in
 line299=%SPACE%* user code.
@@ -408,7 +410,7 @@ line302=%EMPTY%
 line303=typedef struct NPNZ_CASCADE_TRG_s{
 line304=%EMPTY%
 line305=%IDENT%volatile uint16_t ptrCascadedFunction; // Pointer to Function which should be called at the end of the control loop
-line306=%IDENT%volatile uint16_t CascadedFunParam; // Parameter of function called (can be a pointer to a data structure)
+line306=%IDENT%volatile uint16_t CascadedFunctionParam; // Parameter of function called (can be a pointer to a data structure)
 line307=%EMPTY%
 line308=} __attribute__((packed)) NPNZ_CASCADE_TRG_t; // Cascade triggers with parameters for next function call
 line309=%EMPTY%
@@ -492,7 +494,7 @@ line386=#endif  // end of __SPECIAL_FUNCTION_LAYER_LIB_NPNZ16B_H__ header file s
 line387=%EMPTY%
 line388=%EMPTY%
 line389=      //**********************************************************************************
-line390=      // Download latest version of this tool here: https://areiter128.github.io/DCLD
+line390=      // Download latest version of this tool here: %TOOL_HOME_URL%
 line391=      //**********************************************************************************
 line392=%EMPTY%
 
