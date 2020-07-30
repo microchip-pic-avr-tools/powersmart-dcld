@@ -9,17 +9,9 @@
 ~*.*
 .vs/
 .svn/
-bin/
-bin/Debug/
-bin/Release/
-obj/
-Properties/
-Resources/
-Service References/
-test_cases/
-tools/
-user_feedback/
-user_guide/
+docs/
+docs/index_files/
+docs/latest_releases/
 
 # Source Files
 *.bak
@@ -43,10 +35,11 @@ user_guide/
 *.user
 *.vspx
 
+# Individually Listed Files which happen to slip back into Version Control
+index.md
+_config.yml
+
 ### Files and folders to keep ###
-!docs/
-!docs/index_files/
-!docs/latest_releases/
 !publish/
 !publish/*.*
 !publish/*.pdf
@@ -64,8 +57,3 @@ user_guide/
 !README.md
 !readme.txt
 
-# Individually Listed Files which happen to slip back into Version Control
-dcld.ini
-debug.log
-Digital Control Loop Designer.csproj.user
-Digital Control Loop Designer.v11.suo
