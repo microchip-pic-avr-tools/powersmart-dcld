@@ -2,7 +2,7 @@
 #
 # Set up for Visual Studio Environment
 #
-# Special gitignore for release branch only containing the publish folder
+# Special gitignore for github pages branch only containing the Github pages website files
 # No Code Files should be available.
 
 # Project Folders
@@ -47,22 +47,6 @@ user_guide/
 !docs/
 !docs/index_files/
 !docs/latest_releases/
-!publish/
-!publish/*.*
-!publish/*.pdf
-!publish/Windows Install/
-!publish/Windows Install/Windows Install.zip
-!publish/Windows Install/*.*
-!publish/Windows Install/Application Files/
-!publish/Windows Install/Application Files/*.*
-!publish/ThumbDrive Version/
-!publish/ThumbDrive Version/*.*
-!publish/ThumbDrive Version/Resources/
-!publish/ThumbDrive Version/Resources/*.*
-!publish/Windows Install/
-!publish/Windows Install/*.*
-!README.md
-!readme.txt
 
 # Individually Listed Files which happen to slip back into Version Control
 dcld.ini
