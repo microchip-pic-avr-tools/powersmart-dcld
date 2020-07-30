@@ -7,50 +7,13 @@
 
 # Project Folders
 ~*.*
-.vs/
-.svn/
-bin/
-bin/Debug/
-bin/Release/
-obj/
-Properties/
-Resources/
-Service References/
-test_cases/
-tools/
-user_feedback/
-user_guide/
+publish/
 
-# Source Files
-*.bak
-*.bash
-*.cache
-*.cs
-*.csproj
-*.config
-*.elf
-*.ini
-*.ico
-*.ko
-*.log
-*.mk
-*.obj
-*.pdb
-*.psess
-*.resx
-*.sln
-*.suo
-*.user
-*.vspx
+# Individually Listed Files which happen to slip back into Version Control
+README.md
 
 ### Files and folders to keep ###
 !docs/
 !docs/index_files/
 !docs/latest_releases/
 
-# Individually Listed Files which happen to slip back into Version Control
-dcld.ini
-debug.log
-Digital Control Loop Designer.csproj.user
-Digital Control Loop Designer.v11.suo
-README.md
