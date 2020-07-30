@@ -1,5 +1,7 @@
 # Digital Control Library Designer SDK for Microchip dsPIC33® (DCLD)
 
+<release branch README file>
+
 The Digital Control Library SDK is a Software Development Kit (SDK) consisting of one basic main module combining multiple, individual stand-alone tools covering system definition, system modeling, code generation, control system fine tuning and real-time debugging of fully digital control systems for Switched-Mode Power Supplies (SMPS) supporting Microchip Technology's dsPIC® Digital Signal Controllers (DSC).
 
 The major scope of this tool is the rapid design of a digital power supply control stage rather than the power supply itself. This allows to simplify the design process to models based on interconnected transfer functions. These transfer functions are defined and configured in individual configuration windows. A transfer function can be based on generic Laplace-domain functions being calculated at runtime or on external data coming from network analyzer measurements or other third-party simulation tools such as MATLAB, SciLab, Simplis, LTSpice, etc.
