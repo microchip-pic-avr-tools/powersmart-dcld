@@ -15,6 +15,8 @@ index.md
 _config.yml
 
 ### Files and folders to keep ###
+!docs/
+!docs/*.*
 !publish/
 !publish/*.*
 !publish/*.pdf
@@ -29,6 +31,4 @@ _config.yml
 !publish/Windows Install/
 !publish/Windows Install/*.*
 !README.md
-!docs/
-!docs/*.*
 
