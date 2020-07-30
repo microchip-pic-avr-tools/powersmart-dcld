@@ -34,7 +34,7 @@ Export of s-Domain and z-Domain Transfer Function (Bode Plot Data) copies the bo
 This is practically the content of the C-source file and therefore pretty much obsolete. You could as well just select the generated code from the C-Source window and copy it from there.
 
 * **Coefficient Table**  
-All coefficients are exported a block covering floating point, scaled floating point, fixed point, hex, int and binary number format and the rounding error. This is more for documentation than for any other reasonable use case.
+All coefficients are exported as block covering floating point, scaled floating point, fixed point, hex, int and binary number format and the rounding error. This is more for documentation than for any other reasonable use case.
 
 * **Config File Location**  
 Copies the file location of the op-code file for the assembly code generation. This is the script used to build the assembly library. Unfortunately, the C-code is not script based yet. Any larger modification affecting names or data structure elements would result in necessary changes to the DCLD code, which is not feasible. In future versions beyond v1.0 both (assembly and C) will be fully script based to allow anyone to add and modify supported controllers without the need to change to the main program.  
