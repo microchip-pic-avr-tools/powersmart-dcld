@@ -32,3 +32,8 @@ _config.yml
 !publish/Windows Install/*.*
 !README.md
 
+docs/181026h_dcld_beta_user_guide.pdf
+docs/zDLD-code_config.jpg
+docs/zDLD-code_generation.jpg
+docs/zDLD-main.JPG
+docs/zDLD-timing.jpg
