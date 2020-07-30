@@ -9,6 +9,16 @@ The major scope of this tool is the rapid design of a digital power supply contr
 In the current version the essential functions of the z-domain configuration block of the Digital Control Library SDK is allowing the graphical design of z-Domain compensation filters from the 1st to the 6th order (1P1Z to 6P6Z), the generation of customized/tailored digital SMPS controller code libraries with standardized API, taking away the need to manually write DSP-specific source code. Analysis results on timing, number accuracy and resolution and support of alternative fixed- and floating point number scaling options help to tune and optimize the final SMPS controller firmware for specific needs.
 
 ![DCLD z-Domain Configuration Window](./docs/zDLD-main.JPG)
+DCLD z-Domain Configuration Main Window
+
+![DCLD z-Domain Timing Analysis View](./docs/zDLD-timing.JPG)
+DCLD z-Domain Timing Analysis View
+
+![DCLD z-Domain Code Configuration View](./docs/zDLD-code_config.JPG)
+DCLD z-Domain Code Configuration View
+
+![DCLD z-Domain Code Generation View](./docs/zDLD-code_generation.JPG)
+DCLD z-Domain Code Generation View
 
 The standardized API ensures seamless integration into the final firmware, supporting multiple, co-existing controllers in one firmware and seamless exchange between different controller types and scaling methods helping to solve typical performance vs. accuracy and feature tradeoffs.
 For simplified use during code development, the z-Domain configuration window and code generator can be called directly from the MPLAB X® environment to make changes. 
