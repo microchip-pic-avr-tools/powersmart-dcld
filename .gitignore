@@ -45,8 +45,8 @@ user_guide/
 
 ### Files and folders to keep ###
 !docs/
-!dosc/index_files/
-!dosc/index_files/*.*
+!docs/index_files/
+!docs/latest_releases/
 !publish/
 !publish/*.*
 !publish/*.pdf
