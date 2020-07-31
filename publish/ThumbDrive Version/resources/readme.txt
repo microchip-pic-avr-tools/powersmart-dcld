@@ -1,47 +1,37 @@
 Digital Control Library Designer SDK (DCLD) for Microchip dsPIC33®
 ==================================================================
-Version 0.9.9.368 Release Notes:
+Version 0.9.9.403 Release Notes:
 --------------------------------
 
 New Features:
 
-1) NPNZ16b_t Data Structure Reference Separation in Assembly Include File
+1) Independent Setting for Assembly and C Include Paths
 
     Description:
-    The DCLD code generator now features a fifth source code output window where the assembly declaration of the NPNZ16b_t data structure is stored. Users can select to generate the declaration directly into the assembly library file or out-source it to a new file called npnz16b.inc and include it in the Assembly file instead.
-    Although this makes no difference for the generated assembly library, it allows users to include and access the NPNZ16b_t data structure declaration in custom assembly modules.
+    Previous versions of DCLD only supported the selection of one C include directory for all generated files. With the introduciton of an additional Assembly include file, a second, individual selection of a user-defined Assembly Include Path was required. 
+    This setting has been added to the MPLAB X Project Configuration dialog.
 
-2) File Generation Full Path Display
-
+2) Include Path Override Option
+    
     Description:
-    When hoovering the mouse over one of the tabs of the code generator views, a tool-tip text will be displayed, showing the full path of the respective generated file.
+    DCLD allows the specification of user defined include paths for C and Assembly files. The include paths available are imported from the MPLAB X project. If users do not select any include files, the Makefile location becoes the include path reference for all #include and .include pre-compiler directives. 
+    The new override feature is located in the MPLAB Project Configuration dialog and allows users to effectively disable the include path handling by always using the Makefile location an absolute refrence for all #include and .include pre-compiler directives generation.
 
 
 Optimizations:
 
-1) Default Include Path Selection
-
-    Description:
-    DCLD imports include directories declared in the specified MPLAB X project. Users can select one of the defined include paths in the Configuration dialog to optimize include path declarations in generated code.    
-
-    Example:
-    - Project files are located in '<my_project>/<source_files>/'. 
-    - The DCLD generated files should be located in '<my_project>/<source_files>/<sub_folder1>/<sub_folder2>/'
-    - The path './ <source_files>/' has been added to MPLAB X Project Properties -> XC16 -> Common Include Dirs.
-    - In DCLD Configuration dialog this include path can be selected as Default Include Path
-    - When generating code, the code generator will add the include path #include "./<sub_folder1>/<sub_folder2>/<my_file>" 
-      instead of #include "./<source_files>/<sub_folder1>/<sub_folder2>/<my_file>"
-
-
-2) Assembly Data Structure Label Names Cleanup
-
-    Description:
-    The labels used in assembly code referencing to their counterpart of the C-domain NPNZ16b_t data structure have deviated from related C-domain labels over time and have been synchronized to prevent confusions.
+(none)
 
 
 Bugfixes:
 
-(none)
+1) Compiler Error after Assembly Generation with Include File Reference
+
+    Description:
+    Previous versions of DCLD treated the assembly include file like a comon C header file. Hence, when a user-defined C include path was specified, the include declaration generated in the assembly library file also referenced to the C header include directory. However, the compiler does not consider this include directory when assembing the Assembly source file and the buld process failed.
+    With the introduction of a user-defined Assembly include path (see above), this issue has been fixed.
+
+    Status: fixed
 
 
 
