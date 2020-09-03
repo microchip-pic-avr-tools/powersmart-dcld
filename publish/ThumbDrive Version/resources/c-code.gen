@@ -49,6 +49,7 @@ count=18
 14=%SUPPORT_URL%
 15=%VENDOR_URL%
 16=%TOOL_HOME_URL%
+17=%ASM_INCLUDE_FILE%
 
 [option_ids]
 count=41
