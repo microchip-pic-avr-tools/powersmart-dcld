@@ -7,8 +7,8 @@ In this major feature release, many visible and invisible optimizations have bee
 
 New Features:
 
-1)  Bode Plot
-a.  X-/Y-axis scaling and display option panel
+1)  DCLD Graphical User Interface
+a.  Bode plot X-/Y-axis scaling and display option panel
 The previous mouse functions of the Bode plot control allowing users to directly move scales up and down to adjust the visible range of the diagram seemed to be too confusing and well hidden to be useful. Hence, we decided to it the classic way by integrating an axis scale configuration panel next to the chart.
 b.  One-Click transfer function export with selectable frequency range and resolution
 The new Bode plot axis configuration panel opened up the option for a more intuitive way in adjusting the data range of the transfer function. When the transfer function data table is copied to the clipboard, the most recent frequency scale settings and data resolution (number of data points) is used. Hence, if you need to adjust the data range to fit data tables of other tools, you can now use the axis configuration panel to make your adjustments before copying the data table to the clipboard.
@@ -64,7 +64,7 @@ a.  Improved performance of generated assembly routine by optimizing working reg
 By reviewing the possible code execution flows dependent on controller type selection, number scaling option and optional feature selections, we were able to optimize the usage of working registers across all controllers helping to reduce the total number of instruction cycles of the generated code. In most cases this will only result in minor improvements of three to four instruction cycles but … nevertheless.
 b.  Improved performance of generated assembly routine by optimizing pointer management (all modes and controllers)
 (Same as above)
-b.  Improved number resolution in Single Bit-Shift Scaling mode with Output Factor Scaling
+c.  Improved number resolution in Single Bit-Shift Scaling mode with Output Factor Scaling
 In single-bit shift mode with output scaling factor the final output of the control loop gets multiplied with a backwards scaling factor. This mode is generally providing a slightly better fixed-point number resolution than the faster pure single bit-shift mode. However, at the end of filter computation the 40-bit wide result gets converted into a Q15 compatible factor inevitably resulting in loss of resolution. In most cases the output factor multiplication increases the resolution, which is why this was considered to be a feasible implementation. Most recent analysis of low frequency error integration characteristics, however, showed some unexpected shortcomings with specific combinations of filter coefficient values. Therefore, it was decided to add code for dynamic resolution improvement before the factor multiplication, similar to the AGC resolution improvement described above.
 Please note:
 This increases the total instruction cycle count of this number scaling mode, which might impact controller execution timing by prolonging the control response. If you use this number scaling mode in your application with tight timing requirements, it is recommended to review the overall execution timing still works out in your setup.
@@ -83,11 +83,11 @@ a.  Coefficients occasionally did not get updated before code generation due to 
 Performance issues introduced by increasing number of debugging messages being generated during the code generation process resulted in conflicts with the internal event handler when users kept changing options and values while the generator was running in the background. As a result, coefficient values did not get applied/updated as expected.
 b.  Control Output Data Provider pushed wrong data value during runtime
 In single-bit shift mode with output factor scaling, the Control Output Data Provider accessed the wrong working register when pushing data to user variables. 
-d.  When context management was enabled, working registers of MAC instructions got restored in the wrong sequence
+c.  When context management was enabled, working registers of MAC instructions got restored in the wrong sequence
 Working registers pushed to the stack need to be restored in reverse order to end up in the same place again. An error in the code generation script, however, restored the MAC working registers in the same sequence as they were saved, eventually scrambling the context.
-e.  In Fast Floating Point Scaling mode with Adaptive Gain Control enabled, the factor multiplication corrupted data pointers causing the filter computation to fail
+d.  In Fast Floating Point Scaling mode with Adaptive Gain Control enabled, the factor multiplication corrupted data pointers causing the filter computation to fail
 In some implementations the adaptive gain modulation routine accidentally overwrote pointers used by the fast floating point filter computation corrupting the result.
-f.  In Single-Bit Shifting mode with Output Factor Scaling, conditions occurred, where coefficients got rescaled by one bit but this rescaling was not included in the output scaler computation
+e.  In Single-Bit Shifting mode with Output Factor Scaling, conditions occurred, where coefficients got rescaled by one bit but this rescaling was not included in the output scaler computation
 A floor in the coefficient scaler calculation of DCLD resulted in two different results for each coefficient scaler. As a result, each coefficient got scaled a second time by one bit by which the coefficient value output on the GUI showed non-sensical results. The coefficients generated in code, however, were correct.
 
 Change Notes - Impact on Existing Projects:
