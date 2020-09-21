@@ -25,7 +25,7 @@ DCLD z-Domain Code Generation View
 The standardized API ensures seamless integration into the final firmware, supporting multiple, co-existing controllers in one firmware and seamless exchange between different controller types and scaling methods helping to solve typical performance vs. accuracy and feature tradeoffs.
 For simplified use during code development, the z-Domain configuration window and code generator can be called directly from the MPLAB X® environment to make changes. 
 
-(Please refer to the [PDF User Guide](./docs/181026h_dcld_beta_user_guide.pdf) for details)
+(Please refer to the [PDF User Guide](./docs/181026j_dcld_beta_user_guide.pdf) for details)
 
 ### Core Features:
 * **Supports z-Domain Compensation Filters from 1st to 6th Order**
