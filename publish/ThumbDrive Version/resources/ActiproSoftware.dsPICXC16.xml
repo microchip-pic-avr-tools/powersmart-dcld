@@ -106,7 +106,7 @@
         <!-- Native Types -->
         <ExplicitPatternGroup TokenKey="NativeTypeToken" Style="NativeTypeStyle" LookAhead="{NonWordMacro}|\z" CaseSensitivity="Sensitive">
           <ExplicitPatterns>
-            object bool string int byte char float sbyte short long ushort uint ulong double decimal
+            object bool string int byte char float sbyte short long ushort uint ulong double decimal unsigned signed
           </ExplicitPatterns>
         </ExplicitPatternGroup>
         <ExplicitPatternGroup TokenKey="StdIntNativeTypeToken" Style="NativeTypeStyle" LookAhead="{NonWordMacro}|\z" CaseSensitivity="Sensitive">
