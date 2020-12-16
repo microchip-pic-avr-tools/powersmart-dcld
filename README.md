@@ -1,6 +1,6 @@
 ![image](microchip.jpg) 
 
-# MPLAB® PowerSmart™ SDK for Microchip dsPIC33® Digital Signal Controller 
+# MPLAB® PowerSmart™ SDK for Microchip dsPIC33® Digital Signal Controllers 
 
 The MPLAB® PowerSmart™ SDK is a Software Development Kit (SDK) comprised of multiple, individual stand-alone tools for system definition, system modeling, code generation, control system fine tuning and real-time debugging of fully digital control systems for Switched-Mode Power Supplies (SMPS) supporting Microchip Technology's dsPIC® Digital Signal Controllers (DSC).
 
