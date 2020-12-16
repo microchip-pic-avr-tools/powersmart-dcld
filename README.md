@@ -1,4 +1,4 @@
-![image](images/microchip.jpg) 
+![image](./docs/microchip.jpg) 
 
 # MPLAB® PowerSmart™ SDK for Microchip dsPIC33® Digital Signal Controller 
 
