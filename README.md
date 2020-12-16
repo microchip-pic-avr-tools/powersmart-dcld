@@ -13,19 +13,6 @@ The Digital Control Library Designer allows the graphical design of discrete com
 
 The output of this tool the generation of customized/tailored digital SMPS controller source code libraries with standardized API, taking away the need to manually write DSP-specific source code. 
 
-![DCLD z-Domain Configuration Window](./docs/zDLD-main.png)
-DCLD z-Domain Configuration Main Window
-
-![DCLD z-Domain Timing Analysis View](./docs/zDLD-timing.png)
-DCLD z-Domain Timing Analysis View
-
-![DCLD z-Domain Code Configuration View](./docs/zDLD-code_config.png)
-DCLD z-Domain Code Configuration View
-
-![DCLD z-Domain Code Generation View](./docs/zDLD-code_generation.png)
-DCLD z-Domain Code Generation View
-
-
 The standardized API ensures seamless integration into the final firmware, supporting multiple, co-existing controllers in one firmware and seamless exchange between different controller types and scaling methods helping to solve typical performance vs. accuracy and feature tradeoffs.
 For simplified use during code development, the Digital Control Library Designer can be called directly from the MPLAB® X Integrated Development Environment (IDE) to make changes. 
 
