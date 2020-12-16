@@ -1,4 +1,4 @@
-![image](./docs/microchip.jpg) 
+![image](microchip.jpg) 
 
 # MPLAB® PowerSmart™ SDK for Microchip dsPIC33® Digital Signal Controller 
 
@@ -11,7 +11,7 @@ The major scope of this toolset is the rapid design of a digital power supply co
 
 The Digital Control Library Designer allows the graphical design of discrete compensation filters from the 1st to the 6th order (1P1Z to 6P6Z). Analysis results on timing, number accuracy and resolution and support of alternative fixed- and floating point number scaling options help to tune and optimize the final SMPS controller firmware for specific needs.
 
-The output of this tool the generation of customized/tailored digital SMPS controller code libraries with standardized API, taking away the need to manually write DSP-specific source code. 
+The output of this tool the generation of customized/tailored digital SMPS controller source code libraries with standardized API, taking away the need to manually write DSP-specific source code. 
 
 ![DCLD z-Domain Configuration Window](./docs/zDLD-main.png)
 DCLD z-Domain Configuration Main Window
