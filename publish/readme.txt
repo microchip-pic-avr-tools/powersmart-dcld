@@ -2,7 +2,7 @@ MPLAB PowerSmart™ SDK for Microchip dsPIC33® Digital Signal Controllers
 Digital Control Library Designer (PS-DCLD)
 =======================================================================
 
-Version 0.9.12.657 Release Notes:
+Version 0.9.12.660 Release Notes:
 ---------------------------------
 
 New Features:
@@ -17,10 +17,10 @@ execution. The new hooks have been placed
     - After the source address has been read and offset and polarity compensation has been performed but before the error is calculated
     - After the compensation filter computation has completed and before anti-windup clamping is applied
     - After anti-windup clamping has been applied and before the most recent control output is written to the target address
-    - At the end of active 'Update' routine before context is restored and included in the 'Enable' bypass (funciton will not be called when controller is disabled)
-    - At the very end of the 'Update' routine after the Enable bypass, This is the replacement of the previous Cascade Function Call feature
+    - At the end of active 'Update' routine before context is restored and included in the 'Enable' bypass (function will not be called when controller is disabled)
+    - At the very end of the 'Update' routine after the Enable bypass, this is the replacement of the previous Cascade Function Call feature
 
-Each user function can be called as 'viod' function without parameter, with one integer parameter and may or may not return a value.
+Each user function can be called as 'void' function without parameter, with one integer parameter and may or may not return a value.
 These extension function hooks are automatically added to the main control Update routine as well as the PTerm update routine.
 
 2) Increased User Parameter Data Space
@@ -35,7 +35,16 @@ Optimizations:
 
 Bugfixes:
 
-1) Number Scaling Limit
+1) Broken Context Save in Double Bit-Shift Code Generator Script
+
+Rating: High
+Status: Fixed
+
+In interim version 0.9.12.657 the code generator script was corrupted causing to generate error 
+messages and missing code lines in context save code in double bit shift scaling mode when user 
+hooks were used. This release version updates the code generator file solving the issue.
+
+2) Number Scaling Limit
 
 Rating: Medium
 Status: Fixed
@@ -45,7 +54,7 @@ In extreme cases number scaling could exceed the specified bit-width of the frac
 resulting in a math trap error when executed on dsPIC33 working registers. Hence, in this 
 version the maximum number scaling has been limited to the specified bit-width of the fractional.
 
-2) Assembler Include Path Format
+3) Assembler Include Path Format
 
 Rating: Medium
 Status: Fixed
@@ -54,12 +63,12 @@ On some Windows operating systems the file path conversion from Windows format u
 to separate file system directory levels to Unix-style path format using a slash "/" did get corrupted
 leaving backslash formats in place causing builds to fail on Linux or Unix operating systems.
 
-3) Assembler Code Comments 
+4) Assembler Code Comments 
 
 Rating: Low
 Status: Fixed
 
-Operant array index comment in the first multiply of a A- or B-filter caclculation using floating point 
+Operant array index comment in the first multiply of a A- or B-filter calculation using floating point 
 number scaling was broken, leaving %INDEX% tokens in the comment instead of showing the correct index number.
 
 
