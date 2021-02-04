@@ -2,31 +2,71 @@ MPLAB PowerSmart™ SDK for Microchip dsPIC33® Digital Signal Controllers
 Digital Control Library Designer (PS-DCLD)
 =======================================================================
 
-Version 0.9.12.660 Release Notes:
+Version 0.9.12.672 Release Notes:
 ---------------------------------
 
 New Features:
 
-1) Extension Function Call Hooks
+1) Anti-Windup Limiter Compare Value Range Selection
 
-Four new optional hooks for extension functions have been added to the Advanced Tab of the GUI. These hooks add function pointers at 
-specific locations within the NPNZ controller assembly routine allowing to tie in proprietary user code into the NPNZ controller 
-execution. The new hooks have been placed 
+Up to now the number format of values passing through the Anti-Windup limiter was limited to a 
+Q15 fractional number, which is equivalent to a signed 16-bit wide number, ranging from 
+-32,768 to +32,767 (representint a fractional number range of -1.0 to +0.999969481490524). 
 
-    - Beginning of the 'Update' routine, after context has been saved and the Enable bit has been passed
-    - After the source address has been read and offset and polarity compensation has been performed but before the error is calculated
-    - After the compensation filter computation has completed and before anti-windup clamping is applied
-    - After anti-windup clamping has been applied and before the most recent control output is written to the target address
-    - At the end of active 'Update' routine before context is restored and included in the 'Enable' bypass (function will not be called when controller is disabled)
-    - At the very end of the 'Update' routine after the Enable bypass, this is the replacement of the previous Cascade Function Call feature
+In this version the Anti-Windup Limiter Compare number range can be selected to be Q16 
+resp. a 16-bit wide unsinged integer number ranging from 0 to 65,535, representing a fractional 
+number range of 0 to 0.999984740978103). 
 
-Each user function can be called as 'void' function without parameter, with one integer parameter and may or may not return a value.
-These extension function hooks are automatically added to the main control Update routine as well as the PTerm update routine.
+This new option has been introduced to solve issues of limiting the number space in systems where
+the control output is written directly to any PWM timing register such as the duty cycle or period, 
+while the high resolution mode of the PWM module of dsPIC33CK and dsPIC33CH devices is enabled and
+switching frequencies are below 122 kHz. 
 
-2) Increased User Parameter Data Space
+By selecting the new unsigned Anti-Windup Limiter Compare number range allows full 16-bit wide 
+compensator results to be passed to the PWM timing registers supporting the following minimum 
+switching frequencies: 
 
-With increased number of extension functions the need arose to also increase the user data space within the NPNZ data structure. 
-Now this data space supports up to eight unassigned word variables users can use as data space for proprietary user functions.
+- dsPIC33FJ/dsPIC33EP GS Devices, High Resolution Mode Enabled:  14.7 kHz @ 1.04 ns Resolution
+- dsPIC33FJ/dsPIC33EP GS Devices, High Resolution Mode Disabled: 1.83 kHz @ 8.32 ns Resolution
+- dsPIC33CK/dsPIC33CH MP Devices, High Resolution Mode Enabled:  61.0 kHz @  250 ps Resolution
+- dsPIC33CK/dsPIC33CH MP Devices, High Resolution Mode Disabled: 7.63 kHz @ 2.00 ns Resolution
+    
+Please refer to the device data sheet to learn more about the influence of source clock domains
+about PWM resolution limits of dedicated dsPIC33 MC motor control devices.
+
+
+2) Anti-Windup Minimum Auto-Zero Feature
+
+By default, the minium anti-windup theshold limit is used to clamp the control output to that
+specified limit when the control output value is lower than the defined threshold. As a result,
+the output will always produce an absolute minimum output value. This minimu moutput value can be 
+greater than zero, zero or less than zero. Although this satisfies most applications, some systems 
+require a slightly different behavior at the absolute minimum margin of the operating range.
+
+When enabled, the new Minimum Auto-Zero feature of the Anti-Windup Limiter now forces the control 
+output to zero when the control output is below the given threshold value. This feature is very 
+useful in systems where an absolute minimum pulse-width is required to effectively drive the switch 
+node but also needs to support cycle-skipping capabilities when no power should be delivered to the 
+output of the converter.
+
+
+3) Assembler Include Path Declaration
+
+In previous versions the Assembler include file always was included in the Assembly library file 
+with the complete path refrence to the Assembly Include Path declared in the MPLAB® X project.
+A new option on top of the Assembly Library source code window now supports include path only 
+referencing the file or the file with its complete path.
+
+
+4) Built-In Source Code Comment Tags
+
+Doxygen is one of the most popular tools used to auto-generate code documentation of source code.
+The comments in source and header files generated by PS-DCLD have been reworked, incorporating 
+Doxygen-compliant tags allowing users to include PS-DCLD generated source code in their source code
+documentation.
+
+For more information on how to auto-generate software documentation using Doxygen, visit
+https://www.doxygen.nl/.
 
 
 Optimizations:
@@ -35,52 +75,20 @@ Optimizations:
 
 Bugfixes:
 
-1) Broken Context Save in Double Bit-Shift Code Generator Script
-
-Rating: High
-Status: Fixed
-
-In interim version 0.9.12.657 the code generator script was corrupted causing to generate error 
-messages and missing code lines in context save code in double bit shift scaling mode when user 
-hooks were used. This release version updates the code generator file solving the issue.
-
-2) Number Scaling Limit
+1) Timing Graph Update
 
 Rating: Medium
 Status: Fixed
 
-At very low pole and zero locations absolute values of coefficients tend to get very small. 
-In extreme cases number scaling could exceed the specified bit-width of the fractional, 
-resulting in a math trap error when executed on dsPIC33 working registers. Hence, in this 
-version the maximum number scaling has been limited to the specified bit-width of the fractional.
-
-3) Assembler Include Path Format
-
-Rating: Medium
-Status: Fixed
-
-On some Windows operating systems the file path conversion from Windows format using a backslash "\" 
-to separate file system directory levels to Unix-style path format using a slash "/" did get corrupted
-leaving backslash formats in place causing builds to fail on Linux or Unix operating systems.
-
-4) Assembler Code Comments 
-
-Rating: Low
-Status: Fixed
-
-Operant array index comment in the first multiply of a A- or B-filter calculation using floating point 
-number scaling was broken, leaving %INDEX% tokens in the comment instead of showing the correct index number.
-
-
+When the ADC trigger location was moved to a non-standard position 'Trigger at: (user setting)'
+while the Control Loop Call Event is set to '1 - ADC Interrupt Trigger', the timing alignment of 
+ADC latency, ISR latency and control loop latency did not get updated. 
 
 
 Important Change Notes - (Impact on Existing Projects):
 
 1)  API Changes
-
-Section 'CascadeFunction' of NPNZ16b_t data object has been changed to 'ExtensionHooks' and now supports 
-up to six individual user function call hooks. The previous data fields 'ptrCascadeFunction' and 'CascadeFunctionParam'
-have been replaced by 'ptrExtHookEndFunction' and 'ExtHookEndFunctionParam'.
+(none)
 
 2)  Execution of Generated Code / Timing
 (none)
