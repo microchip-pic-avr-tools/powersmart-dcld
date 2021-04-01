@@ -4,7 +4,7 @@
 
 The MPLAB&reg; PowerSmart&trade; SDK is a Software Development Kit (SDK) comprised of multiple, individual stand-alone tools for system definition, system modeling, code generation, control system fine tuning and real-time debugging of fully digital control systems for Switched-Mode Power Supplies (SMPS) supporting Microchip Technology's dsPIC&reg; Digital Signal Controllers (DSC).
 
-The major scope of this tool set is the rapid design of a digital power supply control stage rather than the power supply itself. This allows to simplify the design process to models based on interconnected transfer functions. These transfer functions are defined and configured in individual configuration windows. A transfer function can be based on generic Laplace-domain functions, being calculated at runtime or being defined by external data coming from network analyzer measurements or other third-party simulation tools such as MATLAB, SciLab, Simplis/SciMetrix, LTSpice, etc.
+The major scope of this tool set is the rapid design of a digital power supply control stage rather than the power supply itself. This allows to simplify the design process to models based on interconnected transfer functions. These transfer functions are defined and configured in individual configuration windows. A transfer function can be based on generic Laplace-domain functions, being calculated at runtime or being defined by external data coming from network analyzer measurements or other third-party simulation tools such as MATLAB, SciLab, Simplis/SiMetrix, LTSpice, etc.
 
 # PowerSmart&trade; Digital Control Library Designer (PS-DCLD)
 ### z-Domain Control Loop Configuration Tool & Code Generator Module Overview
@@ -14,9 +14,9 @@ The Digital Control Library Designer allows the graphical design of discrete com
 The output of this tool the generation of customized/tailored digital SMPS controller source code libraries with standardized API, taking away the need to manually write DSP-specific source code. 
 
 The standardized API ensures seamless integration into the final firmware, supporting multiple, co-existing controllers in one firmware and seamless exchange between different controller types and scaling methods helping to solve typical performance vs. accuracy and feature tradeoffs.
-For simplified use during code development, the Digital Control Library Designer can be called directly from the MPLAB® X Integrated Development Environment (IDE) to make changes. 
+For simplified use during code development, the Digital Control Library Designer can be called directly from the MPLAB&reg; X Integrated Development Environment (IDE) to make changes. 
 
-(Please refer to the [PDF User Guide](./docs/181026m_dcld_beta_user_guide.pdf) for details)
+(Please refer to the [PDF User Guide](./docs/181026n_dcld_beta_user_guide.pdf) for details)
 
 ### Core Features:
 * **Supports z-Domain Compensation Filters from 1st to 6th Order**
@@ -48,3 +48,8 @@ Please visit the WIKI site of this repository for more information: [https://git
 ### Download Software
 
 Please visit the RELEASE websiteto download the latest release version: [https://github.com/areiter128/DCLD/releases](https://github.com/areiter128/DCLD/releases)
+
+
+---
+&copy; 2021 Microchip Technology Inc.
+
