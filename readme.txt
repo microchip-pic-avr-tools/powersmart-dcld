@@ -2,6 +2,13 @@ MPLAB PowerSmart™ SDK for Microchip dsPIC33® Digital Signal Controllers
 Digital Control Library Designer (PS-DCLD)
 =======================================================================
 
+Version 0.9.14.678 Release Notes:
+---------------------------------
+
+This additional release was necessary after having moved the website location of PowerSmart™ DCLD to the new Github organiztation Microchip PIC & AVR Tools,
+updating links to websites and user's guide. No further changes have been made.
+
+
 Version 0.9.14.676 Release Notes:
 ---------------------------------
 
