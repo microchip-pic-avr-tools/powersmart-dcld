@@ -2,38 +2,45 @@
 #
 # Set up for Visual Studio Environment
 #
-# Special gitignore for release branch only containing the publish folder
-# No Code Files should be available.
+# Special gitignore for development branches tracking all project files
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
 
 # Project Folders
+*.*
+bin/Debug/
+bin/Release/
+obj/
+test_cases/
+
+# Executables
+#*.exe
+
+# VS specific
 ~*.*
 .vs/
-.svn/
+obj/
+build/
+dist/
+private/
+disassembly/
+publish/
+*.pdb
+*.suo
+*.zip
+*.mk
+*.bash
+Makefile-genesis.properties
 
-# Individually Listed Files which happen to slip back into Version Control
-index.md
-_config.yml
+# Misc
+.svn
+*.bak
+*.log
 
-### Files and folders to keep ###
-!docs/
-!docs/*.*
-!publish/
-!publish/*.*
-!publish/*.pdf
-!publish/*.txt
-!publish/Windows Install/
-!publish/Windows Install/*.*
-!publish/Windows Install/DCLD_Installer.msi
-!publish/ThumbDrive Version/
-!publish/ThumbDrive Version/*.*
-!publish/ThumbDrive Version/Resources/
-!publish/ThumbDrive Version/Resources/*.*
-!publish/Windows Install/
-!publish/Windows Install/*.*
-!README.md
-
-docs/181026h_dcld_beta_user_guide.pdf
-docs/zDLD-code_config.jpg
-docs/zDLD-code_generation.jpg
-docs/zDLD-main.JPG
-docs/zDLD-timing.jpg
+# sub-directories which need to be included
+!Resources/
+!Properties/
