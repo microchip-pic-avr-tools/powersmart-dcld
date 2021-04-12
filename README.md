@@ -7,14 +7,14 @@
 <tr style="border:0px; background-color:#E90000; font:bold; color:#ffffff;" height="40">
 <td width="330">
 <center>
-<a href="https://github.com/areiter128/DCLD/archive/release.zip">
+<a href="https://github.com/microchip-pic-avr-tools/powersmart-dcld/archive/release.zip">
 <span style="color:white">Download</span>
 </a>
 </center>
 </td>
 <td width="330">
 <center>
-<a href="https://github.com/areiter128/DCLD/releases" target="_blank">
+<a href="https://github.com/microchip-pic-avr-tools/powersmart-dcld/releases" target="_blank">
 <span style="color:white;">Visit Release Website</span>
 </a>
 </center>
